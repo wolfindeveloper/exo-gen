@@ -1,13 +1,18 @@
 # Graph Report - exo-gen  (2026-05-21)
 
 ## Corpus Check
-- 132 files · ~105,039 words
+- 134 files · ~105,380 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2799 nodes · 4455 edges · 239 communities (221 shown, 18 thin omitted)
+- 2804 nodes · 4460 edges · 237 communities (218 shown, 19 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 112 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `3b17f181`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Community 0|Community 0]]
@@ -42,6 +47,7 @@
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 33|Community 33]]
 - [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
@@ -222,8 +228,6 @@
 - [[_COMMUNITY_Community 224|Community 224]]
 - [[_COMMUNITY_Community 225|Community 225]]
 - [[_COMMUNITY_Community 226|Community 226]]
-- [[_COMMUNITY_Community 229|Community 229]]
-- [[_COMMUNITY_Community 230|Community 230]]
 - [[_COMMUNITY_Community 231|Community 231]]
 - [[_COMMUNITY_Community 232|Community 232]]
 - [[_COMMUNITY_Community 233|Community 233]]
@@ -234,7 +238,6 @@
 - [[_COMMUNITY_Community 238|Community 238]]
 - [[_COMMUNITY_Community 239|Community 239]]
 - [[_COMMUNITY_Community 240|Community 240]]
-- [[_COMMUNITY_Community 241|Community 241]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `ru` - 39 edges
@@ -249,8 +252,6 @@
 10. `useI18n()` - 36 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Player` --calls--> `test_player()`  [INFERRED]
-  core/models.py → tests/unit/test_expedition_service.py
 - `Orion Ship Asset` --conceptually_related_to--> `Hangar Page (Fleet/Resources)`  [INFERRED]
   frontend/public/assets/ships/orion.png → spec.md
 - `Stella Ship Asset` --conceptually_related_to--> `Hangar Page (Fleet/Resources)`  [INFERRED]
@@ -258,6 +259,8 @@
 - `rate_limit_middleware()` --calls--> `get_redis_client()`  [INFERRED]
   api/middleware/rate_limit.py → core/redis.py
 - `get_config()` --calls--> `get_json()`  [INFERRED]
+  api/routers/configs.py → core/redis.py
+- `get_config()` --calls--> `set_json()`  [INFERRED]
   api/routers/configs.py → core/redis.py
 
 ## Hyperedges (group relationships)
@@ -268,7 +271,7 @@
 - **Artifact Crafting / Staking / Discovery Flow** — LaboratoryPage, DiscoverersList, types_index [INFERRED 0.85]
 - **Expedition Launch → Completion Pipeline** — HangarPage, useConfigStore, expedition_worker [INFERRED 0.75]
 
-## Communities (239 total, 18 thin omitted)
+## Communities (237 total, 19 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.06
@@ -280,19 +283,19 @@ Nodes (33): name, name, name, name, name, name, name, name (+25 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.06
-Nodes (53): BaseModel, AntiFarmConfig, ArtifactErosionConfig, ArtifactErosionSection, ArtifactNftConfig, AvatarEntry, CalibrationCost, EssenceDropMode (+45 more)
+Nodes (53): BaseModel, AntiFarmConfig, ArtifactErosionSection, ArtifactNftConfig, AvatarEntry, CalibrationCost, EssenceDropMode, EssenceTierEntry (+45 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.09
-Nodes (29): RARITY_STYLES, ResourceCard, ResourceCardProps, TYPE_ICONS, RARITY_STYLES, ResourceItemRow(), ResourceItemRowProps, ResourcesAccordion() (+21 more)
+Cohesion: 0.10
+Nodes (32): BONUS_COLORS, BonusBadge(), BonusBadgeProps, RARITY_STYLES, ResourceCard, ResourceCardProps, TYPE_ICONS, RARITY_STYLES (+24 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.05
 Nodes (37): code:block1 (exo-gen/), code:powershell (# 1. Активировать venv (если не активирован)), code:powershell (cd frontend), code:powershell (# Бэкенд health check), code:bash (docker compose down -v && docker compose up -d), code:json ({"id": 123, "username": "Navigator", "first_name": "Test"}), code:json ({), code:powershell (# Удалить и пересоздать таблицы) (+29 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.25
-Nodes (22): name, name, name, name, name, name, name, name (+14 more)
+Cohesion: 0.07
+Nodes (36): fuel_t1_methane_fraction, icon_path, image_path, name, rarity, slug, tier, type (+28 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.08
@@ -303,12 +306,12 @@ Cohesion: 0.06
 Nodes (31): dependencies, axios, framer-motion, i18next, i18next-browser-languagedetector, lucide-react, react, react-dom (+23 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.16
-Nodes (12): HangarCard(), HangarCardProps, RARITY_COLORS, Spaceship(), SpaceshipProps, TIER_COLORS, StatSlot(), StatSlotProps (+4 more)
+Cohesion: 0.09
+Nodes (22): ShipCard, ShipCardProps, ZoneCard, ZoneCardProps, HangarCard(), HangarCardProps, RARITY_COLORS, Spaceship() (+14 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.27
-Nodes (11): useToast(), useI18n(), ResourceConverter(), ResourceConverterProps, HangarPage(), LaboratoryPage(), UniversePage(), universeTabs (+3 more)
+Cohesion: 0.47
+Nodes (10): en, la, ru, description, description, description, description, description (+2 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.07
@@ -347,12 +350,12 @@ Cohesion: 0.25
 Nodes (22): lore, lore, lore, lore, lore, lore, lore, lore (+14 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.12
-Nodes (21): _add_to_inventory(), apply_repair_mat_drops(), _consume_inventory(), _find_expedition_by_tier(), get_active_expeditions(), get_expedition(), _get_player_ship(), _has_inventory() (+13 more)
+Cohesion: 0.11
+Nodes (22): Expedition, _add_to_inventory(), apply_repair_mat_drops(), _consume_inventory(), _find_expedition_by_tier(), get_active_expeditions(), get_expedition(), _get_player_ship() (+14 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.09
-Nodes (24): patch(), mock_telegram_auth(), Мокирует валидацию Telegram initData., mock_db(), Unit-тесты для expedition_service., start_expedition() должен отклонять экспедиции выше тира игрока., start_expedition() должен отклонять стейкнутые корабли., Моковая async-сессия SQLAlchemy. (+16 more)
+Nodes (25): patch(), async_client(), mock_telegram_auth(), mock_telegram_user(), mock_ton_client(), Async fixtures для интеграционных и unit-тестов., Мокирует валидацию Telegram initData., Создаёт таблицы один раз на всю сессию тестов. (+17 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.10
@@ -371,24 +374,24 @@ Cohesion: 0.10
 Nodes (20): compilerOptions, allowImportingTsExtensions, isolatedModules, jsx, lib, module, moduleDetection, moduleResolution (+12 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.14
-Nodes (19): api, get(), calibrateArtifact(), claimYield(), craftArtifact(), getActiveExpeditions(), getArtifacts(), getExpedition() (+11 more)
+Cohesion: 0.11
+Nodes (23): Toast, TOAST_COLORS, ToastContainer(), ToastType, api, get(), calibrateArtifact(), claimYield() (+15 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.11
 Nodes (19): calibrate_artifact(), claim_yield(), list_artifacts(), Claim accumulated staking yield and transfer $XGEN to player balance., Recalibrate a dormant or worn artifact. Resets cycles, deducts cost., List all artifacts owned by the player., Stake an artifact for passive yield generation., Unstake an artifact, stopping yield generation. (+11 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.19
-Nodes (14): _add_inventory_sync(), _calculate_level(), complete_expedition(), _find_expedition_loot(), _find_zone_by_tier(), _generate_base_loot(), Expedition completion Celery task., Find zone config by tier from galaxy_zones. (+6 more)
+Cohesion: 0.13
+Nodes (19): calculate_overdrive_result(), Overdrive service — config-driven risk/reward calculations., Calculate the result of an expedition with overdrive modifiers.      Reads multi, Determine if an essence drops based on mode and anti-farm limits.      Args:, roll_essence_drop(), _add_inventory_sync(), _calculate_level(), complete_expedition() (+11 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.11
 Nodes (18): connect_wallet(), disconnect_wallet(), get_wallet_balance(), get_wallet_nfts(), Wallet router — TON wallet connection and balance queries., List NFTs owned by the connected wallet.      Returns Fleet NFTs (T4-T5), Artifa, Connect a TON wallet to the player's account.      Validates the wallet address, Get TON and $XGEN balances for a connected wallet.      Requires a valid wallet (+10 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.15
-Nodes (17): Artifact, Base, Expedition, Player, SQLAlchemy ORM models for EXO GENESIS., Ship, XgenTransaction, DeclarativeBase (+9 more)
+Cohesion: 0.13
+Nodes (18): Artifact, Base, Player, SQLAlchemy ORM models for EXO GENESIS., Ship, XgenTransaction, DeclarativeBase, _get_first_t1_fuel() (+10 more)
 
 ### Community 30 - "Community 30"
 Cohesion: 0.12
@@ -398,13 +401,17 @@ Nodes (18): en, la, ru, drop_table, lock_days, name, slug, tier (+10 more)
 Cohesion: 0.11
 Nodes (17): cooldown_reset_hours, max_essences_per_day, essence_drop, anti_farm, overdrive, push, stable, base_chance_percent (+9 more)
 
+### Community 32 - "Community 32"
+Cohesion: 0.25
+Nodes (8): zone_frontier, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
+
 ### Community 33 - "Community 33"
-Cohesion: 0.47
-Nodes (10): lore, lore, lore, lore, lore, lore, lore, en (+2 more)
+Cohesion: 0.16
+Nodes (35): lore, lore, lore, lore, lore, lore, lore, lore (+27 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.20
-Nodes (10): essence_t4_chrono_shard, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Cohesion: 0.18
+Nodes (11): essence_t4_chrono_shard, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 35 - "Community 35"
 Cohesion: 0.17
@@ -416,31 +423,31 @@ Nodes (17): BottomNav, DiscoverersList, HangarPage, LaboratoryPage, ResourceConv
 
 ### Community 37 - "Community 37"
 Cohesion: 0.15
-Nodes (12): CosmicMap(), CosmicMapProps, MapTransition(), MapTransitionProps, TIER_ICONS, TierSelector(), TierSelectorProps, TIER_COLORS (+4 more)
+Nodes (13): CosmicMap(), CosmicMapProps, MapTransition(), MapTransitionProps, TIER_ICONS, TierSelector(), TierSelectorProps, TIER_COLORS (+5 more)
 
 ### Community 38 - "Community 38"
-Cohesion: 0.19
-Nodes (14): PlayerInventory, convert_mats(), ConvertRequest, ConvertResponse, get_repair_info(), Resource router: repair ships, convert repair mats., Request to repair a ship., Request to convert higher-tier repair mats to lower-tier. (+6 more)
+Cohesion: 0.10
+Nodes (23): PlayerInventory, convert_mats(), ConvertRequest, ConvertResponse, get_repair_info(), Resource router: repair ships, convert repair mats., Request to repair a ship., Request to convert higher-tier repair mats to lower-tier. (+15 more)
 
 ### Community 39 - "Community 39"
-Cohesion: 0.13
-Nodes (14): fuel_t1_methane_fraction, icon_path, image_path, rarity, slug, tier, type, fuel_t2_liquid_iridium (+6 more)
+Cohesion: 0.12
+Nodes (15): fuel_t2_deuterium_x, icon_path, image_path, name, rarity, slug, tier, type (+7 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.12
 Nodes (15): compilerOptions, allowImportingTsExtensions, composite, isolatedModules, lib, module, moduleDetection, moduleResolution (+7 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.21
-Nodes (11): load_config(), Load a JSON config file from config/{name}.json.      Args:         name: Filena, is_nft_eligible(), mint_artifact_nft(), mint_fleet_nft_if_eligible(), mint_pilot_sbt(), NFT service — minting logic for T4-T5 ships and 1-of-1 artifacts.  Rules (from c, Mint a Soul-Bound Pilot SBT for a verified player.      SBTs are non-transferabl (+3 more)
+Cohesion: 0.10
+Nodes (23): load_config(), Utility: load and cache game config JSON files., Load a JSON config file from config/{name}.json.      Args:         name: Filena, Clear cached config(s) to force reload from disk.      Args:         name: Speci, reload_config(), calculate_staking_yield(), calibrate_artifact(), _get_activity_level() (+15 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.14
-Nodes (8): MOCK_PLAYER, RANKS, TIER_TO_RARITY, TopBar, TopBarProps, ToastProvider(), pageTransition, pageVariants
+Cohesion: 0.12
+Nodes (10): useXgenBalance(), UseXgenBalanceResult, MOCK_PLAYER, RANKS, TIER_TO_RARITY, TopBar, TopBarProps, ToastProvider() (+2 more)
 
 ### Community 43 - "Community 43"
-Cohesion: 0.19
-Nodes (13): calculateRiskModifier(), getButtonGradient(), getLocalized(), getRiskBadgeColor(), getShipName(), ZoneDetailModal(), ZoneDetailModalProps, MOCK_PLAYER (+5 more)
+Cohesion: 0.13
+Nodes (22): useToast(), calculateRiskModifier(), getButtonGradient(), getLocalized(), getRiskBadgeColor(), getShipName(), ZoneDetailModal(), ZoneDetailModalProps (+14 more)
 
 ### Community 44 - "Community 44"
 Cohesion: 0.13
@@ -471,8 +478,8 @@ Cohesion: 0.31
 Nodes (13): bonus, bonus, bonus, bonus, bonus, bonus, bonus, display (+5 more)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.20
-Nodes (9): async_client(), mock_telegram_user(), mock_ton_client(), Async fixtures для интеграционных и unit-тестов., Создаёт таблицы один раз на всю сессию тестов., Async HTTP-клиент для тестирования API эндпоинтов., Генерирует моковый заголовок X-Telegram-User., Мокирует все вызовы к TON блокчейну. (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_schrodinger_paradox, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 52 - "Community 52"
 Cohesion: 0.17
@@ -499,12 +506,12 @@ Cohesion: 0.18
 Nodes (11): 10. Социальная и Монетарная Система, 11. Система Верификации, 12. Маркетплейс, 17. Этап 0 — Подготовка Среды (3–5 дней), 8. Токеномика $XGEN, 9. NFT-Экосистема, 🧠 РЕШЕНИЕ (08:05), Спецификация игрового цикла: Ежедневная рутина (Daily Loop) (+3 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.14
-Nodes (13): mock_db(), Unit-тесты для laboratory_service., Моковая async-сессия SQLAlchemy., Крафт должен отклонять менее min_essences., Тестовый игрок с балансом., SHA-256 хэш должен быть детерминированным: одинаковые входы → одинаковый хэш., Порядок эссенций не должен влиять на хэш (sorted)., Разные входы должны давать разные хэши. (+5 more)
+Cohesion: 0.09
+Nodes (28): _add_inventory(), attempt_craft(), _consume_inventory(), _find_artifact_by_hash(), _generate_recipe_hash(), get_recipe_info(), _has_inventory(), Laboratory service — config-driven artifact crafting. (+20 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.22
-Nodes (9): zone_absolute_status, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_absolute_status, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 60 - "Community 60"
 Cohesion: 0.20
@@ -544,15 +551,15 @@ Nodes (10): name, name, name, name, name, name, name, en (+2 more)
 
 ### Community 69 - "Community 69"
 Cohesion: 0.18
-Nodes (11): essence_t1_iron, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t1_iron, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 70 - "Community 70"
-Cohesion: 0.21
-Nodes (17): fuel_t1_mangan_hydride, icon_path, image_path, rarity, short_description, slug, tier, type (+9 more)
+Cohesion: 0.47
+Nodes (10): short_description, short_description, short_description, short_description, short_description, short_description, short_description, en (+2 more)
 
 ### Community 71 - "Community 71"
-Cohesion: 0.22
-Nodes (9): zone_random_nuisances, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_random_nuisances, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 72 - "Community 72"
 Cohesion: 0.30
@@ -563,12 +570,12 @@ Cohesion: 0.07
 Nodes (28): apex_eternal_singularity, base_stability, expedition_slots, image_path, is_nft, slug, tier, eclipse_abyss_walker (+20 more)
 
 ### Community 74 - "Community 74"
-Cohesion: 0.05
-Nodes (48): en, la, ru, zone_appliance_graveyard, zone_frontier, zone_nebula_belt, zone_schrodinger_paradox, zone_zero_meridian (+40 more)
+Cohesion: 0.20
+Nodes (28): en, la, ru, name, name, name, name, name (+20 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.21
-Nodes (27): en, la, ru, lore, lore, lore, lore, lore (+19 more)
+Cohesion: 0.11
+Nodes (18): galaxy_zones, zone_appliance_graveyard, zone_ego_olympus, zone_nebula_belt, drop_table, image_path, loot_table, rare_chance (+10 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.22
@@ -587,8 +594,8 @@ Cohesion: 0.22
 Nodes (9): eclipse, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
 
 ### Community 80 - "Community 80"
-Cohesion: 0.22
-Nodes (9): eternity, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_singular_architects, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 81 - "Community 81"
 Cohesion: 0.22
@@ -596,7 +603,7 @@ Nodes (9): genesis, art_path, base_stability, expedition_slots, image_path, is_n
 
 ### Community 82 - "Community 82"
 Cohesion: 0.22
-Nodes (9): infinity, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
+Nodes (9): chaos, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
 
 ### Community 83 - "Community 83"
 Cohesion: 0.22
@@ -627,8 +634,8 @@ Cohesion: 0.22
 Nodes (9): ragnarok, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
 
 ### Community 90 - "Community 90"
-Cohesion: 0.10
-Nodes (20): galaxy_zones, zone_ego_olympus, zone_refuel_station, zone_singular_architects, description, drop_table, image_path, loot_table (+12 more)
+Cohesion: 0.25
+Nodes (8): zone_refuel_station, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 91 - "Community 91"
 Cohesion: 0.22
@@ -651,8 +658,8 @@ Cohesion: 0.22
 Nodes (9): zenith, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
 
 ### Community 96 - "Community 96"
-Cohesion: 0.11
-Nodes (19): ShipCard, ShipCardProps, ZoneCard, ZoneCardProps, SectorAccordion(), SectorAccordionProps, TIER_ICONS, TIER_NAMES (+11 more)
+Cohesion: 0.24
+Nodes (8): SectorAccordion(), SectorAccordionProps, TIER_ICONS, TIER_NAMES, getRiskColor(), TIER_COLORS, ZoneCardCompact(), ZoneCardCompactProps
 
 ### Community 97 - "Community 97"
 Cohesion: 0.24
@@ -672,59 +679,59 @@ Nodes (10): 1.1 Предыстория, 1.2 Роль Игрока, 1.3 Фрак�
 
 ### Community 101 - "Community 101"
 Cohesion: 0.20
-Nodes (10): essence_t1_carbon, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Nodes (9): essence_t1_carbon, art_path, crafting_weight, domain, icon_path, rarity, slug, tier (+1 more)
 
 ### Community 102 - "Community 102"
-Cohesion: 0.18
-Nodes (11): essence_t1_silicon, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Cohesion: 0.20
+Nodes (10): essence_t1_silicon, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.18
-Nodes (11): essence_t2_nebula_dust, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Cohesion: 0.20
+Nodes (10): essence_t2_nebula_dust, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.18
-Nodes (11): essence_t2_plasma, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_plasma, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 105 - "Community 105"
-Cohesion: 0.20
-Nodes (10): essence_t2_titanium, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Cohesion: 0.18
+Nodes (11): essence_t2_titanium, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 106 - "Community 106"
-Cohesion: 0.20
-Nodes (10): essence_t3_dark_flux, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Cohesion: 0.18
+Nodes (11): essence_t3_dark_flux, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 107 - "Community 107"
 Cohesion: 0.18
-Nodes (11): essence_t3_singularity, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t3_singularity, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 108 - "Community 108"
 Cohesion: 0.18
-Nodes (11): essence_t3_void_crystal, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t3_void_crystal, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 109 - "Community 109"
-Cohesion: 0.18
-Nodes (11): essence_t4_antimatter, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Cohesion: 0.20
+Nodes (10): essence_t4_antimatter, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 110 - "Community 110"
-Cohesion: 0.22
-Nodes (9): zone_warm_tea_nebula, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_warm_tea_nebula, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 111 - "Community 111"
-Cohesion: 0.20
-Nodes (10): essence_t4_stellar_core, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Cohesion: 0.18
+Nodes (11): essence_t4_stellar_core, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 112 - "Community 112"
 Cohesion: 0.18
-Nodes (11): essence_t5_eternal_flame, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t5_eternal_flame, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 113 - "Community 113"
 Cohesion: 0.18
-Nodes (11): essence_t5_omega, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t5_omega, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 114 - "Community 114"
 Cohesion: 0.20
-Nodes (9): essence_t5_void_heart, art_path, crafting_weight, domain, icon_path, rarity, slug, tier (+1 more)
+Nodes (10): essence_t5_void_heart, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 115 - "Community 115"
 Cohesion: 0.22
@@ -751,8 +758,8 @@ Cohesion: 0.22
 Nodes (7): Docker Compose Orchestration, code:bash (uv venv .venv), EXO GENESIS, Quick Start, Stack, ⚡ EXO GENESIS, 📋 Содержание
 
 ### Community 121 - "Community 121"
-Cohesion: 0.29
-Nodes (7): fuel_t1_plasma_condensate, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.22
+Nodes (9): hyperion, art_path, base_stability, expedition_slots, image_path, is_nft, short_description, slug (+1 more)
 
 ### Community 122 - "Community 122"
 Cohesion: 0.54
@@ -771,84 +778,84 @@ Cohesion: 0.25
 Nodes (8): expedition_scrap_run, damage_chance_percent, duration_hours, fuel_required, loot_table, slug, tier, xp_reward
 
 ### Community 126 - "Community 126"
-Cohesion: 0.29
-Nodes (7): fuel_t2_deuterium_x, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t1_mangan_hydride, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 127 - "Community 127"
-Cohesion: 0.29
-Nodes (7): fuel_t2_quantum_gel, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t2_quantum_gel, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 128 - "Community 128"
-Cohesion: 0.29
-Nodes (7): fuel_t5_singularity_ether, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t5_singularity_ether, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 129 - "Community 129"
-Cohesion: 0.29
-Nodes (7): fuel_t2_methane_fraction, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t2_methane_fraction, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 130 - "Community 130"
-Cohesion: 0.29
-Nodes (7): fuel_t3_dark_matter, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t3_dark_matter, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 131 - "Community 131"
-Cohesion: 0.29
-Nodes (7): fuel_t3_helium_3_prime, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t3_helium_3_prime, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 132 - "Community 132"
-Cohesion: 0.29
-Nodes (7): fuel_t3_proto_matter, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t3_proto_matter, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 133 - "Community 133"
-Cohesion: 0.29
-Nodes (7): fuel_t4_null_element, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t4_null_element, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 134 - "Community 134"
-Cohesion: 0.29
-Nodes (7): fuel_t4_singularity_ether, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t4_singularity_ether, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 135 - "Community 135"
-Cohesion: 0.29
-Nodes (7): fuel_t4_stellar_plasmoid, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t4_stellar_plasmoid, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 136 - "Community 136"
-Cohesion: 0.29
-Nodes (7): fuel_t5_chrono_catalyst, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t5_chrono_catalyst, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 137 - "Community 137"
-Cohesion: 0.29
-Nodes (7): fuel_t5_dark_energy, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t5_dark_energy, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 138 - "Community 138"
-Cohesion: 0.29
-Nodes (7): fuel_t5_dark_matter, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): fuel_t5_dark_matter, icon_path, image_path, name, rarity, slug, tier, type
 
 ### Community 139 - "Community 139"
-Cohesion: 0.22
-Nodes (9): zone_library_deals, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_library_deals, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 140 - "Community 140"
-Cohesion: 0.22
-Nodes (9): zone_deep_rift, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_deep_rift, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 141 - "Community 141"
-Cohesion: 0.22
-Nodes (9): zone_pure_ether, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_pure_ether, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 142 - "Community 142"
-Cohesion: 0.29
-Nodes (7): fuel_t3_laserum_crystals, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): zone_quiet_horror, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 143 - "Community 143"
-Cohesion: 0.20
-Nodes (28): en, la, ru, name, name, name, name, name (+20 more)
+Cohesion: 0.21
+Nodes (27): en, la, ru, lore, lore, lore, lore, lore (+19 more)
 
 ### Community 144 - "Community 144"
 Cohesion: 0.18
-Nodes (11): essence_t1_blue_tape, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t1_blue_tape, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 145 - "Community 145"
-Cohesion: 0.22
-Nodes (9): zone_echo_monday, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_echo_monday, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 146 - "Community 146"
 Cohesion: 0.25
@@ -858,17 +865,13 @@ Nodes (7): CraftRequest, CraftResponse, Pydantic schemas for laboratory endpoint
 Cohesion: 0.25
 Nodes (7): auth_me(), auth_telegram(), auth_worldid(), Authentication router: Telegram and World ID login endpoints., Authenticate via Telegram Web App initData.      MVP: mock validation. Productio, Authenticate via World ID (Worldcoin) verification.      MVP: placeholder. Produ, Return authenticated player identity from Telegram header.
 
-### Community 148 - "Community 148"
-Cohesion: 0.26
-Nodes (11): _add_inventory(), attempt_craft(), _consume_inventory(), _find_artifact_by_hash(), _generate_recipe_hash(), get_recipe_info(), _has_inventory(), Laboratory service — config-driven artifact crafting. (+3 more)
-
 ### Community 149 - "Community 149"
-Cohesion: 0.16
-Nodes (36): name, name, name, name, name, name, name, name (+28 more)
+Cohesion: 0.47
+Nodes (10): name, name, name, name, name, name, name, en (+2 more)
 
 ### Community 150 - "Community 150"
-Cohesion: 0.22
-Nodes (9): zone_edge_common_sense, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_edge_common_sense, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 151 - "Community 151"
 Cohesion: 0.33
@@ -944,43 +947,39 @@ Nodes (3): Orion Ship Asset, Hangar Page (Fleet/Resources), Stella Ship Asset
 
 ### Community 174 - "Community 174"
 Cohesion: 0.18
-Nodes (11): essence_t1_dead_battery, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
-
-### Community 175 - "Community 175"
-Cohesion: 0.22
-Nodes (9): calculate_staking_yield(), calibrate_artifact(), _get_activity_level(), Erosion and staking yield service — config-driven artifact lifecycle., Recalibrate an artifact: reset cycles, deduct cost.      Cost: xgen + resource f, Map weekly expedition count to activity level., Decrement artifact cycles after an expedition.      Overdrive mode costs ×2 cycl, Calculate pending staking yield for an artifact.      Checks: artifact active an (+1 more)
+Nodes (11): essence_t1_dead_battery, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 176 - "Community 176"
 Cohesion: 0.18
-Nodes (11): essence_t1_frozen_embarrassment, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t1_frozen_embarrassment, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 177 - "Community 177"
 Cohesion: 0.18
-Nodes (11): essence_t1_warp_clip, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t1_warp_clip, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 178 - "Community 178"
-Cohesion: 0.22
-Nodes (9): zone_inner_rim, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_inner_rim, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 179 - "Community 179"
-Cohesion: 0.29
-Nodes (7): fuel_t4_am_synthetics, icon_path, image_path, rarity, slug, tier, type
+Cohesion: 0.25
+Nodes (8): zone_singularity_credit, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 180 - "Community 180"
 Cohesion: 0.25
-Nodes (7): Repair a ship using tier-matching repair materials.      Deducts repair mats fro, repair_ship_endpoint(), get_ship_repair_info(), Ship service — repair, stability, and ship lifecycle management., Get repair info for a ship: current stability, required mats, owned mats., Repair a ship using tier-matching repair materials.      Calculates required mat, repair_ship()
+Nodes (8): zone_zero_meridian, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 181 - "Community 181"
 Cohesion: 0.18
-Nodes (11): essence_t2_gaze_reflector, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_gaze_reflector, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 182 - "Community 182"
 Cohesion: 0.18
-Nodes (11): essence_t2_singularity_button, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_singularity_button, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 184 - "Community 184"
-Cohesion: 0.18
-Nodes (11): essence_t3_chrome_nostalgia, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Cohesion: 0.20
+Nodes (10): essence_t3_chrome_nostalgia, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 201 - "Community 201"
 Cohesion: 0.29
@@ -988,135 +987,127 @@ Nodes (7): vanguard_nebula_ghost, base_stability, expedition_slots, image_path, 
 
 ### Community 202 - "Community 202"
 Cohesion: 0.18
-Nodes (11): essence_t3_logic_valve, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t3_logic_valve, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 203 - "Community 203"
 Cohesion: 0.18
-Nodes (11): essence_t3_paradox_dust, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t3_paradox_dust, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 204 - "Community 204"
-Cohesion: 0.20
-Nodes (10): essence_t3_quantum_stabilizer, art_path, crafting_weight, domain, icon_path, name, rarity, slug (+2 more)
+Cohesion: 0.18
+Nodes (11): essence_t3_quantum_stabilizer, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 205 - "Community 205"
-Cohesion: 0.22
-Nodes (9): zone_eternal_waiting, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_eternal_waiting, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 206 - "Community 206"
-Cohesion: 0.22
-Nodes (9): zone_genesis_point, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_genesis_point, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 207 - "Community 207"
-Cohesion: 0.22
-Nodes (9): zone_lost_socks, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_lost_socks, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 208 - "Community 208"
 Cohesion: 0.18
-Nodes (11): essence_t4_deal_shards, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t4_deal_shards, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 209 - "Community 209"
-Cohesion: 0.22
-Nodes (9): zone_quiet_horror, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.21
+Nodes (27): en, la, ru, description, description, description, description, description (+19 more)
 
 ### Community 210 - "Community 210"
-Cohesion: 0.22
-Nodes (9): zone_syntax_error_nebula, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_syntax_error_nebula, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 211 - "Community 211"
-Cohesion: 0.22
-Nodes (9): zone_curved_memories, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_curved_memories, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 212 - "Community 212"
-Cohesion: 0.18
-Nodes (11): essence_t4_ether_condensate, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Cohesion: 0.20
+Nodes (10): essence_t4_ether_condensate, art_path, crafting_weight, domain, icon_path, lore, rarity, slug (+2 more)
 
 ### Community 213 - "Community 213"
-Cohesion: 0.22
-Nodes (9): zone_library_errors, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.25
+Nodes (8): zone_library_errors, drop_table, image_path, loot_table, rare_chance, risk_pct, slug, tier
 
 ### Community 214 - "Community 214"
-Cohesion: 0.22
-Nodes (9): zone_singularity_credit, description, drop_table, image_path, loot_table, rare_chance, risk_pct, slug (+1 more)
+Cohesion: 0.29
+Nodes (6): DiscoverersList(), DiscoverersListProps, FilterMode, RARITY_ORDER, RARITY_STYLES, SortMode
 
 ### Community 215 - "Community 215"
 Cohesion: 0.18
-Nodes (11): essence_t4_fractal_grandeur, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t4_fractal_grandeur, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 216 - "Community 216"
 Cohesion: 0.18
-Nodes (11): essence_t4_possibility_condensate, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t4_possibility_condensate, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 217 - "Community 217"
 Cohesion: 0.18
-Nodes (11): essence_t4_reality_core, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t4_reality_core, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 218 - "Community 218"
 Cohesion: 0.18
-Nodes (11): essence_t5_absolute_zero, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t5_absolute_zero, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 219 - "Community 219"
 Cohesion: 0.18
-Nodes (11): essence_t5_bug_report, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t5_bug_report, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 220 - "Community 220"
 Cohesion: 0.18
-Nodes (11): essence_t5_demiurge_ink, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t5_demiurge_ink, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 221 - "Community 221"
-Cohesion: 0.17
-Nodes (20): en, la, ru, description, description, description, description, description (+12 more)
+Cohesion: 0.18
+Nodes (11): essence_t5_holy_spoon, art_path, description, domain, icon_path, lore, name, rarity (+3 more)
 
 ### Community 222 - "Community 222"
 Cohesion: 0.18
-Nodes (11): essence_t1_compressed_luck, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t1_compressed_luck, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 223 - "Community 223"
 Cohesion: 0.18
-Nodes (11): essence_t2_custom_rivets, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_custom_rivets, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 224 - "Community 224"
 Cohesion: 0.18
-Nodes (11): essence_t2_liquid_methane, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_liquid_methane, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 225 - "Community 225"
 Cohesion: 0.18
-Nodes (11): essence_t2_quick_no_lubricant, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
+Nodes (11): essence_t2_quick_no_lubricant, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 226 - "Community 226"
 Cohesion: 0.18
-Nodes (11): essence_t3_bergamot_crystal, art_path, crafting_weight, description, domain, icon_path, lore, rarity (+3 more)
-
-### Community 229 - "Community 229"
-Cohesion: 0.33
-Nodes (5): calculate_overdrive_result(), Overdrive service — config-driven risk/reward calculations., Calculate the result of an expedition with overdrive modifiers.      Reads multi, Determine if an essence drops based on mode and anti-farm limits.      Args:, roll_essence_drop()
-
-### Community 230 - "Community 230"
-Cohesion: 0.50
-Nodes (3): Utility: load and cache game config JSON files., Clear cached config(s) to force reload from disk.      Args:         name: Speci, reload_config()
+Nodes (11): essence_t3_bergamot_crystal, art_path, crafting_weight, description, domain, icon_path, name, rarity (+3 more)
 
 ### Community 233 - "Community 233"
-Cohesion: 0.10
-Nodes (17): Starfield(), Toast, TOAST_COLORS, ToastContainer(), ToastType, BONUS_COLORS, BonusBadge(), BonusBadgeProps (+9 more)
+Cohesion: 0.20
+Nodes (6): Starfield(), SubMenu, SubMenuProps, SubMenuTab, universeTabs, WalletConnect
 
 ## Knowledge Gaps
-- **1332 isolated node(s):** `$schema`, `plugin`, `@opencode-ai/plugin`, `slug`, `tier` (+1327 more)
+- **1334 isolated node(s):** `$schema`, `plugin`, `@opencode-ai/plugin`, `slug`, `tier` (+1329 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `PlayerInventory` connect `Community 38` to `Community 175`, `Community 19`, `Community 20`, `Community 27`, `Community 29`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **Why does `patch()` connect `Community 20` to `Community 25`, `Community 58`, `Community 51`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **Why does `galaxy_zones` connect `Community 90` to `Community 206`, `Community 71`, `Community 74`, `Community 139`, `Community 140`, `Community 205`, `Community 110`, `Community 207`, `Community 141`, `Community 209`, `Community 210`, `Community 145`, `Community 211`, `Community 213`, `Community 150`, `Community 214`, `Community 178`, `Community 59`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `PlayerInventory` connect `Community 38` to `Community 41`, `Community 19`, `Community 58`, `Community 27`, `Community 29`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `patch()` connect `Community 20` to `Community 25`, `Community 58`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `galaxy_zones` connect `Community 75` to `Community 139`, `Community 140`, `Community 141`, `Community 142`, `Community 145`, `Community 150`, `Community 32`, `Community 178`, `Community 179`, `Community 51`, `Community 180`, `Community 59`, `Community 71`, `Community 205`, `Community 206`, `Community 207`, `Community 80`, `Community 210`, `Community 211`, `Community 213`, `Community 90`, `Community 110`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `$schema`, `plugin`, `@opencode-ai/plugin` to the rest of the system?**
-  _1555 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1557 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.05632360471070148 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.05660377358490566 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.09243697478991597 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10256410256410256 - nodes in this community are weakly interconnected._

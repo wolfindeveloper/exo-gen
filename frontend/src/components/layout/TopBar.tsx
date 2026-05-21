@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { Coins, User, Settings } from 'lucide-react'
 import { usePlayerStore } from '../../store/usePlayerStore'
 import { useI18n } from '../../hooks/useI18n'
+import { useXgenBalance } from '../../hooks/useXgenBalance'
+import { useTonAddress } from '@tonconnect/ui-react'
 
 const RANKS: Record<number, string> = {
   1: 'rank.scout',
@@ -60,12 +62,15 @@ function hapticFeedback(type: 'light' | 'medium' | 'heavy' | 'success' | 'error'
 const TopBar = memo(({ onSettingsClick }: TopBarProps) => {
   const { player, isLoading, error } = usePlayerStore()
   const { t } = useI18n()
+  const { balance: xgenBlockchainBalance, loading: xgenLoading } = useXgenBalance()
+  const walletAddress = useTonAddress()
   const prevXgenRef = useRef<number>(player?.xgen_balance ?? 0)
   const prevXpRef = useRef<number>(player?.xp ?? 0)
 
   // Безопасное получение данных с фоллбэками
   const data = player || MOCK_PLAYER
-  const xgenBalance = typeof data.xgen_balance === 'number' ? data.xgen_balance : 0
+  // Если кошелёк подключён — используем баланс из блокчейна, иначе из БД/мока
+  const xgenBalance = walletAddress ? xgenBlockchainBalance : (typeof data.xgen_balance === 'number' ? data.xgen_balance : 0)
   const xp = typeof data.xp === 'number' ? data.xp : 0
   const level = typeof data.level === 'number' ? data.level : 1
   const tier = typeof data.tier === 'number' ? data.tier : 1
@@ -156,7 +161,11 @@ const TopBar = memo(({ onSettingsClick }: TopBarProps) => {
             >
               <Coins className="w-3.5 h-3.5 text-yellow-400" />
             </motion.div>
-            <span className="text-xs font-bold text-yellow-400">{xgenBalance.toLocaleString()}</span>
+            {xgenLoading ? (
+              <span className="text-xs font-bold text-yellow-400 animate-pulse">...</span>
+            ) : (
+              <span className="text-xs font-bold text-yellow-400">{xgenBalance.toLocaleString()}</span>
+            )}
           </div>
 
           {/* Кнопка настроек: min 44px touch target */}

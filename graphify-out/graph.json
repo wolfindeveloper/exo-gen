@@ -935,7 +935,7 @@
       "source_file": "api/routers/resources.py",
       "source_location": "L54",
       "id": "routers_resources_repair_ship_endpoint",
-      "community": 180,
+      "community": 38,
       "norm_label": "repair_ship_endpoint()"
     },
     {
@@ -1007,7 +1007,7 @@
       "source_file": "api/routers/resources.py",
       "source_location": "L59",
       "id": "routers_resources_rationale_59",
-      "community": 180,
+      "community": 38,
       "norm_label": "repair a ship using tier-matching repair materials.      deducts repair mats fro"
     },
     {
@@ -1520,7 +1520,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L1",
       "id": "api_services_erosion_yield_service_py",
-      "community": 175,
+      "community": 41,
       "norm_label": "erosion_yield_service.py"
     },
     {
@@ -1529,7 +1529,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L15",
       "id": "services_erosion_yield_service_update_artifact_cycles",
-      "community": 175,
+      "community": 41,
       "norm_label": "update_artifact_cycles()"
     },
     {
@@ -1538,7 +1538,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L61",
       "id": "services_erosion_yield_service_calculate_staking_yield",
-      "community": 175,
+      "community": 41,
       "norm_label": "calculate_staking_yield()"
     },
     {
@@ -1547,7 +1547,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L111",
       "id": "services_erosion_yield_service_calibrate_artifact",
-      "community": 175,
+      "community": 41,
       "norm_label": "calibrate_artifact()"
     },
     {
@@ -1556,7 +1556,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L173",
       "id": "services_erosion_yield_service_get_activity_level",
-      "community": 175,
+      "community": 41,
       "norm_label": "_get_activity_level()"
     },
     {
@@ -1565,7 +1565,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L1",
       "id": "services_erosion_yield_service_rationale_1",
-      "community": 175,
+      "community": 41,
       "norm_label": "erosion and staking yield service \u2014 config-driven artifact lifecycle."
     },
     {
@@ -1574,7 +1574,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L20",
       "id": "services_erosion_yield_service_rationale_20",
-      "community": 175,
+      "community": 41,
       "norm_label": "decrement artifact cycles after an expedition.      overdrive mode costs \u00d72 cycl"
     },
     {
@@ -1583,7 +1583,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L66",
       "id": "services_erosion_yield_service_rationale_66",
-      "community": 175,
+      "community": 41,
       "norm_label": "calculate pending staking yield for an artifact.      checks: artifact active an"
     },
     {
@@ -1592,7 +1592,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L116",
       "id": "services_erosion_yield_service_rationale_116",
-      "community": 175,
+      "community": 41,
       "norm_label": "recalibrate an artifact: reset cycles, deduct cost.      cost: xgen + resource f"
     },
     {
@@ -1601,7 +1601,7 @@
       "source_file": "api/services/erosion_yield_service.py",
       "source_location": "L174",
       "id": "services_erosion_yield_service_rationale_174",
-      "community": 175,
+      "community": 41,
       "norm_label": "map weekly expedition count to activity level."
     },
     {
@@ -1808,7 +1808,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L1",
       "id": "api_services_laboratory_service_py",
-      "community": 148,
+      "community": 58,
       "norm_label": "laboratory_service.py"
     },
     {
@@ -1817,7 +1817,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L17",
       "id": "services_laboratory_service_attempt_craft",
-      "community": 148,
+      "community": 58,
       "norm_label": "attempt_craft()"
     },
     {
@@ -1826,7 +1826,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L125",
       "id": "services_laboratory_service_generate_recipe_hash",
-      "community": 148,
+      "community": 58,
       "norm_label": "_generate_recipe_hash()"
     },
     {
@@ -1835,7 +1835,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L132",
       "id": "services_laboratory_service_has_inventory",
-      "community": 148,
+      "community": 58,
       "norm_label": "_has_inventory()"
     },
     {
@@ -1844,7 +1844,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L148",
       "id": "services_laboratory_service_consume_inventory",
-      "community": 148,
+      "community": 58,
       "norm_label": "_consume_inventory()"
     },
     {
@@ -1853,7 +1853,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L173",
       "id": "services_laboratory_service_add_inventory",
-      "community": 148,
+      "community": 58,
       "norm_label": "_add_inventory()"
     },
     {
@@ -1862,7 +1862,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L198",
       "id": "services_laboratory_service_find_artifact_by_hash",
-      "community": 148,
+      "community": 58,
       "norm_label": "_find_artifact_by_hash()"
     },
     {
@@ -1871,7 +1871,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L208",
       "id": "services_laboratory_service_get_recipe_info",
-      "community": 148,
+      "community": 58,
       "norm_label": "get_recipe_info()"
     },
     {
@@ -1880,7 +1880,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L1",
       "id": "services_laboratory_service_rationale_1",
-      "community": 148,
+      "community": 58,
       "norm_label": "laboratory service \u2014 config-driven artifact crafting."
     },
     {
@@ -1889,7 +1889,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L24",
       "id": "services_laboratory_service_rationale_24",
-      "community": 148,
+      "community": 58,
       "norm_label": "attempt to craft an artifact from essences.      validates: player owns essences"
     },
     {
@@ -1898,7 +1898,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L126",
       "id": "services_laboratory_service_rationale_126",
-      "community": 148,
+      "community": 58,
       "norm_label": "generate deterministic sha-256 hash from craft ingredients."
     },
     {
@@ -1907,7 +1907,7 @@
       "source_file": "api/services/laboratory_service.py",
       "source_location": "L212",
       "id": "services_laboratory_service_rationale_212",
-      "community": 148,
+      "community": 58,
       "norm_label": "return public recipe info by hash (for marketplace)."
     },
     {
@@ -2006,7 +2006,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L1",
       "id": "api_services_overdrive_service_py",
-      "community": 229,
+      "community": 27,
       "norm_label": "overdrive_service.py"
     },
     {
@@ -2015,7 +2015,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L11",
       "id": "services_overdrive_service_calculate_overdrive_result",
-      "community": 229,
+      "community": 27,
       "norm_label": "calculate_overdrive_result()"
     },
     {
@@ -2024,7 +2024,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L64",
       "id": "services_overdrive_service_roll_essence_drop",
-      "community": 229,
+      "community": 27,
       "norm_label": "roll_essence_drop()"
     },
     {
@@ -2033,7 +2033,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L1",
       "id": "services_overdrive_service_rationale_1",
-      "community": 229,
+      "community": 27,
       "norm_label": "overdrive service \u2014 config-driven risk/reward calculations."
     },
     {
@@ -2042,7 +2042,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L17",
       "id": "services_overdrive_service_rationale_17",
-      "community": 229,
+      "community": 27,
       "norm_label": "calculate the result of an expedition with overdrive modifiers.      reads multi"
     },
     {
@@ -2051,7 +2051,7 @@
       "source_file": "api/services/overdrive_service.py",
       "source_location": "L70",
       "id": "services_overdrive_service_rationale_70",
-      "community": 229,
+      "community": 27,
       "norm_label": "determine if an essence drops based on mode and anti-farm limits.      args:"
     },
     {
@@ -2060,7 +2060,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L1",
       "id": "api_services_ship_service_py",
-      "community": 180,
+      "community": 38,
       "norm_label": "ship_service.py"
     },
     {
@@ -2069,7 +2069,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L16",
       "id": "services_ship_service_repair_ship",
-      "community": 180,
+      "community": 38,
       "norm_label": "repair_ship()"
     },
     {
@@ -2078,7 +2078,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L119",
       "id": "services_ship_service_get_ship_repair_info",
-      "community": 180,
+      "community": 38,
       "norm_label": "get_ship_repair_info()"
     },
     {
@@ -2087,7 +2087,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L1",
       "id": "services_ship_service_rationale_1",
-      "community": 180,
+      "community": 38,
       "norm_label": "ship service \u2014 repair, stability, and ship lifecycle management."
     },
     {
@@ -2096,7 +2096,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L21",
       "id": "services_ship_service_rationale_21",
-      "community": 180,
+      "community": 38,
       "norm_label": "repair a ship using tier-matching repair materials.      calculates required mat"
     },
     {
@@ -2105,7 +2105,7 @@
       "source_file": "api/services/ship_service.py",
       "source_location": "L124",
       "id": "services_ship_service_rationale_124",
-      "community": 180,
+      "community": 38,
       "norm_label": "get repair info for a ship: current stability, required mats, owned mats."
     },
     {
@@ -3671,7 +3671,7 @@
       "source_file": "config/essences.json",
       "source_location": "L1",
       "id": "config_essences_json",
-      "community": 114,
+      "community": 101,
       "norm_label": "essences.json"
     },
     {
@@ -3698,7 +3698,7 @@
       "source_file": "config/essences.json",
       "source_location": "L4",
       "id": "config_essences_essence_t1_blue_tape_name",
-      "community": 149,
+      "community": 144,
       "norm_label": "name"
     },
     {
@@ -3779,7 +3779,7 @@
       "source_file": "config/essences.json",
       "source_location": "L9",
       "id": "config_essences_description_ru",
-      "community": 221,
+      "community": 9,
       "norm_label": "ru"
     },
     {
@@ -3788,7 +3788,7 @@
       "source_file": "config/essences.json",
       "source_location": "L9",
       "id": "config_essences_description_en",
-      "community": 221,
+      "community": 9,
       "norm_label": "en"
     },
     {
@@ -3797,7 +3797,7 @@
       "source_file": "config/essences.json",
       "source_location": "L9",
       "id": "config_essences_description_la",
-      "community": 221,
+      "community": 9,
       "norm_label": "la"
     },
     {
@@ -3824,7 +3824,7 @@
       "source_file": "config/essences.json",
       "source_location": "L12",
       "id": "config_essences_essence_t1_blue_tape_lore",
-      "community": 144,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -3887,7 +3887,7 @@
       "source_file": "config/essences.json",
       "source_location": "L17",
       "id": "config_essences_essence_t1_compressed_luck_name",
-      "community": 149,
+      "community": 222,
       "norm_label": "name"
     },
     {
@@ -3959,7 +3959,7 @@
       "source_file": "config/essences.json",
       "source_location": "L25",
       "id": "config_essences_essence_t1_compressed_luck_lore",
-      "community": 222,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -3995,7 +3995,7 @@
       "source_file": "config/essences.json",
       "source_location": "L30",
       "id": "config_essences_essence_t1_warp_clip_name",
-      "community": 149,
+      "community": 177,
       "norm_label": "name"
     },
     {
@@ -4067,7 +4067,7 @@
       "source_file": "config/essences.json",
       "source_location": "L38",
       "id": "config_essences_essence_t1_warp_clip_lore",
-      "community": 177,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4103,7 +4103,7 @@
       "source_file": "config/essences.json",
       "source_location": "L43",
       "id": "config_essences_essence_t1_frozen_embarrassment_name",
-      "community": 149,
+      "community": 176,
       "norm_label": "name"
     },
     {
@@ -4175,7 +4175,7 @@
       "source_file": "config/essences.json",
       "source_location": "L51",
       "id": "config_essences_essence_t1_frozen_embarrassment_lore",
-      "community": 176,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4211,7 +4211,7 @@
       "source_file": "config/essences.json",
       "source_location": "L56",
       "id": "config_essences_essence_t1_dead_battery_name",
-      "community": 149,
+      "community": 174,
       "norm_label": "name"
     },
     {
@@ -4283,7 +4283,7 @@
       "source_file": "config/essences.json",
       "source_location": "L64",
       "id": "config_essences_essence_t1_dead_battery_lore",
-      "community": 174,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4319,7 +4319,7 @@
       "source_file": "config/essences.json",
       "source_location": "L69",
       "id": "config_essences_essence_t2_custom_rivets_name",
-      "community": 149,
+      "community": 223,
       "norm_label": "name"
     },
     {
@@ -4391,7 +4391,7 @@
       "source_file": "config/essences.json",
       "source_location": "L77",
       "id": "config_essences_essence_t2_custom_rivets_lore",
-      "community": 223,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4427,7 +4427,7 @@
       "source_file": "config/essences.json",
       "source_location": "L82",
       "id": "config_essences_essence_t2_liquid_methane_name",
-      "community": 149,
+      "community": 224,
       "norm_label": "name"
     },
     {
@@ -4499,7 +4499,7 @@
       "source_file": "config/essences.json",
       "source_location": "L90",
       "id": "config_essences_essence_t2_liquid_methane_lore",
-      "community": 224,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4535,7 +4535,7 @@
       "source_file": "config/essences.json",
       "source_location": "L95",
       "id": "config_essences_essence_t2_singularity_button_name",
-      "community": 149,
+      "community": 182,
       "norm_label": "name"
     },
     {
@@ -4607,7 +4607,7 @@
       "source_file": "config/essences.json",
       "source_location": "L103",
       "id": "config_essences_essence_t2_singularity_button_lore",
-      "community": 182,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4643,7 +4643,7 @@
       "source_file": "config/essences.json",
       "source_location": "L108",
       "id": "config_essences_essence_t2_gaze_reflector_name",
-      "community": 149,
+      "community": 181,
       "norm_label": "name"
     },
     {
@@ -4715,7 +4715,7 @@
       "source_file": "config/essences.json",
       "source_location": "L116",
       "id": "config_essences_essence_t2_gaze_reflector_lore",
-      "community": 181,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4751,7 +4751,7 @@
       "source_file": "config/essences.json",
       "source_location": "L121",
       "id": "config_essences_essence_t2_quick_no_lubricant_name",
-      "community": 149,
+      "community": 225,
       "norm_label": "name"
     },
     {
@@ -4823,7 +4823,7 @@
       "source_file": "config/essences.json",
       "source_location": "L129",
       "id": "config_essences_essence_t2_quick_no_lubricant_lore",
-      "community": 225,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4859,7 +4859,7 @@
       "source_file": "config/essences.json",
       "source_location": "L134",
       "id": "config_essences_essence_t3_paradox_dust_name",
-      "community": 149,
+      "community": 203,
       "norm_label": "name"
     },
     {
@@ -4931,7 +4931,7 @@
       "source_file": "config/essences.json",
       "source_location": "L142",
       "id": "config_essences_essence_t3_paradox_dust_lore",
-      "community": 203,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -4967,7 +4967,7 @@
       "source_file": "config/essences.json",
       "source_location": "L147",
       "id": "config_essences_essence_t3_logic_valve_name",
-      "community": 149,
+      "community": 202,
       "norm_label": "name"
     },
     {
@@ -5039,7 +5039,7 @@
       "source_file": "config/essences.json",
       "source_location": "L155",
       "id": "config_essences_essence_t3_logic_valve_lore",
-      "community": 202,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5120,7 +5120,7 @@
       "source_file": "config/essences.json",
       "source_location": "L165",
       "id": "config_essences_essence_t3_chrome_nostalgia_description",
-      "community": 184,
+      "community": 9,
       "norm_label": "description"
     },
     {
@@ -5228,7 +5228,7 @@
       "source_file": "config/essences.json",
       "source_location": "L178",
       "id": "config_essences_essence_t3_quantum_stabilizer_description",
-      "community": 221,
+      "community": 204,
       "norm_label": "description"
     },
     {
@@ -5291,7 +5291,7 @@
       "source_file": "config/essences.json",
       "source_location": "L186",
       "id": "config_essences_essence_t3_bergamot_crystal_name",
-      "community": 149,
+      "community": 226,
       "norm_label": "name"
     },
     {
@@ -5363,7 +5363,7 @@
       "source_file": "config/essences.json",
       "source_location": "L194",
       "id": "config_essences_essence_t3_bergamot_crystal_lore",
-      "community": 226,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5444,7 +5444,7 @@
       "source_file": "config/essences.json",
       "source_location": "L204",
       "id": "config_essences_essence_t4_ether_condensate_description",
-      "community": 212,
+      "community": 9,
       "norm_label": "description"
     },
     {
@@ -5507,7 +5507,7 @@
       "source_file": "config/essences.json",
       "source_location": "L212",
       "id": "config_essences_essence_t4_fractal_grandeur_name",
-      "community": 149,
+      "community": 215,
       "norm_label": "name"
     },
     {
@@ -5579,7 +5579,7 @@
       "source_file": "config/essences.json",
       "source_location": "L220",
       "id": "config_essences_essence_t4_fractal_grandeur_lore",
-      "community": 215,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5615,7 +5615,7 @@
       "source_file": "config/essences.json",
       "source_location": "L225",
       "id": "config_essences_essence_t4_deal_shards_name",
-      "community": 149,
+      "community": 208,
       "norm_label": "name"
     },
     {
@@ -5687,7 +5687,7 @@
       "source_file": "config/essences.json",
       "source_location": "L233",
       "id": "config_essences_essence_t4_deal_shards_lore",
-      "community": 208,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5723,7 +5723,7 @@
       "source_file": "config/essences.json",
       "source_location": "L238",
       "id": "config_essences_essence_t4_possibility_condensate_name",
-      "community": 149,
+      "community": 216,
       "norm_label": "name"
     },
     {
@@ -5795,7 +5795,7 @@
       "source_file": "config/essences.json",
       "source_location": "L246",
       "id": "config_essences_essence_t4_possibility_condensate_lore",
-      "community": 216,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5831,7 +5831,7 @@
       "source_file": "config/essences.json",
       "source_location": "L251",
       "id": "config_essences_essence_t4_reality_core_name",
-      "community": 149,
+      "community": 217,
       "norm_label": "name"
     },
     {
@@ -5903,7 +5903,7 @@
       "source_file": "config/essences.json",
       "source_location": "L259",
       "id": "config_essences_essence_t4_reality_core_lore",
-      "community": 217,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -5939,7 +5939,7 @@
       "source_file": "config/essences.json",
       "source_location": "L264",
       "id": "config_essences_essence_t5_bug_report_name",
-      "community": 149,
+      "community": 219,
       "norm_label": "name"
     },
     {
@@ -6011,7 +6011,7 @@
       "source_file": "config/essences.json",
       "source_location": "L272",
       "id": "config_essences_essence_t5_bug_report_lore",
-      "community": 219,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -6047,7 +6047,7 @@
       "source_file": "config/essences.json",
       "source_location": "L277",
       "id": "config_essences_essence_t5_demiurge_ink_name",
-      "community": 149,
+      "community": 220,
       "norm_label": "name"
     },
     {
@@ -6119,7 +6119,7 @@
       "source_file": "config/essences.json",
       "source_location": "L285",
       "id": "config_essences_essence_t5_demiurge_ink_lore",
-      "community": 220,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -6155,7 +6155,7 @@
       "source_file": "config/essences.json",
       "source_location": "L290",
       "id": "config_essences_essence_t5_absolute_zero_name",
-      "community": 149,
+      "community": 218,
       "norm_label": "name"
     },
     {
@@ -6227,7 +6227,7 @@
       "source_file": "config/essences.json",
       "source_location": "L298",
       "id": "config_essences_essence_t5_absolute_zero_lore",
-      "community": 218,
+      "community": 33,
       "norm_label": "lore"
     },
     {
@@ -6263,7 +6263,7 @@
       "source_file": "config/essences.json",
       "source_location": "L303",
       "id": "config_essences_essence_t5_holy_spoon_name",
-      "community": 149,
+      "community": 221,
       "norm_label": "name"
     },
     {
@@ -7046,7 +7046,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L2",
       "id": "config_fuels_fuel_t1_mangan_hydride",
-      "community": 70,
+      "community": 126,
       "norm_label": "fuel_t1_mangan_hydride"
     },
     {
@@ -7055,7 +7055,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L3",
       "id": "config_fuels_fuel_t1_mangan_hydride_name",
-      "community": 5,
+      "community": 126,
       "norm_label": "name"
     },
     {
@@ -7163,7 +7163,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L10",
       "id": "config_fuels_fuel_t1_mangan_hydride_image_path",
-      "community": 70,
+      "community": 126,
       "norm_label": "image_path"
     },
     {
@@ -7172,7 +7172,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L11",
       "id": "config_fuels_fuel_t1_mangan_hydride_tier",
-      "community": 70,
+      "community": 126,
       "norm_label": "tier"
     },
     {
@@ -7181,7 +7181,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L12",
       "id": "config_fuels_fuel_t1_mangan_hydride_slug",
-      "community": 70,
+      "community": 126,
       "norm_label": "slug"
     },
     {
@@ -7190,7 +7190,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L13",
       "id": "config_fuels_fuel_t1_mangan_hydride_rarity",
-      "community": 70,
+      "community": 126,
       "norm_label": "rarity"
     },
     {
@@ -7199,7 +7199,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L14",
       "id": "config_fuels_fuel_t1_mangan_hydride_type",
-      "community": 70,
+      "community": 126,
       "norm_label": "type"
     },
     {
@@ -7208,7 +7208,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L15",
       "id": "config_fuels_fuel_t1_mangan_hydride_icon_path",
-      "community": 70,
+      "community": 126,
       "norm_label": "icon_path"
     },
     {
@@ -7289,7 +7289,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L24",
       "id": "config_fuels_fuel_t2_methane_fraction_name",
-      "community": 5,
+      "community": 129,
       "norm_label": "name"
     },
     {
@@ -7397,7 +7397,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L45",
       "id": "config_fuels_fuel_t3_dark_matter_name",
-      "community": 5,
+      "community": 130,
       "norm_label": "name"
     },
     {
@@ -7505,7 +7505,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L66",
       "id": "config_fuels_fuel_t4_singularity_ether_name",
-      "community": 5,
+      "community": 134,
       "norm_label": "name"
     },
     {
@@ -7613,7 +7613,7 @@
       "source_file": "config/fuels.json",
       "source_location": "L87",
       "id": "config_fuels_fuel_t5_dark_energy_name",
-      "community": 5,
+      "community": 137,
       "norm_label": "name"
     },
     {
@@ -7712,7 +7712,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L1",
       "id": "config_galaxy_zones_json",
-      "community": 90,
+      "community": 75,
       "norm_label": "galaxy_zones.json"
     },
     {
@@ -7721,7 +7721,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L2",
       "id": "config_galaxy_zones_galaxy_zones",
-      "community": 90,
+      "community": 75,
       "norm_label": "galaxy_zones"
     },
     {
@@ -7739,7 +7739,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L4",
       "id": "config_galaxy_zones_zone_edge_common_sense_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -7748,7 +7748,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L5",
       "id": "config_galaxy_zones_name_ru",
-      "community": 143,
+      "community": 74,
       "norm_label": "ru"
     },
     {
@@ -7757,7 +7757,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L6",
       "id": "config_galaxy_zones_name_en",
-      "community": 143,
+      "community": 74,
       "norm_label": "en"
     },
     {
@@ -7766,7 +7766,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L7",
       "id": "config_galaxy_zones_name_la",
-      "community": 143,
+      "community": 74,
       "norm_label": "la"
     },
     {
@@ -7775,7 +7775,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L9",
       "id": "config_galaxy_zones_zone_edge_common_sense_description",
-      "community": 150,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -7784,7 +7784,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L10",
       "id": "config_galaxy_zones_description_ru",
-      "community": 74,
+      "community": 209,
       "norm_label": "ru"
     },
     {
@@ -7793,7 +7793,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L11",
       "id": "config_galaxy_zones_description_en",
-      "community": 74,
+      "community": 209,
       "norm_label": "en"
     },
     {
@@ -7802,7 +7802,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L12",
       "id": "config_galaxy_zones_description_la",
-      "community": 74,
+      "community": 209,
       "norm_label": "la"
     },
     {
@@ -7838,7 +7838,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L17",
       "id": "config_galaxy_zones_zone_edge_common_sense_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -7847,7 +7847,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L18",
       "id": "config_galaxy_zones_lore_ru",
-      "community": 75,
+      "community": 143,
       "norm_label": "ru"
     },
     {
@@ -7856,7 +7856,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L19",
       "id": "config_galaxy_zones_lore_en",
-      "community": 75,
+      "community": 143,
       "norm_label": "en"
     },
     {
@@ -7865,7 +7865,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L20",
       "id": "config_galaxy_zones_lore_la",
-      "community": 75,
+      "community": 143,
       "norm_label": "la"
     },
     {
@@ -7964,7 +7964,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L49",
       "id": "config_galaxy_zones_galaxy_zones_zone_appliance_graveyard",
-      "community": 74,
+      "community": 75,
       "norm_label": "zone_appliance_graveyard"
     },
     {
@@ -7973,7 +7973,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L50",
       "id": "config_galaxy_zones_zone_appliance_graveyard_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -7982,7 +7982,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L55",
       "id": "config_galaxy_zones_zone_appliance_graveyard_description",
-      "community": 74,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -7991,7 +7991,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L60",
       "id": "config_galaxy_zones_zone_appliance_graveyard_image_path",
-      "community": 74,
+      "community": 75,
       "norm_label": "image_path"
     },
     {
@@ -8000,7 +8000,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L61",
       "id": "config_galaxy_zones_zone_appliance_graveyard_slug",
-      "community": 74,
+      "community": 75,
       "norm_label": "slug"
     },
     {
@@ -8009,7 +8009,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L62",
       "id": "config_galaxy_zones_zone_appliance_graveyard_tier",
-      "community": 74,
+      "community": 75,
       "norm_label": "tier"
     },
     {
@@ -8018,7 +8018,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L63",
       "id": "config_galaxy_zones_zone_appliance_graveyard_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8027,7 +8027,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L68",
       "id": "config_galaxy_zones_zone_appliance_graveyard_drop_table",
-      "community": 74,
+      "community": 75,
       "norm_label": "drop_table"
     },
     {
@@ -8036,7 +8036,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L71",
       "id": "config_galaxy_zones_zone_appliance_graveyard_risk_pct",
-      "community": 74,
+      "community": 75,
       "norm_label": "risk_pct"
     },
     {
@@ -8045,7 +8045,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L72",
       "id": "config_galaxy_zones_zone_appliance_graveyard_rare_chance",
-      "community": 74,
+      "community": 75,
       "norm_label": "rare_chance"
     },
     {
@@ -8054,7 +8054,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L73",
       "id": "config_galaxy_zones_zone_appliance_graveyard_loot_table",
-      "community": 74,
+      "community": 75,
       "norm_label": "loot_table"
     },
     {
@@ -8081,7 +8081,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L96",
       "id": "config_galaxy_zones_zone_warm_tea_nebula_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8090,7 +8090,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L101",
       "id": "config_galaxy_zones_zone_warm_tea_nebula_description",
-      "community": 110,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8126,7 +8126,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L109",
       "id": "config_galaxy_zones_zone_warm_tea_nebula_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8189,7 +8189,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L142",
       "id": "config_galaxy_zones_zone_random_nuisances_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8198,7 +8198,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L147",
       "id": "config_galaxy_zones_zone_random_nuisances_description",
-      "community": 71,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8234,7 +8234,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L155",
       "id": "config_galaxy_zones_zone_random_nuisances_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8297,7 +8297,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L188",
       "id": "config_galaxy_zones_zone_refuel_station_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8306,7 +8306,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L193",
       "id": "config_galaxy_zones_zone_refuel_station_description",
-      "community": 90,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8342,7 +8342,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L201",
       "id": "config_galaxy_zones_zone_refuel_station_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8405,7 +8405,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L234",
       "id": "config_galaxy_zones_zone_syntax_error_nebula_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8414,7 +8414,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L239",
       "id": "config_galaxy_zones_zone_syntax_error_nebula_description",
-      "community": 210,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8450,7 +8450,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L247",
       "id": "config_galaxy_zones_zone_syntax_error_nebula_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8513,7 +8513,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L280",
       "id": "config_galaxy_zones_zone_lost_socks_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8522,7 +8522,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L285",
       "id": "config_galaxy_zones_zone_lost_socks_description",
-      "community": 207,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8558,7 +8558,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L293",
       "id": "config_galaxy_zones_zone_lost_socks_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8621,7 +8621,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L326",
       "id": "config_galaxy_zones_zone_eternal_waiting_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8630,7 +8630,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L331",
       "id": "config_galaxy_zones_zone_eternal_waiting_description",
-      "community": 205,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8666,7 +8666,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L339",
       "id": "config_galaxy_zones_zone_eternal_waiting_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8720,7 +8720,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L371",
       "id": "config_galaxy_zones_galaxy_zones_zone_quiet_horror",
-      "community": 209,
+      "community": 142,
       "norm_label": "zone_quiet_horror"
     },
     {
@@ -8729,7 +8729,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L372",
       "id": "config_galaxy_zones_zone_quiet_horror_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8747,7 +8747,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L382",
       "id": "config_galaxy_zones_zone_quiet_horror_image_path",
-      "community": 209,
+      "community": 142,
       "norm_label": "image_path"
     },
     {
@@ -8756,7 +8756,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L383",
       "id": "config_galaxy_zones_zone_quiet_horror_slug",
-      "community": 209,
+      "community": 142,
       "norm_label": "slug"
     },
     {
@@ -8765,7 +8765,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L384",
       "id": "config_galaxy_zones_zone_quiet_horror_tier",
-      "community": 209,
+      "community": 142,
       "norm_label": "tier"
     },
     {
@@ -8774,7 +8774,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L385",
       "id": "config_galaxy_zones_zone_quiet_horror_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8783,7 +8783,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L390",
       "id": "config_galaxy_zones_zone_quiet_horror_drop_table",
-      "community": 209,
+      "community": 142,
       "norm_label": "drop_table"
     },
     {
@@ -8792,7 +8792,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L393",
       "id": "config_galaxy_zones_zone_quiet_horror_risk_pct",
-      "community": 209,
+      "community": 142,
       "norm_label": "risk_pct"
     },
     {
@@ -8801,7 +8801,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L394",
       "id": "config_galaxy_zones_zone_quiet_horror_rare_chance",
-      "community": 209,
+      "community": 142,
       "norm_label": "rare_chance"
     },
     {
@@ -8810,7 +8810,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L395",
       "id": "config_galaxy_zones_zone_quiet_horror_loot_table",
-      "community": 209,
+      "community": 142,
       "norm_label": "loot_table"
     },
     {
@@ -8837,7 +8837,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L418",
       "id": "config_galaxy_zones_zone_echo_monday_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8846,7 +8846,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L423",
       "id": "config_galaxy_zones_zone_echo_monday_description",
-      "community": 145,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8882,7 +8882,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L431",
       "id": "config_galaxy_zones_zone_echo_monday_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8936,7 +8936,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L463",
       "id": "config_galaxy_zones_galaxy_zones_zone_singularity_credit",
-      "community": 214,
+      "community": 179,
       "norm_label": "zone_singularity_credit"
     },
     {
@@ -8945,7 +8945,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L464",
       "id": "config_galaxy_zones_zone_singularity_credit_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -8954,7 +8954,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L469",
       "id": "config_galaxy_zones_zone_singularity_credit_description",
-      "community": 214,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -8963,7 +8963,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L474",
       "id": "config_galaxy_zones_zone_singularity_credit_image_path",
-      "community": 214,
+      "community": 179,
       "norm_label": "image_path"
     },
     {
@@ -8972,7 +8972,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L475",
       "id": "config_galaxy_zones_zone_singularity_credit_slug",
-      "community": 214,
+      "community": 179,
       "norm_label": "slug"
     },
     {
@@ -8981,7 +8981,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L476",
       "id": "config_galaxy_zones_zone_singularity_credit_tier",
-      "community": 214,
+      "community": 179,
       "norm_label": "tier"
     },
     {
@@ -8990,7 +8990,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L477",
       "id": "config_galaxy_zones_zone_singularity_credit_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -8999,7 +8999,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L482",
       "id": "config_galaxy_zones_zone_singularity_credit_drop_table",
-      "community": 214,
+      "community": 179,
       "norm_label": "drop_table"
     },
     {
@@ -9008,7 +9008,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L485",
       "id": "config_galaxy_zones_zone_singularity_credit_risk_pct",
-      "community": 214,
+      "community": 179,
       "norm_label": "risk_pct"
     },
     {
@@ -9017,7 +9017,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L486",
       "id": "config_galaxy_zones_zone_singularity_credit_rare_chance",
-      "community": 214,
+      "community": 179,
       "norm_label": "rare_chance"
     },
     {
@@ -9026,7 +9026,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L487",
       "id": "config_galaxy_zones_zone_singularity_credit_loot_table",
-      "community": 214,
+      "community": 179,
       "norm_label": "loot_table"
     },
     {
@@ -9044,7 +9044,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L509",
       "id": "config_galaxy_zones_galaxy_zones_zone_schrodinger_paradox",
-      "community": 74,
+      "community": 51,
       "norm_label": "zone_schrodinger_paradox"
     },
     {
@@ -9053,7 +9053,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L510",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9062,7 +9062,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L515",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_description",
-      "community": 74,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9071,7 +9071,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L520",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_image_path",
-      "community": 74,
+      "community": 51,
       "norm_label": "image_path"
     },
     {
@@ -9080,7 +9080,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L521",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_slug",
-      "community": 74,
+      "community": 51,
       "norm_label": "slug"
     },
     {
@@ -9089,7 +9089,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L522",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_tier",
-      "community": 74,
+      "community": 51,
       "norm_label": "tier"
     },
     {
@@ -9098,7 +9098,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L523",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9107,7 +9107,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L528",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_drop_table",
-      "community": 74,
+      "community": 51,
       "norm_label": "drop_table"
     },
     {
@@ -9116,7 +9116,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L531",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_risk_pct",
-      "community": 74,
+      "community": 51,
       "norm_label": "risk_pct"
     },
     {
@@ -9125,7 +9125,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L532",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_rare_chance",
-      "community": 74,
+      "community": 51,
       "norm_label": "rare_chance"
     },
     {
@@ -9134,7 +9134,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L533",
       "id": "config_galaxy_zones_zone_schrodinger_paradox_loot_table",
-      "community": 74,
+      "community": 51,
       "norm_label": "loot_table"
     },
     {
@@ -9161,7 +9161,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L556",
       "id": "config_galaxy_zones_zone_library_errors_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9170,7 +9170,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L561",
       "id": "config_galaxy_zones_zone_library_errors_description",
-      "community": 213,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9206,7 +9206,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L569",
       "id": "config_galaxy_zones_zone_library_errors_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9269,7 +9269,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L602",
       "id": "config_galaxy_zones_zone_curved_memories_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9278,7 +9278,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L607",
       "id": "config_galaxy_zones_zone_curved_memories_description",
-      "community": 211,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9314,7 +9314,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L615",
       "id": "config_galaxy_zones_zone_curved_memories_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9368,7 +9368,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L647",
       "id": "config_galaxy_zones_galaxy_zones_zone_zero_meridian",
-      "community": 74,
+      "community": 180,
       "norm_label": "zone_zero_meridian"
     },
     {
@@ -9377,7 +9377,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L648",
       "id": "config_galaxy_zones_zone_zero_meridian_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9386,7 +9386,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L653",
       "id": "config_galaxy_zones_zone_zero_meridian_description",
-      "community": 74,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9395,7 +9395,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L658",
       "id": "config_galaxy_zones_zone_zero_meridian_image_path",
-      "community": 74,
+      "community": 180,
       "norm_label": "image_path"
     },
     {
@@ -9404,7 +9404,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L659",
       "id": "config_galaxy_zones_zone_zero_meridian_slug",
-      "community": 74,
+      "community": 180,
       "norm_label": "slug"
     },
     {
@@ -9413,7 +9413,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L660",
       "id": "config_galaxy_zones_zone_zero_meridian_tier",
-      "community": 74,
+      "community": 180,
       "norm_label": "tier"
     },
     {
@@ -9422,7 +9422,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L661",
       "id": "config_galaxy_zones_zone_zero_meridian_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9431,7 +9431,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L666",
       "id": "config_galaxy_zones_zone_zero_meridian_drop_table",
-      "community": 74,
+      "community": 180,
       "norm_label": "drop_table"
     },
     {
@@ -9440,7 +9440,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L669",
       "id": "config_galaxy_zones_zone_zero_meridian_risk_pct",
-      "community": 74,
+      "community": 180,
       "norm_label": "risk_pct"
     },
     {
@@ -9449,7 +9449,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L670",
       "id": "config_galaxy_zones_zone_zero_meridian_rare_chance",
-      "community": 74,
+      "community": 180,
       "norm_label": "rare_chance"
     },
     {
@@ -9458,7 +9458,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L671",
       "id": "config_galaxy_zones_zone_zero_meridian_loot_table",
-      "community": 74,
+      "community": 180,
       "norm_label": "loot_table"
     },
     {
@@ -9485,7 +9485,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L694",
       "id": "config_galaxy_zones_zone_absolute_status_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9494,7 +9494,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L699",
       "id": "config_galaxy_zones_zone_absolute_status_description",
-      "community": 59,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9530,7 +9530,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L707",
       "id": "config_galaxy_zones_zone_absolute_status_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9584,7 +9584,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L739",
       "id": "config_galaxy_zones_galaxy_zones_zone_singular_architects",
-      "community": 90,
+      "community": 80,
       "norm_label": "zone_singular_architects"
     },
     {
@@ -9593,7 +9593,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L740",
       "id": "config_galaxy_zones_zone_singular_architects_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9602,7 +9602,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L745",
       "id": "config_galaxy_zones_zone_singular_architects_description",
-      "community": 90,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9611,7 +9611,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L750",
       "id": "config_galaxy_zones_zone_singular_architects_image_path",
-      "community": 90,
+      "community": 80,
       "norm_label": "image_path"
     },
     {
@@ -9620,7 +9620,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L751",
       "id": "config_galaxy_zones_zone_singular_architects_slug",
-      "community": 90,
+      "community": 80,
       "norm_label": "slug"
     },
     {
@@ -9629,7 +9629,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L752",
       "id": "config_galaxy_zones_zone_singular_architects_tier",
-      "community": 90,
+      "community": 80,
       "norm_label": "tier"
     },
     {
@@ -9638,7 +9638,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L753",
       "id": "config_galaxy_zones_zone_singular_architects_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9647,7 +9647,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L758",
       "id": "config_galaxy_zones_zone_singular_architects_drop_table",
-      "community": 90,
+      "community": 80,
       "norm_label": "drop_table"
     },
     {
@@ -9656,7 +9656,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L761",
       "id": "config_galaxy_zones_zone_singular_architects_risk_pct",
-      "community": 90,
+      "community": 80,
       "norm_label": "risk_pct"
     },
     {
@@ -9665,7 +9665,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L762",
       "id": "config_galaxy_zones_zone_singular_architects_rare_chance",
-      "community": 90,
+      "community": 80,
       "norm_label": "rare_chance"
     },
     {
@@ -9674,7 +9674,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L763",
       "id": "config_galaxy_zones_zone_singular_architects_loot_table",
-      "community": 90,
+      "community": 80,
       "norm_label": "loot_table"
     },
     {
@@ -9701,7 +9701,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L786",
       "id": "config_galaxy_zones_zone_library_deals_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9710,7 +9710,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L791",
       "id": "config_galaxy_zones_zone_library_deals_description",
-      "community": 139,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9746,7 +9746,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L799",
       "id": "config_galaxy_zones_zone_library_deals_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9809,7 +9809,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L832",
       "id": "config_galaxy_zones_zone_pure_ether_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -9818,7 +9818,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L837",
       "id": "config_galaxy_zones_zone_pure_ether_description",
-      "community": 141,
+      "community": 209,
       "norm_label": "description"
     },
     {
@@ -9854,7 +9854,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L845",
       "id": "config_galaxy_zones_zone_pure_ether_lore",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore"
     },
     {
@@ -9908,7 +9908,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L877",
       "id": "config_galaxy_zones_galaxy_zones_zone_ego_olympus",
-      "community": 90,
+      "community": 75,
       "norm_label": "zone_ego_olympus"
     },
     {
@@ -9917,7 +9917,7 @@
       "source_file": "config/galaxy_zones.json",
       "source_location": "L878",
       "id": "config_galaxy_zones_zone_ego_olympus_name",
-      "community": 143,
+      "community": 74,
       "norm_label": "name"
     },
     {
@@ -12995,7 +12995,7 @@
       "source_file": "config/ships.json",
       "source_location": "L142",
       "id": "config_ships_hyperion",
-      "community": 53,
+      "community": 121,
       "norm_label": "hyperion"
     },
     {
@@ -13013,7 +13013,7 @@
       "source_file": "config/ships.json",
       "source_location": "L144",
       "id": "config_ships_hyperion_short_description",
-      "community": 53,
+      "community": 121,
       "norm_label": "short_description"
     },
     {
@@ -13031,7 +13031,7 @@
       "source_file": "config/ships.json",
       "source_location": "L154",
       "id": "config_ships_hyperion_image_path",
-      "community": 53,
+      "community": 121,
       "norm_label": "image_path"
     },
     {
@@ -13040,7 +13040,7 @@
       "source_file": "config/ships.json",
       "source_location": "L155",
       "id": "config_ships_hyperion_art_path",
-      "community": 53,
+      "community": 121,
       "norm_label": "art_path"
     },
     {
@@ -13049,7 +13049,7 @@
       "source_file": "config/ships.json",
       "source_location": "L156",
       "id": "config_ships_hyperion_tier",
-      "community": 53,
+      "community": 121,
       "norm_label": "tier"
     },
     {
@@ -13058,7 +13058,7 @@
       "source_file": "config/ships.json",
       "source_location": "L157",
       "id": "config_ships_hyperion_slug",
-      "community": 53,
+      "community": 121,
       "norm_label": "slug"
     },
     {
@@ -13067,7 +13067,7 @@
       "source_file": "config/ships.json",
       "source_location": "L158",
       "id": "config_ships_hyperion_is_nft",
-      "community": 53,
+      "community": 121,
       "norm_label": "is_nft"
     },
     {
@@ -13076,7 +13076,7 @@
       "source_file": "config/ships.json",
       "source_location": "L159",
       "id": "config_ships_hyperion_base_stability",
-      "community": 53,
+      "community": 121,
       "norm_label": "base_stability"
     },
     {
@@ -13085,7 +13085,7 @@
       "source_file": "config/ships.json",
       "source_location": "L160",
       "id": "config_ships_hyperion_expedition_slots",
-      "community": 53,
+      "community": 121,
       "norm_label": "expedition_slots"
     },
     {
@@ -14084,7 +14084,7 @@
       "source_file": "config/ships.json",
       "source_location": "L362",
       "id": "config_ships_eternity",
-      "community": 80,
+      "community": 53,
       "norm_label": "eternity"
     },
     {
@@ -14102,7 +14102,7 @@
       "source_file": "config/ships.json",
       "source_location": "L364",
       "id": "config_ships_eternity_short_description",
-      "community": 80,
+      "community": 53,
       "norm_label": "short_description"
     },
     {
@@ -14120,7 +14120,7 @@
       "source_file": "config/ships.json",
       "source_location": "L374",
       "id": "config_ships_eternity_image_path",
-      "community": 80,
+      "community": 53,
       "norm_label": "image_path"
     },
     {
@@ -14129,7 +14129,7 @@
       "source_file": "config/ships.json",
       "source_location": "L375",
       "id": "config_ships_eternity_art_path",
-      "community": 80,
+      "community": 53,
       "norm_label": "art_path"
     },
     {
@@ -14138,7 +14138,7 @@
       "source_file": "config/ships.json",
       "source_location": "L376",
       "id": "config_ships_eternity_tier",
-      "community": 80,
+      "community": 53,
       "norm_label": "tier"
     },
     {
@@ -14147,7 +14147,7 @@
       "source_file": "config/ships.json",
       "source_location": "L377",
       "id": "config_ships_eternity_slug",
-      "community": 80,
+      "community": 53,
       "norm_label": "slug"
     },
     {
@@ -14156,7 +14156,7 @@
       "source_file": "config/ships.json",
       "source_location": "L378",
       "id": "config_ships_eternity_is_nft",
-      "community": 80,
+      "community": 53,
       "norm_label": "is_nft"
     },
     {
@@ -14165,7 +14165,7 @@
       "source_file": "config/ships.json",
       "source_location": "L379",
       "id": "config_ships_eternity_base_stability",
-      "community": 80,
+      "community": 53,
       "norm_label": "base_stability"
     },
     {
@@ -14174,7 +14174,7 @@
       "source_file": "config/ships.json",
       "source_location": "L380",
       "id": "config_ships_eternity_expedition_slots",
-      "community": 80,
+      "community": 53,
       "norm_label": "expedition_slots"
     },
     {
@@ -14381,7 +14381,7 @@
       "source_file": "config/ships.json",
       "source_location": "L422",
       "id": "config_ships_infinity",
-      "community": 82,
+      "community": 53,
       "norm_label": "infinity"
     },
     {
@@ -14399,7 +14399,7 @@
       "source_file": "config/ships.json",
       "source_location": "L424",
       "id": "config_ships_infinity_short_description",
-      "community": 82,
+      "community": 53,
       "norm_label": "short_description"
     },
     {
@@ -14417,7 +14417,7 @@
       "source_file": "config/ships.json",
       "source_location": "L434",
       "id": "config_ships_infinity_image_path",
-      "community": 82,
+      "community": 53,
       "norm_label": "image_path"
     },
     {
@@ -14426,7 +14426,7 @@
       "source_file": "config/ships.json",
       "source_location": "L435",
       "id": "config_ships_infinity_art_path",
-      "community": 82,
+      "community": 53,
       "norm_label": "art_path"
     },
     {
@@ -14435,7 +14435,7 @@
       "source_file": "config/ships.json",
       "source_location": "L436",
       "id": "config_ships_infinity_tier",
-      "community": 82,
+      "community": 53,
       "norm_label": "tier"
     },
     {
@@ -14444,7 +14444,7 @@
       "source_file": "config/ships.json",
       "source_location": "L437",
       "id": "config_ships_infinity_slug",
-      "community": 82,
+      "community": 53,
       "norm_label": "slug"
     },
     {
@@ -14453,7 +14453,7 @@
       "source_file": "config/ships.json",
       "source_location": "L438",
       "id": "config_ships_infinity_is_nft",
-      "community": 82,
+      "community": 53,
       "norm_label": "is_nft"
     },
     {
@@ -14462,7 +14462,7 @@
       "source_file": "config/ships.json",
       "source_location": "L439",
       "id": "config_ships_infinity_base_stability",
-      "community": 82,
+      "community": 53,
       "norm_label": "base_stability"
     },
     {
@@ -14471,7 +14471,7 @@
       "source_file": "config/ships.json",
       "source_location": "L440",
       "id": "config_ships_infinity_expedition_slots",
-      "community": 82,
+      "community": 53,
       "norm_label": "expedition_slots"
     },
     {
@@ -14678,7 +14678,7 @@
       "source_file": "config/ships.json",
       "source_location": "L482",
       "id": "config_ships_chaos",
-      "community": 53,
+      "community": 82,
       "norm_label": "chaos"
     },
     {
@@ -14696,7 +14696,7 @@
       "source_file": "config/ships.json",
       "source_location": "L484",
       "id": "config_ships_chaos_short_description",
-      "community": 53,
+      "community": 82,
       "norm_label": "short_description"
     },
     {
@@ -14714,7 +14714,7 @@
       "source_file": "config/ships.json",
       "source_location": "L494",
       "id": "config_ships_chaos_image_path",
-      "community": 53,
+      "community": 82,
       "norm_label": "image_path"
     },
     {
@@ -14723,7 +14723,7 @@
       "source_file": "config/ships.json",
       "source_location": "L495",
       "id": "config_ships_chaos_art_path",
-      "community": 53,
+      "community": 82,
       "norm_label": "art_path"
     },
     {
@@ -14732,7 +14732,7 @@
       "source_file": "config/ships.json",
       "source_location": "L496",
       "id": "config_ships_chaos_tier",
-      "community": 53,
+      "community": 82,
       "norm_label": "tier"
     },
     {
@@ -14741,7 +14741,7 @@
       "source_file": "config/ships.json",
       "source_location": "L497",
       "id": "config_ships_chaos_slug",
-      "community": 53,
+      "community": 82,
       "norm_label": "slug"
     },
     {
@@ -14750,7 +14750,7 @@
       "source_file": "config/ships.json",
       "source_location": "L498",
       "id": "config_ships_chaos_is_nft",
-      "community": 53,
+      "community": 82,
       "norm_label": "is_nft"
     },
     {
@@ -14759,7 +14759,7 @@
       "source_file": "config/ships.json",
       "source_location": "L499",
       "id": "config_ships_chaos_base_stability",
-      "community": 53,
+      "community": 82,
       "norm_label": "base_stability"
     },
     {
@@ -14768,7 +14768,7 @@
       "source_file": "config/ships.json",
       "source_location": "L500",
       "id": "config_ships_chaos_expedition_slots",
-      "community": 53,
+      "community": 82,
       "norm_label": "expedition_slots"
     },
     {
@@ -15020,7 +15020,7 @@
       "source_file": "core/config_loader.py",
       "source_location": "L1",
       "id": "core_config_loader_py",
-      "community": 230,
+      "community": 41,
       "norm_label": "config_loader.py"
     },
     {
@@ -15038,7 +15038,7 @@
       "source_file": "core/config_loader.py",
       "source_location": "L44",
       "id": "core_config_loader_reload_config",
-      "community": 230,
+      "community": 41,
       "norm_label": "reload_config()"
     },
     {
@@ -15047,7 +15047,7 @@
       "source_file": "core/config_loader.py",
       "source_location": "L1",
       "id": "core_config_loader_rationale_1",
-      "community": 230,
+      "community": 41,
       "norm_label": "utility: load and cache game config json files."
     },
     {
@@ -15065,7 +15065,7 @@
       "source_file": "core/config_loader.py",
       "source_location": "L45",
       "id": "core_config_loader_rationale_45",
-      "community": 230,
+      "community": 41,
       "norm_label": "clear cached config(s) to force reload from disk.      args:         name: speci"
     },
     {
@@ -15137,7 +15137,7 @@
       "source_file": "core/config_models.py",
       "source_location": "L79",
       "id": "core_config_models_repaircostentry",
-      "community": 241,
+      "community": 2,
       "norm_label": "repaircostentry"
     },
     {
@@ -15173,7 +15173,7 @@
       "source_file": "core/config_models.py",
       "source_location": "L115",
       "id": "core_config_models_artifacterosionconfig",
-      "community": 2,
+      "community": 148,
       "norm_label": "artifacterosionconfig"
     },
     {
@@ -15506,7 +15506,7 @@
       "source_file": "core/config_models.py",
       "source_location": "L80",
       "id": "core_config_models_rationale_80",
-      "community": 241,
+      "community": 2,
       "norm_label": "\u0437\u0430\u043f\u0438\u0441\u044c \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u0438 \u0440\u0435\u043c\u043e\u043d\u0442\u0430 \u0438\u0437 config/repair_costs.json."
     },
     {
@@ -15542,7 +15542,7 @@
       "source_file": "core/config_models.py",
       "source_location": "L116",
       "id": "core_config_models_rationale_116",
-      "community": 2,
+      "community": 148,
       "norm_label": "\u043a\u043e\u043d\u0444\u0438\u0433 \u044d\u0440\u043e\u0437\u0438\u0438 \u0430\u0440\u0442\u0435\u0444\u0430\u043a\u0442\u043e\u0432 \u0438\u0437 config/artifact_erosion.json."
     },
     {
@@ -15893,7 +15893,7 @@
       "source_file": "core/models.py",
       "source_location": "L61",
       "id": "core_models_expedition",
-      "community": 29,
+      "community": 19,
       "norm_label": "expedition"
     },
     {
@@ -16761,6 +16761,24 @@
       "norm_label": "include"
     },
     {
+      "label": "vercel.json",
+      "file_type": "code",
+      "source_file": "frontend/vercel.json",
+      "source_location": "L1",
+      "id": "frontend_vercel_json",
+      "community": 175,
+      "norm_label": "vercel.json"
+    },
+    {
+      "label": "rewrites",
+      "file_type": "code",
+      "source_file": "frontend/vercel.json",
+      "source_location": "L2",
+      "id": "frontend_vercel_rewrites",
+      "community": 175,
+      "norm_label": "rewrites"
+    },
+    {
       "label": "vite.config.ts",
       "file_type": "code",
       "source_file": "frontend/vite.config.ts",
@@ -16892,7 +16910,7 @@
       "source_file": "frontend/src/main.tsx",
       "source_location": "L1",
       "id": "frontend_src_main_tsx",
-      "community": 9,
+      "community": 43,
       "norm_label": "main.tsx"
     },
     {
@@ -16901,7 +16919,7 @@
       "source_file": "frontend/src/main.tsx",
       "source_location": "L13",
       "id": "src_main_appinitializer",
-      "community": 9,
+      "community": 43,
       "norm_label": "appinitializer()"
     },
     {
@@ -17108,7 +17126,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_toast_tsx",
-      "community": 233,
+      "community": 25,
       "norm_label": "toast.tsx"
     },
     {
@@ -17117,7 +17135,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L4",
       "id": "components_toast_toasttype",
-      "community": 233,
+      "community": 25,
       "norm_label": "toasttype"
     },
     {
@@ -17126,7 +17144,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L6",
       "id": "components_toast_toast",
-      "community": 233,
+      "community": 25,
       "norm_label": "toast"
     },
     {
@@ -17135,7 +17153,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L12",
       "id": "components_toast_toast_colors",
-      "community": 233,
+      "community": 25,
       "norm_label": "toast_colors"
     },
     {
@@ -17144,7 +17162,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L20",
       "id": "components_toast_usetoast",
-      "community": 9,
+      "community": 43,
       "norm_label": "usetoast()"
     },
     {
@@ -17153,7 +17171,7 @@
       "source_file": "frontend/src/components/Toast.tsx",
       "source_location": "L38",
       "id": "components_toast_toastcontainer",
-      "community": 233,
+      "community": 25,
       "norm_label": "toastcontainer()"
     },
     {
@@ -17162,7 +17180,7 @@
       "source_file": "frontend/src/components/cards/ShipCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_cards_shipcard_tsx",
-      "community": 96,
+      "community": 8,
       "norm_label": "shipcard.tsx"
     },
     {
@@ -17171,7 +17189,7 @@
       "source_file": "frontend/src/components/cards/ShipCard.tsx",
       "source_location": "L7",
       "id": "cards_shipcard_shipcardprops",
-      "community": 96,
+      "community": 8,
       "norm_label": "shipcardprops"
     },
     {
@@ -17180,7 +17198,7 @@
       "source_file": "frontend/src/components/cards/ShipCard.tsx",
       "source_location": "L12",
       "id": "cards_shipcard_shipcard",
-      "community": 96,
+      "community": 8,
       "norm_label": "shipcard"
     },
     {
@@ -17189,7 +17207,7 @@
       "source_file": "frontend/src/components/cards/ZoneCard.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_cards_zonecard_tsx",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonecard.tsx"
     },
     {
@@ -17198,7 +17216,7 @@
       "source_file": "frontend/src/components/cards/ZoneCard.tsx",
       "source_location": "L6",
       "id": "cards_zonecard_zonecardprops",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonecardprops"
     },
     {
@@ -17207,7 +17225,7 @@
       "source_file": "frontend/src/components/cards/ZoneCard.tsx",
       "source_location": "L11",
       "id": "cards_zonecard_zonecard",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonecard"
     },
     {
@@ -17243,7 +17261,7 @@
       "source_file": "frontend/src/components/galaxy/index.ts",
       "source_location": "L1",
       "id": "frontend_src_components_galaxy_index_ts",
-      "community": 9,
+      "community": 233,
       "norm_label": "index.ts"
     },
     {
@@ -17531,7 +17549,7 @@
       "source_file": "frontend/src/components/hangar/BonusBadge.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_hangar_bonusbadge_tsx",
-      "community": 233,
+      "community": 3,
       "norm_label": "bonusbadge.tsx"
     },
     {
@@ -17540,7 +17558,7 @@
       "source_file": "frontend/src/components/hangar/BonusBadge.tsx",
       "source_location": "L3",
       "id": "hangar_bonusbadge_bonusbadgeprops",
-      "community": 233,
+      "community": 3,
       "norm_label": "bonusbadgeprops"
     },
     {
@@ -17549,7 +17567,7 @@
       "source_file": "frontend/src/components/hangar/BonusBadge.tsx",
       "source_location": "L8",
       "id": "hangar_bonusbadge_bonus_colors",
-      "community": 233,
+      "community": 3,
       "norm_label": "bonus_colors"
     },
     {
@@ -17558,7 +17576,7 @@
       "source_file": "frontend/src/components/hangar/BonusBadge.tsx",
       "source_location": "L17",
       "id": "hangar_bonusbadge_bonusbadge",
-      "community": 233,
+      "community": 3,
       "norm_label": "bonusbadge()"
     },
     {
@@ -17612,7 +17630,7 @@
       "source_file": "frontend/src/components/hangar/ResourceDetailModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_hangar_resourcedetailmodal_tsx",
-      "community": 233,
+      "community": 3,
       "norm_label": "resourcedetailmodal.tsx"
     },
     {
@@ -17621,7 +17639,7 @@
       "source_file": "frontend/src/components/hangar/ResourceDetailModal.tsx",
       "source_location": "L8",
       "id": "hangar_resourcedetailmodal_resourcedetailmodalprops",
-      "community": 233,
+      "community": 3,
       "norm_label": "resourcedetailmodalprops"
     },
     {
@@ -17630,7 +17648,7 @@
       "source_file": "frontend/src/components/hangar/ResourceDetailModal.tsx",
       "source_location": "L14",
       "id": "hangar_resourcedetailmodal_rarity_styles",
-      "community": 233,
+      "community": 3,
       "norm_label": "rarity_styles"
     },
     {
@@ -17639,7 +17657,7 @@
       "source_file": "frontend/src/components/hangar/ResourceDetailModal.tsx",
       "source_location": "L42",
       "id": "hangar_resourcedetailmodal_resourcedetailmodal",
-      "community": 233,
+      "community": 3,
       "norm_label": "resourcedetailmodal()"
     },
     {
@@ -17711,7 +17729,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_laboratory_discovererslist_tsx",
-      "community": 3,
+      "community": 214,
       "norm_label": "discovererslist.tsx"
     },
     {
@@ -17720,7 +17738,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L7",
       "id": "laboratory_discovererslist_discovererslistprops",
-      "community": 3,
+      "community": 214,
       "norm_label": "discovererslistprops"
     },
     {
@@ -17729,7 +17747,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L14",
       "id": "laboratory_discovererslist_sortmode",
-      "community": 3,
+      "community": 214,
       "norm_label": "sortmode"
     },
     {
@@ -17738,7 +17756,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L15",
       "id": "laboratory_discovererslist_filtermode",
-      "community": 3,
+      "community": 214,
       "norm_label": "filtermode"
     },
     {
@@ -17747,7 +17765,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L17",
       "id": "laboratory_discovererslist_rarity_order",
-      "community": 3,
+      "community": 214,
       "norm_label": "rarity_order"
     },
     {
@@ -17756,7 +17774,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L25",
       "id": "laboratory_discovererslist_rarity_styles",
-      "community": 3,
+      "community": 214,
       "norm_label": "rarity_styles"
     },
     {
@@ -17765,7 +17783,7 @@
       "source_file": "frontend/src/components/laboratory/DiscoverersList.tsx",
       "source_location": "L53",
       "id": "laboratory_discovererslist_discovererslist",
-      "community": 3,
+      "community": 214,
       "norm_label": "discovererslist()"
     },
     {
@@ -17774,7 +17792,7 @@
       "source_file": "frontend/src/components/laboratory/ResourceConverter.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_laboratory_resourceconverter_tsx",
-      "community": 9,
+      "community": 43,
       "norm_label": "resourceconverter.tsx"
     },
     {
@@ -17783,7 +17801,7 @@
       "source_file": "frontend/src/components/laboratory/ResourceConverter.tsx",
       "source_location": "L13",
       "id": "laboratory_resourceconverter_resourceconverterprops",
-      "community": 9,
+      "community": 43,
       "norm_label": "resourceconverterprops"
     },
     {
@@ -17792,7 +17810,7 @@
       "source_file": "frontend/src/components/laboratory/ResourceConverter.tsx",
       "source_location": "L18",
       "id": "laboratory_resourceconverter_resourceconverter",
-      "community": 9,
+      "community": 43,
       "norm_label": "resourceconverter()"
     },
     {
@@ -17889,7 +17907,7 @@
       "label": "RANKS",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L7",
+      "source_location": "L9",
       "id": "layout_topbar_ranks",
       "community": 42,
       "norm_label": "ranks"
@@ -17898,7 +17916,7 @@
       "label": "TIER_TO_RARITY",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "id": "layout_topbar_tier_to_rarity",
       "community": 42,
       "norm_label": "tier_to_rarity"
@@ -17907,7 +17925,7 @@
       "label": "MOCK_PLAYER",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L23",
+      "source_location": "L25",
       "id": "layout_topbar_mock_player",
       "community": 42,
       "norm_label": "mock_player"
@@ -17916,7 +17934,7 @@
       "label": "TopBarProps",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L31",
+      "source_location": "L33",
       "id": "layout_topbar_topbarprops",
       "community": 42,
       "norm_label": "topbarprops"
@@ -17925,7 +17943,7 @@
       "label": "hapticFeedback()",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L39",
+      "source_location": "L41",
       "id": "layout_topbar_hapticfeedback",
       "community": 42,
       "norm_label": "hapticfeedback()"
@@ -17934,7 +17952,7 @@
       "label": "TopBar",
       "file_type": "code",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
-      "source_location": "L60",
+      "source_location": "L62",
       "id": "layout_topbar_topbar",
       "community": 42,
       "norm_label": "topbar"
@@ -18008,7 +18026,7 @@
       "source_file": "frontend/src/components/modals/ZoneModal.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_modals_zonemodal_tsx",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonemodal.tsx"
     },
     {
@@ -18017,7 +18035,7 @@
       "source_file": "frontend/src/components/modals/ZoneModal.tsx",
       "source_location": "L6",
       "id": "modals_zonemodal_zonemodalprops",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonemodalprops"
     },
     {
@@ -18026,7 +18044,7 @@
       "source_file": "frontend/src/components/modals/ZoneModal.tsx",
       "source_location": "L12",
       "id": "modals_zonemodal_zonemodal",
-      "community": 96,
+      "community": 8,
       "norm_label": "zonemodal"
     },
     {
@@ -18053,7 +18071,7 @@
       "source_file": "frontend/src/hooks/useI18n.ts",
       "source_location": "L1",
       "id": "frontend_src_hooks_usei18n_ts",
-      "community": 96,
+      "community": 8,
       "norm_label": "usei18n.ts"
     },
     {
@@ -18062,8 +18080,35 @@
       "source_file": "frontend/src/hooks/useI18n.ts",
       "source_location": "L5",
       "id": "hooks_usei18n_usei18n",
-      "community": 9,
+      "community": 3,
       "norm_label": "usei18n()"
+    },
+    {
+      "label": "useXgenBalance.ts",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useXgenBalance.ts",
+      "source_location": "L1",
+      "id": "frontend_src_hooks_usexgenbalance_ts",
+      "community": 42,
+      "norm_label": "usexgenbalance.ts"
+    },
+    {
+      "label": "UseXgenBalanceResult",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useXgenBalance.ts",
+      "source_location": "L16",
+      "id": "hooks_usexgenbalance_usexgenbalanceresult",
+      "community": 42,
+      "norm_label": "usexgenbalanceresult"
+    },
+    {
+      "label": "useXgenBalance()",
+      "file_type": "code",
+      "source_file": "frontend/src/hooks/useXgenBalance.ts",
+      "source_location": "L22",
+      "id": "hooks_usexgenbalance_usexgenbalance",
+      "community": 42,
+      "norm_label": "usexgenbalance()"
     },
     {
       "label": "api-helpers.ts",
@@ -18224,7 +18269,7 @@
       "source_file": "frontend/src/lib/i18n.ts",
       "source_location": "L1",
       "id": "frontend_src_lib_i18n_ts",
-      "community": 96,
+      "community": 8,
       "norm_label": "i18n.ts"
     },
     {
@@ -18233,7 +18278,7 @@
       "source_file": "frontend/src/lib/i18n.ts",
       "source_location": "L1",
       "id": "lib_i18n_language",
-      "community": 96,
+      "community": 8,
       "norm_label": "language"
     },
     {
@@ -18242,7 +18287,7 @@
       "source_file": "frontend/src/lib/i18n.ts",
       "source_location": "L3",
       "id": "lib_i18n_translations",
-      "community": 96,
+      "community": 8,
       "norm_label": "translations"
     },
     {
@@ -18251,7 +18296,7 @@
       "source_file": "frontend/src/lib/i18n.ts",
       "source_location": "L311",
       "id": "lib_i18n_translationkey",
-      "community": 96,
+      "community": 8,
       "norm_label": "translationkey"
     },
     {
@@ -18395,7 +18440,7 @@
       "source_file": "frontend/src/pages/HangarPage.tsx",
       "source_location": "L1",
       "id": "frontend_src_pages_hangarpage_tsx",
-      "community": 233,
+      "community": 3,
       "norm_label": "hangarpage.tsx"
     },
     {
@@ -18404,7 +18449,7 @@
       "source_file": "frontend/src/pages/HangarPage.tsx",
       "source_location": "L16",
       "id": "pages_hangarpage_hangarpage",
-      "community": 9,
+      "community": 43,
       "norm_label": "hangarpage()"
     },
     {
@@ -18431,7 +18476,7 @@
       "source_file": "frontend/src/pages/LaboratoryPage.tsx",
       "source_location": "L25",
       "id": "pages_laboratorypage_laboratorypage",
-      "community": 9,
+      "community": 43,
       "norm_label": "laboratorypage()"
     },
     {
@@ -18440,7 +18485,7 @@
       "source_file": "frontend/src/pages/UniversePage.tsx",
       "source_location": "L1",
       "id": "frontend_src_pages_universepage_tsx",
-      "community": 9,
+      "community": 233,
       "norm_label": "universepage.tsx"
     },
     {
@@ -18449,7 +18494,7 @@
       "source_file": "frontend/src/pages/UniversePage.tsx",
       "source_location": "L17",
       "id": "pages_universepage_universepage",
-      "community": 9,
+      "community": 43,
       "norm_label": "universepage()"
     },
     {
@@ -18494,7 +18539,7 @@
       "source_file": "frontend/src/store/useConfigStore.ts",
       "source_location": "L18",
       "id": "store_useconfigstore_useconfigstore",
-      "community": 9,
+      "community": 43,
       "norm_label": "useconfigstore"
     },
     {
@@ -18557,7 +18602,7 @@
       "source_file": "frontend/src/store/usePlayerStore.ts",
       "source_location": "L82",
       "id": "store_useplayerstore_useplayerstore",
-      "community": 9,
+      "community": 43,
       "norm_label": "useplayerstore"
     },
     {
@@ -18611,7 +18656,7 @@
       "source_file": "frontend/src/types/index.ts",
       "source_location": "L45",
       "id": "types_index_galaxyzoneconfig",
-      "community": 96,
+      "community": 37,
       "norm_label": "galaxyzoneconfig"
     },
     {
@@ -18674,7 +18719,7 @@
       "source_file": "frontend/src/types/index.ts",
       "source_location": "L111",
       "id": "types_index_tier_to_rarity",
-      "community": 96,
+      "community": 8,
       "norm_label": "tier_to_rarity"
     },
     {
@@ -18719,7 +18764,7 @@
       "source_file": "frontend/src/types/index.ts",
       "source_location": "L153",
       "id": "types_index_resourceitem",
-      "community": 233,
+      "community": 3,
       "norm_label": "resourceitem"
     },
     {
@@ -18917,7 +18962,7 @@
       "source_file": "scripts/seed_dev_data.py",
       "source_location": "L50",
       "id": "scripts_seed_dev_data_ensure_inventory",
-      "community": 29,
+      "community": 38,
       "norm_label": "_ensure_inventory()"
     },
     {
@@ -18962,7 +19007,7 @@
       "source_file": "scripts/seed_dev_data.py",
       "source_location": "L56",
       "id": "scripts_seed_dev_data_rationale_56",
-      "community": 29,
+      "community": 38,
       "norm_label": "\u0433\u0430\u0440\u0430\u043d\u0442\u0438\u0440\u0443\u0435\u0442 \u043c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u0430 \u0432 \u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0435.      \u0435\u0441\u043b\u0438 \u0437\u0430\u043f\u0438\u0441\u0438 \u043d\u0435\u0442 \u2014"
     },
     {
@@ -19034,7 +19079,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L1",
       "id": "tests_conftest_py",
-      "community": 51,
+      "community": 20,
       "norm_label": "conftest.py"
     },
     {
@@ -19043,7 +19088,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L32",
       "id": "tests_conftest_setup_test_db",
-      "community": 51,
+      "community": 20,
       "norm_label": "setup_test_db()"
     },
     {
@@ -19052,7 +19097,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L42",
       "id": "tests_conftest_async_client",
-      "community": 51,
+      "community": 20,
       "norm_label": "async_client()"
     },
     {
@@ -19061,7 +19106,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L76",
       "id": "tests_conftest_mock_telegram_user",
-      "community": 51,
+      "community": 20,
       "norm_label": "mock_telegram_user()"
     },
     {
@@ -19070,7 +19115,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L88",
       "id": "tests_conftest_mock_ton_client",
-      "community": 51,
+      "community": 20,
       "norm_label": "mock_ton_client()"
     },
     {
@@ -19088,7 +19133,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L1",
       "id": "tests_conftest_rationale_1",
-      "community": 51,
+      "community": 20,
       "norm_label": "async fixtures \u0434\u043b\u044f \u0438\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0445 \u0438 unit-\u0442\u0435\u0441\u0442\u043e\u0432."
     },
     {
@@ -19097,7 +19142,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L33",
       "id": "tests_conftest_rationale_33",
-      "community": 51,
+      "community": 20,
       "norm_label": "\u0441\u043e\u0437\u0434\u0430\u0435\u0442 \u0442\u0430\u0431\u043b\u0438\u0446\u044b \u043e\u0434\u0438\u043d \u0440\u0430\u0437 \u043d\u0430 \u0432\u0441\u044e \u0441\u0435\u0441\u0441\u0438\u044e \u0442\u0435\u0441\u0442\u043e\u0432."
     },
     {
@@ -19106,7 +19151,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L43",
       "id": "tests_conftest_rationale_43",
-      "community": 51,
+      "community": 20,
       "norm_label": "async http-\u043a\u043b\u0438\u0435\u043d\u0442 \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f api \u044d\u043d\u0434\u043f\u043e\u0438\u043d\u0442\u043e\u0432."
     },
     {
@@ -19115,7 +19160,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L77",
       "id": "tests_conftest_rationale_77",
-      "community": 51,
+      "community": 20,
       "norm_label": "\u0433\u0435\u043d\u0435\u0440\u0438\u0440\u0443\u0435\u0442 \u043c\u043e\u043a\u043e\u0432\u044b\u0438 \u0437\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a x-telegram-user."
     },
     {
@@ -19124,7 +19169,7 @@
       "source_file": "tests/conftest.py",
       "source_location": "L89",
       "id": "tests_conftest_rationale_89",
-      "community": 51,
+      "community": 20,
       "norm_label": "\u043c\u043e\u043a\u0438\u0440\u0443\u0435\u0442 \u0432\u0441\u0435 \u0432\u044b\u0437\u043e\u0432\u044b \u043a ton \u0431\u043b\u043e\u043a\u0447\u0435\u0438\u043d\u0443."
     },
     {
@@ -19403,7 +19448,7 @@
       "source_file": "tests/unit/test_expedition_service.py",
       "source_location": "L28",
       "id": "unit_test_expedition_service_test_player",
-      "community": 20,
+      "community": 29,
       "norm_label": "test_player()"
     },
     {
@@ -19412,7 +19457,7 @@
       "source_file": "tests/unit/test_expedition_service.py",
       "source_location": "L44",
       "id": "unit_test_expedition_service_test_ship",
-      "community": 20,
+      "community": 29,
       "norm_label": "test_ship()"
     },
     {
@@ -19547,7 +19592,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L30",
       "id": "unit_test_laboratory_service_test_player",
-      "community": 58,
+      "community": 29,
       "norm_label": "test_player()"
     },
     {
@@ -19583,7 +19628,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L85",
       "id": "unit_test_laboratory_service_test_attempt_craft_first_craft_creates_artifact",
-      "community": 20,
+      "community": 58,
       "norm_label": "test_attempt_craft_first_craft_creates_artifact()"
     },
     {
@@ -19592,7 +19637,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L153",
       "id": "unit_test_laboratory_service_test_attempt_craft_duplicate_hash_returns_taken",
-      "community": 20,
+      "community": 58,
       "norm_label": "test_attempt_craft_duplicate_hash_returns_taken()"
     },
     {
@@ -19610,7 +19655,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L269",
       "id": "unit_test_laboratory_service_test_attempt_craft_validates_xgen_balance",
-      "community": 20,
+      "community": 58,
       "norm_label": "test_attempt_craft_validates_xgen_balance()"
     },
     {
@@ -19637,7 +19682,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L31",
       "id": "unit_test_laboratory_service_rationale_31",
-      "community": 58,
+      "community": 29,
       "norm_label": "\u0442\u0435\u0441\u0442\u043e\u0432\u044b\u0438 \u0438\u0433\u0440\u043e\u043a \u0441 \u0431\u0430\u043b\u0430\u043d\u0441\u043e\u043c."
     },
     {
@@ -19673,7 +19718,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L86",
       "id": "unit_test_laboratory_service_rationale_86",
-      "community": 20,
+      "community": 58,
       "norm_label": "\u043f\u0435\u0440\u0432\u044b\u0438 \u043a\u0440\u0430\u0444\u0442 \u0441 \u0443\u043d\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u043c \u0445\u044d\u0448\u0435\u043c \u0434\u043e\u043b\u0436\u0435\u043d \u0441\u043e\u0437\u0434\u0430\u0432\u0430\u0442\u044c \u0430\u0440\u0442\u0435\u0444\u0430\u043a\u0442."
     },
     {
@@ -19682,7 +19727,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L154",
       "id": "unit_test_laboratory_service_rationale_154",
-      "community": 20,
+      "community": 58,
       "norm_label": "\u0432\u0442\u043e\u0440\u043e\u0438 \u043a\u0440\u0430\u0444\u0442 \u0441 \u0442\u0435\u043c \u0436\u0435 \u0445\u044d\u0448\u0435\u043c \u0434\u043e\u043b\u0436\u0435\u043d \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0442\u044c status='taken'."
     },
     {
@@ -19700,7 +19745,7 @@
       "source_file": "tests/unit/test_laboratory_service.py",
       "source_location": "L270",
       "id": "unit_test_laboratory_service_rationale_270",
-      "community": 20,
+      "community": 58,
       "norm_label": "\u043a\u0440\u0430\u0444\u0442 \u0434\u043e\u043b\u0436\u0435\u043d \u043e\u0442\u043a\u043b\u043e\u043d\u044f\u0442\u044c \u043f\u0440\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0430\u0442\u043a\u0435 xgen."
     },
     {
@@ -20662,7 +20707,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L4",
-      "community": 149,
+      "community": 69,
       "norm_label": "name",
       "id": "config_essences_essence_t1_iron_name"
     },
@@ -20734,7 +20779,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L12",
-      "community": 69,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t1_iron_lore"
     },
@@ -20815,7 +20860,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L22",
-      "community": 102,
+      "community": 9,
       "norm_label": "description",
       "id": "config_essences_essence_t1_silicon_description"
     },
@@ -20878,7 +20923,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L30",
-      "community": 101,
+      "community": 149,
       "norm_label": "name",
       "id": "config_essences_essence_t1_carbon_name"
     },
@@ -20923,7 +20968,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L35",
-      "community": 221,
+      "community": 9,
       "norm_label": "description",
       "id": "config_essences_essence_t1_carbon_description"
     },
@@ -20986,7 +21031,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L43",
-      "community": 149,
+      "community": 104,
       "norm_label": "name",
       "id": "config_essences_essence_t2_plasma_name"
     },
@@ -21058,7 +21103,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L51",
-      "community": 104,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t2_plasma_lore"
     },
@@ -21139,7 +21184,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L61",
-      "community": 221,
+      "community": 105,
       "norm_label": "description",
       "id": "config_essences_essence_t2_titanium_description"
     },
@@ -21247,7 +21292,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L74",
-      "community": 103,
+      "community": 9,
       "norm_label": "description",
       "id": "config_essences_essence_t2_nebula_dust_description"
     },
@@ -21310,7 +21355,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L82",
-      "community": 149,
+      "community": 107,
       "norm_label": "name",
       "id": "config_essences_essence_t3_singularity_name"
     },
@@ -21382,7 +21427,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L90",
-      "community": 107,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t3_singularity_lore"
     },
@@ -21418,7 +21463,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L95",
-      "community": 149,
+      "community": 108,
       "norm_label": "name",
       "id": "config_essences_essence_t3_void_crystal_name"
     },
@@ -21490,7 +21535,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L103",
-      "community": 108,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t3_void_crystal_lore"
     },
@@ -21571,7 +21616,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L113",
-      "community": 221,
+      "community": 106,
       "norm_label": "description",
       "id": "config_essences_essence_t3_dark_flux_description"
     },
@@ -21679,7 +21724,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L126",
-      "community": 109,
+      "community": 9,
       "norm_label": "description",
       "id": "config_essences_essence_t4_antimatter_description"
     },
@@ -21787,7 +21832,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L139",
-      "community": 221,
+      "community": 34,
       "norm_label": "description",
       "id": "config_essences_essence_t4_chrono_shard_description"
     },
@@ -21895,7 +21940,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L152",
-      "community": 221,
+      "community": 111,
       "norm_label": "description",
       "id": "config_essences_essence_t4_stellar_core_description"
     },
@@ -21958,7 +22003,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L160",
-      "community": 149,
+      "community": 113,
       "norm_label": "name",
       "id": "config_essences_essence_t5_omega_name"
     },
@@ -22030,7 +22075,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L168",
-      "community": 113,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t5_omega_lore"
     },
@@ -22066,7 +22111,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L173",
-      "community": 149,
+      "community": 112,
       "norm_label": "name",
       "id": "config_essences_essence_t5_eternal_flame_name"
     },
@@ -22138,7 +22183,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L181",
-      "community": 112,
+      "community": 33,
       "norm_label": "lore",
       "id": "config_essences_essence_t5_eternal_flame_lore"
     },
@@ -22219,7 +22264,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L191",
-      "community": 221,
+      "community": 9,
       "norm_label": "description",
       "id": "config_essences_essence_t5_void_heart_description"
     },
@@ -22246,7 +22291,7 @@
       "file_type": "code",
       "source_file": "config/essences.json",
       "source_location": "L194",
-      "community": 33,
+      "community": 114,
       "norm_label": "lore",
       "id": "config_essences_essence_t5_void_heart_lore"
     },
@@ -22273,7 +22318,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L409",
-      "community": 143,
+      "community": 74,
       "norm_label": "name",
       "id": "config_galaxy_zones_zone_deep_rift_name"
     },
@@ -22282,7 +22327,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L410",
-      "community": 140,
+      "community": 209,
       "norm_label": "description",
       "id": "config_galaxy_zones_zone_deep_rift_description"
     },
@@ -22318,7 +22363,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L414",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore",
       "id": "config_galaxy_zones_zone_deep_rift_lore"
     },
@@ -22381,7 +22426,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L436",
-      "community": 143,
+      "community": 74,
       "norm_label": "name",
       "id": "config_galaxy_zones_zone_genesis_point_name"
     },
@@ -22390,7 +22435,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L437",
-      "community": 206,
+      "community": 209,
       "norm_label": "description",
       "id": "config_galaxy_zones_zone_genesis_point_description"
     },
@@ -22426,7 +22471,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L441",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore",
       "id": "config_galaxy_zones_zone_genesis_point_lore"
     },
@@ -22480,7 +22525,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L273",
-      "community": 74,
+      "community": 32,
       "norm_label": "zone_frontier",
       "id": "config_galaxy_zones_galaxy_zones_zone_frontier"
     },
@@ -22489,7 +22534,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L274",
-      "community": 143,
+      "community": 74,
       "norm_label": "name",
       "id": "config_galaxy_zones_zone_frontier_name"
     },
@@ -22498,7 +22543,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L275",
-      "community": 74,
+      "community": 209,
       "norm_label": "description",
       "id": "config_galaxy_zones_zone_frontier_description"
     },
@@ -22507,7 +22552,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L276",
-      "community": 74,
+      "community": 32,
       "norm_label": "image_path",
       "id": "config_galaxy_zones_zone_frontier_image_path"
     },
@@ -22516,7 +22561,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L277",
-      "community": 74,
+      "community": 32,
       "norm_label": "slug",
       "id": "config_galaxy_zones_zone_frontier_slug"
     },
@@ -22525,7 +22570,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L278",
-      "community": 74,
+      "community": 32,
       "norm_label": "tier",
       "id": "config_galaxy_zones_zone_frontier_tier"
     },
@@ -22534,7 +22579,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L279",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore",
       "id": "config_galaxy_zones_zone_frontier_lore"
     },
@@ -22543,7 +22588,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L284",
-      "community": 74,
+      "community": 32,
       "norm_label": "drop_table",
       "id": "config_galaxy_zones_zone_frontier_drop_table"
     },
@@ -22552,7 +22597,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L285",
-      "community": 74,
+      "community": 32,
       "norm_label": "risk_pct",
       "id": "config_galaxy_zones_zone_frontier_risk_pct"
     },
@@ -22561,7 +22606,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L286",
-      "community": 74,
+      "community": 32,
       "norm_label": "rare_chance",
       "id": "config_galaxy_zones_zone_frontier_rare_chance"
     },
@@ -22570,7 +22615,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L287",
-      "community": 74,
+      "community": 32,
       "norm_label": "loot_table",
       "id": "config_galaxy_zones_zone_frontier_loot_table"
     },
@@ -22588,7 +22633,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L138",
-      "community": 74,
+      "community": 75,
       "norm_label": "zone_nebula_belt",
       "id": "config_galaxy_zones_galaxy_zones_zone_nebula_belt"
     },
@@ -22597,7 +22642,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L139",
-      "community": 143,
+      "community": 74,
       "norm_label": "name",
       "id": "config_galaxy_zones_zone_nebula_belt_name"
     },
@@ -22606,7 +22651,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L140",
-      "community": 74,
+      "community": 209,
       "norm_label": "description",
       "id": "config_galaxy_zones_zone_nebula_belt_description"
     },
@@ -22615,7 +22660,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L141",
-      "community": 74,
+      "community": 75,
       "norm_label": "image_path",
       "id": "config_galaxy_zones_zone_nebula_belt_image_path"
     },
@@ -22624,7 +22669,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L142",
-      "community": 74,
+      "community": 75,
       "norm_label": "slug",
       "id": "config_galaxy_zones_zone_nebula_belt_slug"
     },
@@ -22633,7 +22678,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L143",
-      "community": 74,
+      "community": 75,
       "norm_label": "tier",
       "id": "config_galaxy_zones_zone_nebula_belt_tier"
     },
@@ -22642,7 +22687,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L144",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore",
       "id": "config_galaxy_zones_zone_nebula_belt_lore"
     },
@@ -22651,7 +22696,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L149",
-      "community": 74,
+      "community": 75,
       "norm_label": "drop_table",
       "id": "config_galaxy_zones_zone_nebula_belt_drop_table"
     },
@@ -22660,7 +22705,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L150",
-      "community": 74,
+      "community": 75,
       "norm_label": "risk_pct",
       "id": "config_galaxy_zones_zone_nebula_belt_risk_pct"
     },
@@ -22669,7 +22714,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L151",
-      "community": 74,
+      "community": 75,
       "norm_label": "rare_chance",
       "id": "config_galaxy_zones_zone_nebula_belt_rare_chance"
     },
@@ -22678,7 +22723,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L152",
-      "community": 74,
+      "community": 75,
       "norm_label": "loot_table",
       "id": "config_galaxy_zones_zone_nebula_belt_loot_table"
     },
@@ -22704,7 +22749,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L4",
-      "community": 143,
+      "community": 74,
       "norm_label": "name",
       "label": "name",
       "id": "config_galaxy_zones_zone_inner_rim_name"
@@ -22713,7 +22758,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L5",
-      "community": 178,
+      "community": 209,
       "norm_label": "description",
       "label": "description",
       "id": "config_galaxy_zones_zone_inner_rim_description"
@@ -22749,7 +22794,7 @@
       "file_type": "code",
       "source_file": "config/galaxy_zones.json",
       "source_location": "L9",
-      "community": 75,
+      "community": 143,
       "norm_label": "lore",
       "label": "lore",
       "id": "config_galaxy_zones_zone_inner_rim_lore"
@@ -22830,7 +22875,7 @@
       "file_type": "code",
       "source_file": "frontend/src/pages/UniversePage.tsx",
       "source_location": "L14",
-      "community": 9,
+      "community": 233,
       "norm_label": "universetabs",
       "label": "universeTabs",
       "id": "pages_universepage_universetabs"
@@ -22848,7 +22893,7 @@
       "file_type": "code",
       "source_file": "frontend/src/pages/HangarPage.tsx",
       "source_location": "L14",
-      "community": 233,
+      "community": 3,
       "norm_label": "hangartabs",
       "label": "hangarTabs",
       "id": "pages_hangarpage_hangartabs"
@@ -22902,7 +22947,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L66",
-      "community": 5,
+      "community": 133,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t4_null_element_name"
@@ -23001,7 +23046,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L45",
-      "community": 5,
+      "community": 131,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t3_helium_3_prime_name"
@@ -23100,7 +23145,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L69",
-      "community": 5,
+      "community": 128,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t5_singularity_ether_name"
@@ -23208,7 +23253,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L69",
-      "community": 5,
+      "community": 138,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t5_dark_matter_name"
@@ -23307,7 +23352,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L23",
-      "community": 126,
+      "community": 39,
       "norm_label": "fuel_t2_deuterium_x",
       "label": "fuel_t2_deuterium_x",
       "id": "config_fuels_fuel_t2_deuterium_x"
@@ -23316,7 +23361,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L24",
-      "community": 5,
+      "community": 39,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t2_deuterium_x_name"
@@ -23334,7 +23379,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L26",
-      "community": 126,
+      "community": 39,
       "norm_label": "image_path",
       "label": "image_path",
       "id": "config_fuels_fuel_t2_deuterium_x_image_path"
@@ -23343,7 +23388,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L27",
-      "community": 126,
+      "community": 39,
       "norm_label": "tier",
       "label": "tier",
       "id": "config_fuels_fuel_t2_deuterium_x_tier"
@@ -23352,7 +23397,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L28",
-      "community": 126,
+      "community": 39,
       "norm_label": "slug",
       "label": "slug",
       "id": "config_fuels_fuel_t2_deuterium_x_slug"
@@ -23361,7 +23406,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L29",
-      "community": 126,
+      "community": 39,
       "norm_label": "rarity",
       "label": "rarity",
       "id": "config_fuels_fuel_t2_deuterium_x_rarity"
@@ -23370,7 +23415,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L30",
-      "community": 126,
+      "community": 39,
       "norm_label": "type",
       "label": "type",
       "id": "config_fuels_fuel_t2_deuterium_x_type"
@@ -23379,7 +23424,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L31",
-      "community": 126,
+      "community": 39,
       "norm_label": "icon_path",
       "label": "icon_path",
       "id": "config_fuels_fuel_t2_deuterium_x_icon_path"
@@ -23415,7 +23460,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L72",
-      "community": 5,
+      "community": 136,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t5_chrono_catalyst_name"
@@ -23505,7 +23550,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L59",
-      "community": 179,
+      "community": 5,
       "norm_label": "fuel_t4_am_synthetics",
       "label": "fuel_t4_am_synthetics",
       "id": "config_fuels_fuel_t4_am_synthetics"
@@ -23532,7 +23577,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L62",
-      "community": 179,
+      "community": 5,
       "norm_label": "image_path",
       "label": "image_path",
       "id": "config_fuels_fuel_t4_am_synthetics_image_path"
@@ -23541,7 +23586,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L63",
-      "community": 179,
+      "community": 5,
       "norm_label": "tier",
       "label": "tier",
       "id": "config_fuels_fuel_t4_am_synthetics_tier"
@@ -23550,7 +23595,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L64",
-      "community": 179,
+      "community": 5,
       "norm_label": "slug",
       "label": "slug",
       "id": "config_fuels_fuel_t4_am_synthetics_slug"
@@ -23559,7 +23604,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L65",
-      "community": 179,
+      "community": 5,
       "norm_label": "rarity",
       "label": "rarity",
       "id": "config_fuels_fuel_t4_am_synthetics_rarity"
@@ -23568,7 +23613,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L66",
-      "community": 179,
+      "community": 5,
       "norm_label": "type",
       "label": "type",
       "id": "config_fuels_fuel_t4_am_synthetics_type"
@@ -23577,7 +23622,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L67",
-      "community": 179,
+      "community": 5,
       "norm_label": "icon_path",
       "label": "icon_path",
       "id": "config_fuels_fuel_t4_am_synthetics_icon_path"
@@ -23613,7 +23658,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L72",
-      "community": 5,
+      "community": 135,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t4_stellar_plasmoid_name"
@@ -23712,7 +23757,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L48",
-      "community": 5,
+      "community": 132,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t3_proto_matter_name"
@@ -23802,7 +23847,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L59",
-      "community": 142,
+      "community": 5,
       "norm_label": "fuel_t3_laserum_crystals",
       "label": "fuel_t3_laserum_crystals",
       "id": "config_fuels_fuel_t3_laserum_crystals"
@@ -23829,7 +23874,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L62",
-      "community": 142,
+      "community": 5,
       "norm_label": "image_path",
       "label": "image_path",
       "id": "config_fuels_fuel_t3_laserum_crystals_image_path"
@@ -23838,7 +23883,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L63",
-      "community": 142,
+      "community": 5,
       "norm_label": "tier",
       "label": "tier",
       "id": "config_fuels_fuel_t3_laserum_crystals_tier"
@@ -23847,7 +23892,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L64",
-      "community": 142,
+      "community": 5,
       "norm_label": "slug",
       "label": "slug",
       "id": "config_fuels_fuel_t3_laserum_crystals_slug"
@@ -23856,7 +23901,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L65",
-      "community": 142,
+      "community": 5,
       "norm_label": "rarity",
       "label": "rarity",
       "id": "config_fuels_fuel_t3_laserum_crystals_rarity"
@@ -23865,7 +23910,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L66",
-      "community": 142,
+      "community": 5,
       "norm_label": "type",
       "label": "type",
       "id": "config_fuels_fuel_t3_laserum_crystals_type"
@@ -23874,7 +23919,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L67",
-      "community": 142,
+      "community": 5,
       "norm_label": "icon_path",
       "label": "icon_path",
       "id": "config_fuels_fuel_t3_laserum_crystals_icon_path"
@@ -24009,7 +24054,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L48",
-      "community": 5,
+      "community": 127,
       "norm_label": "name",
       "label": "name",
       "id": "config_fuels_fuel_t2_quantum_gel_name"
@@ -24099,7 +24144,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L23",
-      "community": 39,
+      "community": 5,
       "norm_label": "fuel_t1_methane_fraction",
       "label": "fuel_t1_methane_fraction",
       "id": "config_fuels_fuel_t1_methane_fraction"
@@ -24126,7 +24171,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L26",
-      "community": 39,
+      "community": 5,
       "norm_label": "image_path",
       "label": "image_path",
       "id": "config_fuels_fuel_t1_methane_fraction_image_path"
@@ -24135,7 +24180,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L27",
-      "community": 39,
+      "community": 5,
       "norm_label": "tier",
       "label": "tier",
       "id": "config_fuels_fuel_t1_methane_fraction_tier"
@@ -24144,7 +24189,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L28",
-      "community": 39,
+      "community": 5,
       "norm_label": "slug",
       "label": "slug",
       "id": "config_fuels_fuel_t1_methane_fraction_slug"
@@ -24153,7 +24198,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L29",
-      "community": 39,
+      "community": 5,
       "norm_label": "rarity",
       "label": "rarity",
       "id": "config_fuels_fuel_t1_methane_fraction_rarity"
@@ -24162,7 +24207,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L30",
-      "community": 39,
+      "community": 5,
       "norm_label": "type",
       "label": "type",
       "id": "config_fuels_fuel_t1_methane_fraction_type"
@@ -24171,7 +24216,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L31",
-      "community": 39,
+      "community": 5,
       "norm_label": "icon_path",
       "label": "icon_path",
       "id": "config_fuels_fuel_t1_methane_fraction_icon_path"
@@ -24198,7 +24243,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L35",
-      "community": 121,
+      "community": 5,
       "norm_label": "fuel_t1_plasma_condensate",
       "label": "fuel_t1_plasma_condensate",
       "id": "config_fuels_fuel_t1_plasma_condensate"
@@ -24225,7 +24270,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L38",
-      "community": 121,
+      "community": 5,
       "norm_label": "image_path",
       "label": "image_path",
       "id": "config_fuels_fuel_t1_plasma_condensate_image_path"
@@ -24234,7 +24279,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L39",
-      "community": 121,
+      "community": 5,
       "norm_label": "tier",
       "label": "tier",
       "id": "config_fuels_fuel_t1_plasma_condensate_tier"
@@ -24243,7 +24288,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L40",
-      "community": 121,
+      "community": 5,
       "norm_label": "slug",
       "label": "slug",
       "id": "config_fuels_fuel_t1_plasma_condensate_slug"
@@ -24252,7 +24297,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L41",
-      "community": 121,
+      "community": 5,
       "norm_label": "rarity",
       "label": "rarity",
       "id": "config_fuels_fuel_t1_plasma_condensate_rarity"
@@ -24261,7 +24306,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L42",
-      "community": 121,
+      "community": 5,
       "norm_label": "type",
       "label": "type",
       "id": "config_fuels_fuel_t1_plasma_condensate_type"
@@ -24270,7 +24315,7 @@
       "file_type": "code",
       "source_file": "config/fuels.json",
       "source_location": "L43",
-      "community": 121,
+      "community": 5,
       "norm_label": "icon_path",
       "label": "icon_path",
       "id": "config_fuels_fuel_t1_plasma_condensate_icon_path"
@@ -58453,6 +58498,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/vercel.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_vercel_json",
+      "target": "frontend_vercel_rewrites"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/public/tonconnect-manifest.json",
       "source_location": "L2",
       "weight": 1.0,
@@ -58486,9 +58541,9 @@
       "source_file": "frontend/public/tonconnect-manifest.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_public_tonconnect_manifest_json",
-      "target": "public_tonconnect_manifest_icons",
-      "confidence_score": 1.0
+      "target": "public_tonconnect_manifest_icons"
     },
     {
       "relation": "contains",
@@ -61272,6 +61327,28 @@
       "target": "hooks_usei18n_usei18n"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/layout/TopBar.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_components_layout_topbar_tsx",
+      "target": "frontend_src_hooks_usexgenbalance_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/layout/TopBar.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_components_layout_topbar_tsx",
+      "target": "hooks_usexgenbalance_usexgenbalance",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/layout/TopBar.tsx",
@@ -61837,6 +61914,26 @@
       "weight": 1.0,
       "source": "hooks_usei18n_usei18n",
       "target": "pages_universepage_universepage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useXgenBalance.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_hooks_usexgenbalance_ts",
+      "target": "hooks_usexgenbalance_usexgenbalanceresult"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/hooks/useXgenBalance.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "frontend_src_hooks_usexgenbalance_ts",
+      "target": "hooks_usexgenbalance_usexgenbalance"
     },
     {
       "relation": "imports_from",
@@ -70592,5 +70689,6 @@
       "confidence_score": 0.75,
       "source_file": "frontend/src/pages/HangarPage.tsx"
     }
-  ]
+  ],
+  "built_at_commit": "3b17f181b0ba9a91b462b821f92192892cdacce8"
 }
