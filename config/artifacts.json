@@ -1,0 +1,135 @@
+{
+  "artifact_quantum_core": {
+    "slug": "artifact_quantum_core",
+    "name": { "ru": "Квантовое ядро", "en": "Quantum Core", "la": "Nucleus Quantum" },
+    "tier": 3,
+    "rarity": "rare",
+    "type": "artifact",
+    "description": { "ru": "Стабилизированное квантовое поле. Увеличивает добычу эссенции.", "en": "Stabilized quantum field. Increases essence yield.", "la": "Campus quantum stabilizatus." },
+    "art_path": "/assets/arts/quantum_core.png",
+    "lore": { "ru": "Создано в лаборатории коллапсара. Резонирует с квантовыми флуктуациями.", "en": "Forged in collapsar lab. Resonates with quantum fluctuations.", "la": "Fabricatum in laboratorio collapsaro." },
+    "bonus": {
+      "type": "expedition_yield",
+      "value": 15,
+      "display": { "ru": "+15% к добыче", "en": "+15% yield", "la": "+15% redditus" }
+    },
+    "crafting_recipe": ["essence_t2_plasma", "essence_t3_singularity", "essence_t1_iron"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_stellar_compass": {
+    "slug": "artifact_stellar_compass",
+    "name": { "ru": "Звёздный компас", "en": "Stellar Compass", "la": "Compassum Stellare" },
+    "tier": 2,
+    "rarity": "uncommon",
+    "type": "artifact",
+    "description": { "ru": "Указывает на богатые ресурсами зоны. Снижает риск навигации.", "en": "Points to resource-rich zones. Reduces navigation risk.", "la": "Indicat zonas opibus divites." },
+    "art_path": "/assets/arts/stellar_compass.png",
+    "lore": { "ru": "Калибруется по пульсарам. Никогда не ошибается.", "en": "Calibrated by pulsars. Never makes mistakes.", "la": "Calibratum per pulsares." },
+    "bonus": {
+      "type": "risk_reduction",
+      "value": 10,
+      "display": { "ru": "-10% к риску", "en": "-10% risk", "la": "-10% periculum" }
+    },
+    "crafting_recipe": ["essence_t1_silicon", "essence_t2_nebula_dust"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_void_shield": {
+    "slug": "artifact_void_shield",
+    "name": { "ru": "Щит пустоты", "en": "Void Shield", "la": "Scutum Vacui" },
+    "tier": 4,
+    "rarity": "epic",
+    "type": "artifact",
+    "description": { "ru": "Генератор защитного поля. Снижает шанс повреждения корабля.", "en": "Shield field generator. Reduces ship damage chance.", "la": "Generator campi protectivi." },
+    "art_path": "/assets/arts/void_shield.png",
+    "lore": { "ru": "Использует тёмную энергию для создания барьера. Не пробивается метеоритами.", "en": "Uses dark energy to create barrier. Impervious to meteorites.", "la": "Utitur energia obscura ad barrieram creandam." },
+    "bonus": {
+      "type": "damage_reduction",
+      "value": 25,
+      "display": { "ru": "-25% к повреждению", "en": "-25% damage", "la": "-25% damnum" }
+    },
+    "crafting_recipe": ["essence_t3_void_crystal", "essence_t4_antimatter", "essence_t2_titanium"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_chrono_accelerator": {
+    "slug": "artifact_chrono_accelerator",
+    "name": { "ru": "Хроно-ускоритель", "en": "Chrono Accelerator", "la": "Accelerator Chroni" },
+    "tier": 4,
+    "rarity": "epic",
+    "type": "artifact",
+    "description": { "ru": "Ускоряет время внутри корабля. Экспедиции проходят быстрее.", "en": "Accelerates time inside ship. Expeditions complete faster.", "la": "Accelerat tempus intra navem." },
+    "art_path": "/assets/arts/chrono_accelerator.png",
+    "lore": { "ru": "Работает на хроно-осколках. Время внутри корабля течёт в 2 раза быстрее.", "en": "Powered by chrono shards. Time inside ship flows 2x faster.", "la": "Alimentum fragmentis chroni." },
+    "bonus": {
+      "type": "expedition_speed",
+      "value": 20,
+      "display": { "ru": "+20% к скорости", "en": "+20% speed", "la": "+20% velocitas" }
+    },
+    "crafting_recipe": ["essence_t4_chrono_shard", "essence_t3_dark_flux", "essence_t2_plasma"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_omega_engine": {
+    "slug": "artifact_omega_engine",
+    "name": { "ru": "Двигатель Омега", "en": "Omega Engine", "la": "Motor Omega" },
+    "tier": 5,
+    "rarity": "legendary",
+    "type": "artifact",
+    "description": { "ru": "Двигатель на основе Омега-эссенции. Максимальная эффективность.", "en": "Engine based on Omega Essence. Maximum efficiency.", "la": "Motor basatus in Essentia Omega." },
+    "art_path": "/assets/arts/omega_engine.png",
+    "lore": { "ru": "Венец инженерной мысли. Позволяет достигать любых зон за считанные часы.", "en": "Pinnacle of engineering. Allows reaching any zone in hours.", "la": "Fastigium ingenii." },
+    "bonus": {
+      "type": "expedition_yield",
+      "value": 50,
+      "display": { "ru": "+50% к добыче", "en": "+50% yield", "la": "+50% redditus" }
+    },
+    "crafting_recipe": ["essence_t5_omega", "essence_t4_stellar_core", "essence_t3_singularity"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_eternal_lantern": {
+    "slug": "artifact_eternal_lantern",
+    "name": { "ru": "Вечный фонарь", "en": "Eternal Lantern", "la": "Lanterna Aeterna" },
+    "tier": 5,
+    "rarity": "legendary",
+    "type": "artifact",
+    "description": { "ru": "Светит Вечным Пламенем. Открывает скрытые ресурсы в зонах.", "en": "Shines with Eternal Flame. Reveals hidden resources in zones.", "la": "Lucet Flamma Aeterna." },
+    "art_path": "/assets/arts/eternal_lantern.png",
+    "lore": { "ru": "Позволяет видеть эссенцию, скрытую в астероидах. Увеличивает шанс редкой добычи.", "en": "Allows seeing essence hidden in asteroids. Increases rare loot chance.", "la": "Sinit videre essentiam absconditam in asteroidibus." },
+    "bonus": {
+      "type": "rare_chance",
+      "value": 30,
+      "display": { "ru": "+30% к редким", "en": "+30% rare chance", "la": "+30% casus rarus" }
+    },
+    "crafting_recipe": ["essence_t5_eternal_flame", "essence_t3_void_crystal", "essence_t2_nebula_dust"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  },
+  "artifact_singularity_anchor": {
+    "slug": "artifact_singularity_anchor",
+    "name": { "ru": "Якорь сингулярности", "en": "Singularity Anchor", "la": "Ancora Singularitatis" },
+    "tier": 5,
+    "rarity": "legendary",
+    "type": "artifact",
+    "description": { "ru": "Стабилизирует корабль вблизи чёрных дыр. Открывает зоны T5.", "en": "Stabilizes ship near black holes. Unlocks T5 zones.", "la": "Stabilizat navem prope foramina nigra." },
+    "art_path": "/assets/arts/singularity_anchor.png",
+    "lore": { "ru": "Единственный артефакт, позволяющий выжить в горизонте событий.", "en": "The only artifact allowing survival at the event horizon.", "la": "Unicus artifactus superviventiam ad limen eventus permittens." },
+    "bonus": {
+      "type": "t5_access",
+      "value": 100,
+      "display": { "ru": "Доступ к T5 зонам", "en": "T5 zone access", "la": "Accessus ad zonas T5" }
+    },
+    "crafting_recipe": ["essence_t5_void_heart", "essence_t5_omega", "essence_t4_antimatter"],
+    "is_discovered": false,
+    "discovered_by": [],
+    "discovered_at": null
+  }
+}

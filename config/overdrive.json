@@ -1,0 +1,31 @@
+{
+  "stable": {
+    "slug": "stable",
+    "loot_multiplier": 1.0,
+    "time_reduction_percent": 0,
+    "damage_chance_percent": 0,
+    "extra_fuel_required": 0,
+    "guaranteed_loot_percent": 100,
+    "essence_drop_multiplier": 1.0
+  },
+  "push": {
+    "slug": "push",
+    "loot_multiplier": 1.5,
+    "time_reduction_percent": 20,
+    "damage_chance_percent": 10,
+    "extra_fuel_required": 1,
+    "guaranteed_loot_percent": 80,
+    "essence_drop_multiplier": 1.5
+  },
+  "overdrive": {
+    "slug": "overdrive",
+    "loot_multiplier": 2.5,
+    "time_reduction_percent": 40,
+    "damage_chance_percent": 25,
+    "extra_fuel_required": 1,
+    "requires_insurance": true,
+    "guaranteed_loot_percent": 50,
+    "essence_drop_multiplier": 3.5,
+    "unlocks_tier_min": 4
+  }
+}

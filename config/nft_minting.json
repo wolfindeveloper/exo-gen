@@ -1,0 +1,19 @@
+{
+  "nft_minting": {
+    "fleet_nft": {
+      "min_tier": 4,
+      "royalty_percent": 3,
+      "standard": "TEP-62"
+    },
+    "artifact_nft": {
+      "unique_per_hash": true,
+      "royalty_percent": 3,
+      "standard": "TEP-62"
+    },
+    "pilot_sbt": {
+      "soulbound": true,
+      "transferable": false,
+      "standard": "TEP-62"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "marketplace_fee_percent": 5,
+  "burn_percent_of_fee": 10,
+  "ecosystem_percent_of_fee": 90,
+  "royalty_percent": 3,
+  "external_marketplace_url": "https://getgems.io",
+  "internal_p2p_enabled": false,
+  "allowed_tiers_for_trade": [4, 5],
+  "artifact_trade_enabled": true
+}

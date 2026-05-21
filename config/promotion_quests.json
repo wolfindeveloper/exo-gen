@@ -1,0 +1,16 @@
+{
+  "promotion_quests": {
+    "t1_to_t2": {
+      "slug": "t1_to_t2",
+      "required_expeditions": 20,
+      "required_xp": 2000,
+      "crate_slug": "promotion_crate_t2"
+    },
+    "t2_to_t3": {
+      "slug": "t2_to_t3",
+      "required_expeditions": 40,
+      "required_xp": 8000,
+      "crate_slug": "promotion_crate_t3"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "essence_drop": {
+    "stable": {
+      "base_chance_percent": 5,
+      "t4_unlocked": false,
+      "t5_unlocked": false
+    },
+    "push": {
+      "base_chance_percent": 10,
+      "t4_unlocked": false,
+      "t5_unlocked": false
+    },
+    "overdrive": {
+      "base_chance_percent": 25,
+      "multiplier": 3.5,
+      "t4_unlocked": true,
+      "t5_unlocked": true
+    },
+    "anti_farm": {
+      "max_essences_per_day": 50,
+      "cooldown_reset_hours": 24
+    }
+  }
+}

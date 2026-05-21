@@ -1,0 +1,97 @@
+{
+  "repair_matter_t1": {
+    "slug": "repair_matter_t1",
+    "name": { "ru": "Комплект «И так сойдет!»", "en": "\"Good Enough\" Kit", "la": "\"Sic Sufficit\" Kit" },
+    "short_description": { "ru": "Синяя Изолента и Маты", "en": "Blue Tape and Mats", "la": "Taenium Caeruleum et Mata" },
+    "description": {
+      "ru": "Универсальный набор для починки Stella и Orion. Состоит из рулона сверхпрочной космической изоленты, пачки канцелярских скрепок и краткого словаря экспрессивной навигаторской лексики. Удивительно, но после такого ремонта корабли часто летают лучше, чем новые.",
+      "en": "Universal repair kit for Stella and Orion. Contains a roll of ultra-strong cosmic duct tape, a pack of paper clips, and a brief dictionary of expressive navigator vocabulary. Surprisingly, ships often fly better than new after such repairs.",
+      "la": "Instrumentum universale pro reparandis Stella et Orion. Continet rotulum taenii cosmici firmissimi, fasciculum clavorum chartaceorum, et breve dictionarium vocabularii expressivi navigatoris. Mirabile, sed naves post talem reparationem saepe melius quam novae volant."
+    },
+    "icon_path": "/assets/icons/repair_t1.png",
+    "tier": 1,
+    "rarity": "common",
+    "repair_value": 5,
+    "lore": {
+      "ru": "Помятый чемоданчик, из которого торчит кусок сипплинга (провода) и синяя лента.",
+      "en": "A dented suitcase with a piece of cabling (wire) and blue tape sticking out.",
+      "la": "Valigia deformata, e qua fragmentum cabling (filum) et taenium caeruleum eminent."
+    }
+  },
+  "repair_matter_t2": {
+    "slug": "repair_matter_t2",
+    "name": { "ru": "Комплект «Гаражный Тюнинг»", "en": "\"Garage Tuning\" Kit", "la": "\"Tuning Garagii\" Kit" },
+    "short_description": { "ru": "Набор Кастомных Заклепок «Вторая Жизнь»", "en": "\"Second Life\" Custom Rivets", "la": "Clavi \"Secunda Vita\" Custom" },
+    "description": {
+      "ru": "Набор для кораблей, которые уже повидали жизнь. Включает в себя кувалду общего назначения, жидкие гвозди на основе метанового клея и набор кастомных панелей, снятых со старых стиральных машин. Позволяет залатать пробоину в Nomad так, чтобы из нее хотя бы не свистел вакуум.",
+      "en": "A kit for ships that have seen some life. Includes a general-purpose sledgehammer, liquid nails based on methane glue, and a set of custom panels salvaged from old washing machines. Allows you to patch a hole in a Nomad so that at least the vacuum doesn't whistle through it.",
+      "la": "Instrumentum pro navibus quae vitam viderunt. Continet malleum generalem, clavos liquidum ex glutino methanico, et setem pannorum custom ex vetulis lavatricis machinis salvatorum. Permittit foramen in Nomad ita obturare ut vacuum saltem non sibilet per id."
+    },
+    "icon_path": "/assets/icons/repair_t2.png",
+    "tier": 2,
+    "rarity": "uncommon",
+    "repair_value": 5,
+    "lore": {
+      "ru": "Ящик с ржавыми, но надежными инструментами и банкой шпатлевки.",
+      "en": "A crate with rusty but reliable tools and a can of putty.",
+      "la": "Cista cum instrumentis rubiginosis sed fidelibus et lata massae."
+    }
+  },
+  "repair_matter_t3": {
+    "slug": "repair_matter_t3",
+    "name": { "ru": "Комплект «Анти-Энтропия»", "en": "\"Anti-Entropy\" Kit", "la": "\"Anti-Entropia\" Kit" },
+    "short_description": { "ru": "Хромированные Заплатки «Пафосный Сварщик»", "en": "Chrome Patches \"Pathos Welder\"", "la": "Emendationes Chromatae \"Sarcinator Pathos\"" },
+    "description": {
+      "ru": "Сюда входят нано-гелевые пластины, которые приклеиваются к обшивке Chronos или Leviathan и делают вид, что никакого повреждения никогда не было (они просто убеждают атомы металла в том, что им показалось). Выглядит дорого, блестит на солнце, повышает эго пилота на 25%.",
+      "en": "Contains nano-gel plates that stick to the hull of a Chronos or Leviathan and pretend the damage never happened (they simply convince the metal atoms they were mistaken). Looks expensive, shines in the sun, boosts the pilot's ego by 25%.",
+      "la": "Continet laminas nano-gel quae ad carinam Chronos vel Leviathan adhaerent et faciunt ut damnum numquam accidisse videatur (atomis metalli simpliciter persuadent se erravisse). Speciose videtur, in sole lucet, ego pilotae 25% auget."
+    },
+    "icon_path": "/assets/icons/repair_t3.png",
+    "tier": 3,
+    "rarity": "rare",
+    "repair_value": 5,
+    "lore": {
+      "ru": "Сверкающий кейс из полированного хрома, внутри которого светятся лазерные паяльники.",
+      "en": "A sparkling case made of polished chrome, inside which laser soldering irons glow.",
+      "la": "Cista scintillans ex chromato polito, intra quam ferrumina laseria lucent."
+    }
+  },
+  "repair_matter_t4": {
+    "slug": "repair_matter_t4",
+    "name": { "ru": "Комплект «Перезапись Транзакции»", "en": "\"Transaction Rewrite\" Kit", "la": "\"Transcriptio Transactionis\" Kit" },
+    "short_description": { "ru": "Фрактальный Регенератор «Минт-Мастер»", "en": "Fractal Regenerator \"Mint-Master\"", "la": "Regenerator Fractalis \"Mint-Master\"" },
+    "description": {
+      "ru": "Поскольку Epic-корабли — это дорогие NFT, чинить их изолентой — преступление против искусства. Этот комплект запускает микро-дрон, который переписывает геометрический код поврежденного крыла, возвращая его к исходному блокчейн-состоянию. В процессе ремонта дрон тихонько играет расслабляющий лоу-фай.",
+      "en": "Since Epic ships are expensive NFTs, fixing them with tape is a crime against art. This kit launches a micro-drone that rewrites the geometric code of the damaged wing, returning it to its original blockchain state. During the repair, the drone quietly plays relaxing lo-fi.",
+      "la": "Cum naves Epicae sint NFT pretiosae, eas taenio reparare scelus contra artem est. Hoc instrumentum micro-drone emittit quae codem geometricum alae damnae rescribit, eam ad statum originalem blockchain rediens. Inter reparationem, drone leniter lo-fi relaxantem canit."
+    },
+    "icon_path": "/assets/icons/repair_t4.png",
+    "tier": 4,
+    "rarity": "epic",
+    "repair_value": 5,
+    "lore": {
+      "ru": "Ультратехнологичная капсула с летающими вокруг нее голографическими пикселями.",
+      "en": "An ultratechnological capsule with holographic pixels flying around it.",
+      "la": "Capsula ultratechnologica cum pixellis holographicis circum eam volitantibus."
+    }
+  },
+  "repair_matter_t5": {
+    "slug": "repair_matter_t5",
+    "name": { "ru": "Комплект «Перезагрузка Матрицы»", "en": "\"Matrix Reboot\" Kit", "la": "\"Rebootus Matricis\" Kit" },
+    "short_description": { "ru": "Квантовый Откат «Ctrl+Z»", "en": "Quantum Rollback \"Ctrl+Z\"", "la": "Revocatio Quantica \"Ctrl+Z\"" },
+    "description": {
+      "ru": "Предназначен для божественных сущностей вроде Genesis или Chaos. Этот ремкомплект не чинит корабль физически. Он просто откатывает локальное время вокруг корпуса на пять минут назад — в тот момент, когда вы еще не влетели на полной скорости в тот злосчастный квантовый шторм. Из побочных эффектов: пилот может на пару минут забыть собственное имя или начать говорить стихами.",
+      "en": "Intended for divine entities like Genesis or Chaos. This kit doesn't physically repair the ship. It simply rolls back local time around the hull by five minutes — to the moment before you flew at full speed into that ill-fated quantum storm. Side effects: the pilot might forget their own name for a couple of minutes or start speaking in verse.",
+      "la": "Destinatum pro entitatibus divinis sicut Genesis vel Chaos. Hoc instrumentum navem physicaliter non reparat. Tempus locale circa carinam simpliciter per quinque minuta retro volvit — ad momentum antequam plena velocitate in tempestatem quanticam infaustam volavisti. Effectus secundarii: pilota nomen proprium per pauca minuta oblivisci potest vel versibus loqui incipere."
+    },
+    "icon_path": "/assets/icons/repair_t5.png",
+    "tier": 5,
+    "rarity": "legendary",
+    "repair_value": 5,
+    "lore": {
+      "ru": "Светящийся песочный хронометр, внутри которого вместо песка пересыпаются бинарные коды и искры.",
+      "en": "A glowing sand chronometer, inside which binary codes and sparks pour instead of sand.",
+      "la": "Chronometrum arenaceum lucens, intra quod codices binarii et scintillae loco arenae defluunt."
+    }
+  }
+}

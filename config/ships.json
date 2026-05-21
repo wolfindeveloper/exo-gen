@@ -1,0 +1,502 @@
+{
+  "stella": {
+    "name": { "ru": "STELLA", "en": "STELLA", "la": "STELLA" },
+    "short_description": {
+      "ru": "Ну, Она Хотя бы Пытается",
+      "en": "Well, At Least It Tries",
+      "la": "Saltem Conatur"
+    },
+    "description": {
+      "ru": "Самый массовый корабль в известной Вселенной. Если бы «Стелла» была бытовым прибором, она была бы тостером, который искренне верит, что он — межгалактический крейсер. Дизайнеры придали ей форму треугольника просто потому, что это единственная геометрическая фигура, которую они смогли нарисовать после трех пинт пангаллактического грызлодера. При заправке Гидридом марганца она издает звук, удивительно похожий на вежливое покашливание британского дворецкого. Она невероятно послушна, в основном потому, что слишком пуглива, чтобы спорить с пилотом.",
+      "en": "The most mass-produced ship in the known Universe. If the Stella were a household appliance, it would be a toaster that genuinely believes it's an intergalactic cruiser. Designers gave it a triangular shape simply because that was the only geometric figure they could draw after three pints of pangalactic gargle-blaster. When fueled with Manganese Hydride, it makes a sound surprisingly similar to a British butler's polite cough. It's incredibly obedient — mostly because it's too timid to argue with the pilot.",
+      "la": "Navis frequentissime fabricata in universo cognito. Si Stella esset instrumentum domesticum, esset tostum quod vere credit se esse cruciatorum intergalacticum. Designatores ei formam triangularem dederunt quia sola figura geometrica erat quam post tres pintas gargle-blasteris pangalactici pingere poterant. Cum Hydrido Manganii alitur, sonum edit simillimum tussi politae buticularii Britannici. Oboediens est valde — praesertim quia nimis timida est ut cum pilota disputet."
+    },
+    "image_path": "/assets/ships/stella.png",
+    "art_path": "/assets/ships/stella.png",
+    "tier": 1,
+    "slug": "stella",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 1
+  },
+  "orion": {
+    "name": { "ru": "ORION", "en": "ORION", "la": "ORION" },
+    "short_description": {
+      "ru": "Слабоумие и Отвага",
+      "en": "Recklessness and Courage",
+      "la": "Temeritas et Fortitudo"
+    },
+    "description": {
+      "ru": "«Орион» спроектирован инженерами, которые явно куда-то очень сильно опаздывали. Его хищный матово-графитовый корпус как бы кричит: «Посмотрите, какой я опасный!», хотя на самом деле он просто хочет, чтобы его погладили по обшивке. У этого корабля тяжелый характер депрессивного подростка: он обожает влетать в самые глубокие аномалии, игнорируя датчики безопасности, просто чтобы посмотреть, «что из этого выйдет». Если вам скучно жить, «Орион» — ваш идеальный выбор.",
+      "en": "The Orion was designed by engineers who were clearly in a massive hurry. Its predatory matte-graphite hull screams 'Look how dangerous I am!' — though in reality it just wants someone to pet its plating. This ship has the temperament of a moody teenager: it loves diving into the deepest anomalies, ignoring safety sensors, just to see 'what happens.' If life is too boring for you, the Orion is your perfect choice.",
+      "la": "Orion ab ingeniariis conceptus est qui valde festinabant. Carina eius praedatoria graphitea matrica clamat 'Aspice quam periculosus sim!' — sed re vera tantum vult ut aliquis laminas eius palpabit. Haec navis ingenium habet adolescentis morosi: amat in altissimas anomalias irrumpere, sensores securitatis ignorans, tantum ut videat 'quid accidat.' Si vita tibi taediosa est, Orion electio perfecta est."
+    },
+    "image_path": "/assets/ships/orion.png",
+    "art_path": "/assets/ships/orion.png",
+    "tier": 1,
+    "slug": "orion",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 1
+  },
+  "aurora": {
+    "name": { "ru": "AURORA", "en": "AURORA", "la": "AURORA" },
+    "short_description": {
+      "ru": "Уютный Чемодан",
+      "en": "Cozy Suitcase",
+      "la": "Arcula Amoena"
+    },
+    "description": {
+      "ru": "Огромная, неповоротливая и подозрительно напоминающая гигантский космический утюг. Философия «Авроры» проста: если космос вокруг вас взрывается, схлопывается в черную дыру или просто ведет себя неприлично — заварите чаю. Внутри этого корабля всегда тихо, пахнет мятным печеньем и царит абсолютный покой, который не способен нарушить даже метеоритный дождь. Она не летит сквозь пространство — пространство, вздохнув, само уступает ей дорогу из вежливости.",
+      "en": "Huge, unwieldy, and suspiciously resembling a giant cosmic iron. Aurora's philosophy is simple: if space around you is exploding, collapsing into a black hole, or just behaving indecently — make some tea. Inside this ship it's always quiet, smells of mint cookies, and absolute peace reigns — not even a meteor shower can disturb it. It doesn't fly through space — space itself, with a sigh, politely steps aside.",
+      "la": "Ingens, ingrata et ferrum cosmicum giganteum valde similis. Philosophia Aurorae simplex est: si spatium circa te explodit, in foramen nigrum collabitur, vel se indecenter gerit — theam para. Intus haec navis semper quieta est, menthae placentas olet, et pax absoluta regnat — ne pluvia meteororum quidem eam perturbare potest. Non per spatium volat — spatium ipsum, suspirans, comiter viam ei dat."
+    },
+    "image_path": "/assets/ships/aurora.png",
+    "art_path": "/assets/ships/aurora.png",
+    "tier": 1,
+    "slug": "aurora",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 1
+  },
+  "vega": {
+    "name": { "ru": "VEGA", "en": "VEGA", "la": "VEGA" },
+    "short_description": {
+      "ru": "Где Я и Что Я Здесь Делаю?",
+      "en": "Where Am I and What Am I Doing Here?",
+      "la": "Ubi Sum et Quid Hic Facio?"
+    },
+    "description": {
+      "ru": "Из-за своей странной асимметричной формы «Вега» выглядит так, будто её собирали в темноте, перепутав инструкцию от шкафа из ИКЕА и чертежи квантового сканера. Она настолько малозаметна, что даже собственный бортовой компьютер иногда теряет её в пространстве и начинает паниковать. «Вега» обладает уникальной способностью находить чудеса и аномалии там, где их быть не должно, исключительно потому, что она постоянно путает «право» и «лево»",
+      "en": "Due to its strange asymmetrical shape, Vega looks like it was assembled in the dark, mixing up instructions for an IKEA shelf with blueprints for a quantum scanner. It is so inconspicuous that even its own onboard computer sometimes loses it in space and starts to panic. Vega has a unique ability to find wonders and anomalies where they shouldn't be, simply because it constantly confuses \"right\" and \"left\".",
+      "la": "Propter formam suam asymmetricam miram, Vega videtur quasi in tenebris collecta esset, instructiones plutei IKEA cum delineationibus scanneris quantici confundens. Tam inconspicua est ut etiam computatrum suum on-board eam interdum in spatio perdat et panicare incipiat. Vega habet facultatem unicam inveniendi miracula et anomalias ubi esse non debent, simpliciter quia \"dextrum\" et \"sinistrum\" perpetuo confundit."
+    },
+    "image_path": "/assets/ships/vega.png",
+    "art_path": "/assets/ships/vega.png",
+    "tier": 1,
+    "slug": "vega",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 1
+  },
+  "zenith": {
+    "name": { "ru": "ZENITH", "en": "ZENITH", "la": "ZENITH" },
+    "short_description": {
+      "ru": "Не Прыгай, Подушка Безопасности",
+      "en": "Don't Jump, Safety Airbag",
+      "la": "Noli Saltare, Securitas"
+    },
+    "description": {
+      "ru": "Монолитный кусок армированного графита, который по какому-то недоразумению снабдили двигателями. «Зенит» не обращает внимания на законы физики, гравитацию и здравый смысл. Если в него врезается астероид, астероид обычно извиняется и отлетает в сторону. Идеальный корабль для тех, кто не умеет парковаться, а также для тех, кто планирует пережить Конец Света, не вылезая из пижамы.",
+      "en": "A monolithic chunk of reinforced graphite that was somehow equipped with engines by a misunderstanding. Zenith ignores the laws of physics, gravity, and common sense. If an asteroid crashes into it, the asteroid usually apologizes and flies off to the side. The perfect ship for those who can't park, and for those planning to survive the Apocalypse without getting out of their pajamas.",
+      "la": "Monolithica frusta graphitis armatae quae quodam errore motoribus instructa est. Zenith leges physicae, gravitatem, et sensum communem ignorat. Si asteroides in eam incurrat, asteroides plerumque veniam petit et in latus avolat. Navis perfecta pro eis qui parcere nesciunt, et pro eis qui Apocalypsin sine pyjamatis exire cogitant."
+    },
+    "image_path": "/assets/ships/zenith.png",
+    "art_path": "/assets/ships/zenith.png",
+    "tier": 1,
+    "slug": "zenith",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 1
+  },
+  "eclipse": {
+    "name": { "ru": "ECLIPSE", "en": "ECLIPSE", "la": "ECLIPSE" },
+    "short_description": {
+      "ru": "Где-то Танцует Тень",
+      "en": "Somewhere a Shadow Dances",
+      "la": "Alicubi Umbra Saltat"
+    },
+    "description": {
+      "ru": "Дизайнеры «Eclipse» задались целью создать корабль, который поглощает 99% света, чтобы стать невидимым. Им это почти удалось, но они забыли про неоновые полоски, которые при заправке метаном горят так ярко, что корабль выглядит как диско-шар на похоронах. Зато он очень тихий. Настолько тихий, что бортовой компьютер иногда шепотом рассказывает вам неприличные анекдоты, чтобы вы не заснули. Идеально подходит для тех, кто хочет скрыться от кредиторов, но при этом стильно выглядеть на радарах.",
+      "en": "The Eclipse designers set out to create a ship that absorbs 99% of light to become invisible. They almost succeeded, but forgot about the neon strips that, when fueled with methane, glow so brightly the ship looks like a disco ball at a funeral. On the plus side, it's very quiet. So quiet that the onboard computer sometimes whispers dirty jokes to keep you from falling asleep. Perfect for those who want to hide from creditors while still looking stylish on radar.",
+      "la": "Designatores Eclipse navem creare voluerunt quae 99% lucis absorbeat ut invisibilis fiat. Paene successerunt, sed taenias neonitas obliti sunt quae, methano alitae, tam lucide ardent ut navis sicut pila discothecae in funere videatur. Sed valde quieta est. Tam quieta ut computatrum on-board interdum iocos obscuros susurret ne obdormiscas. Perfecta pro eis qui a creditoribus celari volunt sed in radar speciosi videri."
+    },
+    "image_path": "/assets/ships/eclipse.png",
+    "art_path": "/assets/ships/eclipse.png",
+    "tier": 2,
+    "slug": "eclipse",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 2
+  },
+  "vanguard": {
+    "name": { "ru": "VANGUARD", "en": "VANGUARD", "la": "VANGUARD" },
+    "short_description": {
+      "ru": "Я У мамы Инженер",
+      "en": "My Mom's Engineer",
+      "la": "Mater Ingeniaria"
+    },
+    "description": {
+      "ru": "Огромный, рубленый корпус «Авангарда» выглядит так, будто его собирали из деталей трех разных космических станций и одной старой стиральной машины, а затем покрасили в красный, потому что красный — это «быстро». Изначально он проектировался для тарана астероидов, но в итоге выяснилось, что он лучше всего работает как гигантский открывашка для консервных банок. Если вам нужно что-то протаранить, открыть или просто напугать до икоты пролетающий мимо дрон — это ваш выбор. Внутри пахнет озоном и отчаянием.",
+      "en": "The Vanguard's massive, angular hull looks like it was assembled from parts of three different space stations and an old washing machine, then painted red because red means 'fast.' Originally designed for ramming asteroids, it turned out to work best as a giant can opener. If you need to ram something, open it, or just scare a passing drone into hiccups — this is your choice. Inside, it smells of ozone and despair.",
+      "la": "Carina Vanguardiae ingens et angularis videtur quasi ex partibus trium stationum cosmicarum et una lavatrice veteri collecta esset, deinde rubro picta quia rubrum 'velox' significat. Initio ad asteroides percutiendos designata, melius ut aperilata gigantea functa est. Si aliquid percutere, aperire, vel drone transeuntem ad singultum terrere vis — haec electio tua est. Intus ozonum et desperationem olet."
+    },
+    "image_path": "/assets/ships/vanguard.png",
+    "art_path": "/assets/ships/vanguard.png",
+    "tier": 2,
+    "slug": "vanguard",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 2
+  },
+  "hyperion": {
+    "name": { "ru": "HYPERION", "en": "HYPERION", "la": "HYPERION" },
+    "short_description": {
+      "ru": "Слишком Умный для Своего Же Веса",
+      "en": "Too Smart for Its Own Weight",
+      "la": "Nimis Sapiens pro Pondere Suo"
+    },
+    "description": {
+      "ru": "Корабль, созданный для ученых, которые считают, что если прикрутить к корпусу больше колец и стабилизаторов, он полетит быстрее. Не полетел. Зато его бортовой ИИ настолько развит, что способен предсказать Конец Вселенной за 42 секунды до его начала, но не может запомнить, куда вы дели ключи от шлюза. «Hyperion» постоянно поправляет вашу грамматику, когда вы отдаете голосовые команды, и отказывается лететь в сектора, которые кажутся ему «эстетически несовершенными».",
+      "en": "A ship built for scientists who believe that bolting more rings and stabilizers to the hull will make it fly faster. It didn't. But its onboard AI is so advanced it can predict the End of the Universe 42 seconds before it begins, yet can't remember where you put the airlock keys. Hyperion constantly corrects your grammar when you give voice commands and refuses to fly to sectors it deems 'aesthetically imperfect.'",
+      "la": "Navis scientis facta qui credunt si plures anulos et stabilizatores carinae affigant, celerius volabit. Non volavit. Sed AI on-board tam provecta est ut Finem Universi 42 secundis ante initium praedicere possit, sed claves exclusae ubi posueris memorare non potest. Hyperion grammaticam tuam perpetuo corrigit cum mandata vocalia das, et in sectores quos 'aesthetice imperfectos' putat volare recusat."
+    },
+    "image_path": "/assets/ships/hyperion.png",
+    "art_path": "/assets/ships/hyperion.png",
+    "tier": 2,
+    "slug": "hyperion",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 2
+  },
+  "phoenix": {
+    "name": { "ru": "PHOENIX", "en": "PHOENIX", "la": "PHOENIX" },
+    "short_description": {
+      "ru": "Второй Шанс для Металлолома",
+      "en": "Second Chance for Scrap Metal",
+      "la": "Alterum Opportunitas pro Ferri Rudere"
+    },
+    "description": {
+      "ru": "Легенда гласит, что корпуса этой серии собираются из переплавленных микроволновок, которые не пережили гарантийный срок. Навигаторы любят его за уникальную способность возвращаться из экспедиций целым, даже если по пути он потерял оба двигателя, навигационную панель и половину экипажа (что, к сожалению, случается часто). «Феникс» выглядит благородно-золотистым, но если присмотреться, это просто хорошо отполированная ржавчина. Корабль-оптимист, который верит в вас больше, чем вы в него.",
+      "en": "Legend has it that the hulls of this series are assembled from melted-down microwaves that didn't survive the warranty period. Navigators love it for its unique ability to return from expeditions intact, even if it lost both engines, the navigation panel, and half the crew along the way (which, unfortunately, happens often). Phoenix looks nobly golden, but if you look closer, it's just well-polished rust. An optimistic ship that believes in you more than you believe in it.",
+      "la": "Fabula fert carinas huius seriei ex micro-undis conflatis quae tempus garantiae non superaverunt collectas esse. Navigatores eam amant pro facultate unica ex expeditionibus integram reverti, etiam si ambos motores, tabulam navigationis, et dimidium crew via amisit (quod, heu, saepe accidit). Phoenix aurea nobilis videtur, sed si propius aspicias, tantum ferrugo bene polita est. Navis optimistica quae in te magis credit quam tu in eam."
+    },
+    "image_path": "/assets/ships/phoenix.png",
+    "art_path": "/assets/ships/phoenix.png",
+    "tier": 2,
+    "slug": "phoenix",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 2
+  },
+  "nomad": {
+    "name": { "ru": "NOMAD", "en": "NOMAD", "la": "NOMAD" },
+    "short_description": {
+      "ru": "Где Упал, Там и Станция",
+      "en": "Where It Fell, There's a Station",
+      "la": "Ubi Cecidit, Ibi Statum"
+    },
+    "description": {
+      "ru": "Легендарное судно, созданное бродячими инженерами, которые считали, что провода снаружи — это «стильно», а симметрия — это «для слабаков». «Nomad» спроектирован так, чтобы работать автономно месяцами, в основном потому, что его никто не хочет пускать ни на одну приличную космическую станцию. Внутри он больше похож на геймерскую комнату в общежитии, чем на мостик корабля. Говорят, что если вы долго летите на «Номаде», он начинает говорить с вами голосом вашей бывшей.",
+      "en": "A legendary vessel built by wandering engineers who thought exposed wires were 'stylish' and symmetry was 'for the weak.' Nomad is designed to operate autonomously for months, mostly because no decent space station wants to let it dock. Inside, it looks more like a gamer's dorm room than a ship's bridge. They say if you fly long enough on the Nomad, it starts talking to you in your ex's voice.",
+      "la": "Navis legenda ab ingeniariis errantibus facta qui putabant fila externa 'speciosa' esse et symmetriam 'pro infirmis.' Nomad ita designata est ut mensibus autonome operetur, praesertim quia nulla statio cosmica decens eam recipere vult. Intus magis sicut cubiculum lusoris in collegio videtur quam pons navis. Aiunt si diu in Nomade volas, incipit tecum voce ex tua loqui."
+    },
+    "image_path": "/assets/ships/nomad.png",
+    "art_path": "/assets/ships/nomad.png",
+    "tier": 2,
+    "slug": "nomad",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 2
+  },
+  "nemesis": {
+    "name": { "ru": "NEMESIS", "en": "NEMESIS", "la": "NEMESIS" },
+    "short_description": {
+      "ru": "Гнев, Покрашенный в Черный",
+      "en": "Wrath, Painted Black",
+      "la": "Ira, Atrata"
+    },
+    "description": {
+      "ru": "Когда конструкторы создавали «Немезиду», они явно переслушали межгалактического тяжелого рока. Этот корпус создавался с одной целью — выглядеть настолько монументально и зловеще, чтобы пространство вокруг него само начинало паниковать. В буклете написано, что его обтекатели выкованы в сердце умирающей квази-звезды, хотя, скорее всего, их просто покрасили очень дорогой матовой краской. При заправке Тёмной материей корабль издает низкий, пафосный гул, от которого у пилота начинают чесаться зубы, а бортовой ИИ цитирует древние эпические поэмы о конце всего сущего. Настоящий титан для тех, у кого комплексы по поводу размеров своего стартового тостера.",
+      "en": "When the designers created Nemesis, they had clearly been listening to too much intergalactic heavy metal. This hull was built with one purpose — to look so monumental and menacing that space itself starts to panic around it. The brochure says its fairings were forged in the heart of a dying quasi-star, though most likely they were just painted with very expensive matte paint. When fueled with Dark Matter, the ship emits a low, pompous hum that makes the pilot's teeth itch, while the onboard AI quotes ancient epic poems about the end of all things. A true titan for those who have insecurities about the size of their starting toaster.",
+      "la": "Cum designatores Nemesim crearent, nimis metallum galaxicum grave audierant. Haec carina uno proposito facta est — tam monumentaliter et minaciter videri ut spatium ipsum circa eam panicare incipiat. Libellus dicit carinas eius in corde quasi-stellae morientis forgiatas esse, quamquam verisimilius tantum pictura matrica valde cara pictae sunt. Cum Materia Obscura alitur, navis humilem pomposumque sonum edit a quo dentes pilotae pruriunt, dum AI on-board poemata epica antiqua de fine omnium rerum citat. Titanus verus pro eis qui complexus de magnitudine tostatoris sui initialis habent."
+    },
+    "image_path": "/assets/ships/nemesis.png",
+    "art_path": "/assets/ships/nemesis.png",
+    "tier": 3,
+    "slug": "nemesis",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 3
+  },
+  "chronos": {
+    "name": { "ru": "CHRONOS", "en": "CHRONOS", "la": "CHRONOS" },
+    "short_description": {
+      "ru": "Вчера Было Завтра",
+      "en": "Yesterday Was Tomorrow",
+      "la": "Heri Fuit Cras"
+    },
+    "description": {
+      "ru": "Высокомерный кусок хромированного совершенства. Создатели «Кроноса» заигрывали с тахионными полями, поэтому корабль постоянно существует сразу в трех временах: он выглядит так, будто его построят только через сто лет, летит там, где он был пять секунд назад, а его пепельница уже заполнена окурками из следующего вторника. Лететь на нем — это значит постоянно испытывать дежавю и слушать, как бортовой компьютер спорит сам с собой о том, наступил уже четверг или еще нет. Невероятно эпичное судно, которое может случайно обогнать собственный лазерный луч, если пилот слишком сильно нажмет на педаль.",
+      "en": "An arrogant piece of chromed perfection. The creators of Chronos played with tachyon fields, so the ship constantly exists in three times at once: it looks like it will be built in a hundred years, flies where it was five seconds ago, and its ashtray is already full of cigarette butts from next Tuesday. Flying it means constantly experiencing déjà vu and listening to the onboard computer argue with itself about whether it's already Thursday or not. An incredibly epic vessel that might accidentally outrun its own laser beam if the pilot presses the pedal too hard.",
+      "la": "Superbum frustum chromati perfectionis. Creatores Chronos cum campis tachyonis luserunt, itaque navis perpetuo in tribus temporibus simul existit: videtur quasi post centum annos aedificabitur, volat ubi ante quinque secundis erat, et cinerarium eius iam plenum est cigarettis ex proximo Martis. In ea volare est perpetuo deia vu experiri et audire computatrum on-board secum disputans an iam Iovis sit an nondum. Navis incredibiliter epica quae fortuitum radium laseris suum praeterire potest si pilota pedalem nimis fortiter premit."
+    },
+    "image_path": "/assets/ships/chronos.png",
+    "art_path": "/assets/ships/chronos.png",
+    "tier": 3,
+    "slug": "chronos",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 3
+  },
+  "leviathan": {
+    "name": { "ru": "LEVIATHAN", "en": "LEVIATHAN", "la": "LEVIATHAN" },
+    "short_description": {
+      "ru": "Абсолютное Доминирование",
+      "en": "Absolute Dominance",
+      "la": "Dominatio Absoluta"
+    },
+    "description": {
+      "ru": "Корабль, который настолько огромен и величественен, что у него есть собственное небольшое гравитационное поле, притягивающее мелкие астероиды и пустые кофейные чашки пилота. «Левиафан» выглядит так, будто он собирается колонизировать четверть известного космоса в одиночку. Внутри него столько свободного места, что Навигаторы часто теряются по дороге от спальни до капитанского мостика и основывают там новые цивилизации. Он движется сквозь вакуум с грацией гордого утюга, оставляя за собой шлейф из чистой Тёмной материи и искренней зависти всех владельцев Стелл.",
+      "en": "A ship so massive and majestic that it has its own small gravitational field, pulling in tiny asteroids and the pilot's empty coffee cups. Leviathan looks like it's about to colonize a quarter of known space all by itself. There's so much room inside that Navigators often get lost on the way from the bedroom to the captain's bridge and end up founding new civilizations there. It moves through the vacuum with the grace of a proud iron, leaving behind a trail of pure Dark Matter and the sincere envy of all Stella owners.",
+      "la": "Navis tam immensa et maiestosa ut proprium parvum campum gravitationalem habeat, asteroides parvos et scyphas coffeae vacuas pilotae trahens. Leviathan videtur quasi quartam partem spatii noti solus colonizare velit. Tantum spatii intus est ut Navigatores saepe a cubiculo ad pontem capitanei euntes pereant et ibi novas civitates condant. Per vacuum cum gratia ferri superbi movetur, post se tramitem ex Materia Obscura pura et invidia sincera omnium dominorum Stellarum relinquens."
+    },
+    "image_path": "/assets/ships/leviathan.png",
+    "art_path": "/assets/ships/leviathan.png",
+    "tier": 3,
+    "slug": "leviathan",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 3
+  },
+  "singularity": {
+    "name": { "ru": "SINGULARITY", "en": "SINGULARITY", "la": "SINGULARITY" },
+    "short_description": {
+      "ru": "Схлопнись Или Будь Проклят",
+      "en": "Collapse or Be Cursed",
+      "la": "Collabere vel Maledictus Esto"
+    },
+    "description": {
+      "ru": "Округло-зеркальный и пугающе элегантный корабль, спроектированный безумным физиком, который пытался доказать, что геометрия — это заговор рептилоидов. «Singularity» выглядит так, будто он постоянно падает внутрь самого себя, из-за чего у любого, кто смотрит на него дольше трех секунд, начинает двоиться в глазах и дико хочется соленых огурцов. Инженеры клянутся, что его двигатель — это ручная микро-черная дыра, которая питается Тёмной материей и исключительно качественным джазом. Корабль обладает замашками аристократа: если вы припаркуете его слишком близко к Стелле, он начнет медленно засасывать её краску в свое гравитационное поле.",
+      "en": "A round-mirrored and frighteningly elegant ship, designed by a mad physicist who tried to prove that geometry is a reptilian conspiracy. Singularity looks like it is constantly falling into itself, causing anyone who stares at it for more than three seconds to see double and crave pickles. Engineers swear its engine is a manual micro-black hole that feeds on Dark Matter and exclusively high-quality jazz. The ship has aristocratic pretensions: if you park it too close to a Stella, it will slowly start sucking its paint into its gravitational field.",
+      "la": "Navis rotundo-specularis et terribiliter elegans, a physico insano designata qui probare conabatur geometriam conspiracy reptiliorum esse. Singularity videtur quasi perpetuo in se ipsum cadat, faciens ut quisquis eam plus quam tres secundas intuetur, duplicata videat et picles valde desideret. Ingeniarii iurant motor eius micro-foramen nigrum manuale esse quod Materia Obscura et iazum eximiae qualitatis alitur. Navis praetensiones aristocraticas habet: si eam nimis prope Stellam parques, pigmentum eius lente in campum gravitationalem suum sorbere incipiet."
+    },
+    "image_path": "/assets/ships/singularity.png",
+    "art_path": "/assets/ships/singularity.png",
+    "tier": 3,
+    "slug": "singularity",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 3
+  },
+  "ragnarok": {
+    "name": { "ru": "RAGNAROK", "en": "RAGNAROK", "la": "RAGNAROK" },
+    "short_description": {
+      "ru": "Дорогой Конец Света",
+      "en": "Expensive Apocalypse",
+      "la": "Pretiosum Finis Mundi"
+    },
+    "description": {
+      "ru": "Название этого корабля переводится как «Окончательный и бесповоротный демонтаж вселенной», что звучит дико круто на любой космической тусовке. Его корпус состоит из такого количества острых углов, шипов и непонятных светящихся штук, что его страшно протирать тряпкой. Инженеры утверждают, что если врубить его двигатели на полную мощность, в соседнем секторе может родиться новая религия. «Рагнарёк» — это апофеоз пафоса: он заставляет пилота чувствовать себя властелином галактики, даже если тот просто летит в экспедицию за тремя граммами космического мусора.",
+      "en": "This ship's name translates to 'Final and Irreversible Dismantling of the Universe,' which sounds incredibly cool at any cosmic party. Its hull consists of so many sharp angles, spikes, and incomprehensible glowing bits that it's scary to wipe it with a rag. Engineers claim that if you fire its engines at full power, a new religion might be born in the neighboring sector. Ragnarok is the apotheosis of pathos: it makes the pilot feel like the lord of the galaxy, even if they're just flying on an expedition for three grams of space junk.",
+      "la": "Nomen huius navis 'Finalem et Irreversibilem Universi Destructionem' vertitur, quod in quavis festa cosmica valde speciosum sonat. Carina eius ex tot angulis acutis, spinis, et rebus fulgentibus incomprehensibilibus constat ut eam panno tergere terribile sit. Ingeniarii affirmant si motores eius ad plenam potentiam accendantur, nova religio in sectori vicino nasci potest. Ragnarok est apothosis pathos: pilotam dominum galaxiae sentire facit, etiam si tantum ad expeditionem pro tribus grammis purgamentorum cosmicorum volat."
+    },
+    "image_path": "/assets/ships/ragnarok.png",
+    "art_path": "/assets/ships/ragnarok.png",
+    "tier": 3,
+    "slug": "ragnarok",
+    "is_nft": false,
+    "base_stability": 100,
+    "expedition_slots": 3
+  },
+  "prometheus": {
+    "name": { "ru": "PROMETHEUS", "en": "PROMETHEUS", "la": "PROMETHEUS" },
+    "short_description": {
+      "ru": "Подержи Моё Пиво, Солнце",
+      "en": "Hold My Beer, Sun",
+      "la": "Tene Cerevisiam Meam, Sol"
+    },
+    "description": {
+      "ru": "Эпический флагман, чей корпус отлит из чистой плазменной стали, добытой прямо из короны новорожденной звезды. Дизайнеры «Прометея» явно страдали гигантоманией и манией величия: корабль настолько величественен, что когда он пролетает мимо планет, их жители начинают неистово креститься и строить ему храмы. Бортовой ИИ обладает манерами древнегреческого титана, разговаривает исключительно громоподобным басом и считает всех остальных участников флота «жалкими космическими микроволновками». Он не просто летит сквозь вакуум — он пафосно раздвигает ткань пространства, оставляя за собой шлейф из чистой гордости.",
+      "en": "An epic flagship whose hull is forged from pure plasma steel, harvested directly from the corona of a newborn star. The designers of Prometheus clearly suffered from megalomania and delusions of grandeur: the ship is so majestic that when it flies past planets, their inhabitants start frantically crossing themselves and building temples in its honor. The onboard AI has the manners of an ancient Greek titan, speaks exclusively in a thunderous bass, and considers all other fleet members 'pitiful cosmic microwaves.' It doesn't just fly through the vacuum — it pompously parts the fabric of space, leaving behind a trail of pure pride.",
+      "la": "Navis princeps epica cuius carina ex puro chalybe plasmae confusa est, e corona stellae novae natae directa. Designatores Promethei manifeste megalomania et magnitatis delirio laborabant: navis tam maiestosa est ut cum praeter planetas volat, incolae eorum furiose se signare et templa ei aedificare incipiunt. AI on-board mores titani Graeci antiqui habet, exclusivo basso tonante loquitur, et omnes alios classis membra 'miserabiles micro-undas cosmicis' putat. Non tantum per vacuum volat — textum spatii pompose dividit, post se tramitem purae superbiae relinquens."
+    },
+    "image_path": "/assets/ships/prometheus.png",
+    "art_path": "/assets/ships/prometheus.png",
+    "tier": 4,
+    "slug": "prometheus",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 4
+  },
+  "odyssey": {
+    "name": { "ru": "ODYSSEY", "en": "ODYSSEY", "la": "ODYSSEY" },
+    "short_description": {
+      "ru": "Заблудиться с Максимальным Комфортом",
+      "en": "Get Lost with Maximum Comfort",
+      "la": "Errare cum Maximo Commodo"
+    },
+    "description": {
+      "ru": "Вершина исследовательской мысли и роскоши. Этот NFT-корабль создавался для миллиардеров, которые хотели отправиться на край Вселенной, но не были готовы отказаться от джакузи с подогревом и личного шеф-повара. Корпус «Одиссеи» покрыт уникальной зеркальной броней, в которой отражаются созвездия (и высокий социальный статус владельца). Корабль оборудован системой искривления реальности, которая позволяет ему игнорировать любые пространственные штормы просто потому, что они «не соответствуют пятизвездочным стандартам безопасности».",
+      "en": "The pinnacle of exploratory thought and luxury. This NFT ship was created for billionaires who wanted to travel to the edge of the Universe but weren't ready to give up heated jacuzzis and a personal chef. Odyssey's hull is covered in unique mirrored armor that reflects constellations (and the owner's high social status). The ship is equipped with a reality-warping system that allows it to ignore any spatial storms simply because they 'do not meet five-star safety standards.'",
+      "la": "Culmen cogitationis exploratoriae et luxuriae. Haec navis NFT pro miliardariis creata est qui ad oram Universi ire volebant sed a iacuzzi calefacto et coquo personali renuntiare parati non erant. Carina Odysseae armatura speculi unica tecta est quae constellationes (et statum socialem altum domini) reflectit. Navis systema deformationis realitatis instructum est quod eam omnes tempestates spatiales ignorare sinit quia 'normas securitatis quinque stellarum non satisfaciunt.'"
+    },
+    "image_path": "/assets/ships/odyssey.png",
+    "art_path": "/assets/ships/odyssey.png",
+    "tier": 4,
+    "slug": "odyssey",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 4
+  },
+  "dominion": {
+    "name": { "ru": "DOMINION", "en": "DOMINION", "la": "DOMINION" },
+    "short_description": {
+      "ru": "Ваше Мнение Нас Не Интересует",
+      "en": "We Don't Care About Your Opinion",
+      "la": "Opinio Tua Nos Non Interest"
+    },
+    "description": {
+      "ru": "Монолитный, устрашающий и неприлично агрессивный крейсер. Его силуэт напоминает парящий над бездной готический собор, который кто-то по ошибке оснастил варп-двигателями. «Доминион» создан для того, чтобы одним своим присутствием в секторе вызывать у противников желание немедленно продать свои корабли и уйти в монастырь. Известен случай, когда «Доминион» уничтожил пиратский флот, просто громко заведя свои двигатели на холостом ходу. Обладает встроенным эго-генератором, который увеличивает пафос вокруг корабля на 400%.",
+      "en": "A monolithic, terrifying, and indecently aggressive cruiser. Its silhouette resembles a gothic cathedral hovering over the abyss, mistakenly equipped with warp engines. Dominion was created so that its mere presence in a sector makes enemies want to immediately sell their ships and join a monastery. There is a known case where Dominion destroyed a pirate fleet simply by loudly idling its engines. It has a built-in ego generator that increases pathos around the ship by 400%.",
+      "la": "Monolithica, terribilis et indecenter aggressiva cruciator. Silhouette eius cathedralem gothicam super abyssam fluitantem refert, quae errore motoribus warp instructa est. Dominion ita creata est ut sola praesentia sua in sectori hostes naves suas statim vendere et in monasterium ire velit. Notum est casum ubi Dominion classem piraticam tantum motores suos in otio alte accendendo destruxit. Generatorem ego integratum habet qui pathos circa navem 400% auget."
+    },
+    "image_path": "/assets/ships/dominion.png",
+    "art_path": "/assets/ships/dominion.png",
+    "tier": 4,
+    "slug": "dominion",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 4
+  },
+  "eternity": {
+    "name": { "ru": "ETERNITY", "en": "ETERNITY", "la": "ETERNITY" },
+    "short_description": {
+      "ru": "Подожди, Я Сфоткаю",
+      "en": "Wait, Let Me Take a Photo",
+      "la": "Mane, Imaginem Capio"
+    },
+    "description": {
+      "ru": "Корабль, который буквально плюет в лицо законам энтропии. Конструкторы заявляют, что «Eternity» не подвластен времени — он не стареет, не ржавеет и не пачкается, потому что существует в состоянии перманентного эстетического совершенства. Если в него прилетает торпеда, она просто замирает в воздухе, восхищается безупречными линиями корпуса и аккуратно падает вниз. Лететь на нем — значит чувствовать себя бессмертным полубогом, который лениво посматривает на копошащиеся внизу Стеллы и Орионы, как на муравьев.",
+      "en": "A ship that literally spits in the face of the laws of entropy. The designers claim that Eternity is timeless — it doesn't age, rust, or get dirty because it exists in a state of permanent aesthetic perfection. If a torpedo hits it, it simply freezes in mid-air, admires the flawless lines of the hull, and politely falls down. Flying it means feeling like an immortal demigod, lazily watching the Stellae and Orions scurrying below like ants.",
+      "la": "Navis quae legibus entropiae literaliter in faciem spuit. Designatores affirmant Eternitatem temporis expertem esse — non senescit, non rubiginem contrahit, non sordidatur quia in statu perfectionis aestheticae perpetuae existit. Si torpedo in eam volat, simpliciter in aere congelat, lineas carinae impecabiles admiratur, et comiter deorsum cadit. In ea volare est sentire sicut semideus immortalis, qui pigre Stellas et Oriones infra formicas velut observat."
+    },
+    "image_path": "/assets/ships/eternity.png",
+    "art_path": "/assets/ships/eternity.png",
+    "tier": 4,
+    "slug": "eternity",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 4
+  },
+  "archon": {
+    "name": { "ru": "ARCHON", "en": "ARCHON", "la": "ARCHON" },
+    "short_description": {
+      "ru": "Крипто-Аристократ",
+      "en": "Crypto Aristocrat",
+      "la": "Aristocrates Cryptographicus"
+    },
+    "description": {
+      "ru": "Ультимативное судно эры Exo-Genesis. Корпус «Архонта» выполнен в виде сложнейшей геометрической фрактальной структуры, которая постоянно меняет свои грани, подстраиваясь под настроение Навигатора. Говорят, что чертежи этого корабля были найдены в коде самой первой заблокированной транзакции в древнем блокчейне. Он настолько технологичен, что его датчики способны уловить шевеление мыслей пилота за три парсека до того, как тот решит нажать на кнопку. Корабль-символ, обладать которым — значит официально объявить себя правителем этого сектора космоса.",
+      "en": "The ultimate vessel of the Exo-Genesis era. Archon's hull is crafted in the form of an incredibly complex geometric fractal structure that constantly shifts its facets to match the Navigator's mood. They say the blueprints for this ship were found in the code of the very first locked transaction in the ancient blockchain. It is so advanced that its sensors can detect the stirring of the pilot's thoughts three parsecs before they decide to press a button. A symbolic ship — to possess it means to officially declare yourself ruler of this sector of space.",
+      "la": "Navis ultima aerae Exo-Genesis. Carina Archontis in forma structurae fractalis geometricae valde complexae facta est quae facies suas perpetuo mutat ut animo Navigatoris se accommodet. Aiunt delineationes huius navis in codice primae transactionis clausae in blockchain antiquo inventas esse. Tam provecta est ut sensores eius motum cogitationum pilotae tria parsecia antequam buttonum premere decernat deprehendere possint. Navis symbolica — eam possidere est te rectorem huius sectoris spatii officialiter declarare."
+    },
+    "image_path": "/assets/ships/archon.png",
+    "art_path": "/assets/ships/archon.png",
+    "tier": 4,
+    "slug": "archon",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 4
+  },
+  "genesis": {
+    "name": { "ru": "GENESIS", "en": "GENESIS", "la": "GENESIS" },
+    "short_description": {
+      "ru": "Архитектор Вселенского Бардака",
+      "en": "Architect of Universal Chaos",
+      "la": "Architectus Chaos Universalis"
+    },
+    "description": {
+      "ru": "Легендарное судно, чья обшивка соткана из реликтового излучения Большого взрыва. В официальном руководстве написано, что «Genesis» присутствовал при создании времени как такового, и именно его бортовой ИИ случайно пролил кофе на пульт управления, из-за чего в нашей вселенной зародилась белковая жизнь (и глупые законы термодинамики). Корабль обладает такой мощью, что когда он просто включает ближний свет фар, на трех ближайших планетах наступает эпоха Просвещения, а местное население начинает изобретать колесо. Он не перемещается в пространстве — пространство падает ниц и умоляет корабль соизволить наступить на него.",
+      "en": "A legendary vessel whose hull is woven from the relic radiation of the Big Bang. The official manual states that Genesis was present at the creation of time itself, and that its onboard AI accidentally spilled coffee on the control panel, which is how protein-based life (and the stupid laws of thermodynamics) came into existence in our universe. The ship is so powerful that when it simply turns on its low beams, an Age of Enlightenment dawns on the three nearest planets, and the local population starts inventing the wheel. It doesn't move through space — space prostrates itself and begs the ship to deign to step on it.",
+      "la": "Navis legenda cuius carina ex radiatione relicta Magni Crepitus texta est. Manuale officiale dicit Genesim creationi temporis ipsi adfuisse, et AI on-board casu caffeinum in tabulam gubernationem effudisse, ob quam vita proteina (et leges thermodynamicae stultae) in universo nostro exorta est. Navis tam potens est ut cum tantum lumina proxima accendat, Aetas Illuminationis in tribus planetis proximis oritur, et incolae rotam invenire incipiunt. Non per spatium movetur — spatium in terram procumbit et navem obsecrat ut dignetur super eum calcare."
+    },
+    "image_path": "/assets/ships/genesis.png",
+    "art_path": "/assets/ships/genesis.png",
+    "tier": 5,
+    "slug": "genesis",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 5
+  },
+  "infinity": {
+    "name": { "ru": "INFINITY", "en": "INFINITY", "la": "INFINITY" },
+    "short_description": {
+      "ru": "Увидимся Везде и Сразу",
+      "en": "See You Everywhere and At Once",
+      "la": "Ubique et Simul Te Videbo"
+    },
+    "description": {
+      "ru": "Ультимативный монумент инженерного безумия. «Infinity» существует не в конкретной точке космоса, а размазан ровным слоем по всем возможным параллельным мирам. Если вы сидите в его капитанском кресле, вы одновременно пьете чай в прошлом, выигрываете джекпот в будущем и наблюдаете, как в альтернативной реальности ваш корабль покрасили в розовый цвет. Из-за этого бортовой ИИ постоянно страдает экзистенциальным кризисом и лениво философствует о тщете бытия, пока вы пытаетесь долететь до соседней астероидной базы. Обладать им — значит официально заявить Вселенной, что законы физики — это просто дружеская рекомендация, которую вы решили проигнорировать.",
+      "en": "The ultimate monument to engineering madness. Infinity doesn't exist at a specific point in space — it's smeared evenly across all possible parallel worlds. If you sit in its captain's chair, you're simultaneously drinking tea in the past, winning the jackpot in the future, and watching your ship get painted pink in an alternate reality. Because of this, the onboard AI constantly suffers from an existential crisis and lazily philosophizes about the futility of existence while you're trying to reach the neighboring asteroid base. To possess it means to officially declare to the Universe that the laws of physics are just a friendly recommendation you've chosen to ignore.",
+      "la": "Ultimum monumentum insaniae ingeniariae. Infinity in puncto specifico spatii non existit — per omnes mundos parallelos possibiles aequaliter sparsa est. Si in sella capitanei sedes, simul theam in praeterito bibis, iackpot in futuro vincis, et navem tuam in realitate alternativa roseam pingi observas. Ob hoc AI on-board perpetuo crisi existentiali laborat et de vanitate existendi otiose philosophatur dum ad basim asteroidalem proximam pervenire conaris. Eam possidere est Universo officialiter declarare leges physicae tantum commendationem amicam esse quam ignorare decrevisti."
+    },
+    "image_path": "/assets/ships/infinity.png",
+    "art_path": "/assets/ships/infinity.png",
+    "tier": 5,
+    "slug": "infinity",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 5
+  },
+  "apocalypse": {
+    "name": { "ru": "APOCALYPSE", "en": "APOCALYPSE", "la": "APOCALYPSE" },
+    "short_description": {
+      "ru": "Ультимативный Аргумент",
+      "en": "The Ultimate Argument",
+      "la": "Argumentum Ultimum"
+    },
+    "description": {
+      "ru": "Корабль, созданный для того, чтобы ставить жирную точку в любых пространственных спорах. Его силуэт настолько грандиозен и эпичен, что он не помещается на экраны обычных радаров — радары просто вздыхают, показывают белый флаг и начинают транслировать классическую музыку. «Apocalypse» окутан полем сингулярности, которое заставляет время вокруг него течь вспять, поэтому любые повреждения заживают на нем за секунду до того, как в него попадут. Пилотировать этот корабль — значит нести в себе энергию угасания миллиардов звезд. Если вам нужно изящно и с абсолютным божественным пафосом напомнить галактике, кто тут главный инвестор — этот корпус создан для вас.",
+      "en": "A ship built to put a definitive end to any spatial disputes. Its silhouette is so grand and epic that it doesn't fit on ordinary radar screens — radars simply sigh, raise a white flag, and start playing classical music. Apocalypse is shrouded in a singularity field that causes time around it to flow backward, so any damage heals a second before it gets hit. Piloting this ship means carrying the energy of fading billions of stars within you. If you need to elegantly and with absolute divine pathos remind the galaxy who the main investor is — this hull was built for you.",
+      "la": "Navis creata ut punctum definitivum in quavis disputatione spatiali ponat. Silhouette eius tam grandis et epica est ut in screenis radarum ordinariarum non capiatur — radaria simpliciter suspirant, vexillum album ostendunt, et musicam classicam transmittere incipiunt. Apocalypse campo singularitatis involuta est quod tempus circa eam retro fluere facit, itaque quaelibet damna secundo antequam feriatur sanantur. Hanc navem pilotare est energiam stellarum milliardorum evanescentium in te gerere. Si eleganter et cum pathose divino absoluto galaxiam monere debes quis hic investor principalis sit — haec carina pro te facta est."
+    },
+    "image_path": "/assets/ships/apocalypse.png",
+    "art_path": "/assets/ships/apocalypse.png",
+    "tier": 5,
+    "slug": "apocalypse",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 5
+  },
+  "creator": {
+    "name": { "ru": "CREATOR", "en": "CREATOR", "la": "CREATOR" },
+    "short_description": {
+      "ru": "Дизайнер Реальности",
+      "en": "Reality Designer",
+      "la": "Rerum Architectus"
+    },
+    "description": {
+      "ru": "Шедевр, собранный по чертежам, которые были найдены внутри ДНК первой разумной расы. Корпус «Творца» состоит из живого фрактального жидкого металла, который постоянно переливается и меняет форму, напоминая то распускающийся космический цветок, то геометрически идеальный кристалл. Этот корабль способен буквально переписывать код пространства вокруг себя: если Навигатору не нравится цвет пролетающей мимо туманности, «Creator» легким импульсом меняет её оттенок на более инстаграмный. Корабль-бог, чье появление в Ангаре заставляет все остальные тиры (включая несчастные Стеллы-тостеры) благоговейно вибрировать в унисон.",
+      "en": "A masterpiece assembled from blueprints found within the DNA of the first intelligent race. Creator's hull is made of living fractal liquid metal that constantly shimmers and shifts shape, resembling a blooming cosmic flower one moment and a geometrically perfect crystal the next. This ship is capable of literally rewriting the code of the space around it: if the Navigator doesn't like the color of a passing nebula, Creator changes its hue to something more Instagram-worthy with a light pulse. A god-ship, whose appearance in the Hangar makes all other tiers (including the unfortunate toaster-Stellas) vibrate in reverent unison.",
+      "la": "Opus ex delineationibus in DNA primae gentis intelligentis inventis collectum. Carina Creatoris ex metallo liquido fractali vivo constat quod perpetuo micat et formam mutat, nunc florem cosmicum patentem, nunc crystallum geometricum perfectum referens. Haec navis codem spatii circa se literaliter rescribere potest: si Navigator colori nebulae praetervolantis non placet, Creator tonum eius levi impulsu ad aliquid plus Instagram-dignum mutat. Navis-deus, cuius adventus in Hangar omnes alios gradus (inclusis infelicibus Stellis-tostatoribus) reverenter unisono vibrare facit."
+    },
+    "image_path": "/assets/ships/creator.png",
+    "art_path": "/assets/ships/creator.png",
+    "tier": 5,
+    "slug": "creator",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 5
+  },
+  "chaos": {
+    "name": { "ru": "CHAOS", "en": "CHAOS", "la": "CHAOS" },
+    "short_description": {
+      "ru": "Квантовый Игральный Кубик Вселенной",
+      "en": "The Universe's Quantum Dice",
+      "la": "Alea Quantica Universi"
+    },
+    "description": {
+      "ru": "Этот легендарный корабль не был построен. Он просто материализовался в пространстве, когда кто-то попытался одновременно делить на ноль, майнить биткоин на калькуляторе и варить макароны в невесомости. «Chaos» выглядит как постоянно меняющийся пространственный парадокс: в одну секунду это величественный хрустальный октаэдр, в другую — хищный киберпанк-истребитель, а в третью его левое крыло начинает пахнуть клубничным йогуртом. Его бортовой ИИ управляет кораблем с помощью абсолютной случайности. Он может доставить вас на край галактики за полторы миллисекунды просто потому, что ему понравился цвет пролетающего мимо астероида, или отказаться лететь, пока Навигатор не загадает ему смешную загадку. Ультимативное судно для тех, кто полностью доверяет своей удаче и готов со смехом смотреть в лицо космической бездне.",
+      "en": "This legendary ship was never built. It simply materialized in space when someone tried to divide by zero, mine Bitcoin on a calculator, and cook pasta in zero gravity — all at the same time. Chaos looks like a constantly shifting spatial paradox: one second it's a majestic crystalline octahedron, the next a predatory cyberpunk fighter, and the third his left wing starts smelling like strawberry yogurt. Its onboard AI controls the ship through absolute randomness. It can take you to the edge of the galaxy in a millisecond and a half simply because it liked the color of a passing asteroid, or refuse to fly until the Navigator tells it a funny riddle. The ultimate vessel for those who fully trust their luck and are ready to laugh in the face of the cosmic abyss.",
+      "la": "Haec navis legenda numquam aedificata est. Simpliciter in spatio materializavit cum quis per nullum dividere, Bitcoin in calculator fodere, et pasta in gravitate zero coquere simul conatus est. Chaos velut paradoxum spatiale perpetuo mutans videtur: uno secundo octahedrum crystallinum maiestaticum, altero pugnator cyberpunk praedatorius, tertio ala eius sinistra sicut yogurtum fragrans incipit. AI on-board navem per casum absolutum gubernat. Ad oram galaxiae in millisecondio et dimidio te portare potest simpliciter quia color asteroidis praetervolantis placuit, vel volare recusare donec Navigator ei aenigma ridiculum proponat. Navis ultima pro eis qui fortunae suae plenissime confidunt et in faciem abyssi cosmicae cum risu parati sunt aspicere."
+    },
+    "image_path": "/assets/ships/chaos.png",
+    "art_path": "/assets/ships/chaos.png",
+    "tier": 5,
+    "slug": "chaos",
+    "is_nft": true,
+    "base_stability": 100,
+    "expedition_slots": 5
+  }
+}

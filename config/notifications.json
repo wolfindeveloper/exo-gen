@@ -1,0 +1,40 @@
+{
+  "notifications": {
+    "expedition_completed": {
+      "slug": "expedition_completed",
+      "template": {
+        "ru": "Экспедиция завершена! Забери лут.",
+        "en": "Expedition complete! Claim your loot.",
+        "la": "Expeditio completa! Lucrum tuum cape."
+      },
+      "cooldown_seconds": 300
+    },
+    "repair_completed": {
+      "slug": "repair_completed",
+      "template": {
+        "ru": "Корабль готов к вылету.",
+        "en": "Ship is ready for launch.",
+        "la": "Navis parata est ad volatum."
+      },
+      "cooldown_seconds": 300
+    },
+    "lab_craft_result": {
+      "slug": "lab_craft_result",
+      "template": {
+        "ru": "Артефакт создан / Комбинация не сработала.",
+        "en": "Artifact crafted / Combination failed.",
+        "la": "Artefactum creatum / Combinatio defecit."
+      },
+      "cooldown_seconds": 300
+    },
+    "daily_reminder": {
+      "slug": "daily_reminder",
+      "template": {
+        "ru": "Стрик горит! Забери ежедневный опыт.",
+        "en": "Streak is burning! Claim your daily XP.",
+        "la": "Streak ardet! Experientiam quotidianam cape."
+      },
+      "cooldown_seconds": 86400
+    }
+  }
+}

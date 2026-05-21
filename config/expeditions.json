@@ -1,0 +1,59 @@
+{
+  "expedition_scrap_run": {
+    "name": { "ru": "Scrap Run", "en": "Scrap Run", "la": "Scrap Run" },
+    "description": { "ru": "", "en": "", "la": "" },
+    "slug": "expedition_scrap_run",
+    "tier": 1,
+    "duration_hours": 4,
+    "xp_reward": 50,
+    "fuel_required": ["fuel_t1_mangan_hydride", "fuel_t1_methane_fraction", "fuel_t1_plasma_condensate"],
+    "loot_table": ["exoscrap_t1", "essence_t1", "xgen_small"],
+    "damage_chance_percent": 5
+  },
+  "expedition_nebula_extraction": {
+    "name": { "ru": "Nebula Extraction", "en": "Nebula Extraction", "la": "Nebula Extraction" },
+    "description": { "ru": "", "en": "", "la": "" },
+    "slug": "expedition_nebula_extraction",
+    "tier": 2,
+    "duration_hours": 8,
+    "xp_reward": 120,
+    "fuel_required": ["fuel_t2_deuterium_x", "fuel_t2_liquid_iridium", "fuel_t2_quantum_gel"],
+    "loot_table": ["exocarbon_t2", "essence_t2", "xgen_medium"],
+    "damage_chance_percent": 10
+  },
+  "expedition_frontier_outpost": {
+    "name": { "ru": "Frontier Outpost", "en": "Frontier Outpost", "la": "Frontier Outpost" },
+    "description": { "ru": "", "en": "", "la": "" },
+    "slug": "expedition_frontier_outpost",
+    "tier": 3,
+    "duration_hours": 12,
+    "xp_reward": 250,
+    "fuel_required": ["fuel_t3_helium_3_prime", "fuel_t3_proto_matter", "fuel_t3_laserum_crystals"],
+    "loot_table": ["radiant_shard_t3", "essence_t3", "xgen_large"],
+    "damage_chance_percent": 15
+  },
+  "expedition_deep_rift": {
+    "name": { "ru": "Deep Rift", "en": "Deep Rift", "la": "Deep Rift" },
+    "description": { "ru": "", "en": "", "la": "" },
+    "slug": "expedition_deep_rift",
+    "tier": 4,
+    "duration_hours": 18,
+    "xp_reward": 500,
+    "fuel_required": ["fuel_t4_null_element", "fuel_t4_am_synthetics", "fuel_t4_stellar_plasmoid"],
+    "loot_table": ["primal_cell_t4", "essence_t4", "xgen_epic"],
+    "damage_chance_percent": 20,
+    "requires_verification": "BASIC"
+  },
+  "expedition_genesis_point": {
+    "name": { "ru": "Genesis Point", "en": "Genesis Point", "la": "Genesis Point" },
+    "description": { "ru": "", "en": "", "la": "" },
+    "slug": "expedition_genesis_point",
+    "tier": 5,
+    "duration_hours": 24,
+    "xp_reward": 1000,
+    "fuel_required": ["fuel_t5_dark_matter", "fuel_t5_chrono_catalyst", "fuel_t5_singularity_ether"],
+    "loot_table": ["genesis_spark_t5", "essence_t5", "xgen_legendary"],
+    "damage_chance_percent": 25,
+    "requires_verification": "VERIFIED"
+  }
+}

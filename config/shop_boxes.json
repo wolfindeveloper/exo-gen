@@ -1,0 +1,20 @@
+{
+  "shop_boxes": {
+    "promotion_crate_t2": {
+      "name": { "ru": "Крейг Восхождения T2", "en": "Promotion Crate T2", "la": "Capsula Promotionis T2" },
+      "slug": "promotion_crate_t2",
+      "tier": 2,
+      "xgen_cost": 500,
+      "lock_days": 7,
+      "drop_table": ["vanguard_nebula_ghost", "essence_t2", "xgen_medium"]
+    },
+    "promotion_crate_t3": {
+      "name": { "ru": "Крейг Восхождения T3", "en": "Promotion Crate T3", "la": "Capsula Promotionis T3" },
+      "slug": "promotion_crate_t3",
+      "tier": 3,
+      "xgen_cost": 1500,
+      "lock_days": 14,
+      "drop_table": ["horizon_star_cutter", "essence_t3", "xgen_large"]
+    }
+  }
+}

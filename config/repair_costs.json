@@ -1,0 +1,32 @@
+{
+  "standard": {
+    "slug": "standard",
+    "resource_cost_multiplier": 1.0,
+    "duration_hours": 2,
+    "xgen_cost": 0
+  },
+  "express": {
+    "slug": "express",
+    "resource_cost_multiplier": 0,
+    "duration_hours": 0,
+    "xgen_cost": 50,
+    "instant": true
+  },
+  "hybrid": {
+    "slug": "hybrid",
+    "resource_cost_multiplier": 0.5,
+    "duration_hours": 1,
+    "xgen_cost": 10
+  },
+  "auto": {
+    "slug": "auto",
+    "description": "Uses player profile settings to determine repair mode"
+  },
+  "catastrophic": {
+    "slug": "catastrophic",
+    "requires_artifact": "lapis_temporis",
+    "resource_cost_multiplier": 2.0,
+    "duration_hours": 6,
+    "xgen_cost": 100
+  }
+}

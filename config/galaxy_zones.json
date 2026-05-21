@@ -1,0 +1,1154 @@
+{
+  "galaxy_zones": {
+    "zone_edge_common_sense": {
+      "name": {
+        "ru": "Окраина Здравого Смысла",
+        "en": "Edge of Common Sense",
+        "la": "Orbis Sensus Communis"
+      },
+      "description": {
+        "ru": "Самое спокойное место в галактике — здесь абсолютно ничего нет",
+        "en": "The calmest place in the galaxy — absolutely nothing happens here",
+        "la": "Locus quietissimus in galaxia — nihil fit hic"
+      },
+      "image_path": "/assets/zones/edge_common_sense.png",
+      "slug": "zone_edge_common_sense",
+      "tier": 1,
+      "lore": {
+        "ru": "Самое спокойное место в галактике, в основном потому, что здесь абсолютно ничего нет. Здесь настолько скучно, что даже законы гравитации работают вполсилы, просто чтобы не утруждаться. Идеальное место для стартовых тостеров: здесь физически невозможно во что-то врезаться, если только вы не умудритесь въехать в собственный хвост.",
+        "en": "The calmest place in the galaxy, mostly because there's absolutely nothing here. It's so boring that even gravity works at half-strength just to not bother itself. Perfect for starter toasters: it's physically impossible to crash into anything here, unless you somehow manage to ram your own tail.",
+        "la": "Locus quietissimus in galaxia, quia nihil est hic. Tam taedet ut gravitas dimidia vi operetur."
+      },
+      "drop_table": [
+        "fuel_t1_mangan_hydride"
+      ],
+      "risk_pct": 10,
+      "rare_chance": 0.3,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t1_blue_tape",
+          "weight": 60
+        },
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 30
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 65,
+        "repair_matter_t2": 18,
+        "repair_matter_t3": 8,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 4
+      }
+    },
+    "zone_appliance_graveyard": {
+      "name": {
+        "ru": "Кладбище Бытовой Техники «Утиль-7»",
+        "en": "Appliance Graveyard \"Scrap-7\"",
+        "la": "Sepulcrum Instrumentorum \"Reiectum-7\""
+      },
+      "description": {
+        "ru": "Огромное облако космического мусора — сломанные микроволновки, старые флешки и роботы-пылесосы",
+        "en": "A massive cloud of space junk — broken microwaves, old flash drives, and rogue robot vacuums",
+        "la": "Nubes ingens rerum derelictarum — microondae fractae et roboti vacui"
+      },
+      "image_path": "/assets/zones/appliance_graveyard.png",
+      "slug": "zone_appliance_graveyard",
+      "tier": 1,
+      "lore": {
+        "ru": "Огромное облако космического мусора, куда на протяжении веков сбрасывали сломанные микроволновки, старые флешки и неудачные модели роботов-пылесосов. Местные дроны-утилизаторы давно сошли с ума от скуки и теперь поклоняются случайно найденному тостеру как божеству.",
+        "en": "A massive cloud of space junk where broken microwaves, old flash drives, and failed robot vacuum models have been dumped for centuries. The local recycling drones went mad from boredom long ago and now worship a randomly discovered toaster as a deity.",
+        "la": "Nubes ingens rerum derelictarum ubi microondae fractae et roboti vacui saeculis iacti sunt. Droni locales tostrum deum colunt."
+      },
+      "drop_table": [
+        "fuel_t1_mangan_hydride"
+      ],
+      "risk_pct": 15,
+      "rare_chance": 0.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t1_blue_tape",
+          "weight": 60
+        },
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 30
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 60,
+        "repair_matter_t2": 20,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_warm_tea_nebula": {
+      "name": {
+        "ru": "Туманность «Тёплый Чай»",
+        "en": "\"Warm Tea\" Nebula",
+        "la": "Nebula \"Thea Calida\""
+      },
+      "description": {
+        "ru": "Зона с низкой температурой, но странным образом здесь всегда пахнет бергамотом",
+        "en": "A cold zone that somehow always smells like bergamot",
+        "la": "Zona frigida quae semper bergamotto olet"
+      },
+      "image_path": "/assets/zones/warm_tea_nebula.png",
+      "slug": "zone_warm_tea_nebula",
+      "tier": 1,
+      "lore": {
+        "ru": "Зона с крайне низкой температурой, но странным образом здесь всегда пахнет бергамотом. Здесь дрейфуют огромные облака пыли, которые, если пролететь через них на правильной скорости, издают звук, подозрительно похожий на свист чайника. Место крайне популярно среди навигаторов, которые любят «посидеть в тишине» (что переводится как «заглохнуть посреди ничего»).",
+        "en": "A zone with extremely low temperature, but strangely it always smells like bergamot here. Huge dust clouds drift through, and if you fly through them at the right speed, they make a sound suspiciously similar to a kettle whistling. Extremely popular among navigators who like to \"sit in silence\" (which translates to \"stall in the middle of nowhere\").",
+        "la": "Zona frigida quae semper bergamotto olet. Nubes pulveris sonum similis theae stridentis edunt."
+      },
+      "drop_table": [
+        "fuel_t1_mangan_hydride"
+      ],
+      "risk_pct": 12,
+      "rare_chance": 0.8,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t1_blue_tape",
+          "weight": 60
+        },
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 30
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 62,
+        "repair_matter_t2": 19,
+        "repair_matter_t3": 9,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_random_nuisances": {
+      "name": {
+        "ru": "Астероидный пояс «Случайные Неприятности»",
+        "en": "Asteroid Belt \"Random Nuisances\"",
+        "la": "Cingulus Asteroidum \"Incommoda Fortuita\""
+      },
+      "description": {
+        "ru": "Астероиды летают не по законам Кеплера, а по принципу «а почему бы и нет?»",
+        "en": "Asteroids don't follow Kepler's laws — they fly on a \"why not?\" principle",
+        "la": "Asteroides non leges Kepleri sequuntur sed principium \"cur non?\""
+      },
+      "image_path": "/assets/zones/random_nuisances.png",
+      "slug": "zone_random_nuisances",
+      "tier": 1,
+      "lore": {
+        "ru": "Место, где астероиды летают не по законам Кеплера, а исключительно по принципу «а почему бы и нет?». Статистически вероятность столкновения здесь составляет 1 к 1, но для пилотов Первого Тира она магическим образом превращается в 1 к 1. Очень бодрит нервную систему.",
+        "en": "A place where asteroids don't follow Kepler's laws, but exclusively the principle of \"why not?\". Statistically, the collision probability here is 1 in 1, but for Tier One pilots it magically turns into 1 in 1. Very invigorating for the nervous system.",
+        "la": "Locus ubi asteroides non leges Kepleri sequuntur sed principium \"cur non?\". Probabilitas collisionis est 1 ex 1."
+      },
+      "drop_table": [
+        "fuel_t1_mangan_hydride"
+      ],
+      "risk_pct": 20,
+      "rare_chance": 1.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t1_blue_tape",
+          "weight": 60
+        },
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 30
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 58,
+        "repair_matter_t2": 22,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_refuel_station": {
+      "name": {
+        "ru": "Станция «Заправка у Края»",
+        "en": "Station \"Refueling at the Edge\"",
+        "la": "Statio \"Refectio in Limine\""
+      },
+      "description": {
+        "ru": "Старый обшарпанный блокпост на краю обитаемого космоса с ИИ-заправщиком",
+        "en": "A worn-down checkpoint at the edge of inhabited space with an AI refueler",
+        "la": "Statio vetus in limite spatii habitati cum AI refectore"
+      },
+      "image_path": "/assets/zones/refuel_station.png",
+      "slug": "zone_refuel_station",
+      "tier": 1,
+      "lore": {
+        "ru": "Старый, обшарпанный блокпост на краю обитаемого космоса. Здесь работает один ИИ-заправщик, который искренне считает, что он — верховный правитель сектора, просто его никто не понимает. Если вежливо попросить (или засунуть ему в слот ложку), он может продать вам топливо по цене, которую он придумал ровно секунду назад.",
+        "en": "An old, shabby checkpoint at the edge of inhabited space. A single AI refueler works here, who sincerely believes he is the supreme ruler of the sector — nobody just understands him. If you ask politely (or stick a spoon in his slot), he might sell you fuel at a price he invented exactly one second ago.",
+        "la": "Statio vetus et squalida in limite spatii habitati. AI refector solus hic operatur, qui se rectorem supremi sectoris credit."
+      },
+      "drop_table": [
+        "fuel_t1_mangan_hydride"
+      ],
+      "risk_pct": 8,
+      "rare_chance": 0.2,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t1_blue_tape",
+          "weight": 60
+        },
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 30
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 68,
+        "repair_matter_t2": 15,
+        "repair_matter_t3": 7,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_syntax_error_nebula": {
+      "name": {
+        "ru": "Туманность «Синтаксическая Ошибка»",
+        "en": "\"Syntax Error\" Nebula",
+        "la": "Nebula \"Error Syntacticus\""
+      },
+      "description": {
+        "ru": "Облако газа, пытающееся самоорганизоваться в осмысленные предложения — смешивая квантовую механику с кулинарией",
+        "en": "A gas cloud trying to self-organize into meaningful sentences — mixing quantum mechanics with cooking",
+        "la": "Nubes gasii quae se in sententias ordinare conatur — mechanica quantica cum arte coquinaria miscens"
+      },
+      "image_path": "/assets/zones/syntax_error_nebula.png",
+      "slug": "zone_syntax_error_nebula",
+      "tier": 2,
+      "lore": {
+        "ru": "Огромное облако газа, которое постоянно пытается самоорганизоваться в осмысленные предложения. К сожалению, оно знает только квантовую механику и кулинарные рецепты, поэтому результат выглядит как «Котлета Шредингера, подаваемая с гарниром из параллельных реальностей». Пилоты здесь часто слышат в рации странные советы по приготовлению пасты.",
+        "en": "A massive gas cloud constantly trying to self-organize into meaningful sentences. Unfortunately, it only knows quantum mechanics and cooking recipes, so the result looks like \"Schrödinger's Cutlet, served with a side of parallel realities.\" Pilots here often hear strange pasta-cooking advice on their radios.",
+        "la": "Nubes ingens gasii quae semper in sententias significativas se ordinare conatur. Heu, solum mechanica quantica et formulae culinariae novit."
+      },
+      "drop_table": [
+        "fuel_t2_methane_fraction"
+      ],
+      "risk_pct": 25,
+      "rare_chance": 1.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 55
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 20,
+        "repair_matter_t2": 60,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_lost_socks": {
+      "name": {
+        "ru": "Архипелаг Потерянных Носков",
+        "en": "Archipelago of Lost Socks",
+        "la": "Archipelagus Soccarum Ammissarum"
+      },
+      "description": {
+        "ru": "Астероидное поле из вещей, потерянных в стиральных машинах — правые носки, одинокие серьги и авторучки",
+        "en": "An asteroid field of things lost in washing machines — right socks, lonely earrings, and dead pens",
+        "la": "Campus asteroidum ex rebus in machinis lavatoriis amissis — soccae dextrae et monilia solitaria"
+      },
+      "image_path": "/assets/zones/lost_socks.png",
+      "slug": "zone_lost_socks",
+      "tier": 2,
+      "lore": {
+        "ru": "Астероидное поле, состоящее из объектов, которые «потерялись» в пространстве. Почему-то Вселенная решила, что это идеальное место для сбора всех вещей, которые пропадают в стиральных машинах по всей галактике. Здесь дрейфуют миллиарды правых носков, одиноких сережек и авторучек, которые перестали писать в самый ответственный момент.",
+        "en": "An asteroid field made of objects that \"got lost\" in space. For some reason, the Universe decided this was the perfect collection point for everything that disappears in washing machines across the galaxy. Billions of right socks, lonely earrings, and pens that stopped working at the most crucial moment drift here.",
+        "la": "Campus asteroidum ex rebus quae in spatio \"amissae\" sunt. Universitas hoc locum collegtionis rerum in machinis lavatoriis per galaxiam disparatarum esse constituit."
+      },
+      "drop_table": [
+        "fuel_t2_methane_fraction"
+      ],
+      "risk_pct": 30,
+      "rare_chance": 1.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 55
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 18,
+        "repair_matter_t2": 62,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_eternal_waiting": {
+      "name": {
+        "ru": "Станция «Вечное Ожидание»",
+        "en": "Station \"Eternal Waiting\"",
+        "la": "Statio \"Expectatio Aeterna\""
+      },
+      "description": {
+        "ru": "Дрейфующая станция с очередью на стыковку в семь световых лет и отличным Wi-Fi",
+        "en": "A drifting station with a seven-light-year docking queue and excellent Wi-Fi",
+        "la": "Statio derivans cum expectatione conexus septem annorum luminum et Wi-Fi optimo"
+      },
+      "image_path": "/assets/zones/eternal_waiting.png",
+      "slug": "zone_eternal_waiting",
+      "tier": 2,
+      "lore": {
+        "ru": "Огромная дрейфующая станция, где очередь на стыковку растянулась на семь световых лет. Все корабли стоят в очереди, чтобы заправиться, но никто не двигается, потому что никто не помнит, кто был первым. На станции отличный Wi-Fi, поэтому пилоты второго тира предпочитают зависать здесь, постя мемы в межгалактический интернет, пока их баки медленно пустеют.",
+        "en": "A massive drifting station where the docking queue stretches seven light-years. All ships are lined up to refuel, but nobody moves because nobody remembers who was first. The station has excellent Wi-Fi, so Tier Two pilots prefer to hang around here, posting memes to the intergalactic internet while their tanks slowly empty.",
+        "la": "Statio ingens derivans ubi expectatio conexus septem annos luminum tenditur. Omnes naves in ordine stant ut combustible accipiant, sed nemo movetur quia nemo meminit quis primus fuerit."
+      },
+      "drop_table": [
+        "fuel_t2_methane_fraction"
+      ],
+      "risk_pct": 22,
+      "rare_chance": 0.8,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 55
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 22,
+        "repair_matter_t2": 58,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_quiet_horror": {
+      "name": {
+        "ru": "Зона «Тихого Ужаса»",
+        "en": "Zone of \"Quiet Horror\"",
+        "la": "Zona \"Horror Tacitus\""
+      },
+      "description": {
+        "ru": "Физика работает нормально, но с подвохом — всегда слегка дует, кофе холодноват, карты перевёрнуты",
+        "en": "Physics works fine, but with a catch — always slightly drafty, coffee too cold, maps upside down",
+        "la": "Physica bene operatur sed cum fraude — semper paulum flat, caffe frigidius, tabulae inversae"
+      },
+      "image_path": "/assets/zones/quiet_horror.png",
+      "slug": "zone_quiet_horror",
+      "tier": 2,
+      "lore": {
+        "ru": "Место, где физика работает нормально, но с легким подвохом: здесь всегда слегка дует, кофе всегда чуть холоднее, чем хочется, а навигационные карты всегда перевернуты вверх ногами. Корабли второго тира прилетают сюда, чтобы закалить характер пилотов перед посещением секторов третьего тира.",
+        "en": "A place where physics works normally, but with a slight catch: it's always slightly drafty, coffee is always a bit colder than you'd like, and navigation maps are always upside down. Tier Two ships come here to toughen up pilots before visiting Tier Three sectors.",
+        "la": "Locus ubi physica normaliter operatur sed cum fraude: semper paulum flat, caffe frigidius quam velis, tabulae navigationis semper inversae. Naves gradus secundi huc veniunt ut pilotos ante sectores gradus tertii durent."
+      },
+      "drop_table": [
+        "fuel_t2_methane_fraction"
+      ],
+      "risk_pct": 35,
+      "rare_chance": 2.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 55
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 15,
+        "repair_matter_t2": 65,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_echo_monday": {
+      "name": {
+        "ru": "Планета «Эхо Понедельника»",
+        "en": "Planet \"Echo of Monday\"",
+        "la": "Planeta \"Echo Lunae\""
+      },
+      "description": {
+        "ru": "Планета, где время зациклено — здесь всегда утро понедельника",
+        "en": "A planet where time is looped — it's always Monday morning",
+        "la": "Planeta ubi tempus in circulo est — semper mane Lunae"
+      },
+      "image_path": "/assets/zones/echo_monday.png",
+      "slug": "zone_echo_monday",
+      "tier": 2,
+      "lore": {
+        "ru": "Планета, на которой время зациклено таким образом, что здесь всегда утро понедельника. Жители планеты — крайне раздражительные существа, которые мечтают только о пятнице, но никак не могут до нее долететь. Они готовы отдать любые ресурсы, лишь бы кто-нибудь привез им новость о том, что выходные наконец-то наступили.",
+        "en": "A planet where time is looped so that it's always Monday morning. The planet's inhabitants are extremely irritable creatures who dream only of Friday but can never reach it. They're willing to give up any resources just for someone to bring them news that the weekend has finally arrived.",
+        "la": "Planeta ubi tempus in circulo est ut semper mane Lunae sit. Incolae creaturae valde irritabiles sunt quae solum de Veneris die somniant sed eam numquam attingere possunt."
+      },
+      "drop_table": [
+        "fuel_t2_methane_fraction"
+      ],
+      "risk_pct": 28,
+      "rare_chance": 1.2,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t2_custom_rivets",
+          "weight": 55
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 10
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 17,
+        "repair_matter_t2": 63,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 5,
+        "repair_matter_t5": 5
+      }
+    },
+    "zone_singularity_credit": {
+      "name": {
+        "ru": "Черная Дыра «Сингулярность в Кредит»",
+        "en": "\"Singularity on Credit\" Black Hole",
+        "la": "Foramen Nigrum \"Singularitas in Creditum\""
+      },
+      "description": {
+        "ru": "Гравитационная аномалия, всасывающая всё с отрицательным банковским балансом — воронка из цифр и отчётов",
+        "en": "A gravitational anomaly sucking in everything with a negative bank balance — a vortex of numbers and reports",
+        "la": "Anomalia gravitatis omnia cum ratione negativa trahens — vortex numerorum et relationum"
+      },
+      "image_path": "/assets/zones/singularity_credit.png",
+      "slug": "zone_singularity_credit",
+      "tier": 3,
+      "lore": {
+        "ru": "Это не совсем дыра, а гравитационная аномалия, которая всасывает в себя всё, у кого отрицательный баланс в межгалактическом банке. Место выглядит как гигантская воронка из цифр и бухгалтерских отчетов, вращающихся со скоростью света. Корабли третьего тира используют её гравитацию для разгона, но всегда есть риск случайно «перезанять» пару парсеков у будущего.",
+        "en": "Not exactly a hole, but a gravitational anomaly that sucks in everything with a negative balance at the intergalactic bank. The place looks like a giant vortex of numbers and accounting reports spinning at the speed of light. Tier Three ships use its gravity for acceleration, but there's always a risk of accidentally \"over-borrowing\" a couple of parsecs from the future.",
+        "la": "Non foramen sed anomalia gravitatis quae omnia cum ratione negativa in banco intergalactico trahit. Locus sicut vortex ingens numerorum et relationum accounting celeritate lucis rotantium."
+      },
+      "drop_table": [
+        "fuel_t3_dark_matter"
+      ],
+      "risk_pct": 40,
+      "rare_chance": 2.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 10,
+        "repair_matter_t2": 20,
+        "repair_matter_t3": 50,
+        "repair_matter_t4": 10,
+        "repair_matter_t5": 10
+      }
+    },
+    "zone_schrodinger_paradox": {
+      "name": {
+        "ru": "Сектор «Парадокс Шрёдингера»",
+        "en": "\"Schrödinger's Paradox\" Sector",
+        "la": "Sector \"Paradoxum Schrödinger\""
+      },
+      "description": {
+        "ru": "Каждый астероид одновременно минерал и космический пират, пока не подлетишь ближе",
+        "en": "Every asteroid is both a mineral and a space pirate until you fly closer",
+        "la": "Unusquisque asteroides est et mineralis et pirata spatialis donec appropinquas"
+      },
+      "image_path": "/assets/zones/schrodinger_paradox.png",
+      "slug": "zone_schrodinger_paradox",
+      "tier": 3,
+      "lore": {
+        "ru": "Зона, в которой каждый астероид одновременно является и минералом, и космическим пиратом, пока вы не подлетите ближе. Навигация здесь — это чистый дзен: вы никогда не знаете, прилетели ли вы в пункт назначения или просто представили это. Место крайне нервное, но невероятно богатое на ресурсы.",
+        "en": "A zone where every asteroid is simultaneously a mineral and a space pirate until you fly closer. Navigation here is pure zen: you never know if you've arrived at your destination or just imagined it. An extremely nerve-wracking but incredibly resource-rich place.",
+        "la": "Zona ubi unusquisque asteroides est simul mineralis et pirata spatialis donec appropinquas. Navigatio hic est purum zen: numquam scis an ad destinationem perveneris an solum imaginatus sis."
+      },
+      "drop_table": [
+        "fuel_t3_dark_matter"
+      ],
+      "risk_pct": 45,
+      "rare_chance": 3.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 8,
+        "repair_matter_t2": 18,
+        "repair_matter_t3": 54,
+        "repair_matter_t4": 10,
+        "repair_matter_t5": 10
+      }
+    },
+    "zone_library_errors": {
+      "name": {
+        "ru": "Библиотека «Всех Ошибок Мироздания»",
+        "en": "Library of \"All Creation Errors\"",
+        "la": "Bibliotheca \"Omnium Errorum Creationis\""
+      },
+      "description": {
+        "ru": "Орбитальная станция с чертежами всех версий Вселенной, которые не заработали",
+        "en": "An orbital station with blueprints of all Universe versions that didn't work",
+        "la": "Statio orbitalis cum delineationibus omnium versionum Universi quae non functae sunt"
+      },
+      "image_path": "/assets/zones/library_errors.png",
+      "slug": "zone_library_errors",
+      "tier": 3,
+      "lore": {
+        "ru": "Гигантская орбитальная станция, где хранятся чертежи всех версий Вселенной, которые не заработали. Здесь можно найти чертеж планеты, где вместо океанов — кисель, или солнца, которое светит холодным синим светом по вторникам. Станция охраняется ИИ-библиотекарями, которые требуют за вход не деньги, а интересную историю о том, как вы умудрились долететь сюда на своем Rare-корабле.",
+        "en": "A massive orbital station storing blueprints of all Universe versions that didn't work. Here you can find a blueprint of a planet where oceans are made of jelly, or a sun that shines cold blue light on Tuesdays. The station is guarded by AI librarians who demand not money but an interesting story about how you managed to fly here in your Rare ship.",
+        "la": "Statio orbitalis ingens ubi delineationes omnium versionum Universi quae non functae sunt servantur. Hic delineationem planetae ubi oceana ex gelatina sunt invenire potes."
+      },
+      "drop_table": [
+        "fuel_t3_dark_matter"
+      ],
+      "risk_pct": 38,
+      "rare_chance": 2.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 10,
+        "repair_matter_t2": 22,
+        "repair_matter_t3": 48,
+        "repair_matter_t4": 10,
+        "repair_matter_t5": 10
+      }
+    },
+    "zone_curved_memories": {
+      "name": {
+        "ru": "Облако «Искривленных Воспоминаний»",
+        "en": "Cloud of \"Curved Memories\"",
+        "la": "Nubes \"Memoriarum Curvarum\""
+      },
+      "description": {
+        "ru": "Туманность из психоактивного газа, заставляющая бортовой компьютер «вспоминать» несуществующие события",
+        "en": "A nebula of psychoactive gas that makes the onboard computer \"remember\" events that never happened",
+        "la": "Nebula gasii psychoactivi quae computatrum onboard eventa quae numquam acciderunt \"memorare\" facit"
+      },
+      "image_path": "/assets/zones/curved_memories.png",
+      "slug": "zone_curved_memories",
+      "tier": 3,
+      "lore": {
+        "ru": "Туманность, состоящая из психоактивного газа, который заставляет бортовой компьютер «вспоминать» события, которых никогда не было. Пока вы летите через этот сектор, корабль может начать рассказывать вам о своей прошлой жизни в качестве тостера или военного крейсера. Это отличный способ свести с ума штурмана, но зато газ здесь идеально охлаждает реакторы на Темной материи.",
+        "en": "A nebula made of psychoactive gas that causes the onboard computer to \"remember\" events that never happened. While flying through this sector, your ship might start telling you about its past life as a toaster or a military cruiser. Great way to drive the navigator insane, but the gas here perfectly cools Dark Matter reactors.",
+        "la": "Nebula ex gasio psychoactivo composita quae computatrum onboard eventa quae numquam fuerunt \"memorare\" facit. Dum per hunc sectorem volas, navis de vita praeterita sua ut tostrum vel cruciator militaris narrare incipit."
+      },
+      "drop_table": [
+        "fuel_t3_dark_matter"
+      ],
+      "risk_pct": 50,
+      "rare_chance": 3.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 12,
+        "repair_matter_t2": 18,
+        "repair_matter_t3": 50,
+        "repair_matter_t4": 10,
+        "repair_matter_t5": 10
+      }
+    },
+    "zone_zero_meridian": {
+      "name": {
+        "ru": "Станция «Нулевой Меридиан Абсурда»",
+        "en": "Station \"Zero Meridian of Absurdity\"",
+        "la": "Statio \"Meridianus Zero Absurditatis\""
+      },
+      "description": {
+        "ru": "Станция, где время идёт в двух направлениях — снаружи в будущее, внутри в прошлое",
+        "en": "A station where time flows in two directions — outward to the future, inward to the past",
+        "la": "Statio ubi tempus in duas directiones fluit — foras in futurum, intus in praeteritum"
+      },
+      "image_path": "/assets/zones/zero_meridian.png",
+      "slug": "zone_zero_meridian",
+      "tier": 3,
+      "lore": {
+        "ru": "Станция, вокруг которой время идет в двух направлениях одновременно: снаружи — в будущее, внутри — в прошлое. Чтобы припарковаться, вам нужно совершить маневр, который технически невозможен, если вы не согласны слегка состариться и помолодеть в процессе. Самое популярное место для тех, кто хочет понять, как устроен наш мир, и немедленно забыть об этом.",
+        "en": "A station around which time flows in two directions simultaneously: outside — to the future, inside — to the past. To park, you need to perform a maneuver that's technically impossible unless you agree to slightly age and de-age in the process. The most popular place for those who want to understand how our world works and immediately forget about it.",
+        "la": "Statio circum quam tempus in duas directiones simul fluit: foras in futurum, intus in praeteritum. Ut parces, maneuver tecnic impossibilem perficere debes nisi paulum senescere et iuvenescere in processu consentias."
+      },
+      "drop_table": [
+        "fuel_t3_dark_matter"
+      ],
+      "risk_pct": 42,
+      "rare_chance": 2.8,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 10,
+        "repair_matter_t2": 20,
+        "repair_matter_t3": 50,
+        "repair_matter_t4": 10,
+        "repair_matter_t5": 10
+      }
+    },
+    "zone_absolute_status": {
+      "name": {
+        "ru": "Вершина «Абсолютного Статуса»",
+        "en": "Peak of \"Absolute Status\"",
+        "la": "Cacumen \"Status Absoluti\""
+      },
+      "description": {
+        "ru": "Искусственное сооружение из золотого плазменного света — элитные корабли «светятся» на его фоне",
+        "en": "An artificial structure of golden plasma light — elite ships \"shine\" against its backdrop",
+        "la": "Structura artificialis ex luce plasma aurea — naves elitae contra eam fulgent"
+      },
+      "image_path": "/assets/zones/absolute_status.png",
+      "slug": "zone_absolute_status",
+      "tier": 4,
+      "lore": {
+        "ru": "Это не планета, а искусственное сооружение из чистого золотого плазменного света. Оно висит над пространственным разломом и существует исключительно для того, чтобы элитные корабли могли «засветиться» на фоне этого великолепия. Здесь нет ресурсов, кроме «чувства собственной важности», которое здесь можно собрать в контейнеры и продать на черном рынке как эликсир уверенности.",
+        "en": "Not a planet, but an artificial structure made of pure golden plasma light. It hovers above a spatial rift and exists solely so elite ships can \"show off\" against its magnificence. There are no resources here except \"a sense of self-importance,\" which can be collected in containers and sold on the black market as a confidence elixir.",
+        "la": "Non planeta sed structura artificialis ex pura luce plasma aurea. Super riftum spatialem pendet et solum existit ut naves elitae contra magnificentiam eius fulgere possint."
+      },
+      "drop_table": [
+        "fuel_t4_singularity_ether"
+      ],
+      "risk_pct": 55,
+      "rare_chance": 4.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 45
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 40
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 10,
+        "repair_matter_t3": 20,
+        "repair_matter_t4": 50,
+        "repair_matter_t5": 15
+      }
+    },
+    "zone_singular_architects": {
+      "name": {
+        "ru": "Сектор «Сингулярных Архитекторов»",
+        "en": "Sector of \"Singular Architects\"",
+        "la": "Sector \"Architectorum Singularium\""
+      },
+      "description": {
+        "ru": "Место, где древние цивилизации тренировались строить миры — недоделанные планеты-черновики висят в пустоте",
+        "en": "Where ancient civilizations practiced building worlds — unfinished draft planets hang in the void",
+        "la": "Ubi civilizationes antiquae mundos aedificare exercebant — planetae imperfectae in vacuo pendent"
+      },
+      "image_path": "/assets/zones/singular_architects.png",
+      "slug": "zone_singular_architects",
+      "tier": 4,
+      "lore": {
+        "ru": "Место, где древние цивилизации (или очень скучающие боги) тренировались строить миры. Здесь можно найти недоделанные планеты-черновики, которые висят в пустоте, ожидая, пока кто-то закончит их код. Пилоты Epic-кораблей прилетают сюда, чтобы с помощью Сингулярного эфира «дописать» кусочек реальности и забрать себе часть готовой материи.",
+        "en": "A place where ancient civilizations (or very bored gods) practiced building worlds. Here you can find unfinished draft planets hanging in the void, waiting for someone to finish their code. Epic ship pilots fly here to \"write in\" a piece of reality using Singularity Ether and take some finished matter for themselves.",
+        "la": "Locus ubi civilizationes antiquae (aut dei valde taediosi) mundos aedificare exercebant. Hic planetas imperfectas in vacuo pendentes invenire potes, quae expectant dum aliquis codicem earum perficiat."
+      },
+      "drop_table": [
+        "fuel_t4_singularity_ether"
+      ],
+      "risk_pct": 62,
+      "rare_chance": 5.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 45
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 40
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 8,
+        "repair_matter_t3": 22,
+        "repair_matter_t4": 50,
+        "repair_matter_t5": 15
+      }
+    },
+    "zone_library_deals": {
+      "name": {
+        "ru": "Библиотека «Великих Сделок»",
+        "en": "Library of \"Great Deals\"",
+        "la": "Bibliotheca \"Magnorum Pactorum\""
+      },
+      "description": {
+        "ru": "Станция-книга, где каждая страница — история транзакции, изменившей судьбу галактики",
+        "en": "A station-book where every page is a transaction history that changed the galaxy's fate",
+        "la": "Statio-liber ubi unaquaeque pagina est historia transactionis quae fatum galaxiae mutavit"
+      },
+      "image_path": "/assets/zones/library_deals.png",
+      "slug": "zone_library_deals",
+      "tier": 4,
+      "lore": {
+        "ru": "Станция, которая на самом деле является гигантской книгой. Каждая страница — это история транзакции, которая изменила судьбу галактики. Здесь хранится запись о том, как кто-то когда-то продал право на владение туманностью за один космический сэндвич. Эпические корабли прилетают сюда, чтобы «подписать» новые контракты и обновить свой статус в блокчейне Вселенной.",
+        "en": "A station that is actually a giant book. Each page is the history of a transaction that changed the fate of the galaxy. Here lies the record of someone who once sold ownership of a nebula for a single cosmic sandwich. Epic ships fly here to \"sign\" new contracts and update their status in the Universe's blockchain.",
+        "la": "Statio quae re vera est liber ingens. Unaquaeque pagina est historia transactionis quae fatum galaxiae mutavit. Hic recordum servatur de aliquo qui ius proprietatis nebulae pro uno cosmico sandvico vendidit."
+      },
+      "drop_table": [
+        "fuel_t4_singularity_ether"
+      ],
+      "risk_pct": 58,
+      "rare_chance": 4.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 45
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 40
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 10,
+        "repair_matter_t3": 18,
+        "repair_matter_t4": 52,
+        "repair_matter_t5": 15
+      }
+    },
+    "zone_pure_ether": {
+      "name": {
+        "ru": "Облако «Чистого Эфира»",
+        "en": "Cloud of \"Pure Ether\"",
+        "la": "Nubes \"Aetheris Puri\""
+      },
+      "description": {
+        "ru": "Огромная туманность из Сингулярного эфира — приборы показывают будущее на 5 минут вперёд",
+        "en": "A massive nebula of Singularity Ether — instruments show the future 5 minutes ahead",
+        "la": "Nubes ingens ex Aethere Singularitatis — instrumenta futurum 5 minuta ante ostendunt"
+      },
+      "image_path": "/assets/zones/pure_ether.png",
+      "slug": "zone_pure_ether",
+      "tier": 4,
+      "lore": {
+        "ru": "Огромная туманность, состоящая из того самого Сингулярного эфира, которым заправляются корабли 4-го тира. Здесь так много энергии, что приборы начинают показывать будущее на пять минут вперед. Главная опасность — случайно встретить самого себя, который летит заправляться через 10 минут, и заспорить, кто должен заправляться первым.",
+        "en": "A massive nebula made of the very Singularity Ether that Tier Four ships refuel with. There's so much energy here that instruments start showing the future five minutes ahead. The main danger — accidentally meeting yourself flying in to refuel in 10 minutes, and arguing about who should refuel first.",
+        "la": "Nebula ingens ex ipso Aethere Singularitatis composita quo naves gradus quarti combustible accipiunt. Tam multa energia hic est ut instrumenta futurum quinque minuta ante ostendere incipiant."
+      },
+      "drop_table": [
+        "fuel_t4_singularity_ether"
+      ],
+      "risk_pct": 68,
+      "rare_chance": 6.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 45
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 40
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 10,
+        "repair_matter_t3": 20,
+        "repair_matter_t4": 48,
+        "repair_matter_t5": 17
+      }
+    },
+    "zone_ego_olympus": {
+      "name": {
+        "ru": "Планета «Эго-Олимп»",
+        "en": "Planet \"Ego-Olympus\"",
+        "la": "Planeta \"Ego-Olympus\""
+      },
+      "description": {
+        "ru": "Планета, ландшафт которой подстраивается под желания пилота — замок из хрусталя? Пожалуйста",
+        "en": "A planet whose landscape adapts to the pilot's desires — a crystal castle? Sure",
+        "la": "Planeta cuius superficies se desideriis pilotis adaptat — castellum crystallinum? Libenter"
+      },
+      "image_path": "/assets/zones/ego_olympus.png",
+      "slug": "zone_ego_olympus",
+      "tier": 4,
+      "lore": {
+        "ru": "Планета, ландшафт которой в реальном времени подстраивается под желания пилота, приземлившегося в Epic-корабле. Хочешь замок из чистого хрусталя? Пожалуйста. Хочешь водопад из шампанского? Держи. Планета делает всё, чтобы ты почувствовал себя центром мироздания. Не забудь улететь до того, как планета решит, что ты — её любимая игрушка.",
+        "en": "A planet whose landscape adapts in real-time to the desires of any pilot who lands in an Epic ship. Want a castle made of pure crystal? Done. Want a champagne waterfall? Here you go. The planet does everything to make you feel like the center of the universe. Don't forget to leave before the planet decides you're its favorite toy.",
+        "la": "Planeta cuius superficies in tempore reali se desideriis pilotis in nave Epica appulsi adaptat. Castellum ex crystallo pura vis? Factum. Cataractam e champagne? Ecce. Planeta omnia facit ut te centrum universi sentias."
+      },
+      "drop_table": [
+        "fuel_t4_singularity_ether"
+      ],
+      "risk_pct": 65,
+      "rare_chance": 5.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 45
+        },
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 40
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 10,
+        "repair_matter_t3": 20,
+        "repair_matter_t4": 50,
+        "repair_matter_t5": 15
+      }
+    },
+    "zone_admin_resource": {
+      "name": {
+        "ru": "Черная Дыра «Административный Ресурс»",
+        "en": "\"Administrative Resource\" Black Hole",
+        "la": "Foramen Nigrum \"Res Administrativa\""
+      },
+      "description": {
+        "ru": "Гигантский «корзинный файл» вселенной — сюда сваливается всё удалённое из реальности",
+        "en": "The Universe's giant \"Recycle Bin\" — everything deleted from reality ends up here",
+        "la": "Ingens \"Corbis Deletorum\" universi — omnia ex realitate deleta huc cadunt"
+      },
+      "image_path": "/assets/zones/admin_resource.png",
+      "slug": "zone_admin_resource",
+      "tier": 5,
+      "lore": {
+        "ru": "Это не дыра, а гигантский «корзинный файл» вселенной. Сюда сваливается всё, что когда-либо было удалено из реальности: нерожденные цивилизации, несказанные слова, неправильные ответы на школьных контрольных и, конечно, баги кода. Легендарные корабли залетают сюда, чтобы подобрать что-нибудь эпическое из «Корзины», пока не сработал Auto-Delete.",
+        "en": "Not a hole, but the Universe's giant \"Recycle Bin.\" Everything ever deleted from reality ends up here: unborn civilizations, unspoken words, wrong answers on school tests, and of course, code bugs. Legendary ships fly here to pick up something epic from the \"Bin\" before Auto-Delete kicks in.",
+        "la": "Non foramen sed ingens \"Corbis Deletorum\" universi. Hic omnia quae umquam ex realitate deleta sunt cadunt: civilizationes non natae, verba non dicta, responsa scholastica errata et, utique, buga codicis."
+      },
+      "drop_table": [
+        "fuel_t5_dark_energy"
+      ],
+      "risk_pct": 75,
+      "rare_chance": 8.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 5,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 20,
+        "repair_matter_t5": 60
+      }
+    },
+    "zone_gods_conference": {
+      "name": {
+        "ru": "Сектор «Конференц-зал Богов»",
+        "en": "\"Gods' Conference Room\" Sector",
+        "la": "Sector \"Conclave Deorum\""
+      },
+      "description": {
+        "ru": "Место, где высшие сущности обсуждают, почему в секторе 42 вечно ломаются варп-двигатели",
+        "en": "Where higher beings discuss why warp engines always break in sector 42",
+        "la": "Ubi entitates superiores disputant cur machinae warp in sectore 42 semper franguntur"
+      },
+      "image_path": "/assets/zones/gods_conference.png",
+      "slug": "zone_gods_conference",
+      "tier": 5,
+      "lore": {
+        "ru": "Место, где высшие сущности (или просто очень уставшие программисты космоса) обсуждают, почему в секторе 42 вечно ломаются варп-двигатели. Здесь можно найти бесконечный кофе, стопку чертежей планет, нарисованных на салфетках, и пару забытых пультов управления реальностью. Очень не рекомендуется заходить без записи, но «Chaos» или «Genesis» там свои люди.",
+        "en": "A place where higher beings (or just very tired space programmers) discuss why warp engines always break in sector 42. Here you can find infinite coffee, a stack of planet blueprints drawn on napkins, and a couple of forgotten reality control panels. Highly inadvisable to enter without an appointment, but \"Chaos\" and \"Genesis\" are insiders here.",
+        "la": "Locus ubi entitates superiores (aut solum programmatores spatii valde fessi) disputant cur machinae warp in sectore 42 semper franguntur. Hic caffe infinitum, delineationes planetarum in mappis pictas, et paucos oblitos gubernaculos realitatis invenire potes."
+      },
+      "drop_table": [
+        "fuel_t5_dark_energy"
+      ],
+      "risk_pct": 82,
+      "rare_chance": 9.5,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 5,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 20,
+        "repair_matter_t5": 60
+      }
+    },
+    "zone_random_epiphany": {
+      "name": {
+        "ru": "Туманность «Случайного Озарения»",
+        "en": "Nebula of \"Random Epiphany\"",
+        "la": "Nebula \"Epiphania Fortuita\""
+      },
+      "description": {
+        "ru": "Облако газа, бомбардирующее мозг истинами вроде «А почему бы не сделать вселенную квадратной?»",
+        "en": "A gas cloud bombarding your brain with truths like \"Why not make the universe square?\"",
+        "la": "Nubes gasii cerebrum veritatibus bombardans sicut \"Cur non universum quadratum faciamus?\""
+      },
+      "image_path": "/assets/zones/random_epiphany.png",
+      "slug": "zone_random_epiphany",
+      "tier": 5,
+      "lore": {
+        "ru": "Облако газа, которое постоянно бомбардирует ваш мозг (и бортовой компьютер) истинами вроде «А почему бы нам не сделать вселенную квадратной?». Уровень пафоса здесь так высок, что вы начинаете чувствовать себя как минимум героем античной трагедии, даже если просто пытаетесь припарковаться.",
+        "en": "A gas cloud that constantly bombards your brain (and the onboard computer) with truths like \"Why not make the universe square?\". The level of pathos here is so high that you start feeling like at least a hero of an ancient tragedy, even if you're just trying to park.",
+        "la": "Nubes gasii quae cerebrum tuum (et computatrum onboard) veritatibus constanter bombardat sicut \"Cur non universum quadratum faciamus?\". Gradus pathos hic tam altus est ut te saltem heroem tragoediae antiquae sentire incipias."
+      },
+      "drop_table": [
+        "fuel_t5_dark_energy"
+      ],
+      "risk_pct": 88,
+      "rare_chance": 11.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 5,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 20,
+        "repair_matter_t5": 60
+      }
+    },
+    "zone_placebo": {
+      "name": {
+        "ru": "Планета «Эффект Плацебо»",
+        "en": "Planet \"Placebo Effect\"",
+        "la": "Planeta \"Effectus Placebo\""
+      },
+      "description": {
+        "ru": "Планета существует только потому, что все в неё верят — горы золота появятся, если ты уверен",
+        "en": "A planet that exists only because everyone believes in it — gold mountains appear if you're sure",
+        "la": "Planeta quae solum existit quia omnes in eam credunt — montes aurei apparent si certus es"
+      },
+      "image_path": "/assets/zones/placebo.png",
+      "slug": "zone_placebo",
+      "tier": 5,
+      "lore": {
+        "ru": "Самая парадоксальная планета: она существует только потому, что все в ней верят. Если вы прилетите сюда на «Infinity» и будете твердо уверены, что здесь есть горы золота — они будут. Если вы усомнитесь — вы врежетесь в пустоту. Планета — идеальный тест на то, насколько сильно вы верите в свои NFT-активы.",
+        "en": "The most paradoxical planet: it exists only because everyone believes in it. If you fly here on an \"Infinity\" and firmly believe there are mountains of gold — there will be. If you doubt — you'll crash into emptiness. The planet is the perfect test of how much you believe in your NFT assets.",
+        "la": "Planeta maxime paradoxica: solum existit quia omnes in eam credunt. Si huc in \"Infinitate\" volas et firme credas montes aureos esse — erunt. Si dubitas — in vacuum impinges."
+      },
+      "drop_table": [
+        "fuel_t5_dark_energy"
+      ],
+      "risk_pct": 80,
+      "rare_chance": 10.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 5,
+        "repair_matter_t3": 10,
+        "repair_matter_t4": 20,
+        "repair_matter_t5": 60
+      }
+    },
+    "zone_end_of_shift": {
+      "name": {
+        "ru": "Станция «Конец Смены»",
+        "en": "Station \"End of Shift\"",
+        "la": "Statio \"Finis Operae\""
+      },
+      "description": {
+        "ru": "Станция на краю «Экрана Загрузки» реальности — всё закрыто, свет выключен, вселенная засыпает",
+        "en": "A station at the edge of reality's \"Loading Screen\" — everything closed, lights off, universe sleeping",
+        "la": "Statio in fine \"Schlae Onerationis\" realitatis — omnia clausa, lumina exstincta, universus dormit"
+      },
+      "image_path": "/assets/zones/end_of_shift.png",
+      "slug": "zone_end_of_shift",
+      "tier": 5,
+      "lore": {
+        "ru": "Станция, висящая на самом краю «Экрана Загрузки» реальности. Здесь всё закрыто, свет выключен, а в фоновом режиме слышно, как вселенная потихоньку выключается на ночь. Легендарные корабли прилетают сюда, чтобы «постоять в темноте» и перезарядиться от самой сути пустоты. Считается самым престижным местом во всей игре: если вы здесь, значит, дальше лететь просто некуда.",
+        "en": "A station hanging at the very edge of reality's \"Loading Screen.\" Everything is closed here, the lights are off, and in the background you can hear the universe quietly shutting down for the night. Legendary ships fly here to \"stand in the dark\" and recharge from the very essence of emptiness. Considered the most prestigious place in the entire game: if you're here, there's simply nowhere left to fly.",
+        "la": "Statio in ipso fine \"Schlae Onerationis\" realitatis pendens. Hic omnia clausa sunt, lumina exstincta, et in fundo universum sensim se ad noctem exstinguere audire potes. Naves legendariae huc veniunt ut \"in tenebris stent\" et ab ipsa essentia vacui se rechargent."
+      },
+      "drop_table": [
+        "fuel_t5_dark_energy"
+      ],
+      "risk_pct": 90,
+      "rare_chance": 12.0,
+      "loot_table": [
+        {
+          "essence_slug": "essence_t5_bug_report",
+          "weight": 50
+        },
+        {
+          "essence_slug": "essence_t4_ether_condensate",
+          "weight": 35
+        },
+        {
+          "essence_slug": "essence_t3_paradox_dust",
+          "weight": 15
+        }
+      ],
+      "repair_drop_weights": {
+        "repair_matter_t1": 5,
+        "repair_matter_t2": 5,
+        "repair_matter_t3": 8,
+        "repair_matter_t4": 22,
+        "repair_matter_t5": 60
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "fuel_t1_mangan_hydride": {
+    "name": { "ru": "Гидрид марганца", "en": "Mangan Hydride", "la": "Hydridum Mangani" },
+    "short_description": { "ru": "«Первый Штрих»", "en": "\"First Stroke\"", "la": "\"Primus Ictus\"" },
+    "description": {
+      "ru": "Самое дешевое горючее в известной галактике. Пахнет как подгоревший тост и старые батарейки. По слухам, на 40% состоит из обычной газировки, но корабли первого тира послушно переваривают его, издавая звуки взлетающего пылесоса.",
+      "en": "The cheapest fuel in the known galaxy. Smells like burnt toast and old batteries. Rumor has it, it's 40% regular soda, but tier-one ships obediently digest it, making sounds like a taking-off vacuum cleaner.",
+      "la": "Combustibile vilissimum in galaxia nota. Olet sicut panis tostus combustus et battery veteres. Rumor dicit eum 40% sodam regularem esse, sed naves primi gradus eum oboedienter digerunt, sonum aspiratoris volantis edentes."
+    },
+    "image_path": "/assets/fuel/t1_mangan_hydride.png",
+    "tier": 1,
+    "slug": "fuel_t1_mangan_hydride",
+    "rarity": "common",
+    "type": "fuel",
+    "icon_path": "/assets/icons/fuel_t1.png",
+    "lore": {
+      "ru": "Слегка мутная синяя жидкость в пластиковой канистре с наклейкой «Не пить! (Серьезно, не надо)».",
+      "en": "Slightly cloudy blue liquid in a plastic canister with a label 'Do not drink! (Seriously, don't)'.",
+      "la": "Liquor caeruleus subnubilus in canistro plastico cum inscriptione 'Ne bibas! (Serio, noli)'."
+    },
+    "stats": { "efficiency": 100, "burn_rate": 1.0 }
+  },
+  "fuel_t2_methane_fraction": {
+    "name": { "ru": "Метановая фракция", "en": "Methane Fraction", "la": "Fractio Methanica" },
+    "short_description": { "ru": "«Гордость Коров»", "en": "\"Pride of Cows\"", "la": "\"Gloria Vaccarum\"" },
+    "description": {
+      "ru": "Высокооктановый сжиженный газ. Вырабатывается на гигантских фермерских планетах-астероидах. Корабли второго тира летят на нем заметно быстрее, но в ангаре после заправки еще долго пахнет... деревенским утром и упущенными возможностями.",
+      "en": "High-octane liquefied gas. Produced on giant farm planet-asteroids. Tier-two ships fly noticeably faster on it, but the hangar smells like a country morning and missed opportunities for a long time after refueling.",
+      "la": "Gas liquefactus high-octanus. Productus in gigantibus planetis-asteroidibus agrariis. Naves gradus secundi eo visibiliter celerius volant, sed in hangar post repletionem diu olet... mane rustico et occasionibus amissis."
+    },
+    "image_path": "/assets/fuel/t2_methane_fraction.png",
+    "tier": 2,
+    "slug": "fuel_t2_methane_fraction",
+    "rarity": "uncommon",
+    "type": "fuel",
+    "icon_path": "/assets/icons/fuel_t2.png",
+    "lore": {
+      "ru": "Баллон ядовито-зеленого цвета, который подозрительно раздувается, если на него долго смотреть.",
+      "en": "A poison-green cylinder that suspiciously bulges if you stare at it too long.",
+      "la": "Cylindrus viridis venenosus qui suspiciose inflatur si eum diu intueris."
+    },
+    "stats": { "efficiency": 150, "burn_rate": 1.1 }
+  },
+  "fuel_t3_dark_matter": {
+    "name": { "ru": "Тёмная материя", "en": "Dark Matter", "la": "Materia Obscura" },
+    "short_description": { "ru": "«Чёрный Четверг»", "en": "\"Black Friday\"", "la": "\"Dies Veneris Nigra\"" },
+    "description": {
+      "ru": "Субстанция, которая весит невероятно много, но занимает подозрительно мало места. Если уронить капсулу с этим топливом на ногу, вы провалитесь сквозь текстуры станции прямо в ядро планеты. Зато Rare-корабли на нём буквально поют.",
+      "en": "A substance that weighs incredibly much but takes up suspiciously little space. If you drop a capsule of this fuel on your foot, you'll fall through the station's textures straight into the planet's core. But Rare ships literally sing on it.",
+      "la": "Substantia quae incredibiliter multum pendet sed spatium valde parvum occupat. Si capsulam huius combustibilis in pedem demittis, per texturas stationis recte in nucleum planetae cades. Sed naves Rarae in eo literaliter canunt."
+    },
+    "image_path": "/assets/fuel/t3_dark_matter.png",
+    "tier": 3,
+    "slug": "fuel_t3_dark_matter",
+    "rarity": "rare",
+    "type": "fuel",
+    "icon_path": "/assets/icons/fuel_t3.png",
+    "lore": {
+      "ru": "Абсолютно чёрная сфера в магнитной ловушке, которая поглощает свет пикселей вокруг себя.",
+      "en": "An absolutely black sphere in a magnetic trap that absorbs the light of pixels around it.",
+      "la": "Sphaera absolute nigra in trappa magnetica quae lucem pixellorum circa se absorbet."
+    },
+    "stats": { "efficiency": 220, "burn_rate": 1.0 }
+  },
+  "fuel_t4_singularity_ether": {
+    "name": { "ru": "Сингулярный эфир", "en": "Singularity Ether", "la": "Aether Singularitatis" },
+    "short_description": { "ru": "«Безлимитный Кредит»", "en": "\"Unlimited Credit\"", "la": "\"Creditum Infinitum\"" },
+    "description": {
+      "ru": "Элитная субстанция, текущая сквозь дыры в бюджете конструкторских бюро. Обладает легким запахом дорогого парфюма и свежеотпечатанных NFT-сертификатов. На заправку одного Epic-корабля уходит столько энергии, сколько средняя планета тратит на просмотр котиков в интернетах за сто лет.",
+      "en": "An elite substance flowing through the budget holes of design bureaus. It has a faint scent of expensive perfume and freshly printed NFT certificates. Refueling a single Epic ship takes as much energy as an average planet spends watching cat videos for a hundred years.",
+      "la": "Substantia elitae quae per foramina budgeti officinarum designatorum fluit. Levem odorem unguenti pretiosi et certificationum NFT nuper impressarum habet. Ad navem Epicam unam replendam tantum energiae consumitur quantum planeta media in centum annis felium videos in internet spectando consumit."
+    },
+    "image_path": "/assets/fuel/t4_singularity_ether.png",
+    "tier": 4,
+    "slug": "fuel_t4_singularity_ether",
+    "rarity": "epic",
+    "type": "fuel",
+    "icon_path": "/assets/icons/fuel_t4.png",
+    "lore": {
+      "ru": "Изящная стеклянная колба с неоново-розовой жидкостью, внутри которой медленно вращаются золотые знаки доллара или шестеренки.",
+      "en": "An elegant glass vial with neon-pink liquid, inside which golden dollar signs or gears slowly rotate.",
+      "la": "Ampulla vitrea elegans cum liquore roseo-neon, intra quam signa dollarum aurea vel rotae dentatae lente rotantur."
+    },
+    "stats": { "efficiency": 350, "burn_rate": 0.6 }
+  },
+  "fuel_t5_dark_energy": {
+    "name": { "ru": "Тёмная энергия", "en": "Dark Energy", "la": "Energia Obscura" },
+    "short_description": { "ru": "«Ой, Всё»", "en": "\"Oh, Whatever\"", "la": "\"Heu, Omnia\"" },
+    "description": {
+      "ru": "Это не просто топливо, это буквально концентрированный жидкий Хаос и чистая Тёмная Энергия. На этой штуке вселенная расширяется, когда ей лень стоять на месте. Попытка налить её в бак без благословения ИИ обычно приводит к тому, что ваш корабль превращается в букет герани, но если всё прошло успешно — вы можете обогнать само время.",
+      "en": "This isn't just fuel — it's literally concentrated liquid Chaos and pure Dark Energy. It's the stuff the universe expands on when it's too lazy to stand still. Trying to pour it into a tank without the AI's blessing usually results in your ship turning into a bouquet of geraniums, but if everything goes well — you can outrun time itself.",
+      "la": "Hoc non est solum combustibile — est literaliter Chaos liquidum concentratum et Energia Obscura pura. Hac re universum se expandit cum piget stare. Si eam in reservoirium sine benedictione AI fundere conaris, navis tua plerumque in fasciculum geranii vertitur, sed si omnia bene procedunt — ipsum tempus praeterire potes."
+    },
+    "image_path": "/assets/fuel/t5_dark_energy.png",
+    "tier": 5,
+    "slug": "fuel_t5_dark_energy",
+    "rarity": "legendary",
+    "type": "fuel",
+    "icon_path": "/assets/icons/fuel_t5.png",
+    "lore": {
+      "ru": "Мерцающая глитч-плазма, которая постоянно меняет свой цвет и слегка дергается.",
+      "en": "Flickering glitch-plasma that constantly changes color and twitches slightly.",
+      "la": "Plasma glitch fulgens quae colorem perpetuo mutat et leviter convellitur."
+    },
+    "stats": { "efficiency": 600, "burn_rate": 0.25 }
+  }
+}

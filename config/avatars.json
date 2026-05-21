@@ -1,0 +1,11 @@
+{
+  "avatars": {
+    "default_navigator": {
+      "name": { "ru": "Навигатор по умолчанию", "en": "Default Navigator", "la": "Navigator Default" },
+      "slug": "default_navigator",
+      "image_path": "/assets/avatars/default_navigator.png",
+      "tier": 1,
+      "unlock_condition": "default"
+    }
+  }
+}

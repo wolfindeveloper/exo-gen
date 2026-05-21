@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+*.egg
+
+# uv
+# uv.lock is committed for reproducible builds
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# mypy
+.mypy_cache/
+
+# ruff
+.ruff_cache/
+
+# pytest
+.pytest_cache/
+
+# Node (frontend)
+frontend/node_modules/
+frontend/dist/
+
+# TON contracts build artifacts
+contracts/build/
+
+# Secrets
+*.pem
+*.key
+secrets/
+
+# AI generated files
+graphify-out/manifest.json
+graphify-out/cost.json

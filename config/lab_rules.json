@@ -1,0 +1,16 @@
+{
+  "lab_rules": {
+    "min_essences": 3,
+    "max_essences": 5,
+    "xgen_burn_percent": 100,
+    "failure_return_percent": 50,
+    "hash_algorithm": "sha256"
+  },
+  "essence_tiers": {
+    "essence_t1": { "tier": 1, "slug": "essence_t1" },
+    "essence_t2": { "tier": 2, "slug": "essence_t2" },
+    "essence_t3": { "tier": 3, "slug": "essence_t3" },
+    "essence_t4": { "tier": 4, "slug": "essence_t4" },
+    "essence_t5": { "tier": 5, "slug": "essence_t5" }
+  }
+}

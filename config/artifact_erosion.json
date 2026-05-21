@@ -1,0 +1,27 @@
+{
+  "artifact_erosion": {
+    "default_cycles": 10,
+    "floor_percent": 10,
+    "calibration_cost": {
+      "xgen": 25,
+      "resource_slug": "essence_t2"
+    }
+  },
+  "staking_yield": {
+    "global_pool_total": 40000000,
+    "daily_cap_percent": 0.1,
+    "activity_multiplier": {
+      "idle": 0.25,
+      "low": 0.5,
+      "medium": 0.75,
+      "high": 1.0
+    },
+    "rarity_multipliers": {
+      "t1": 1.0,
+      "t2": 1.5,
+      "t3": 2.0,
+      "t4": 3.0,
+      "t5": 5.0
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "ranks": {
+    "spark": {
+      "name": { "ru": "Искра", "en": "Spark", "la": "Scintilla" },
+      "slug": "spark",
+      "min_level": 1,
+      "max_level": 20
+    },
+    "wanderer": {
+      "name": { "ru": "Странник", "en": "Wanderer", "la": "Viator" },
+      "slug": "wanderer",
+      "min_level": 21,
+      "max_level": 40
+    },
+    "vector": {
+      "name": { "ru": "Вектор", "en": "Vector", "la": "Vector" },
+      "slug": "vector",
+      "min_level": 41,
+      "max_level": 60
+    },
+    "archon": {
+      "name": { "ru": "Архонд", "en": "Archon", "la": "Archon" },
+      "slug": "archon",
+      "min_level": 61,
+      "max_level": 80
+    },
+    "genesis": {
+      "name": { "ru": "Генезис", "en": "Genesis", "la": "Genesis" },
+      "slug": "genesis",
+      "min_level": 81,
+      "max_level": 100
+    }
+  },
+  "progression": {
+    "max_level": 100,
+    "xp_base": 100,
+    "xp_exponent": 1.8
+  }
+}
