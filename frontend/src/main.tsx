@@ -7,7 +7,7 @@ import { usePlayerStore } from './store/usePlayerStore'
 import { useConfigStore } from './store/useConfigStore'
 import './index.css'
 
-const manifestUrl = import.meta.env.VITE_TON_MANIFEST_URL || 'https://proud-pillows-slide.loca.lt/tonconnect-manifest.json'
+const manifestUrl = import.meta.env.VITE_TON_MANIFEST_URL || 'https://exo-gen.vercel.app/tonconnect-manifest.json'
 const network = import.meta.env.VITE_TON_NETWORK || 'testnet'
 
 function AppInitializer() {
