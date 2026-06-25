@@ -1,9 +1,10 @@
-
+import asyncio
 from contextlib import asynccontextmanager
 from app.infrastructure.database.session import engine
 from app.infrastructure.persistence.models.base import Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from app.config.settings import settings
 from app.presentation.api.routes.player import router as player_router
 from app.presentation.api.routes.admin import router as admin_router
@@ -19,9 +20,26 @@ from app.infrastructure.persistence.models import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # 🔥 Ждём, пока PostgreSQL поднимется (до 30 секунд)
+    for attempt in range(30):
+        try:
+            async with engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
+            print("✅ PostgreSQL is ready!")
+            break
+        except Exception:
+            print(f"⏳ Waiting for PostgreSQL... (attempt {attempt+1}/30)")
+            await asyncio.sleep(1)
+    else:
+        raise Exception("PostgreSQL did not start in time")
+    
+    # Создаём таблицы
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        print("✅ Tables created!")
+    
     yield
+    await engine.dispose()
 
 def create_app() -> FastAPI:
     app = FastAPI(
