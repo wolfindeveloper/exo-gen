@@ -20,24 +20,14 @@ from app.infrastructure.persistence.models import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 🔥 Ждём, пока PostgreSQL поднимется (до 30 секунд)
-    for attempt in range(30):
-        try:
-            async with engine.connect() as conn:
-                await conn.execute(text("SELECT 1"))
-            print("✅ PostgreSQL is ready!")
-            break
-        except Exception:
-            print(f"⏳ Waiting for PostgreSQL... (attempt {attempt+1}/30)")
-            await asyncio.sleep(1)
-    else:
-        raise Exception("PostgreSQL did not start in time")
-    
-    # Создаём таблицы
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        print("✅ Tables created!")
-    
+    print(f"🔌 DATABASE_URL: {engine.url}")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("✅ Tables created successfully!")
+    except Exception as e:
+        print(f"❌ Database connection failed: {type(e).__name__}: {e}")
+        raise
     yield
     await engine.dispose()
 
