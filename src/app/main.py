@@ -1,3 +1,7 @@
+
+from contextlib import asynccontextmanager
+from app.infrastructure.database.session import engine
+from app.infrastructure.persistence.models.base import Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
@@ -7,12 +11,24 @@ from app.presentation.api.routes.zones import router as zones_router
 from app.presentation.api.routes.expeditions import router as expeditions_router
 from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
+from app.infrastructure.persistence.models import (
+    player_orm, ship_orm, zone_orm, expedition_orm, 
+    season_orm, chapter_orm, article_orm, 
+    guide_progress_orm, item_orm, inventory_item_orm
+)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.APP_NAME,
         description="Don't Panic. Just idle through the galaxy.",
-        version="0.1.0"
+        version="0.1.0",
+        lifespan=lifespan
     )
 
     app.add_middleware(
