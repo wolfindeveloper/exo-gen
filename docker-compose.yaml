@@ -8,6 +8,13 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - PYTHONPATH=/app/src
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.exo-app.rule=Host(`api.exo-gen.com`)"
+      - "traefik.http.routers.exo-app.entrypoints=https"
+      - "traefik.http.routers.exo-app.tls=true"
+      - "traefik.http.routers.exo-app.tls.certresolver=letsencrypt"
+      - "traefik.http.services.exo-app.loadbalancer.server.port=8000"
     networks:
       - coolify
 
