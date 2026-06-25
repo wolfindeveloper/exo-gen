@@ -1,0 +1,19 @@
+from abc import ABC, abstractmethod
+from uuid import UUID
+from app.domain.entities.item import Item
+
+class ItemRepository(ABC):
+    @abstractmethod
+    async def save(self, item: Item) -> None:
+        """Сохраняет новый предмет или обновляет существующий"""
+        pass
+
+    @abstractmethod
+    async def get_by_id(self, item_id: UUID) -> Item | None:
+        """Ищет предмет по его ID"""
+        pass
+
+    @abstractmethod
+    async def get_all(self) -> list[Item]:
+        """Возвращает все предметы (для админки или магазина)"""
+        pass

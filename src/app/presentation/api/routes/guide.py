@@ -1,0 +1,69 @@
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException
+from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.guide_progress_repository import GuideProgressRepository
+from app.application.use_cases.get_guide import GetGuideUseCase
+from app.application.use_cases.unlock_article import UnlockArticleUseCase
+from app.application.use_cases.process_trigger import ProcessTriggerUseCase
+from app.application.use_cases.get_leaderboard import GetLeaderboardUseCase
+from app.infrastructure.telegram.security import get_current_player
+from app.domain.entities.player import Player
+from app.application.dtos.guide_dto import GuideResponseDTO, UnlockArticleDTO, UnlockArticleResponseDTO, TriggerEventDTO, TriggerEventResponseDTO, LeaderboardEntryDTO
+
+
+from app.presentation.api.dependencies import get_player_repo, get_chapter_repo, get_guide_progress_repo
+
+router = APIRouter(prefix="/guide", tags=["Guide"])
+
+@router.get("/", response_model=GuideResponseDTO)
+async def get_guide(
+    current_player: Player = Depends(get_current_player),
+    chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+):
+
+    use_case = GetGuideUseCase(chapter_repo, progress_repo)
+    return await use_case.execute(current_player)
+
+
+@router.post("/unlock", response_model=UnlockArticleResponseDTO)
+async def unlock_article(
+    dto: UnlockArticleDTO,
+    current_player: Player = Depends(get_current_player),
+    chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+):
+
+    use_case = UnlockArticleUseCase(chapter_repo, guide_repo)
+    try:
+        return await use_case.execute(current_player, dto.article_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/trigger", response_model=TriggerEventResponseDTO)
+async def process_trigger(
+    dto: TriggerEventDTO,
+    current_player: Player = Depends(get_current_player),
+    player_repo: PlayerRepository = Depends(get_player_repo),
+    chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+):
+    use_case = ProcessTriggerUseCase(player_repo, chapter_repo, guide_repo)
+    try:
+        return await use_case.execute(current_player, dto.event_type)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/leaderboard", response_model=list[LeaderboardEntryDTO])
+async def get_leaderboard(
+    season_id: UUID, # Передаем ID сезона как query-параметр
+    progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+):
+
+    use_case = GetLeaderboardUseCase(progress_repo)
+    return await use_case.execute(season_id)
+

@@ -1,0 +1,50 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from uuid import UUID
+
+from app.domain.entities.inventory import Inventory
+from app.domain.repositories.inventory_repository import InventoryRepository
+from app.infrastructure.persistence.models.inventory_item_orm import InventoryItemORM
+from app.infrastructure.persistence.mappers import InventoryMapper, InventoryItemMapper
+
+class SQLAlchemyInventoryRepository(InventoryRepository):
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
+    async def get_by_player_id(self, player_id: UUID) -> Inventory:
+        stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == player_id)
+        result = await self.session.execute(stmt)
+        items_orm = result.scalars().all()
+        
+        # Если у игрока еще нет предметов, вернется пустой список, 
+        # и InventoryMapper создаст пустой Агрегат.
+        return InventoryMapper.to_domain(player_id, items_orm)
+
+    async def save(self, inventory: Inventory) -> None:
+        # 1. Достаем все текущие предметы игрока из БД
+        stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
+        result = await self.session.execute(stmt)
+        existing_items_orm = {item.id: item for item in result.scalars().all()}
+
+        # 2. Проходимся по тому, что есть в Агрегате (в памяти)
+        for domain_item in inventory.items:
+            if domain_item.id in existing_items_orm:
+                # Предмет уже есть в БД - просто обновляем его количество и метаданные
+                orm_item = existing_items_orm[domain_item.id]
+                orm_item.quantity = domain_item.quantity
+                orm_item.item_metadata = domain_item.metadata
+                
+                # Удаляем из словаря, чтобы отметить как "обработанный"
+                del existing_items_orm[domain_item.id] 
+            else:
+                # Это новый предмет (например, только что выпал из экспедиции) - добавляем в БД
+                new_orm = InventoryItemMapper.to_orm(domain_item)
+                self.session.add(new_orm)
+
+        # 3. Всё, что осталось в словаре existing_items_orm, было удалено из Агрегата 
+        # (например, количество упало до 0 и доменной метод удалил его из списка).
+        # Удаляем эти записи из БД.
+        for orm_item in existing_items_orm.values():
+            await self.session.delete(orm_item)
+
+        await self.session.commit()

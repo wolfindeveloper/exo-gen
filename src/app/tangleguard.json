@@ -1,0 +1,24 @@
+{
+  "layers": [
+    {
+      "name": "Layer 1",
+      "description": "domain",
+      "workspace_paths": [
+        [
+          "app",
+          "domain"
+        ]
+      ]
+    }
+  ],
+  "layout": {
+    "nodes": {
+      "Layer 1": {
+        "x": 100,
+        "y": 100,
+        "width": 220,
+        "height": 200
+      }
+    }
+  }
+}

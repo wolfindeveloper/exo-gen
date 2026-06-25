@@ -1,0 +1,17 @@
+from pydantic import BaseModel
+from uuid import UUID
+
+class ClaimExpeditionDTO(BaseModel):
+    expedition_id: UUID
+
+class ClaimedItemDTO(BaseModel):
+    item_id: UUID
+    amount: int
+
+class ClaimExpeditionResponseDTO(BaseModel):
+    xgen_earned: int
+    fragments_earned: int
+    items_earned: list[ClaimedItemDTO] = [] # <-- НОВОЕ: Список выпавших предметов
+    optimism_lost: float
+    current_tea: float
+    current_optimism: float

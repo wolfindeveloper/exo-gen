@@ -1,0 +1,284 @@
+from uuid import UUID
+
+from app.domain.entities.player import Player
+from app.domain.entities.ship import Ship
+from app.domain.entities.zone import Zone
+from app.domain.entities.expedition import Expedition, ExpeditionStatus
+from app.domain.entities.article import Article
+from app.domain.entities.chapter import Chapter
+from app.domain.entities.season import Season
+from app.domain.entities.item import Item, ItemType
+from app.domain.entities.inventory_item import InventoryItem
+from app.domain.entities.inventory import Inventory
+from app.infrastructure.persistence.models.player_orm import PlayerORM
+from app.infrastructure.persistence.models.ship_orm import ShipORM
+from app.infrastructure.persistence.models.zone_orm import ZoneORM
+from app.infrastructure.persistence.models.expedition_orm import ExpeditionORM
+from app.infrastructure.persistence.models.article_orm import ArticleORM
+from app.infrastructure.persistence.models.chapter_orm import ChapterORM
+from app.infrastructure.persistence.models.season_orm import SeasonORM
+from app.infrastructure.persistence.models.item_orm import ItemORM
+from app.infrastructure.persistence.models.inventory_item_orm import InventoryItemORM
+
+
+class PlayerMapper:
+    @staticmethod
+    def ship_to_orm(ship: Ship, player_id: UUID) -> ShipORM:
+        return ShipORM(
+            id=ship.id,
+            player_id=player_id,
+            name=ship.name,
+            tea_level=ship.tea_level,
+            optimism=ship.optimism,
+            speed=ship.speed,
+            defense=ship.defense,
+            luck=ship.luck
+        )
+
+    @staticmethod
+    def ship_to_domain(ship_orm: ShipORM) -> Ship:
+        return Ship(
+            id=ship_orm.id,
+            player_id=ship_orm.player_id,
+            name=ship_orm.name,
+            tea_level=ship_orm.tea_level,
+            optimism=ship_orm.optimism,
+            speed=ship_orm.speed,
+            defense=ship_orm.defense,
+            luck=ship_orm.luck
+        )
+
+
+    @classmethod
+    def player_to_orm(cls, player: Player) -> PlayerORM:
+        return PlayerORM(
+            id=player.id,
+            telegram_id=player.telegram_id,
+            username=player.username,
+            xp=player.xp,
+            xgen_balance=player.xgen_balance,
+            fragments_balance=player.fragments_balance,
+            daily_streak=player.daily_streak,
+            last_login_date=player.last_login_date,
+            ships=[
+                cls.ship_to_orm(ship, player_id=player.id)
+                for ship in player.ships
+            ]
+        )
+
+    @classmethod
+    def player_to_domain(cls, player_orm: PlayerORM) -> Player:
+        return Player(
+            id=player_orm.id,
+            telegram_id=player_orm.telegram_id,
+            username=player_orm.username,
+            xp=player_orm.xp,
+            xgen_balance=player_orm.xgen_balance,
+            fragments_balance=player_orm.fragments_balance,
+            daily_streak=player_orm.daily_streak,
+            last_login_date=player_orm.last_login_date,
+            ships=[
+                cls.ship_to_domain(ship)
+                for ship in player_orm.ships
+            ]
+        )
+
+
+class ZoneMapper:
+    @staticmethod
+    def zone_to_orm(zone: Zone) -> ZoneORM:
+        return ZoneORM(
+           id=zone.id,
+           name=zone.name,
+           description=zone.description,
+           image_url=zone.image_url,
+           fuel_cost=zone.fuel_cost,
+           optimism_risk=zone.optimism_risk,
+           duration_seconds=zone.duration_seconds,
+           loot_table=zone.loot_table 
+        )
+
+    @staticmethod
+    def zone_to_domain(zone_orm: ZoneORM) -> Zone:
+        return Zone(
+            id=zone_orm.id,
+            name=zone_orm.name,
+            description=zone_orm.description,
+            image_url=zone_orm.image_url,
+            fuel_cost=zone_orm.fuel_cost,
+            optimism_risk=zone_orm.optimism_risk,
+            duration_seconds=zone_orm.duration_seconds,
+            loot_table=zone_orm.loot_table
+        )
+
+
+class ExpeditionMapper:
+    @staticmethod
+    def expedition_to_orm(expedition: Expedition) -> ExpeditionORM:
+        return ExpeditionORM(
+            id=expedition.id,
+            ship_id=expedition.ship_id,
+            zone_id=expedition.zone_id,
+            started_at=expedition.started_at,
+            ends_at=expedition.ends_at,
+            status=expedition.status.value
+        )
+
+    @staticmethod
+    def expedition_to_domain(expedition_orm: ExpeditionORM) -> Expedition:
+        return Expedition(
+            id=expedition_orm.id,
+            ship_id=expedition_orm.ship_id,
+            zone_id=expedition_orm.zone_id,
+            started_at=expedition_orm.started_at,
+            ends_at=expedition_orm.ends_at,
+            status=ExpeditionStatus(expedition_orm.status)
+        )
+
+
+class SeasonMapper:
+    @staticmethod
+    def season_to_domain(season_orm: SeasonORM) -> Season:
+        return Season(
+            id=season_orm.id,
+            name=season_orm.name,
+            description=season_orm.description,
+            start_date=season_orm.start_date,
+            end_date=season_orm.end_date,
+            reward_xgen=season_orm.reward_xgen,
+            reward_fragments=season_orm.reward_fragments,
+            is_active=season_orm.is_active
+        )
+
+    @staticmethod
+    def season_to_orm(season: Season) -> SeasonORM:
+        return SeasonORM(
+            id=season.id,
+            name=season.name,
+            description=season.description,
+            start_date=season.start_date,
+            end_date=season.end_date,
+            reward_xgen=season.reward_xgen,
+            reward_fragments=season.reward_fragments,
+            is_active=season.is_active
+        )
+
+
+class ArticleMapper:
+    @staticmethod
+    def article_to_domain(article_orm: ArticleORM) -> Article:
+        return Article(
+            id=article_orm.id,
+            chapter_id=article_orm.chapter_id,
+            title=article_orm.title,
+            content=article_orm.content,
+            fragment_cost=article_orm.fragment_cost,
+            trigger_event_type=article_orm.trigger_event_type,
+            required_item_id=article_orm.required_item_id,
+            trigger_threshold=article_orm.trigger_threshold
+        )
+
+    @staticmethod
+    def article_to_orm(article: Article) -> ArticleORM:
+        return ArticleORM(
+            id=article.id,
+            chapter_id=article.chapter_id,
+            title=article.title,
+            content=article.content,
+            fragment_cost=article.fragment_cost,
+            trigger_event_type=article.trigger_event_type,
+            required_item_id=article.required_item_id,
+            trigger_threshold=article.trigger_threshold
+        )
+
+
+class ChapterMapper:
+    @classmethod
+    def chapter_to_domain(cls, chapter_orm: ChapterORM) -> Chapter:
+        articles = [ArticleMapper.article_to_domain(a) for a in chapter_orm.articles]
+
+        return Chapter(
+            id=chapter_orm.id,
+            name=chapter_orm.name,
+            description=chapter_orm.description,
+            is_secret=chapter_orm.is_secret,
+            season_id=chapter_orm.season_id,
+            reward_xgen=chapter_orm.reward_xgen,
+            reward_fragments=chapter_orm.reward_fragments,
+            articles=articles
+        )
+
+    @classmethod
+    def chapter_to_orm(cls, chapter: Chapter) -> ChapterORM:
+        articles = [ArticleMapper.article_to_orm(a) for a in chapter.articles]
+
+        return ChapterORM(
+            id=chapter.id,
+            name=chapter.name,
+            description=chapter.description,
+            is_secret=chapter.is_secret,
+            season_id=chapter.season_id,
+            reward_xgen=chapter.reward_xgen,
+            reward_fragments=chapter.reward_fragments,
+            articles=articles
+        )
+
+
+class ItemMapper:
+    @staticmethod
+    def to_domain(orm: ItemORM) -> Item:
+        return Item(
+            id=orm.id,
+            name=orm.name,
+            description=orm.description,
+            type=ItemType(orm.type), # Строка из БД превращается в Enum
+            rarity=orm.rarity,
+            effect=orm.effect,
+            is_tradable=orm.is_tradable,
+            sell_price=orm.sell_price
+        )
+
+    @staticmethod
+    def to_orm(domain: Item) -> ItemORM:
+        return ItemORM(
+            id=domain.id,
+            name=domain.name,
+            description=domain.description,
+            type=domain.type.value, # Enum превращается в строку для БД
+            rarity=domain.rarity,
+            effect=domain.effect,
+            is_tradable=domain.is_tradable,
+            sell_price=domain.sell_price
+        )
+
+class InventoryItemMapper:
+    @staticmethod
+    def to_domain(orm: InventoryItemORM) -> InventoryItem:
+        return InventoryItem(
+            id=orm.id,
+            player_id=orm.player_id,
+            item_id=orm.item_id,
+            quantity=orm.quantity,
+            metadata=orm.item_metadata # Читаем из item_metadata, пишем в metadata
+        )
+
+    @staticmethod
+    def to_orm(domain: InventoryItem) -> InventoryItemORM:
+        return InventoryItemORM(
+            id=domain.id,
+            player_id=domain.player_id,
+            item_id=domain.item_id,
+            quantity=domain.quantity,
+            item_metadata=domain.metadata # Читаем из metadata, пишем в item_metadata
+        )
+
+class InventoryMapper:
+    @classmethod
+    def to_domain(cls, player_id: UUID, items_orm: list[InventoryItemORM]) -> Inventory:
+        """Собирает Агрегат Инвентаря из списка ORM-записей"""
+        return Inventory(
+            player_id=player_id,
+            items=[InventoryItemMapper.to_domain(i) for i in items_orm]
+        )
+
+    
