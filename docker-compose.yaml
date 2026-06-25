@@ -17,7 +17,11 @@ services:
       - "traefik.http.services.exo-app.loadbalancer.server.port=8000"
     networks:
       - coolify
+      - default
 
 networks:
   coolify:
     external: true
+  default:
+    external: true
+    name: coolify
