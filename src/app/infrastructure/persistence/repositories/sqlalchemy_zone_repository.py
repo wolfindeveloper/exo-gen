@@ -32,7 +32,4 @@ class SQLAlchemyZoneRepository(ZoneRepository):
 
     async def save(self, zone: Zone) -> None:
         zone_orm = ZoneMapper.zone_to_orm(zone)
-
-        merged_orm = await self.session.merge(zone_orm)
-        await self.session.commit()
-        await self.session.refresh(merged_orm)
+        await self.session.merge(zone_orm)

@@ -4,19 +4,21 @@ from app.application.dtos.player_response_dto import PlayerResponseDTO
 from app.application.use_cases.create_player import CreatePlayerUseCase
 from app.application.use_cases.get_player import GetPlayerUseCase
 from app.application.use_cases.process_daily_login import ProcessDailyLoginUseCase
+from app.domain.exceptions import DomainError
+from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
-from app.presentation.api.dependencies import get_player_repo
+from app.presentation.api.dependencies import get_player_repo, get_uow
 
 router = APIRouter(prefix="/players", tags=["Players"])
 
 @router.post("/register", status_code=201)
 async def register_player(
-    dto: CreatePlayerDTO, 
-    player_repo: PlayerRepository = Depends(get_player_repo)
+    dto: CreatePlayerDTO,
+    player_repo: PlayerRepository = Depends(get_player_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
     use_case = CreatePlayerUseCase(player_repo=player_repo)
-    player = await use_case.execute(dto)
-    # Здесь мы возвращаем DTO или просто данные, чтобы не светить внутренние dataclass/ORM
+    player = await use_case.execute(dto, uow)
     return {"id": str(player.id), "telegram_id": player.telegram_id, "ships": len(player.ships)}
 
 
@@ -37,12 +39,12 @@ async def get_player(
 @router.post("/{telegram_id}/daily-login")
 async def daily_login(
     telegram_id: int,
-    player_repo: PlayerRepository = Depends(get_player_repo)
+    player_repo: PlayerRepository = Depends(get_player_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
-
     use_case = ProcessDailyLoginUseCase(player_repo=player_repo)
     try:
-        result = await use_case.execute(telegram_id)
+        result = await use_case.execute(telegram_id, uow)
         return result
-    except ValueError as e:
+    except DomainError as e:
         raise HTTPException(status_code=404, detail=str(e))

@@ -1,4 +1,3 @@
-from sqlalchemy.engine import result
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, exists
 from uuid import UUID
@@ -29,9 +28,7 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
             article_id=unlocked.article_id,
             unlocked_at=unlocked.unlocked_at
         )
-
         self.session.add(orm_obj)
-        await self.session.commit()
 
     async def save_chapter_completion(self, completion: ChapterCompletion) -> None:
         orm_obj = ChapterCompletionORM(
@@ -40,9 +37,7 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
             chapter_id=completion.chapter_id,
             completed_at=completion.completed_at
         )
-
         self.session.add(orm_obj)
-        await self.session.commit()
 
     async def is_chapter_completed(self, player_id: UUID, chapter_id: UUID) -> bool:
         stmt = select(ChapterCompletionORM).where(
@@ -84,7 +79,6 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
         )
 
     async def save_trigger_progress(self, progress: ArticleTriggerProgress) -> None:
-        # Ищем существующую запись или создаем новую
         stmt = select(ArticleTriggerProgressORM).where(ArticleTriggerProgressORM.id == progress.id)
         result = await self.session.execute(stmt)
         orm = result.scalar_one_or_none()
@@ -99,8 +93,6 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
                 current_count=progress.current_count
             )
             self.session.add(orm)
-        
-        await self.session.commit()
 
 
     async def get_season_leaderboard(self, season_id: UUID, limit: int = 100) -> list[LeaderboardEntry]:

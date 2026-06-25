@@ -28,15 +28,7 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
 
     async def save(self, player: Player) -> None:
         player_orm = PlayerMapper.player_to_orm(player)
-
-        # 2. merge() умный: если объекта с таким ID нет в БД - он его создаст (INSERT).
-        # Если есть - он обновит его поля (UPDATE).
-        # Это избавляет нас от необходимости вручную писать if/else на проверку существования.
-        merged_orm = await self.session.merge(player_orm)
-        await self.session.commit()
-        # 3. Обновляем состояние доменного объекта (например, если БД сгенерировала ID)
-        # Но так как ID мы генерируем сами в Python, это опционально.
-        await self.session.refresh(merged_orm)
+        await self.session.merge(player_orm)
 
         
         

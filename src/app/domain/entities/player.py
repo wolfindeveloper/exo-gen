@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from uuid import UUID
+
+from app.domain.exceptions.player import InsufficientFragmentsError
+from app.domain.services.clock import Clock, SystemClock
 from .ship import Ship
 
 
@@ -16,8 +19,11 @@ class Player:
     last_login_date: date | None = None
     ships: list[Ship] = field(default_factory=list)
 
-    def process_daily_login(self):
-        today = date.today()
+    def process_daily_login(self, clock: Clock = None):
+        if clock is None:
+            clock = SystemClock()
+
+        today = clock.today()
 
         if self.last_login_date == today:
             return DailyLoginResult(
@@ -47,8 +53,8 @@ class Player:
         )
 
     def spend_fragments(self, amount: int) -> None:
-        if self.fragments_balance < amount: 
-            raise ValueError("Not enough fragments")
+        if self.fragments_balance < amount:
+            raise InsufficientFragmentsError(required=amount, available=self.fragments_balance)
 
         self.fragments_balance -= amount
 

@@ -8,12 +8,14 @@ from app.application.use_cases.get_guide import GetGuideUseCase
 from app.application.use_cases.unlock_article import UnlockArticleUseCase
 from app.application.use_cases.process_trigger import ProcessTriggerUseCase
 from app.application.use_cases.get_leaderboard import GetLeaderboardUseCase
+from app.domain.exceptions import DomainError
+from app.domain.uow import UnitOfWork
 from app.infrastructure.telegram.security import get_current_player
 from app.domain.entities.player import Player
 from app.application.dtos.guide_dto import GuideResponseDTO, UnlockArticleDTO, UnlockArticleResponseDTO, TriggerEventDTO, TriggerEventResponseDTO, LeaderboardEntryDTO
 
 
-from app.presentation.api.dependencies import get_player_repo, get_chapter_repo, get_guide_progress_repo
+from app.presentation.api.dependencies import get_player_repo, get_chapter_repo, get_guide_progress_repo, get_uow
 
 router = APIRouter(prefix="/guide", tags=["Guide"])
 
@@ -32,14 +34,15 @@ async def get_guide(
 async def unlock_article(
     dto: UnlockArticleDTO,
     current_player: Player = Depends(get_current_player),
+    player_repo: PlayerRepository = Depends(get_player_repo),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
-    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
-
-    use_case = UnlockArticleUseCase(chapter_repo, guide_repo)
+    use_case = UnlockArticleUseCase(player_repo, chapter_repo, guide_repo)
     try:
-        return await use_case.execute(current_player, dto.article_id)
-    except ValueError as e:
+        return await use_case.execute(current_player, dto.article_id, uow)
+    except DomainError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -49,12 +52,13 @@ async def process_trigger(
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
-    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo)
+    guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
     use_case = ProcessTriggerUseCase(player_repo, chapter_repo, guide_repo)
     try:
-        return await use_case.execute(current_player, dto.event_type)
-    except ValueError as e:
+        return await use_case.execute(current_player, dto, uow)
+    except DomainError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 

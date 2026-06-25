@@ -1,16 +1,16 @@
 import uuid
 
 from app.domain.entities.zone import Zone
+from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.application.dtos.zone_dto import CreateZoneDTO
 
 
-class CreateZoneUseCase():
+class CreateZoneUseCase:
     def __init__(self, zone_repo: ZoneRepository):
         self.zone_repo = zone_repo
 
-
-    async def execute(self, dto: CreateZoneDTO) -> Zone:
+    async def execute(self, dto: CreateZoneDTO, uow: UnitOfWork) -> Zone:
         raw_loot_table = [item.model_dump() for item in dto.loot_table]
 
         zone = Zone(
@@ -25,6 +25,7 @@ class CreateZoneUseCase():
         )
 
         await self.zone_repo.save(zone)
+        await uow.commit()
 
         return zone
 

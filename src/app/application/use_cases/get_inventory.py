@@ -1,5 +1,4 @@
 from app.domain.entities.player import Player
-from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.application.dtos.inventory_dto import InventoryResponseDTO, InventoryItemDTO

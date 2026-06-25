@@ -3,18 +3,18 @@ import hashlib
 import json
 import os
 from urllib.parse import parse_qs
+
 from fastapi import Header, HTTPException, Depends
-from uuid import UUID
 from dotenv import load_dotenv
 
-from app.presentation.api.dependencies import get_player_repo 
-
+from app.presentation.api.dependencies import get_player_repo, get_uow
+from app.application.use_cases.auto_register_player import AutoRegisterPlayerUseCase
 from app.domain.entities.player import Player
+from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 
 
-load_dotenv() 
-# Убедись, что BOT_TOKEN добавлен в твой .env файл!
+load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is missing in .env file")
@@ -53,41 +53,24 @@ def verify_telegram_signature(init_data: str) -> dict:
 
 async def get_current_player(
     authorization: str = Header(..., description="tghash <init_data>"),
-    player_repo: PlayerRepository = Depends(get_player_repo) # Инжектим ниже
+    player_repo: PlayerRepository = Depends(get_player_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ) -> Player:
-    """FastAPI зависимость, которая автоматически достает текущего игрока"""
-    
-    # Фронтенд будет слать заголовок: "Authorization: tghash user=%7B...%7D&auth_date=..."
     if not authorization.startswith("tghash "):
          raise HTTPException(status_code=401, detail="Invalid authorization scheme")
-         
+
     init_data = authorization.replace("tghash ", "")
-    
-    # Проверяем криптографию
+
     user_data = verify_telegram_signature(init_data)
     telegram_id = user_data.get("id")
     username = user_data.get("username") or user_data.get("first_name") or f"user_{telegram_id}"
-    
+
     if not telegram_id:
         raise HTTPException(status_code=401, detail="User ID not found in init data")
 
-    # Ищем игрока в базе
     player = await player_repo.get_by_telegram_id(int(telegram_id))
     if not player:
-        # 🎉 АВТО-РЕГИСТРАЦИЯ: Создаем игрока при первом входе!
-        from uuid import uuid4
-        from app.domain.entities.player import Player
-        
-        player = Player(
-            id=uuid4(),
-            telegram_id=telegram_id,
-            username=username,
-            xp=0,
-            daily_streak=0,
-            xgen_balance=100,  # Стартовый капитал для нового игрока
-            fragments_balance=50,
-            ships=[]           # Пока без корабля
-        )
-        await player_repo.save(player)
-        
+        use_case = AutoRegisterPlayerUseCase(player_repo)
+        player = await use_case.execute(int(telegram_id), username, uow)
+
     return player

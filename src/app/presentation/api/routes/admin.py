@@ -4,15 +4,16 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.presentation.api.dependencies import get_db_session, get_zone_repo
+from app.presentation.api.dependencies import get_db_session, get_zone_repo, get_uow
+from app.domain.uow import UnitOfWork
 from app.infrastructure.persistence.models.season_orm import SeasonORM
 from app.infrastructure.persistence.models.chapter_orm import ChapterORM
 from app.infrastructure.persistence.models.article_orm import ArticleORM
 from app.infrastructure.persistence.models.item_orm import ItemORM
 
 from app.application.dtos.guide_dto import (
-    CreateSeasonDTO, SeasonResponseDTO, 
-    CreateArticleDTO, ArticleResponseDTO, 
+    CreateSeasonDTO, SeasonResponseDTO,
+    CreateArticleDTO, ArticleResponseDTO,
     CreateChapterDTO, ChapterResponseDTO
 )
 from app.application.dtos.zone_dto import CreateZoneDTO
@@ -25,10 +26,11 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 @router.post("/zones", status_code=201)
 async def create_zone(
     dto: CreateZoneDTO,
-    zone_repo: ZoneRepository = Depends(get_zone_repo)
+    zone_repo: ZoneRepository = Depends(get_zone_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
     use_case = CreateZoneUseCase(zone_repo=zone_repo)
-    await use_case.execute(dto)
+    await use_case.execute(dto, uow)
     return {"status": "Zone created successfully"}
 
 @router.post("/seasons", response_model=SeasonResponseDTO, status_code=201)

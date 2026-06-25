@@ -41,10 +41,5 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
                 new_orm = InventoryItemMapper.to_orm(domain_item)
                 self.session.add(new_orm)
 
-        # 3. Всё, что осталось в словаре existing_items_orm, было удалено из Агрегата 
-        # (например, количество упало до 0 и доменной метод удалил его из списка).
-        # Удаляем эти записи из БД.
         for orm_item in existing_items_orm.values():
             await self.session.delete(orm_item)
-
-        await self.session.commit()

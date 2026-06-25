@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 from app.domain.entities.expedition import Expedition
-from app.domain.entities.ship import Ship
 
 
 class ExpeditionRepository(ABC):

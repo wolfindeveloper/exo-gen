@@ -1,10 +1,12 @@
 import uuid
 from dataclasses import dataclass
 from uuid import UUID
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 
 from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
+from app.domain.exceptions.ship import InsufficientTeaError, ShipDestroyedError
+from app.domain.services.clock import Clock, SystemClock
 
 
 @dataclass
@@ -23,12 +25,18 @@ class Ship:
             
         
 
-    def start_expedition(self, zone: Zone) -> Expedition:
-        if not self.can_start_expedition(zone):
-            raise ValueError("Недостаточно ресурсов или корабль уничтожен")
+    def start_expedition(self, zone: Zone, clock: Clock = None) -> Expedition:
+        if clock is None:
+            clock = SystemClock()
+
+        if self.optimism <= 0:
+            raise ShipDestroyedError("Ship optimism is 0, cannot start expedition")
+
+        if self.tea_level < zone.fuel_cost:
+            raise InsufficientTeaError(required=zone.fuel_cost, available=self.tea_level)
 
         self.tea_level -= zone.fuel_cost
-        now = datetime.now(timezone.utc)
+        now = clock.now()
         ends_at = now + timedelta(seconds=zone.duration_seconds)
 
         return Expedition(

@@ -1,10 +1,10 @@
-import asyncio
+import logging
 from contextlib import asynccontextmanager
+
 from app.infrastructure.database.session import engine
 from app.infrastructure.persistence.models.base import Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import text
 from app.config.settings import settings
 from app.presentation.api.routes.player import router as player_router
 from app.presentation.api.routes.admin import router as admin_router
@@ -12,21 +12,20 @@ from app.presentation.api.routes.zones import router as zones_router
 from app.presentation.api.routes.expeditions import router as expeditions_router
 from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
-from app.infrastructure.persistence.models import (
-    player_orm, ship_orm, zone_orm, expedition_orm, 
-    season_orm, chapter_orm, article_orm, 
-    guide_progress_orm, item_orm, inventory_item_orm
-)
+
+
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print(f"🔌 DATABASE_URL: {engine.url}")
+    logger.info(f"DATABASE_URL: {engine.url}")
     try:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        print("✅ Tables created successfully!")
+        logger.info("Tables created successfully!")
     except Exception as e:
-        print(f"❌ Database connection failed: {type(e).__name__}: {e}")
+        logger.error(f"Database connection failed: {type(e).__name__}: {e}")
         raise
     yield
     await engine.dispose()

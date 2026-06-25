@@ -1,5 +1,4 @@
 from app.domain.entities.player import Player
-from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.application.dtos.guide_dto import ChapterResponseDTO, ArticleResponseDTO, GuideResponseDTO

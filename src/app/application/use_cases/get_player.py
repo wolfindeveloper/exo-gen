@@ -10,10 +10,10 @@ class GetPlayerUseCase:
     async def execute(self, telegram_id: int) -> PlayerResponseDTO | None:
         player = await self.player_repo.get_by_telegram_id(telegram_id)
 
-        ship = next((s for s in player.ships), None)
-
         if not player:
             return None
+
+        ship = next((s for s in player.ships), None)
 
         return PlayerResponseDTO(
             id=player.id,
@@ -24,5 +24,5 @@ class GetPlayerUseCase:
             fragments_balance=player.fragments_balance,
             daily_streak=player.daily_streak,
             ship_count=len(player.ships),
-            ship_id=ship.id
+            ship_id=ship.id if ship else None
         )

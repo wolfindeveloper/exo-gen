@@ -9,8 +9,10 @@ from app.application.dtos.item_dto import ItemResponseDTO
 from app.application.dtos.inventory_dto import UseItemDTO, UseItemResponseDTO
 from app.application.use_cases.use_item import UseItemUseCase
 from app.domain.entities.player import Player
+from app.domain.exceptions import DomainError
+from app.domain.uow import UnitOfWork
 from app.infrastructure.telegram.security import get_current_player
-from app.presentation.api.dependencies import get_player_repo, get_inventory_repo, get_item_repo
+from app.presentation.api.dependencies import get_player_repo, get_inventory_repo, get_item_repo, get_uow
 
 router = APIRouter(tags=["Inventory"])
 
@@ -32,19 +34,21 @@ async def get_inventory(
     use_case = GetInventoryUseCase(inventory_repo, item_repo)
     try:
         return await use_case.execute(current_player)
-    except ValueError as e:
+    except DomainError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.post("/use", response_model=UseItemResponseDTO)
 async def use_item(
     dto: UseItemDTO,
+    current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
-    item_repo: ItemRepository = Depends(get_item_repo)
+    item_repo: ItemRepository = Depends(get_item_repo),
+    uow: UnitOfWork = Depends(get_uow)
 ):
     use_case = UseItemUseCase(player_repo, inventory_repo, item_repo)
     try:
-        return await use_case.execute(dto)
-    except ValueError as e:
+        return await use_case.execute(current_player, dto, uow)
+    except DomainError as e:
         raise HTTPException(status_code=400, detail=str(e))

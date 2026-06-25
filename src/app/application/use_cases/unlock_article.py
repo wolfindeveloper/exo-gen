@@ -1,7 +1,10 @@
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
+
 from app.domain.entities.player import Player
+from app.domain.uow import UnitOfWork
 from app.domain.entities.guide_progress import UnlockedArticle, ChapterCompletion
+from app.domain.exceptions.guide import ArticleNotFoundError, ChapterNotFoundError, ArticleAlreadyUnlockedError, CannotBuySecretArticleError
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
@@ -14,26 +17,21 @@ class UnlockArticleUseCase:
         self.chapter_repo = chapter_repo
         self.guide_repo = guide_repo
 
-    async def execute(self, player: Player, article_id: UUID) -> UnlockArticleResponseDTO:
-        # 2. Достаем главу по article_id
+    async def execute(self, player: Player, article_id: UUID, uow: UnitOfWork) -> UnlockArticleResponseDTO:
         chapter = await self.chapter_repo.get_chapter_by_article_id(article_id)
         if not chapter:
-            raise ValueError("Article or chapter not found")
+            raise ChapterNotFoundError(f"Chapter for article {article_id} not found")
 
-        # 3. Ищем саму статью внутри главы
         article = next((a for a in chapter.articles if a.id == article_id), None)
         if not article:
-            raise ValueError("Article not found in chapter")
+            raise ArticleNotFoundError(f"Article {article_id} not found in chapter")
 
-        # 4. Проверка: нельзя купить секретные статьи
         if chapter.is_secret or article.trigger_event_type:
-            raise ValueError("Cannot buy secret articles")
+            raise CannotBuySecretArticleError("Cannot buy secret articles")
 
-        # 5. Проверка: не куплена ли уже
         if await self.guide_repo.is_article_unlocked(player_id=player.id, article_id=article.id):
-            raise ValueError("Already unlocked")
+            raise ArticleAlreadyUnlockedError(f"Article {article_id} already unlocked")
 
-        # 6. Транзакция: списываем фрагменты (кинет ValueError, если не хватает)
         player.spend_fragments(article.fragment_cost)
 
         # 7. Создаем запись об открытии и сохраняем
@@ -48,6 +46,7 @@ class UnlockArticleUseCase:
         # 8. Проверяем, завершена ли глава целиком
         chapter_completed = False
         xgen_rewarded = 0
+        fragments_rewarded = 0
 
         # Считаем только ОБЫЧНЫЕ статьи (не секретные)
         regular_articles = [a for a in chapter.articles if not a.trigger_event_type]
@@ -82,8 +81,8 @@ class UnlockArticleUseCase:
                     await self.guide_repo.save_chapter_completion(completion)
                     chapter_completed = True
 
-        # 9. Сохраняем игрока (с обновленным балансом фрагментов и, возможно, xgen)
         await self.player_repo.save(player)
+        await uow.commit()
 
         return UnlockArticleResponseDTO(
             content=article.content,

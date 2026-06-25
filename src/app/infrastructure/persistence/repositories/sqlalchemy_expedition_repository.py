@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
 from app.domain.entities.expedition import Expedition
 from app.infrastructure.persistence.models.expedition_orm import ExpeditionORM
@@ -48,7 +47,4 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
 
     async def save(self, expedition: Expedition) -> None:
         expedition_orm = ExpeditionMapper.expedition_to_orm(expedition)
-
-        merged_orm = await self.session.merge(expedition_orm)
-        await self.session.commit()
-        await self.session.refresh(merged_orm)
+        await self.session.merge(expedition_orm)

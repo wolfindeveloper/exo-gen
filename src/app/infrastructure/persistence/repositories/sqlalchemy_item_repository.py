@@ -13,11 +13,7 @@ class SQLAlchemyItemRepository(ItemRepository):
 
     async def save(self, item: Item) -> None:
         orm_obj = ItemMapper.to_orm(item)
-        # merge() в SQLAlchemy — это умный метод. 
-        # Если предмета с таким ID нет в БД, он сделает INSERT.
-        # Если есть и он изменился — сделает UPDATE.
         await self.session.merge(orm_obj)
-        await self.session.commit()
 
     async def get_by_id(self, item_id: UUID) -> Item | None:
         stmt = select(ItemORM).where(ItemORM.id == item_id)

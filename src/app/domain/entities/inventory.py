@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from uuid import UUID, uuid4
+
 from app.domain.entities.inventory_item import InventoryItem
+from app.domain.exceptions.inventory import ItemNotInInventoryError, InsufficientItemQuantityError
 
 @dataclass
 class Inventory:
@@ -28,10 +30,13 @@ class Inventory:
         """Списывает предмет. Если количество падает до 0 - удаляет из списка."""
         existing = next((i for i in self.items if i.item_id == item_id), None)
         if not existing:
-            raise ValueError("Item not found in inventory")
-            
+            raise ItemNotInInventoryError(item_id)
+
+        if existing.quantity < quantity:
+            raise InsufficientItemQuantityError(item_id, required=quantity, available=existing.quantity)
+
         existing.remove_quantity(quantity)
-        
+
         if existing.quantity == 0:
             self.items.remove(existing)
 

@@ -1,7 +1,9 @@
+import logging
 from uuid import uuid4
 from datetime import datetime, timezone
 
 from app.domain.entities.player import Player
+from app.domain.uow import UnitOfWork
 from app.domain.entities.guide_progress import UnlockedArticle, ArticleTriggerProgress, ChapterCompletion
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
@@ -9,18 +11,21 @@ from app.domain.repositories.guide_progress_repository import GuideProgressRepos
 from app.application.dtos.guide_dto import TriggerEventDTO, TriggerEventResponseDTO
 
 
+logger = logging.getLogger(__name__)
+
+
 class ProcessTriggerUseCase:
     def __init__(
-        self, 
-        player_repo: PlayerRepository, 
-        chapter_repo: ChapterRepository, 
+        self,
+        player_repo: PlayerRepository,
+        chapter_repo: ChapterRepository,
         guide_repo: GuideProgressRepository
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
         self.guide_repo = guide_repo
 
-    async def execute(self, player: Player, dto: TriggerEventDTO) -> TriggerEventResponseDTO:
+    async def execute(self, player: Player, dto: TriggerEventDTO, uow: UnitOfWork) -> TriggerEventResponseDTO:
         # 2. Достаем ВСЕ главы со статьями
         # (В идеале тут был бы метод репозитория get_articles_by_trigger(), 
         # но для MVP и малого количества глав мы фильтруем в памяти Python)
@@ -37,7 +42,7 @@ class ProcessTriggerUseCase:
                 if art.trigger_event_type == dto.event_type
             ]
 
-            print(f"🔍 Событие: '{dto.event_type}'. Найдено подходящих статей: {len(triggered_articles)}")
+            logger.info(f"Событие: '{dto.event_type}'. Найдено подходящих статей: {len(triggered_articles)}")
             
             if not triggered_articles:
                 continue
@@ -45,7 +50,7 @@ class ProcessTriggerUseCase:
             for article in triggered_articles:
                 # 3.1. Пропускаем, если статья уже открыта
                 is_unlocked = await self.guide_repo.is_article_unlocked(player.id, article.id)
-                print(f"📖 Статья: '{article.title}'. Уже открыта? {is_unlocked}")
+                logger.debug(f"Статья: '{article.title}'. Уже открыта? {is_unlocked}")
                 
                 if is_unlocked:
                     continue
@@ -62,11 +67,11 @@ class ProcessTriggerUseCase:
 
                 # 3.3. Инкрементируем счетчик
                 progress.current_count += 1
-                print(f"⚙️ Прогресс: {progress.current_count} / {article.trigger_threshold} (Порог из БД)")
+                logger.debug(f"Прогресс: {progress.current_count} / {article.trigger_threshold}")
 
                 # 3.4. Проверяем, достигнут ли порог
                 if progress.current_count >= article.trigger_threshold:
-                    print("🎉 ПОРОГ ДОСТИГНУТ! Открываем статью...")
+                    logger.info(f"Порог достигнут! Открываем статью: {article.title}")
                     # 🎉 Открываем статью!
                     unlocked = UnlockedArticle(
                         id=uuid4(),
@@ -111,9 +116,9 @@ class ProcessTriggerUseCase:
                 # Сохраняем прогресс триггера (обновленный счетчик или новую запись)
                 await self.guide_repo.save_trigger_progress(progress)
 
-        # 4. Сохраняем игрока, если ему начислились награды за закрытие главы
         if player_state_changed:
             await self.player_repo.save(player)
 
-        # 5. Возвращаем фронтенду список того, что открылось, чтобы показать красивую плашку
+        await uow.commit()
+
         return TriggerEventResponseDTO(newly_unlocked_articles=newly_unlocked_titles)
