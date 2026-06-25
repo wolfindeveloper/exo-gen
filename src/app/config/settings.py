@@ -1,12 +1,13 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 from functools import lru_cache
+import os
 
 class Settings(BaseSettings):
-    # Pydantic V2 config
     model_config = SettingsConfigDict(
-        env_file=".env", 
-        env_file_encoding="utf-8", 
-        case_sensitive=False, 
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
         extra="ignore"
     )
 
@@ -14,7 +15,10 @@ class Settings(BaseSettings):
     APP_NAME: str = "Hitchhiker's Idle Strategy"
     DEBUG: bool = False
 
-    # Database (PostgreSQL 16)
+    # Database - новая опция (читается из DATABASE_URL в Coolify)
+    DATABASE_URL: str | None = Field(default=None, alias="DATABASE_URL")
+
+    # Fallback значения (для локальной разработки)
     POSTGRES_USER: str = "vogon"
     POSTGRES_PASSWORD: str = "poetry_is_bad"
     POSTGRES_HOST: str = "db"
@@ -23,6 +27,11 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
+        # Если DATABASE_URL передан через окружение (Coolify) - используем его
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
+        
+        # Иначе собираем из компонентов (для локальной разработки)
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     # Redis
