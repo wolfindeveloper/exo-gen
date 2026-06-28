@@ -2,7 +2,12 @@ from uuid import UUID
 
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
-from app.domain.value_objects.resources import TeaLevel, Optimism, XgenBalance, FragmentsBalance
+from app.domain.value_objects.resources import (
+    TeaLevel,
+    Optimism,
+    XgenBalance,
+    FragmentsBalance,
+)
 from app.domain.value_objects.equipment import SlotType
 from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
@@ -13,6 +18,9 @@ from app.domain.entities.item import Item, ItemType
 from app.domain.entities.inventory_item import InventoryItem
 from app.domain.entities.inventory import Inventory
 from app.domain.entities.equipment import Equipment, EquippedArtifact
+from app.domain.entities.loot_box_config import LootBoxConfig
+from app.domain.value_objects.loot_box import LootBoxType, LootBoxEntry
+from app.infrastructure.persistence.models.loot_box_config_orm import LootBoxConfigORM
 from app.infrastructure.persistence.models.player_orm import PlayerORM
 from app.infrastructure.persistence.models.ship_orm import ShipORM
 from app.infrastructure.persistence.models.zone_orm import ZoneORM
@@ -36,7 +44,7 @@ class PlayerMapper:
             optimism=ship.optimism.value,
             speed=ship.speed,
             defense=ship.defense,
-            luck=ship.luck
+            luck=ship.luck,
         )
 
     @staticmethod
@@ -57,7 +65,6 @@ class PlayerMapper:
             equipment=equipment,
         )
 
-
     @classmethod
     def player_to_orm(cls, player: Player) -> PlayerORM:
         return PlayerORM(
@@ -69,10 +76,7 @@ class PlayerMapper:
             fragments_balance=player.fragments_balance.value,
             daily_streak=player.daily_streak,
             last_login_date=player.last_login_date,
-            ships=[
-                cls.ship_to_orm(ship, player_id=player.id)
-                for ship in player.ships
-            ]
+            ships=[cls.ship_to_orm(ship, player_id=player.id) for ship in player.ships],
         )
 
     @classmethod
@@ -86,10 +90,7 @@ class PlayerMapper:
             fragments_balance=FragmentsBalance(player_orm.fragments_balance),
             daily_streak=player_orm.daily_streak,
             last_login_date=player_orm.last_login_date,
-            ships=[
-                cls.ship_to_domain(ship)
-                for ship in player_orm.ships
-            ]
+            ships=[cls.ship_to_domain(ship) for ship in player_orm.ships],
         )
 
 
@@ -97,14 +98,14 @@ class ZoneMapper:
     @staticmethod
     def zone_to_orm(zone: Zone) -> ZoneORM:
         return ZoneORM(
-           id=zone.id,
-           name=zone.name,
-           description=zone.description,
-           image_url=zone.image_url,
-           fuel_cost=zone.fuel_cost,
-           optimism_risk=zone.optimism_risk,
-           duration_seconds=zone.duration_seconds,
-           loot_table=zone.loot_table 
+            id=zone.id,
+            name=zone.name,
+            description=zone.description,
+            image_url=zone.image_url,
+            fuel_cost=zone.fuel_cost,
+            optimism_risk=zone.optimism_risk,
+            duration_seconds=zone.duration_seconds,
+            loot_table=zone.loot_table,
         )
 
     @staticmethod
@@ -117,7 +118,7 @@ class ZoneMapper:
             fuel_cost=zone_orm.fuel_cost,
             optimism_risk=zone_orm.optimism_risk,
             duration_seconds=zone_orm.duration_seconds,
-            loot_table=zone_orm.loot_table
+            loot_table=zone_orm.loot_table,
         )
 
 
@@ -130,7 +131,7 @@ class ExpeditionMapper:
             zone_id=expedition.zone_id,
             started_at=expedition.started_at,
             ends_at=expedition.ends_at,
-            status=expedition.status.value
+            status=expedition.status.value,
         )
 
     @staticmethod
@@ -141,7 +142,7 @@ class ExpeditionMapper:
             zone_id=expedition_orm.zone_id,
             started_at=expedition_orm.started_at,
             ends_at=expedition_orm.ends_at,
-            status=ExpeditionStatus(expedition_orm.status)
+            status=ExpeditionStatus(expedition_orm.status),
         )
 
 
@@ -156,7 +157,7 @@ class SeasonMapper:
             end_date=season_orm.end_date,
             reward_xgen=season_orm.reward_xgen,
             reward_fragments=season_orm.reward_fragments,
-            is_active=season_orm.is_active
+            is_active=season_orm.is_active,
         )
 
     @staticmethod
@@ -169,7 +170,7 @@ class SeasonMapper:
             end_date=season.end_date,
             reward_xgen=season.reward_xgen,
             reward_fragments=season.reward_fragments,
-            is_active=season.is_active
+            is_active=season.is_active,
         )
 
 
@@ -184,7 +185,7 @@ class ArticleMapper:
             fragment_cost=article_orm.fragment_cost,
             trigger_event_type=article_orm.trigger_event_type,
             required_item_id=article_orm.required_item_id,
-            trigger_threshold=article_orm.trigger_threshold
+            trigger_threshold=article_orm.trigger_threshold,
         )
 
     @staticmethod
@@ -197,7 +198,7 @@ class ArticleMapper:
             fragment_cost=article.fragment_cost,
             trigger_event_type=article.trigger_event_type,
             required_item_id=article.required_item_id,
-            trigger_threshold=article.trigger_threshold
+            trigger_threshold=article.trigger_threshold,
         )
 
 
@@ -214,7 +215,7 @@ class ChapterMapper:
             season_id=chapter_orm.season_id,
             reward_xgen=chapter_orm.reward_xgen,
             reward_fragments=chapter_orm.reward_fragments,
-            articles=articles
+            articles=articles,
         )
 
     @classmethod
@@ -229,7 +230,7 @@ class ChapterMapper:
             season_id=chapter.season_id,
             reward_xgen=chapter.reward_xgen,
             reward_fragments=chapter.reward_fragments,
-            articles=articles
+            articles=articles,
         )
 
 
@@ -240,11 +241,11 @@ class ItemMapper:
             id=orm.id,
             name=orm.name,
             description=orm.description,
-            type=ItemType(orm.type), # Строка из БД превращается в Enum
+            type=ItemType(orm.type),  # Строка из БД превращается в Enum
             rarity=orm.rarity,
             effect=orm.effect,
             is_tradable=orm.is_tradable,
-            sell_price=orm.sell_price
+            sell_price=orm.sell_price,
         )
 
     @staticmethod
@@ -253,12 +254,13 @@ class ItemMapper:
             id=domain.id,
             name=domain.name,
             description=domain.description,
-            type=domain.type.value, # Enum превращается в строку для БД
+            type=domain.type.value,  # Enum превращается в строку для БД
             rarity=domain.rarity,
             effect=domain.effect,
             is_tradable=domain.is_tradable,
-            sell_price=domain.sell_price
+            sell_price=domain.sell_price,
         )
+
 
 class InventoryItemMapper:
     @staticmethod
@@ -268,7 +270,7 @@ class InventoryItemMapper:
             player_id=orm.player_id,
             item_id=orm.item_id,
             quantity=orm.quantity,
-            metadata=orm.item_metadata # Читаем из item_metadata, пишем в metadata
+            metadata=orm.item_metadata,  # Читаем из item_metadata, пишем в metadata
         )
 
     @staticmethod
@@ -278,8 +280,9 @@ class InventoryItemMapper:
             player_id=domain.player_id,
             item_id=domain.item_id,
             quantity=domain.quantity,
-            item_metadata=domain.metadata # Читаем из metadata, пишем в item_metadata
+            item_metadata=domain.metadata,  # Читаем из metadata, пишем в item_metadata
         )
+
 
 class EquipmentMapper:
     @staticmethod
@@ -316,7 +319,47 @@ class InventoryMapper:
         """Собирает Агрегат Инвентаря из списка ORM-записей"""
         return Inventory(
             player_id=player_id,
-            items=[InventoryItemMapper.to_domain(i) for i in items_orm]
+            items=[InventoryItemMapper.to_domain(i) for i in items_orm],
         )
 
-    
+
+class LootBoxMapper:
+    @staticmethod
+    def to_domain(orm: LootBoxConfigORM) -> LootBoxConfig:
+        entries = [
+            LootBoxEntry(
+                item_type=e["item_type"],
+                amount=e["amount"],
+                chance=e["chance"],
+                item_id=UUID(e["item_id"]) if e.get("item_id") else None,
+            )
+            for e in orm.entries
+        ]
+        return LootBoxConfig(
+            id=orm.id,
+            box_type=LootBoxType(orm.box_type),
+            name=orm.name,
+            description=orm.description,
+            entries=entries,
+            is_active=orm.is_active,
+        )
+
+    @staticmethod
+    def to_orm(domain: LootBoxConfig) -> LootBoxConfigORM:
+        entries = [
+            {
+                "item_type": e.item_type,
+                "amount": e.amount,
+                "chance": e.chance,
+                "item_id": str(e.item_id) if e.item_id else None,
+            }
+            for e in domain.entries
+        ]
+        return LootBoxConfigORM(
+            id=domain.id,
+            box_type=domain.box_type.value,
+            name=domain.name,
+            description=domain.description,
+            entries=entries,
+            is_active=domain.is_active,
+        )

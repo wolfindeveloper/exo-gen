@@ -7,21 +7,41 @@ from app.infrastructure.database.session import AsyncSessionLocal
 from app.domain.uow import UnitOfWork
 from app.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_player_repository import SQLAlchemyPlayerRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_player_repository import (
+    SQLAlchemyPlayerRepository,
+)
 from app.domain.repositories.zone_repository import ZoneRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_zone_repository import SQLAlchemyZoneRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_zone_repository import (
+    SQLAlchemyZoneRepository,
+)
 from app.domain.repositories.expedition_repository import ExpeditionRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_expedition_repository import SQLAlchemyExpeditionRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_expedition_repository import (
+    SQLAlchemyExpeditionRepository,
+)
 from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_chapter_repository import SQLAlchemyChapterRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_guide_progress_repository import SQLAlchemyGuideProgressRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_chapter_repository import (
+    SQLAlchemyChapterRepository,
+)
+from app.infrastructure.persistence.repositories.sqlalchemy_guide_progress_repository import (
+    SQLAlchemyGuideProgressRepository,
+)
 from app.domain.repositories.item_repository import ItemRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_item_repository import SQLAlchemyItemRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_item_repository import (
+    SQLAlchemyItemRepository,
+)
 from app.domain.repositories.inventory_repository import InventoryRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_inventory_repository import SQLAlchemyInventoryRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_inventory_repository import (
+    SQLAlchemyInventoryRepository,
+)
 from app.domain.repositories.equipment_repository import EquipmentRepository
-from app.infrastructure.persistence.repositories.sqlalchemy_equipment_repository import SQLAlchemyEquipmentRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_equipment_repository import (
+    SQLAlchemyEquipmentRepository,
+)
+from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_loot_box_repository import (
+    SQLAlchemyLootBoxRepository,
+)
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -29,7 +49,9 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-async def get_uow(session: AsyncSession = Depends(get_db_session)) -> AsyncGenerator[UnitOfWork, None]:
+async def get_uow(
+    session: AsyncSession = Depends(get_db_session),
+) -> AsyncGenerator[UnitOfWork, None]:
     uow = SQLAlchemyUnitOfWork(session)
     try:
         yield uow
@@ -38,33 +60,55 @@ async def get_uow(session: AsyncSession = Depends(get_db_session)) -> AsyncGener
         raise
 
 
-async def get_player_repo(session: AsyncSession = Depends(get_db_session)) -> PlayerRepository:
+async def get_player_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> PlayerRepository:
     return SQLAlchemyPlayerRepository(session)
 
 
-async def get_zone_repo(session: AsyncSession = Depends(get_db_session)) -> ZoneRepository:
+async def get_zone_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ZoneRepository:
     return SQLAlchemyZoneRepository(session)
 
 
-async def get_expedition_repo(session: AsyncSession = Depends(get_db_session)) -> ExpeditionRepository:
+async def get_expedition_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ExpeditionRepository:
     return SQLAlchemyExpeditionRepository(session)
 
 
-async def get_chapter_repo(session: AsyncSession = Depends(get_db_session)) -> ChapterRepository:
+async def get_chapter_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ChapterRepository:
     return SQLAlchemyChapterRepository(session)
 
 
-async def get_guide_progress_repo(session: AsyncSession = Depends(get_db_session)) -> GuideProgressRepository:
+async def get_guide_progress_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> GuideProgressRepository:
     return SQLAlchemyGuideProgressRepository(session)
 
 
-async def get_item_repo(session: AsyncSession = Depends(get_db_session)) -> ItemRepository:
+async def get_item_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ItemRepository:
     return SQLAlchemyItemRepository(session)
 
 
-async def get_inventory_repo(session: AsyncSession = Depends(get_db_session)) -> InventoryRepository:
+async def get_inventory_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> InventoryRepository:
     return SQLAlchemyInventoryRepository(session)
 
 
-async def get_equipment_repo(session: AsyncSession = Depends(get_db_session)) -> EquipmentRepository:
+async def get_equipment_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> EquipmentRepository:
     return SQLAlchemyEquipmentRepository(session)
+
+
+async def get_loot_box_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> LootBoxRepository:
+    return SQLAlchemyLootBoxRepository(session)
