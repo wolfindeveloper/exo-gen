@@ -11,6 +11,8 @@ from app.presentation.api.routes.expeditions import router as expeditions_router
 from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
 from app.presentation.api.routes.equipment import router as equipment_router
+from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
+from app.infrastructure.messaging.event_handlers import setup_event_handlers
 
 
 logger = logging.getLogger(__name__)
@@ -19,6 +21,10 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting up Hitchhiker's Idle...")
+
+    bot_service = TelegramBotService()
+    setup_event_handlers(bot_service)
+
     yield
     logger.info("Shutting down...")
 

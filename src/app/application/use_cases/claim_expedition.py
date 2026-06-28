@@ -74,6 +74,7 @@ class ClaimExpeditionUseCase:
 
         expedition.complete(
             player_id=player.id,
+            telegram_id=player.telegram_id,
             xgen_earned=loot["xgen"],
             fragments_earned=loot["fragments"],
             items_earned=loot.get("items", [])

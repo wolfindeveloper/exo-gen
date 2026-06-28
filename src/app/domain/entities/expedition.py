@@ -21,12 +21,13 @@ class Expedition(AggregateRoot):
     ends_at: datetime
     status: ExpeditionStatus
 
-    def complete(self, player_id: UUID, xgen_earned: int, fragments_earned: int, items_earned: list[dict]) -> None:
+    def complete(self, player_id: UUID, telegram_id: int, xgen_earned: int, fragments_earned: int, items_earned: list[dict]) -> None:
         self.status = ExpeditionStatus.COMPLETED
         self.register_event(ExpeditionCompletedEvent(
             occurred_at=datetime.now(timezone.utc),
             expedition_id=self.id,
             player_id=player_id,
+            telegram_id=telegram_id,
             xgen_earned=xgen_earned,
             fragments_earned=fragments_earned,
             items_earned=items_earned

@@ -70,6 +70,7 @@ class UnlockArticleUseCase:
             ArticleUnlockedEvent(
                 occurred_at=now,
                 player_id=player.id,
+                telegram_id=player.telegram_id,
                 article_id=article.id,
                 chapter_id=chapter.id,
             )
@@ -105,6 +106,7 @@ class UnlockArticleUseCase:
                     ChapterCompletedEvent(
                         occurred_at=now,
                         player_id=player.id,
+                        telegram_id=player.telegram_id,
                         chapter_id=chapter.id,
                         xgen_rewarded=xgen_rewarded,
                         fragments_rewarded=fragments_rewarded,

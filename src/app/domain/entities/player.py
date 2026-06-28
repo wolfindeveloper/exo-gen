@@ -50,6 +50,7 @@ class Player(AggregateRoot):
         self.register_event(DailyLoginCompletedEvent(
             occurred_at=clock.now(),
             player_id=self.id,
+            telegram_id=self.telegram_id,
             earned_xp=earned_xp,
             new_streak=self.daily_streak,
             got_box=got_box

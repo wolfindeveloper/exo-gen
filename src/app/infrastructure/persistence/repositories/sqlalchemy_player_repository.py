@@ -1,3 +1,4 @@
+from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlalchemy import select
@@ -11,6 +12,17 @@ from app.infrastructure.persistence.mappers import PlayerMapper
 class SQLAlchemyPlayerRepository(PlayerRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    async def get_by_id(self, player_id: UUID) -> Player | None:
+        result = await self.session.execute(
+            select(PlayerORM)
+            .options(selectinload(PlayerORM.ships))
+            .where(PlayerORM.id == player_id)
+        )
+        player_orm = result.scalar_one_or_none()
+        if not player_orm:
+            return None
+        return PlayerMapper.player_to_domain(player_orm=player_orm)
 
     async def get_by_telegram_id(self, telegram_id: int) -> Player | None:
         result = await self.session.execute(

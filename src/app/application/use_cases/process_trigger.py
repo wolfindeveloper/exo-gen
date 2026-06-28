@@ -98,6 +98,7 @@ class ProcessTriggerUseCase:
                         ArticleUnlockedEvent(
                             occurred_at=now,
                             player_id=player.id,
+                            telegram_id=player.telegram_id,
                             article_id=article.id,
                             chapter_id=chapter.id,
                         )
@@ -127,6 +128,7 @@ class ProcessTriggerUseCase:
                                 ChapterCompletedEvent(
                                     occurred_at=now,
                                     player_id=player.id,
+                                    telegram_id=player.telegram_id,
                                     chapter_id=chapter.id,
                                     xgen_rewarded=chapter.reward_xgen,
                                     fragments_rewarded=chapter.reward_fragments,

@@ -14,6 +14,7 @@ class PlayerRegisteredEvent(DomainEvent):
 @dataclass(frozen=True)
 class DailyLoginCompletedEvent(DomainEvent):
     player_id: UUID
+    telegram_id: int
     earned_xp: int
     new_streak: int
     got_box: bool
@@ -31,6 +32,7 @@ class ExpeditionStartedEvent(DomainEvent):
 class ExpeditionCompletedEvent(DomainEvent):
     expedition_id: UUID
     player_id: UUID
+    telegram_id: int
     xgen_earned: int
     fragments_earned: int
     items_earned: list[dict]
@@ -39,6 +41,7 @@ class ExpeditionCompletedEvent(DomainEvent):
 @dataclass(frozen=True)
 class ArticleUnlockedEvent(DomainEvent):
     player_id: UUID
+    telegram_id: int
     article_id: UUID
     chapter_id: UUID
 
@@ -46,6 +49,7 @@ class ArticleUnlockedEvent(DomainEvent):
 @dataclass(frozen=True)
 class ChapterCompletedEvent(DomainEvent):
     player_id: UUID
+    telegram_id: int
     chapter_id: UUID
     xgen_rewarded: int
     fragments_rewarded: int
