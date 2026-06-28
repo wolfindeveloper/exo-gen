@@ -51,7 +51,6 @@ class AutoRegisterPlayerUseCase:
             )
         )
         uow.track(player)
-        await self.player_repo.save(player)
 
         open_box_uc = OpenLootBoxUseCase(
             self.loot_box_service,
