@@ -8,6 +8,7 @@ from app.infrastructure.persistence.models.base import Base
 if TYPE_CHECKING:
     from app.infrastructure.persistence.models.player_orm import PlayerORM
     from app.infrastructure.persistence.models.expedition_orm import ExpeditionORM
+    from app.infrastructure.persistence.models.equipment_orm import EquipmentORM
 
 class ShipORM(Base):
     __tablename__ = "ships"
@@ -23,3 +24,8 @@ class ShipORM(Base):
 
     player: Mapped["PlayerORM"] = relationship(back_populates="ships")
     expeditions: Mapped[list["ExpeditionORM"]] = relationship(back_populates="ship")
+    equipment: Mapped["EquipmentORM | None"] = relationship(
+        back_populates="ship",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )

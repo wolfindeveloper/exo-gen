@@ -41,6 +41,10 @@ class PlayerMapper:
 
     @staticmethod
     def ship_to_domain(ship_orm: ShipORM) -> Ship:
+        equipment = None
+        if hasattr(ship_orm, "equipment") and ship_orm.equipment is not None:
+            equipment = EquipmentMapper.to_domain(ship_orm.equipment)
+
         return Ship(
             id=ship_orm.id,
             player_id=ship_orm.player_id,
@@ -49,7 +53,8 @@ class PlayerMapper:
             optimism=Optimism(ship_orm.optimism),
             speed=ship_orm.speed,
             defense=ship_orm.defense,
-            luck=ship_orm.luck
+            luck=ship_orm.luck,
+            equipment=equipment,
         )
 
 

@@ -4,6 +4,7 @@ from sqlalchemy import select
 
 from app.domain.entities.player import Player
 from app.infrastructure.persistence.models.player_orm import PlayerORM
+from app.infrastructure.persistence.models.ship_orm import ShipORM
 from app.domain.repositories.player_repository import PlayerRepository
 from app.infrastructure.persistence.mappers import PlayerMapper
 
@@ -14,7 +15,9 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
     async def get_by_telegram_id(self, telegram_id: int) -> Player | None:
         result = await self.session.execute(
             select(PlayerORM)
-            .options(selectinload(PlayerORM.ships))
+            .options(
+                selectinload(PlayerORM.ships).selectinload(ShipORM.equipment)
+            )
             .where(PlayerORM.telegram_id == telegram_id)
         )
 
