@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict
 
 # --- DTO для создания (Запросы) ---
 
+
 class CreateArticleDTO(BaseModel):
     chapter_id: UUID | None = None
     title: str
@@ -22,7 +23,7 @@ class CreateChapterDTO(BaseModel):
     reward_xgen: int = 0
     reward_fragments: int = 0
     # В Pydantic V2 безопасно использовать просто []
-    articles: list[CreateArticleDTO] = [] 
+    articles: list[CreateArticleDTO] = []
 
 
 class CreateSeasonDTO(BaseModel):
@@ -37,8 +38,11 @@ class CreateSeasonDTO(BaseModel):
 
 # --- DTO для ответа (Ответы) ---
 
+
 class ArticleResponseDTO(BaseModel):
-    model_config = ConfigDict(from_attributes=True) # Позволяет читать атрибуты ORM/dataclass
+    model_config = ConfigDict(
+        from_attributes=True
+    )  # Позволяет читать атрибуты ORM/dataclass
 
     id: UUID
     chapter_id: UUID
@@ -79,10 +83,11 @@ class SeasonResponseDTO(BaseModel):
 class GuideResponseDTO(BaseModel):
     chapters: list[ChapterResponseDTO]
     player_fragments_balance: int  # Фронт сразу знает, хватает ли валюты
-    
-    
+
+
 class UnlockArticleDTO(BaseModel):
     article_id: UUID
+
 
 class UnlockArticleResponseDTO(BaseModel):
     content: str
@@ -90,13 +95,22 @@ class UnlockArticleResponseDTO(BaseModel):
     chapter_completed: bool
     xgen_rewarded: int
     fragments_rewarded: int = 0
+    box_opened: bool = False
+    box_xgen: int = 0
+    box_fragments: int = 0
+    box_items: list[dict] = []
 
 
 class TriggerEventDTO(BaseModel):
     event_type: str
 
+
 class TriggerEventResponseDTO(BaseModel):
-    newly_unlocked_articles: list[str] # Список названий (title)
+    newly_unlocked_articles: list[str]  # Список названий (title)
+    box_opened: bool = False
+    box_xgen: int = 0
+    box_fragments: int = 0
+    box_items: list[dict] = []
 
 
 class LeaderboardEntryDTO(BaseModel):

@@ -4,12 +4,21 @@ from datetime import datetime, timezone
 
 from app.domain.entities.player import Player
 from app.domain.uow import UnitOfWork
-from app.domain.entities.guide_progress import UnlockedArticle, ArticleTriggerProgress, ChapterCompletion
+from app.domain.value_objects.loot_box import LootBoxType
+from app.domain.entities.guide_progress import (
+    UnlockedArticle,
+    ArticleTriggerProgress,
+    ChapterCompletion,
+)
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
+from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.services.loot_box_service import LootBoxService
 from app.application.dtos.guide_dto import TriggerEventDTO, TriggerEventResponseDTO
 from app.domain.events.player_events import ArticleUnlockedEvent, ChapterCompletedEvent
+from app.application.use_cases.open_loot_box import OpenLootBoxUseCase
 
 
 logger = logging.getLogger(__name__)
@@ -20,21 +29,34 @@ class ProcessTriggerUseCase:
         self,
         player_repo: PlayerRepository,
         chapter_repo: ChapterRepository,
-        guide_repo: GuideProgressRepository
+        guide_repo: GuideProgressRepository,
+        loot_box_service: LootBoxService | None = None,
+        loot_box_repo: LootBoxRepository | None = None,
+        inventory_repo: InventoryRepository | None = None,
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
         self.guide_repo = guide_repo
+        self.loot_box_service = loot_box_service
+        self.loot_box_repo = loot_box_repo
+        self.inventory_repo = inventory_repo
 
-    async def execute(self, player: Player, dto: TriggerEventDTO, uow: UnitOfWork) -> TriggerEventResponseDTO:
+    async def execute(
+        self, player: Player, dto: TriggerEventDTO, uow: UnitOfWork
+    ) -> TriggerEventResponseDTO:
         chapters = await self.chapter_repo.get_all_with_articles()
 
         newly_unlocked_titles = []
         player_state_changed = False
+        box_opened = False
+        box_xgen = 0
+        box_fragments = 0
+        box_items: list[dict] = []
 
         for chapter in chapters:
             triggered_articles = [
-                art for art in chapter.articles
+                art
+                for art in chapter.articles
                 if art.trigger_event_type == dto.event_type
             ]
 
@@ -42,17 +64,21 @@ class ProcessTriggerUseCase:
                 continue
 
             for article in triggered_articles:
-                is_unlocked = await self.guide_repo.is_article_unlocked(player.id, article.id)
+                is_unlocked = await self.guide_repo.is_article_unlocked(
+                    player.id, article.id
+                )
                 if is_unlocked:
                     continue
 
-                progress = await self.guide_repo.get_trigger_progress(player.id, article.id)
+                progress = await self.guide_repo.get_trigger_progress(
+                    player.id, article.id
+                )
                 if not progress:
                     progress = ArticleTriggerProgress(
                         id=uuid4(),
                         player_id=player.id,
                         article_id=article.id,
-                        current_count=0
+                        current_count=0,
                     )
 
                 threshold_reached = progress.increment(article.trigger_threshold)
@@ -63,21 +89,27 @@ class ProcessTriggerUseCase:
                         id=uuid4(),
                         player_id=player.id,
                         article_id=article.id,
-                        unlocked_at=now
+                        unlocked_at=now,
                     )
                     await self.guide_repo.save_unlocked_article(unlocked)
                     newly_unlocked_titles.append(article.title)
 
-                    player.register_event(ArticleUnlockedEvent(
-                        occurred_at=now,
-                        player_id=player.id,
-                        article_id=article.id,
-                        chapter_id=chapter.id
-                    ))
+                    player.register_event(
+                        ArticleUnlockedEvent(
+                            occurred_at=now,
+                            player_id=player.id,
+                            article_id=article.id,
+                            chapter_id=chapter.id,
+                        )
+                    )
 
-                    unlocked_ids = await self.guide_repo.get_unlocked_articles_ids(player.id)
+                    unlocked_ids = await self.guide_repo.get_unlocked_articles_ids(
+                        player.id
+                    )
                     if chapter.check_completion(unlocked_ids):
-                        is_completed = await self.guide_repo.is_chapter_completed(player.id, chapter.id)
+                        is_completed = await self.guide_repo.is_chapter_completed(
+                            player.id, chapter.id
+                        )
                         if not is_completed:
                             player.add_xgen(chapter.reward_xgen)
                             player.add_fragments(chapter.reward_fragments)
@@ -87,17 +119,37 @@ class ProcessTriggerUseCase:
                                 id=uuid4(),
                                 player_id=player.id,
                                 chapter_id=chapter.id,
-                                completed_at=now
+                                completed_at=now,
                             )
                             await self.guide_repo.save_chapter_completion(completion)
 
-                            player.register_event(ChapterCompletedEvent(
-                                occurred_at=now,
-                                player_id=player.id,
-                                chapter_id=chapter.id,
-                                xgen_rewarded=chapter.reward_xgen,
-                                fragments_rewarded=chapter.reward_fragments
-                            ))
+                            player.register_event(
+                                ChapterCompletedEvent(
+                                    occurred_at=now,
+                                    player_id=player.id,
+                                    chapter_id=chapter.id,
+                                    xgen_rewarded=chapter.reward_xgen,
+                                    fragments_rewarded=chapter.reward_fragments,
+                                )
+                            )
+
+                            if (
+                                self.loot_box_service
+                                and self.loot_box_repo
+                                and self.inventory_repo
+                            ):
+                                open_box_uc = OpenLootBoxUseCase(
+                                    self.loot_box_service,
+                                    self.loot_box_repo,
+                                    self.inventory_repo,
+                                )
+                                loot_result = await open_box_uc.execute(
+                                    player, LootBoxType.CHAPTER_REWARD, uow
+                                )
+                                box_opened = True
+                                box_xgen += loot_result.xgen_earned
+                                box_fragments += loot_result.fragments_earned
+                                box_items.extend(loot_result.items_earned or [])
 
                 await self.guide_repo.save_trigger_progress(progress)
 
@@ -107,4 +159,10 @@ class ProcessTriggerUseCase:
 
         await uow.commit()
 
-        return TriggerEventResponseDTO(newly_unlocked_articles=newly_unlocked_titles)
+        return TriggerEventResponseDTO(
+            newly_unlocked_articles=newly_unlocked_titles,
+            box_opened=box_opened,
+            box_xgen=box_xgen,
+            box_fragments=box_fragments,
+            box_items=box_items,
+        )
