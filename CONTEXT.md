@@ -42,7 +42,7 @@ Presentation (FastAPI routes)
 - Infrastructure реализует интерфейсы через SQLAlchemy
 - Mappers конвертируют domain entity ↔ ORM model
 - Use Cases оркестрируют работу через repositories + Unit of Work
-- Domain Events определены, но dispatch еще не подключен
+- Domain Events + dispatch через UnitOfWork
 
 **Структура** (`src/app/`):
 
@@ -88,13 +88,7 @@ Presentation (FastAPI routes)
 - 20+ API endpoint'ов (игроки, зоны, экспедиции, путеводитель, инвентарь, админка)
 - Ключевая бизнес-логика (экспедиции, ежедневные логины, loot система, открытие статей, лидерборды)
 
-### ✅ Реализовано на бекенде
-- DDD архитектура (сущности, value objects, use cases, репозитории)
-- 12 таблиц в PostgreSQL, 8 миграций Alembic
-- Аутентификация через Telegram HMAC-SHA256
-- 20+ API endpoint'ов (игроки, зоны, экспедиции, путеводитель, инвентарь, админка)
-- Stage 1: Content API (`/content/ships|zones|resources|artifacts|ranks`), Ships API (profile patch, ships list, refuel/repair/equip/unequip), Stats API, Guide Detail, Achievements API, Shop API, Events API, Stars balance
-- Ключевая бизнес-логика (экспедиции, ежедневные логины, loot система, открытие статей, лидерборды)
+
 
 ### ✅ Реализовано на фронтенде (Stage 3b)
 - **6 страниц**: ShipPage (канвас/animated starfield, hex slots, экспедиции, easter eggs), Galaxy (карта зон по тирам), GuidePage (главы/статьи/глитчи), Inventory (фильтры/сортировка/использование предметов), Profile (статистика/достижения/прогресс), Shop (категории/покупки за XGEN/Stars), AdminPage (CRUD контента, дашборд)
@@ -124,10 +118,10 @@ Presentation (FastAPI routes)
 | Этап | Что делаем | Статус |
 |------|-----------|--------|
 | **0** | Фундамент: CI/CD, Docker, pre-commit, тесты, секьюрити | ✅ Выполнен |
-| **1** | Бекенд: Content, Ships, Stats, Guide Detail, Achievements, Shop, Events, Stars | ✅ Выполнен |
+| **1** | Бекенд: Content, Ships, Stats, Guide Detail, Achievements, Shop, Events, Stars | ⏳ Stage 4 |
 | **2** | Админка для заказчика (CRUD контента, дашборд) | ✅ Выполнен |
 | **3** | Фронтенд: портирование старого фронта (6 страниц, компоненты, хуки, i18n) | ⏳ Stage 3a: admin panel frontend ✅ / Stage 3b: player pages ✅ |
-| **4** | Инфраструктура: Redis кэш, rate limiting, Domain Events + нотификации | ⏳ В плане |
+| **4** | Бекенд Stage 1: Content API (`/content/ships|zones|resources|artifacts|ranks`), Ships API (profile patch, ships list, refuel/repair/equip/unequip), Stats API, Guide Detail, Achievements API, Shop API, Events API, Stars balance | ⏳ В плане |
 | **5** | Монетизация: Telegram Stars, абстрактный платежный слой, реклама | ⏳ В плане |
 | **6** | Контент + Полировка: наполнение, анимации, тесты, README | ⏳ В плане |
 

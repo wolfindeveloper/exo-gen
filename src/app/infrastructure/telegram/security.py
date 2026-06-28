@@ -1,11 +1,9 @@
 import hmac
 import hashlib
 import json
-import os
 from urllib.parse import parse_qs
 
 from fastapi import Header, HTTPException, Depends
-from dotenv import load_dotenv
 
 from app.presentation.api.dependencies import get_player_repo, get_uow
 from app.application.use_cases.auto_register_player import AutoRegisterPlayerUseCase
@@ -13,12 +11,6 @@ from app.domain.entities.player import Player
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 from app.config.settings import settings
-
-
-load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN is missing in .env file")
 
 def verify_telegram_signature(init_data: str) -> dict:
     """Проверяет подпись Telegram и возвращает данные о пользователе"""
@@ -38,7 +30,7 @@ def verify_telegram_signature(init_data: str) -> dict:
     data_check_string = '\n'.join([f"{k}={v}" for k, v in sorted_items])
 
     # 2. Создаем секретный ключ (HMAC-SHA256 от "WebAppData" и токена бота)
-    secret_key = hmac.new(b"WebAppData", BOT_TOKEN.encode('utf-8'), hashlib.sha256).digest()
+    secret_key = hmac.new(b"WebAppData", settings.BOT_TOKEN.encode('utf-8'), hashlib.sha256).digest()
     
     # 3. Считаем хэш от строки данных
     calculated_hash = hmac.new(secret_key, data_check_string.encode('utf-8'), hashlib.sha256).hexdigest()

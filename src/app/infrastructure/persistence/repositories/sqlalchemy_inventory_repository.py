@@ -27,9 +27,12 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
 
         for domain_item in inventory.items:
             if domain_item.id in existing_items_orm:
-                orm_item = existing_items_orm[domain_item.id]
+                orm_item = existing_items_orm.pop(domain_item.id)
                 orm_item.quantity = domain_item.quantity
                 orm_item.item_metadata = domain_item.metadata
             else:
                 new_orm = InventoryItemMapper.to_orm(domain_item)
                 self.session.add(new_orm)
+
+        for orm_item in existing_items_orm.values():
+            await self.session.delete(orm_item)

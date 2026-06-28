@@ -33,7 +33,8 @@ class Settings(BaseSettings):
         # Иначе собираем из компонентов (для локальной разработки)
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
-    # Admin
+    # Telegram
+    BOT_TOKEN: str
     ADMIN_TELEGRAM_IDS: list[int] = []
 
     # Redis
