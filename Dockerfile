@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Устанавливаем системные зависимости для PostgreSQL
+# Системные зависимости для PostgreSQL
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -22,7 +22,10 @@ RUN uv sync --frozen || uv sync
 # Копируем исходный код
 COPY src/ ./src/
 
+# ⬇️ ДОБАВЛЕНО: Копируем миграции и конфиг Alembic
+COPY alembic/ ./alembic/
+COPY alembic.ini ./
+
 EXPOSE 8000
 
-# ИСПРАВЛЕНО: убрали src. из пути
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -30,6 +30,10 @@ from app.domain.exceptions.guide import (
     CannotBuySecretArticleError,
 )
 from app.domain.exceptions.zone import ZoneNotFoundError
+from app.domain.exceptions.equipment import (
+    EquipmentNotFoundError,
+    ArtifactNotEquippedError,
+)
 
 __all__ = [
     "DomainError",
@@ -54,4 +58,6 @@ __all__ = [
     "ArticleAlreadyUnlockedError",
     "CannotBuySecretArticleError",
     "ZoneNotFoundError",
+    "EquipmentNotFoundError",
+    "ArtifactNotEquippedError",
 ]

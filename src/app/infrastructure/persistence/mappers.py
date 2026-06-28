@@ -3,6 +3,7 @@ from uuid import UUID
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
 from app.domain.value_objects.resources import TeaLevel, Optimism, XgenBalance, FragmentsBalance
+from app.domain.value_objects.equipment import SlotType
 from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
 from app.domain.entities.article import Article
@@ -11,6 +12,7 @@ from app.domain.entities.season import Season
 from app.domain.entities.item import Item, ItemType
 from app.domain.entities.inventory_item import InventoryItem
 from app.domain.entities.inventory import Inventory
+from app.domain.entities.equipment import Equipment, EquippedArtifact
 from app.infrastructure.persistence.models.player_orm import PlayerORM
 from app.infrastructure.persistence.models.ship_orm import ShipORM
 from app.infrastructure.persistence.models.zone_orm import ZoneORM
@@ -20,6 +22,7 @@ from app.infrastructure.persistence.models.chapter_orm import ChapterORM
 from app.infrastructure.persistence.models.season_orm import SeasonORM
 from app.infrastructure.persistence.models.item_orm import ItemORM
 from app.infrastructure.persistence.models.inventory_item_orm import InventoryItemORM
+from app.infrastructure.persistence.models.equipment_orm import EquipmentORM
 
 
 class PlayerMapper:
@@ -272,6 +275,35 @@ class InventoryItemMapper:
             quantity=domain.quantity,
             item_metadata=domain.metadata # Читаем из metadata, пишем в item_metadata
         )
+
+class EquipmentMapper:
+    @staticmethod
+    def to_domain(orm: EquipmentORM) -> Equipment:
+        artifacts = [
+            EquippedArtifact(
+                item_id=UUID(a["item_id"]),
+                slot_type=SlotType(a["slot_type"]),
+                bonuses=a["bonuses"],
+            )
+            for a in orm.artifacts
+        ]
+        return Equipment(ship_id=orm.ship_id, artifacts=artifacts)
+
+    @staticmethod
+    def to_orm(domain: Equipment) -> EquipmentORM:
+        return EquipmentORM(
+            id=domain.id,
+            ship_id=domain.ship_id,
+            artifacts=[
+                {
+                    "item_id": str(a.item_id),
+                    "slot_type": a.slot_type.value,
+                    "bonuses": a.bonuses,
+                }
+                for a in domain.artifacts
+            ],
+        )
+
 
 class InventoryMapper:
     @classmethod

@@ -20,6 +20,8 @@ from app.domain.repositories.item_repository import ItemRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_item_repository import SQLAlchemyItemRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_inventory_repository import SQLAlchemyInventoryRepository
+from app.domain.repositories.equipment_repository import EquipmentRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_equipment_repository import SQLAlchemyEquipmentRepository
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -62,3 +64,7 @@ async def get_item_repo(session: AsyncSession = Depends(get_db_session)) -> Item
 
 async def get_inventory_repo(session: AsyncSession = Depends(get_db_session)) -> InventoryRepository:
     return SQLAlchemyInventoryRepository(session)
+
+
+async def get_equipment_repo(session: AsyncSession = Depends(get_db_session)) -> EquipmentRepository:
+    return SQLAlchemyEquipmentRepository(session)

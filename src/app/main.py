@@ -10,6 +10,7 @@ from app.presentation.api.routes.zones import router as zones_router
 from app.presentation.api.routes.expeditions import router as expeditions_router
 from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
+from app.presentation.api.routes.equipment import router as equipment_router
 
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ def create_app() -> FastAPI:
     app.include_router(expeditions_router)
     app.include_router(guide_router)
     app.include_router(inventory_router)
+    app.include_router(equipment_router)
 
     @app.get("/healthcheck", tags=["System"])
     async def healthcheck():
