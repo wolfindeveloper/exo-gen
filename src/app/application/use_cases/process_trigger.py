@@ -30,9 +30,9 @@ class ProcessTriggerUseCase:
         player_repo: PlayerRepository,
         chapter_repo: ChapterRepository,
         guide_repo: GuideProgressRepository,
-        loot_box_service: LootBoxService | None = None,
-        loot_box_repo: LootBoxRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
+        loot_box_service: LootBoxService,
+        loot_box_repo: LootBoxRepository,
+        inventory_repo: InventoryRepository,
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
@@ -133,23 +133,18 @@ class ProcessTriggerUseCase:
                                 )
                             )
 
-                            if (
-                                self.loot_box_service
-                                and self.loot_box_repo
-                                and self.inventory_repo
-                            ):
-                                open_box_uc = OpenLootBoxUseCase(
-                                    self.loot_box_service,
-                                    self.loot_box_repo,
-                                    self.inventory_repo,
-                                )
-                                loot_result = await open_box_uc.execute(
-                                    player, LootBoxType.CHAPTER_REWARD, uow
-                                )
-                                box_opened = True
-                                box_xgen += loot_result.xgen_earned
-                                box_fragments += loot_result.fragments_earned
-                                box_items.extend(loot_result.items_earned or [])
+                            open_box_uc = OpenLootBoxUseCase(
+                                self.loot_box_service,
+                                self.loot_box_repo,
+                                self.inventory_repo,
+                            )
+                            chapter_loot = await open_box_uc.execute(
+                                player, LootBoxType.CHAPTER_REWARD, uow
+                            )
+                            box_opened = True
+                            box_xgen += chapter_loot.xgen_earned
+                            box_fragments += chapter_loot.fragments_earned
+                            box_items.extend(chapter_loot.items_earned)
 
                 await self.guide_repo.save_trigger_progress(progress)
 

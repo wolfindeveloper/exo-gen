@@ -5,6 +5,9 @@ import pytest
 
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.services.loot_box_service import LootBoxService
 
 
 @pytest.fixture
@@ -13,6 +16,28 @@ def mock_player_repo():
     repo.get_by_telegram_id = AsyncMock()
     repo.save = AsyncMock()
     return repo
+
+
+@pytest.fixture
+def mock_inventory_repo():
+    repo = MagicMock(spec=InventoryRepository)
+    repo.get_by_player_id = AsyncMock()
+    repo.save = AsyncMock()
+    return repo
+
+
+@pytest.fixture
+def mock_loot_box_repo():
+    repo = MagicMock(spec=LootBoxRepository)
+    repo.get_by_type = AsyncMock()
+    repo.save = AsyncMock()
+    repo.get_all = AsyncMock()
+    return repo
+
+
+@pytest.fixture
+def mock_loot_box_service():
+    return MagicMock(spec=LootBoxService)
 
 
 @pytest.fixture

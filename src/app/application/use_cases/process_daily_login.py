@@ -13,9 +13,9 @@ class ProcessDailyLoginUseCase:
     def __init__(
         self,
         player_repo: PlayerRepository,
-        loot_box_service: LootBoxService | None = None,
-        loot_box_repo: LootBoxRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
+        loot_box_service: LootBoxService,
+        loot_box_repo: LootBoxRepository,
+        inventory_repo: InventoryRepository,
     ):
         self.player_repo = player_repo
         self.loot_box_service = loot_box_service
@@ -33,23 +33,14 @@ class ProcessDailyLoginUseCase:
         domain_result = player.process_daily_login()
         uow.track(player)
 
-        box_xgen = 0
-        box_fragments = 0
-        box_items: list[dict] = []
-
-        if (
-            domain_result.got_box
-            and self.loot_box_service
-            and self.loot_box_repo
-            and self.inventory_repo
-        ):
+        loot_result = None
+        if domain_result.got_box:
             open_box_uc = OpenLootBoxUseCase(
-                self.loot_box_service, self.loot_box_repo, self.inventory_repo
+                self.loot_box_service,
+                self.loot_box_repo,
+                self.inventory_repo,
             )
             loot_result = await open_box_uc.execute(player, LootBoxType.DAILY_42, uow)
-            box_xgen = loot_result.xgen_earned
-            box_fragments = loot_result.fragments_earned
-            box_items = loot_result.items_earned or []
 
         await self.player_repo.save(player)
         await uow.commit()
@@ -59,8 +50,8 @@ class ProcessDailyLoginUseCase:
             new_streak=domain_result.new_streak,
             got_box=domain_result.got_box,
             already_claimed=domain_result.already_claimed,
-            box_opened=domain_result.got_box,
-            box_xgen=box_xgen,
-            box_fragments=box_fragments,
-            box_items=box_items,
+            box_opened=loot_result is not None,
+            box_xgen=loot_result.xgen_earned if loot_result else 0,
+            box_fragments=loot_result.fragments_earned if loot_result else 0,
+            box_items=loot_result.items_earned if loot_result else [],
         )

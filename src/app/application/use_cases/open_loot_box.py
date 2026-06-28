@@ -11,13 +11,9 @@ from app.domain.repositories.inventory_repository import InventoryRepository
 
 @dataclass
 class OpenLootBoxResult:
-    xgen_earned: int = 0
-    fragments_earned: int = 0
-    items_earned: list[dict] | None = None
-
-    def __post_init__(self):
-        if self.items_earned is None:
-            self.items_earned = []
+    xgen_earned: int
+    fragments_earned: int
+    items_earned: list[dict]
 
 
 class OpenLootBoxUseCase:
@@ -39,7 +35,7 @@ class OpenLootBoxUseCase:
     ) -> OpenLootBoxResult:
         config = await self.loot_box_repo.get_by_type(box_type)
         if not config or not config.is_active:
-            return OpenLootBoxResult()
+            return OpenLootBoxResult(0, 0, [])
 
         loot = self.loot_box_service.generate(config)
 
@@ -52,7 +48,7 @@ class OpenLootBoxUseCase:
             item_id = UUID(item_drop["item_id"])
             amount = item_drop["amount"]
             inventory.add_item(item_id=item_id, quantity=amount)
-            items_earned.append({"item_id": str(item_id), "amount": amount})
+            items_earned.append({"item_id": item_id, "amount": amount})
 
         await self.inventory_repo.save(inventory)
 

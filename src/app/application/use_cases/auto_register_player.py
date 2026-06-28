@@ -17,9 +17,9 @@ class AutoRegisterPlayerUseCase:
     def __init__(
         self,
         player_repo: PlayerRepository,
-        loot_box_service: LootBoxService | None = None,
-        loot_box_repo: LootBoxRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
+        loot_box_service: LootBoxService,
+        loot_box_repo: LootBoxRepository,
+        inventory_repo: InventoryRepository,
     ):
         self.player_repo = player_repo
         self.loot_box_service = loot_box_service
@@ -53,12 +53,13 @@ class AutoRegisterPlayerUseCase:
         uow.track(player)
         await self.player_repo.save(player)
 
-        if self.loot_box_service and self.loot_box_repo and self.inventory_repo:
-            open_box_uc = OpenLootBoxUseCase(
-                self.loot_box_service, self.loot_box_repo, self.inventory_repo
-            )
-            await open_box_uc.execute(player, LootBoxType.WELCOME, uow)
-            await self.player_repo.save(player)
+        open_box_uc = OpenLootBoxUseCase(
+            self.loot_box_service,
+            self.loot_box_repo,
+            self.inventory_repo,
+        )
+        _ = await open_box_uc.execute(player, LootBoxType.WELCOME, uow)
+        await self.player_repo.save(player)
 
         await uow.commit()
 

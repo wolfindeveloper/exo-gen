@@ -28,9 +28,9 @@ class UnlockArticleUseCase:
         player_repo: PlayerRepository,
         chapter_repo: ChapterRepository,
         guide_repo: GuideProgressRepository,
-        loot_box_service: LootBoxService | None = None,
-        loot_box_repo: LootBoxRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
+        loot_box_service: LootBoxService,
+        loot_box_repo: LootBoxRepository,
+        inventory_repo: InventoryRepository,
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
@@ -78,6 +78,7 @@ class UnlockArticleUseCase:
         chapter_completed = False
         xgen_rewarded = 0
         fragments_rewarded = 0
+        chapter_loot = None
 
         unlocked_ids = await self.guide_repo.get_unlocked_articles_ids(player.id)
         if chapter.check_completion(unlocked_ids):
@@ -110,27 +111,14 @@ class UnlockArticleUseCase:
                     )
                 )
 
-        box_xgen = 0
-        box_fragments = 0
-        box_items: list[dict] = []
-
-        if (
-            chapter_completed
-            and self.loot_box_service
-            and self.loot_box_repo
-            and self.inventory_repo
-        ):
-            open_box_uc = OpenLootBoxUseCase(
-                self.loot_box_service, self.loot_box_repo, self.inventory_repo
-            )
-            loot_result = await open_box_uc.execute(
-                player, LootBoxType.CHAPTER_REWARD, uow
-            )
-            box_xgen = loot_result.xgen_earned
-            box_fragments = loot_result.fragments_earned
-            box_items = loot_result.items_earned or []
-            xgen_rewarded += box_xgen
-            fragments_rewarded += box_fragments
+                open_box_uc = OpenLootBoxUseCase(
+                    self.loot_box_service,
+                    self.loot_box_repo,
+                    self.inventory_repo,
+                )
+                chapter_loot = await open_box_uc.execute(
+                    player, LootBoxType.CHAPTER_REWARD, uow
+                )
 
         uow.track(player)
         await self.player_repo.save(player)
@@ -143,7 +131,7 @@ class UnlockArticleUseCase:
             xgen_rewarded=xgen_rewarded,
             fragments_rewarded=fragments_rewarded,
             box_opened=chapter_completed,
-            box_xgen=box_xgen,
-            box_fragments=box_fragments,
-            box_items=box_items,
+            box_xgen=chapter_loot.xgen_earned if chapter_completed else 0,
+            box_fragments=chapter_loot.fragments_earned if chapter_completed else 0,
+            box_items=chapter_loot.items_earned if chapter_completed else [],
         )

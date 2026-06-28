@@ -49,11 +49,22 @@ TODAY = date.today()
 class TestProcessDailyLogin:
     @pytest.mark.asyncio
     async def test_first_login_sets_streak_to_1_and_grants_10_xp(
-        self, mock_player_repo, mock_uow, player_id
+        self,
+        mock_player_repo,
+        mock_loot_box_service,
+        mock_loot_box_repo,
+        mock_inventory_repo,
+        mock_uow,
+        player_id,
     ):
         player = make_player(player_id)
         mock_player_repo.get_by_telegram_id.return_value = player
-        use_case = ProcessDailyLoginUseCase(mock_player_repo)
+        use_case = ProcessDailyLoginUseCase(
+            mock_player_repo,
+            mock_loot_box_service,
+            mock_loot_box_repo,
+            mock_inventory_repo,
+        )
 
         result = await use_case.execute(TG_ID, mock_uow)
 
@@ -72,11 +83,22 @@ class TestProcessDailyLogin:
 
     @pytest.mark.asyncio
     async def test_double_login_same_day_returns_already_claimed(
-        self, mock_player_repo, mock_uow, player_id
+        self,
+        mock_player_repo,
+        mock_loot_box_service,
+        mock_loot_box_repo,
+        mock_inventory_repo,
+        mock_uow,
+        player_id,
     ):
         player = make_player(player_id, xp=50, streak=5, last_login=TODAY)
         mock_player_repo.get_by_telegram_id.return_value = player
-        use_case = ProcessDailyLoginUseCase(mock_player_repo)
+        use_case = ProcessDailyLoginUseCase(
+            mock_player_repo,
+            mock_loot_box_service,
+            mock_loot_box_repo,
+            mock_inventory_repo,
+        )
 
         result = await use_case.execute(TG_ID, mock_uow)
 
@@ -94,12 +116,23 @@ class TestProcessDailyLogin:
 
     @pytest.mark.asyncio
     async def test_login_after_skip_resets_streak_to_1(
-        self, mock_player_repo, mock_uow, player_id
+        self,
+        mock_player_repo,
+        mock_loot_box_service,
+        mock_loot_box_repo,
+        mock_inventory_repo,
+        mock_uow,
+        player_id,
     ):
         old_date = TODAY - timedelta(days=3)
         player = make_player(player_id, xp=30, streak=3, last_login=old_date)
         mock_player_repo.get_by_telegram_id.return_value = player
-        use_case = ProcessDailyLoginUseCase(mock_player_repo)
+        use_case = ProcessDailyLoginUseCase(
+            mock_player_repo,
+            mock_loot_box_service,
+            mock_loot_box_repo,
+            mock_inventory_repo,
+        )
 
         result = await use_case.execute(TG_ID, mock_uow)
 
@@ -117,10 +150,21 @@ class TestProcessDailyLogin:
 
     @pytest.mark.asyncio
     async def test_player_not_found_raises_error(
-        self, mock_player_repo, mock_uow, player_id
+        self,
+        mock_player_repo,
+        mock_loot_box_service,
+        mock_loot_box_repo,
+        mock_inventory_repo,
+        mock_uow,
+        player_id,
     ):
         mock_player_repo.get_by_telegram_id.return_value = None
-        use_case = ProcessDailyLoginUseCase(mock_player_repo)
+        use_case = ProcessDailyLoginUseCase(
+            mock_player_repo,
+            mock_loot_box_service,
+            mock_loot_box_repo,
+            mock_inventory_repo,
+        )
 
         with pytest.raises(PlayerNotFoundError):
             await use_case.execute(TG_ID, mock_uow)
