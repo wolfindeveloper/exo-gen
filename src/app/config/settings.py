@@ -33,6 +33,9 @@ class Settings(BaseSettings):
         # Иначе собираем из компонентов (для локальной разработки)
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
+    # Admin
+    ADMIN_TELEGRAM_IDS: list[int] = []
+
     # Redis
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6381

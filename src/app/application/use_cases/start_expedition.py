@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from app.domain.entities.player import Player
 from app.domain.uow import UnitOfWork
 from app.application.dtos.expedition_dto import StartExpeditionDTO, ExpeditionResponseDTO
@@ -6,6 +8,7 @@ from app.domain.exceptions.zone import ZoneNotFoundError
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
+from app.domain.events.player_events import ExpeditionStartedEvent
 
 
 class StartExpeditionUseCase:
@@ -31,7 +34,15 @@ class StartExpeditionUseCase:
             raise ShipAlreadyInExpeditionError("Ship is already in expedition")
 
         new_expedition = ship.start_expedition(zone)
+        new_expedition.register_event(ExpeditionStartedEvent(
+            occurred_at=datetime.now(timezone.utc),
+            expedition_id=new_expedition.id,
+            ship_id=ship.id,
+            zone_id=zone.id,
+            ends_at=new_expedition.ends_at
+        ))
 
+        uow.track(new_expedition)
         await self.player_repo.save(player)
         await self.expedition_repo.save(new_expedition)
         await uow.commit()
@@ -43,5 +54,5 @@ class StartExpeditionUseCase:
             started_at=new_expedition.started_at,
             ends_at=new_expedition.ends_at,
             status=new_expedition.status.value,
-            remaining_tea=ship.tea_level
+            remaining_tea=ship.tea_level.value
         )

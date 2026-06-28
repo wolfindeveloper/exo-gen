@@ -1,9 +1,11 @@
 import uuid
+from datetime import datetime, timezone
 
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.events.player_events import PlayerRegisteredEvent
 
 
 class AutoRegisterPlayerUseCase:
@@ -27,6 +29,12 @@ class AutoRegisterPlayerUseCase:
             fragments_balance=50,
             ships=[Ship(id=uuid.uuid4(), player_id=player_id)]
         )
+        player.register_event(PlayerRegisteredEvent(
+            occurred_at=datetime.now(timezone.utc),
+            player_id=player_id,
+            telegram_id=telegram_id
+        ))
+        uow.track(player)
         await self.player_repo.save(player)
         await uow.commit()
 

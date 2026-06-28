@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.presentation.api.dependencies import get_db_session, get_zone_repo, get_uow
 from app.domain.uow import UnitOfWork
+from app.infrastructure.telegram.security import get_admin_player
 from app.infrastructure.persistence.models.season_orm import SeasonORM
 from app.infrastructure.persistence.models.chapter_orm import ChapterORM
 from app.infrastructure.persistence.models.article_orm import ArticleORM
@@ -21,7 +22,7 @@ from app.application.dtos.item_dto import CreateItemDTO, ItemResponseDTO
 from app.application.use_cases.create_zone import CreateZoneUseCase
 from app.domain.repositories.zone_repository import ZoneRepository
 
-router = APIRouter(prefix="/admin", tags=["Admin"])
+router = APIRouter(prefix="/admin", tags=["Admin"], dependencies=[Depends(get_admin_player)])
 
 @router.post("/zones", status_code=201)
 async def create_zone(

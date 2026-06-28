@@ -12,6 +12,7 @@ from app.application.use_cases.auto_register_player import AutoRegisterPlayerUse
 from app.domain.entities.player import Player
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
+from app.config.settings import settings
 
 
 load_dotenv()
@@ -74,3 +75,11 @@ async def get_current_player(
         player = await use_case.execute(int(telegram_id), username, uow)
 
     return player
+
+
+async def get_admin_player(
+    current_player: Player = Depends(get_current_player),
+) -> Player:
+    if current_player.telegram_id not in settings.ADMIN_TELEGRAM_IDS:
+        raise HTTPException(status_code=403, detail="Access denied. Admins only.")
+    return current_player

@@ -21,25 +21,15 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         return InventoryMapper.to_domain(player_id, items_orm)
 
     async def save(self, inventory: Inventory) -> None:
-        # 1. Достаем все текущие предметы игрока из БД
         stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
         result = await self.session.execute(stmt)
         existing_items_orm = {item.id: item for item in result.scalars().all()}
 
-        # 2. Проходимся по тому, что есть в Агрегате (в памяти)
         for domain_item in inventory.items:
             if domain_item.id in existing_items_orm:
-                # Предмет уже есть в БД - просто обновляем его количество и метаданные
                 orm_item = existing_items_orm[domain_item.id]
                 orm_item.quantity = domain_item.quantity
                 orm_item.item_metadata = domain_item.metadata
-                
-                # Удаляем из словаря, чтобы отметить как "обработанный"
-                del existing_items_orm[domain_item.id] 
             else:
-                # Это новый предмет (например, только что выпал из экспедиции) - добавляем в БД
                 new_orm = InventoryItemMapper.to_orm(domain_item)
                 self.session.add(new_orm)
-
-        for orm_item in existing_items_orm.values():
-            await self.session.delete(orm_item)

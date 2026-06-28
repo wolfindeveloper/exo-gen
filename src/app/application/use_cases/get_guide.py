@@ -41,6 +41,6 @@ class GetGuideUseCase:
 
         return GuideResponseDTO(
             chapters=chapters_dto,
-            player_fragments_balance=player.fragments_balance
+            player_fragments_balance=player.fragments_balance.value
         )
 

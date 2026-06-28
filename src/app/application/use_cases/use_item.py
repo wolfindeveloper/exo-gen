@@ -50,6 +50,6 @@ class UseItemUseCase:
 
         return UseItemResponseDTO(
             message=f"Successfully used {item.name} on {ship.name}!",
-            new_tea_level=ship.tea_level,
-            new_optimism=ship.optimism
+            new_tea_level=ship.tea_level.value,
+            new_optimism=ship.optimism.value
         )

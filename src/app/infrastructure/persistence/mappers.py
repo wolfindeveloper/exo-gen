@@ -2,6 +2,7 @@ from uuid import UUID
 
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
+from app.domain.value_objects.resources import TeaLevel, Optimism, XgenBalance, FragmentsBalance
 from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
 from app.domain.entities.article import Article
@@ -28,8 +29,8 @@ class PlayerMapper:
             id=ship.id,
             player_id=player_id,
             name=ship.name,
-            tea_level=ship.tea_level,
-            optimism=ship.optimism,
+            tea_level=ship.tea_level.value,
+            optimism=ship.optimism.value,
             speed=ship.speed,
             defense=ship.defense,
             luck=ship.luck
@@ -41,8 +42,8 @@ class PlayerMapper:
             id=ship_orm.id,
             player_id=ship_orm.player_id,
             name=ship_orm.name,
-            tea_level=ship_orm.tea_level,
-            optimism=ship_orm.optimism,
+            tea_level=TeaLevel(ship_orm.tea_level),
+            optimism=Optimism(ship_orm.optimism),
             speed=ship_orm.speed,
             defense=ship_orm.defense,
             luck=ship_orm.luck
@@ -56,8 +57,8 @@ class PlayerMapper:
             telegram_id=player.telegram_id,
             username=player.username,
             xp=player.xp,
-            xgen_balance=player.xgen_balance,
-            fragments_balance=player.fragments_balance,
+            xgen_balance=player.xgen_balance.value,
+            fragments_balance=player.fragments_balance.value,
             daily_streak=player.daily_streak,
             last_login_date=player.last_login_date,
             ships=[
@@ -73,8 +74,8 @@ class PlayerMapper:
             telegram_id=player_orm.telegram_id,
             username=player_orm.username,
             xp=player_orm.xp,
-            xgen_balance=player_orm.xgen_balance,
-            fragments_balance=player_orm.fragments_balance,
+            xgen_balance=XgenBalance(player_orm.xgen_balance),
+            fragments_balance=FragmentsBalance(player_orm.fragments_balance),
             daily_streak=player_orm.daily_streak,
             last_login_date=player_orm.last_login_date,
             ships=[

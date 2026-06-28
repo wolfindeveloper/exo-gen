@@ -1,8 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
 
-from app.infrastructure.database.session import engine
-from app.infrastructure.persistence.models.base import Base
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
@@ -19,16 +17,9 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(f"DATABASE_URL: {engine.url}")
-    try:
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        logger.info("Tables created successfully!")
-    except Exception as e:
-        logger.error(f"Database connection failed: {type(e).__name__}: {e}")
-        raise
+    logger.info("Starting up Hitchhiker's Idle...")
     yield
-    await engine.dispose()
+    logger.info("Shutting down...")
 
 def create_app() -> FastAPI:
     app = FastAPI(

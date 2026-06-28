@@ -20,8 +20,8 @@ class GetPlayerUseCase:
             telegram_id=player.telegram_id,
             username=player.username,
             xp=player.xp,
-            xgen_balance=player.xgen_balance,
-            fragments_balance=player.fragments_balance,
+            xgen_balance=player.xgen_balance.value,
+            fragments_balance=player.fragments_balance.value,
             daily_streak=player.daily_streak,
             ship_count=len(player.ships),
             ship_id=ship.id if ship else None

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from app.domain.entities.base import AggregateRoot
+
 
 class UnitOfWork(ABC):
     @abstractmethod
@@ -16,4 +18,8 @@ class UnitOfWork(ABC):
 
     @abstractmethod
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        pass
+
+    @abstractmethod
+    def track(self, *aggregates: AggregateRoot) -> None:
         pass

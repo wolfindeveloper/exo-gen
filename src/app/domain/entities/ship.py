@@ -7,6 +7,7 @@ from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
 from app.domain.exceptions.ship import InsufficientTeaError, ShipDestroyedError
 from app.domain.services.clock import Clock, SystemClock
+from app.domain.value_objects.resources import TeaLevel, Optimism
 
 
 @dataclass
@@ -14,14 +15,14 @@ class Ship:
     id: UUID
     player_id: UUID
     name: str = "Vogon MK"
-    tea_level: float = 100.0 # Топливо
-    optimism: float = 100.0 # Прочность
+    tea_level: TeaLevel = TeaLevel(100.0)
+    optimism: Optimism = Optimism(100.0)
     speed: float = 1.0 # Скорость
     defense: float = 0.0 # Защита
     luck: float = 0.0 # Шанс
 
     def can_start_expedition(self, zone: Zone) -> bool:
-        return self.tea_level >= zone.fuel_cost and self.optimism > 0
+        return self.tea_level.value >= zone.fuel_cost and not self.optimism.is_destroyed()
             
         
 
@@ -29,13 +30,13 @@ class Ship:
         if clock is None:
             clock = SystemClock()
 
-        if self.optimism <= 0:
+        if self.optimism.is_destroyed():
             raise ShipDestroyedError("Ship optimism is 0, cannot start expedition")
 
-        if self.tea_level < zone.fuel_cost:
-            raise InsufficientTeaError(required=zone.fuel_cost, available=self.tea_level)
+        if self.tea_level.value < zone.fuel_cost:
+            raise InsufficientTeaError(required=zone.fuel_cost, available=self.tea_level.value)
 
-        self.tea_level -= zone.fuel_cost
+        self.tea_level = self.tea_level.consume(zone.fuel_cost)
         now = clock.now()
         ends_at = now + timedelta(seconds=zone.duration_seconds)
 
@@ -49,26 +50,11 @@ class Ship:
         )
 
     def apply_expedition_wear_and_tear(self, risk: float):
-        """
-        Рассчитывает потерю оптимизма (прочности) после экспедиции.
-        Защита корабля снижает получаемый урон.
-        """
-        # Урон не может быть отрицательным
-
-        damage = max(0.0, risk - self.defense)
-        self.optimism -= damage
-
-        # Оптимизм не может уйти в минус (корабль не может быть "сломаннее" чем на 0)
-        if self.optimism < 0.0:
-            self.optimism = 0.0
+        self.optimism = self.optimism.apply_damage(risk, self.defense)
 
     def restore_tea(self, amount: float) -> None:
-        """Восстанавливает топливо (чай)."""
-        self.tea_level += amount
-        # В будущем здесь можно добавить проверку на максимальную вместимость бака
+        self.tea_level = self.tea_level.restore(amount)
 
     def restore_optimism(self, amount: float) -> None:
-        """Восстанавливает прочность (оптимизм)."""
-        self.optimism += amount
-        # В будущем можно добавить проверку на максимальный уровень оптимизма
+        self.optimism = self.optimism.restore(amount)
         

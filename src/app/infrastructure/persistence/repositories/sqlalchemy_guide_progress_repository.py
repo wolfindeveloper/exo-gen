@@ -79,20 +79,18 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
         )
 
     async def save_trigger_progress(self, progress: ArticleTriggerProgress) -> None:
-        stmt = select(ArticleTriggerProgressORM).where(ArticleTriggerProgressORM.id == progress.id)
-        result = await self.session.execute(stmt)
-        orm = result.scalar_one_or_none()
+        from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-        if orm:
-            orm.current_count = progress.current_count
-        else:
-            orm = ArticleTriggerProgressORM(
-                id=progress.id,
-                player_id=progress.player_id,
-                article_id=progress.article_id,
-                current_count=progress.current_count
-            )
-            self.session.add(orm)
+        stmt = pg_insert(ArticleTriggerProgressORM).values(
+            id=progress.id,
+            player_id=progress.player_id,
+            article_id=progress.article_id,
+            current_count=progress.current_count
+        ).on_conflict_do_update(
+            index_elements=['id'],
+            set_={'current_count': progress.current_count}
+        )
+        await self.session.execute(stmt)
 
 
     async def get_season_leaderboard(self, season_id: UUID, limit: int = 100) -> list[LeaderboardEntry]:

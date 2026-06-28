@@ -27,3 +27,7 @@ class ArticleTriggerProgress:
     player_id: UUID
     article_id: UUID
     current_count: int = 0
+
+    def increment(self, threshold: int) -> bool:
+        self.current_count += 1
+        return self.current_count >= threshold

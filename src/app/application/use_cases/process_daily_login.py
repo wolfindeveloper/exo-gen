@@ -15,6 +15,7 @@ class ProcessDailyLoginUseCase:
             raise PlayerNotFoundError(f"Player with telegram_id {telegram_id} not found")
 
         domain_result = player.process_daily_login()
+        uow.track(player)
         await self.player_repo.save(player)
         await uow.commit()
 

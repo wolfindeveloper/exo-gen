@@ -55,8 +55,8 @@ class ClaimExpeditionUseCase:
 
         loot = generate_loot(zone.loot_table)
 
-        player.xgen_balance += loot["xgen"]
-        player.fragments_balance += loot["fragments"]
+        player.add_xgen(loot["xgen"])
+        player.add_fragments(loot["fragments"])
 
         inventory = await self.inventory_repo.get_by_player_id(player.id)
         claimed_items_dtos = []
@@ -72,8 +72,14 @@ class ClaimExpeditionUseCase:
         damage = max(0.0, zone.optimism_risk - ship.defense)
         ship.apply_expedition_wear_and_tear(zone.optimism_risk)
 
-        expedition.status = ExpeditionStatus.COMPLETED
+        expedition.complete(
+            player_id=player.id,
+            xgen_earned=loot["xgen"],
+            fragments_earned=loot["fragments"],
+            items_earned=loot.get("items", [])
+        )
 
+        uow.track(player, expedition)
         await self.player_repo.save(player)
         await self.expedition_repo.save(expedition)
         await self.inventory_repo.save(inventory)
@@ -84,6 +90,6 @@ class ClaimExpeditionUseCase:
             fragments_earned=loot["fragments"],
             items_earned=claimed_items_dtos,
             optimism_lost=damage,
-            current_tea=ship.tea_level,
-            current_optimism=ship.optimism
+            current_tea=ship.tea_level.value,
+            current_optimism=ship.optimism.value
         )

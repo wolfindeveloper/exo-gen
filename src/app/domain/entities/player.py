@@ -2,19 +2,21 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from uuid import UUID
 
-from app.domain.exceptions.player import InsufficientFragmentsError
 from app.domain.services.clock import Clock, SystemClock
+from app.domain.value_objects.resources import XgenBalance, FragmentsBalance
+from app.domain.events.player_events import DailyLoginCompletedEvent
+from app.domain.entities.base import AggregateRoot
 from .ship import Ship
 
 
 @dataclass
-class Player:
+class Player(AggregateRoot):
     id: UUID
     telegram_id: int
     username: str | None
     xp: int = 0
-    xgen_balance: int  = 0
-    fragments_balance: int = 0
+    xgen_balance: XgenBalance = XgenBalance(0)
+    fragments_balance: FragmentsBalance = FragmentsBalance(0)
     daily_streak: int = 0
     last_login_date: date | None = None
     ships: list[Ship] = field(default_factory=list)
@@ -45,6 +47,14 @@ class Player:
 
         got_box = (self.daily_streak % 42 == 0) and (self.daily_streak > 0)
 
+        self.register_event(DailyLoginCompletedEvent(
+            occurred_at=clock.now(),
+            player_id=self.id,
+            earned_xp=earned_xp,
+            new_streak=self.daily_streak,
+            got_box=got_box
+        ))
+
         return DailyLoginResult(
             earned_xp=earned_xp,
             new_streak=self.daily_streak,
@@ -53,16 +63,13 @@ class Player:
         )
 
     def spend_fragments(self, amount: int) -> None:
-        if self.fragments_balance < amount:
-            raise InsufficientFragmentsError(required=amount, available=self.fragments_balance)
-
-        self.fragments_balance -= amount
+        self.fragments_balance = self.fragments_balance.spend(amount)
 
     def add_xgen(self, amount: int) -> None:
-        self.xgen_balance += amount
+        self.xgen_balance = self.xgen_balance.add(amount)
 
     def add_fragments(self, amount: int) -> None:
-        self.fragments_balance += amount
+        self.fragments_balance = self.fragments_balance.add(amount)
 
 
 @dataclass
