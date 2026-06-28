@@ -34,5 +34,6 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
                 new_orm = InventoryItemMapper.to_orm(domain_item)
                 self.session.add(new_orm)
 
-        for orm_item in existing_items_orm.values():
-            await self.session.delete(orm_item)
+        # Удаляем предметы, которых больше нет в доменной модели (quantity упал до 0)
+        for orphan_orm in existing_items_orm.values():
+            await self.session.delete(orphan_orm)

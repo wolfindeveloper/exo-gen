@@ -34,8 +34,8 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     # Telegram
-    BOT_TOKEN: str
     ADMIN_TELEGRAM_IDS: list[int] = []
+    BOT_TOKEN: str = Field(..., description="Telegram Bot Token from BotFather")
 
     # Redis
     REDIS_HOST: str = "redis"
