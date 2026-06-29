@@ -97,6 +97,7 @@ async def process_trigger(
     guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     use_case = ProcessTriggerUseCase(
@@ -107,6 +108,7 @@ async def process_trigger(
         loot_box_service=LootBoxService(),
         loot_box_repo=loot_box_repo,
         inventory_repo=inventory_repo,
+        item_repo=item_repo,
     )
     try:
         return await use_case.execute(current_player, dto, uow)

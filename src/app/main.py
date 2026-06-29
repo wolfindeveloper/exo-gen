@@ -39,7 +39,10 @@ async def lifespan(app: FastAPI):
     setup_event_handlers(bot_service)
 
     webhook_url = f"{settings.PUBLIC_URL.rstrip('/')}/payments/stars/webhook"
-    result = await bot_service.set_webhook(webhook_url)
+    result = await bot_service.set_webhook(
+        webhook_url,
+        secret_token=settings.TELEGRAM_WEBHOOK_SECRET,
+    )
     if result:
         logger.info(f"Telegram webhook set to {webhook_url}")
     else:

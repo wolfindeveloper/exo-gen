@@ -2,11 +2,13 @@ from uuid import UUID
 from dataclasses import dataclass
 
 from app.domain.entities.player import Player
+from app.domain.entities.item import ItemType
 from app.domain.uow import UnitOfWork
 from app.domain.value_objects.loot_box import LootBoxType
 from app.domain.services.loot_box_service import LootBoxService
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.item_repository import ItemRepository
 
 
 @dataclass
@@ -22,10 +24,12 @@ class OpenLootBoxUseCase:
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
         inventory_repo: InventoryRepository,
+        item_repo: ItemRepository,
     ):
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
         self.inventory_repo = inventory_repo
+        self.item_repo = item_repo
 
     async def execute(
         self,
@@ -43,12 +47,18 @@ class OpenLootBoxUseCase:
         player.add_fragments(loot.fragments)
 
         inventory = await self.inventory_repo.get_by_player_id(player.id)
+
+        item_ids = [UUID(d["item_id"]) for d in loot.items]
+        items = await self.item_repo.get_by_ids(item_ids)
+        item_type_map = {item.id: item.type for item in items}
+
         items_earned = []
         for item_drop in loot.items:
             item_id = UUID(item_drop["item_id"])
             amount = item_drop["amount"]
             inventory.add_item(item_id=item_id, quantity=amount)
-            player.increment_artifacts_found(amount)
+            if item_type_map.get(item_id) == ItemType.ARTIFACT:
+                player.increment_artifacts_found(amount)
             items_earned.append({"item_id": item_id, "amount": amount})
 
         uow.track(player)

@@ -16,6 +16,7 @@ from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.domain.exceptions.guide import SeasonExpiredError
 from app.domain.services.loot_box_service import LootBoxService
 from app.application.dtos.guide_dto import TriggerEventDTO, TriggerEventResponseDTO
@@ -36,6 +37,7 @@ class ProcessTriggerUseCase:
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
         inventory_repo: InventoryRepository,
+        item_repo: ItemRepository,
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
@@ -44,6 +46,7 @@ class ProcessTriggerUseCase:
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
         self.inventory_repo = inventory_repo
+        self.item_repo = item_repo
 
     async def execute(
         self, player: Player, dto: TriggerEventDTO, uow: UnitOfWork
@@ -152,6 +155,7 @@ class ProcessTriggerUseCase:
                                 self.loot_box_service,
                                 self.loot_box_repo,
                                 self.inventory_repo,
+                                self.item_repo,
                             )
                             chapter_loot = await open_box_uc.execute(
                                 player, LootBoxType.CHAPTER_REWARD, uow

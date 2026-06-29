@@ -115,7 +115,7 @@ class TestUnlockArticleSeasonValidation:
     async def test_unlock_article_season_expired(
         self, mock_player_repo, mock_chapter_repo, mock_guide_repo,
         mock_inventory_repo, mock_loot_box_repo, mock_loot_box_service,
-        mock_season_repo, mock_uow, player_id
+        mock_season_repo, mock_item_repo, mock_uow, player_id
     ):
         article_id = uuid4()
         chapter_id = uuid4()
@@ -136,6 +136,7 @@ class TestUnlockArticleSeasonValidation:
             loot_box_service=mock_loot_box_service,
             loot_box_repo=mock_loot_box_repo,
             inventory_repo=mock_inventory_repo,
+            item_repo=mock_item_repo,
         )
 
         with pytest.raises(SeasonExpiredError, match="Expired Season"):
@@ -148,7 +149,7 @@ class TestUnlockArticleSeasonValidation:
     async def test_unlock_article_active_season_succeeds(
         self, mock_player_repo, mock_chapter_repo, mock_guide_repo,
         mock_inventory_repo, mock_loot_box_repo, mock_loot_box_service,
-        mock_season_repo, mock_uow, player_id
+        mock_season_repo, mock_item_repo, mock_uow, player_id
     ):
         article_id = uuid4()
         chapter_id = uuid4()
@@ -169,6 +170,7 @@ class TestUnlockArticleSeasonValidation:
             loot_box_service=mock_loot_box_service,
             loot_box_repo=mock_loot_box_repo,
             inventory_repo=mock_inventory_repo,
+            item_repo=mock_item_repo,
         )
 
         result = await use_case.execute(player, article_id, mock_uow)

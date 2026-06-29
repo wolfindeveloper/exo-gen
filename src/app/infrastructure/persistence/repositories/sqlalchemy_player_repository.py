@@ -42,6 +42,20 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
         return PlayerMapper.player_to_domain(player_orm=player_orm)
 
 
+    async def get_by_id_for_update(self, player_id: UUID) -> Player | None:
+        result = await self.session.execute(
+            select(PlayerORM)
+            .options(
+                selectinload(PlayerORM.ships).selectinload(ShipORM.equipment)
+            )
+            .where(PlayerORM.id == player_id)
+            .with_for_update()
+        )
+        player_orm = result.scalar_one_or_none()
+        if not player_orm:
+            return None
+        return PlayerMapper.player_to_domain(player_orm=player_orm)
+
     async def get_by_ship_id(self, ship_id: UUID) -> Player | None:
         result = await self.session.execute(
             select(PlayerORM)

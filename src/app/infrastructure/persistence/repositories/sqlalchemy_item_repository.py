@@ -27,6 +27,12 @@ class SQLAlchemyItemRepository(ItemRepository):
         orms = result.scalars().all()
         return [ItemMapper.to_domain(o) for o in orms]
 
+    async def get_by_ids(self, item_ids: list[UUID]) -> list[Item]:
+        stmt = select(ItemORM).where(ItemORM.id.in_(item_ids))
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ItemMapper.to_domain(o) for o in orms]
+
     async def get_consumables_with_effect(self, effect_key: str) -> list[Item]:
         from app.domain.entities.item import ItemType
         stmt = (

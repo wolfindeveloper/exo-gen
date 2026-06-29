@@ -90,10 +90,12 @@ class TelegramBotService:
         result = await self._call_api("answerPreCheckoutQuery", payload)
         return result is not None
 
-    async def set_webhook(self, webhook_url: str) -> bool:
+    async def set_webhook(self, webhook_url: str, secret_token: str | None = None) -> bool:
         payload = {
             "url": webhook_url,
             "allowed_updates": ["pre_checkout_query", "successful_payment"],
         }
+        if secret_token:
+            payload["secret_token"] = secret_token
         result = await self._call_api("setWebhook", payload)
         return result is not None

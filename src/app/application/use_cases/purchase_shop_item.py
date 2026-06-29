@@ -40,6 +40,11 @@ class PurchaseShopItemUseCase:
     async def execute(
         self, player: Player, dto: PurchaseItemDTO, uow: UnitOfWork
     ) -> PurchaseItemResponseDTO:
+        # Перезагружаем игрока с блокировкой строки для защиты от Race Condition
+        locked_player = await self.player_repo.get_by_id_for_update(player.id)
+        if not locked_player:
+            raise RuntimeError(f"Player {player.id} not found during locked reload")
+
         shop_item = await self.shop_item_repo.get_by_id(dto.shop_item_id)
         if not shop_item:
             raise ShopItemNotFoundError(dto.shop_item_id)
@@ -48,7 +53,7 @@ class PurchaseShopItemUseCase:
         today = clock.today()
 
         purchase_count_today = await self.purchase_history_repo.get_purchase_count_today(
-            player.id, shop_item.id, today
+            locked_player.id, shop_item.id, today
         )
         total_purchase_count = await self.purchase_history_repo.get_total_purchase_count(
             shop_item.id
@@ -56,7 +61,7 @@ class PurchaseShopItemUseCase:
 
         shop_item.can_purchase(purchase_count_today, total_purchase_count)
 
-        player.spend_xgen(shop_item.price_xgen)
+        locked_player.spend_xgen(shop_item.price_xgen)
 
         item = await self.item_repo.get_by_id(shop_item.item_id)
         if not item:
@@ -68,21 +73,23 @@ class PurchaseShopItemUseCase:
                 loot_box_service=self.loot_box_service,
                 loot_box_repo=self.loot_box_repo,
                 inventory_repo=self.inventory_repo,
+                item_repo=self.item_repo,
             )
-            await open_box_uc.execute(player, LootBoxType.SHOP, uow)
+            await open_box_uc.execute(locked_player, LootBoxType.SHOP, uow)
         else:
-            inventory = await self.inventory_repo.get_by_player_id(player.id)
+            inventory = await self.inventory_repo.get_by_player_id(locked_player.id)
             inventory.add_item(item_id=item.id, quantity=quantity)
             await self.inventory_repo.save(inventory)
 
         purchase = PurchaseHistory(
             id=uuid4(),
-            player_id=player.id,
+            player_id=locked_player.id,
             shop_item_id=shop_item.id,
             purchased_at=clock.now(),
         )
         await self.purchase_history_repo.save(purchase)
-        await self.player_repo.save(player)
+        await self.player_repo.save(locked_player)
+        uow.track(locked_player)
         await uow.commit()
 
         return PurchaseItemResponseDTO(

@@ -18,6 +18,11 @@ class PlayerRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_by_id_for_update(self, player_id: UUID) -> Player | None:
+        """Загружает игрока с блокировкой строки (SELECT ... FOR UPDATE)"""
+        pass
+
+    @abstractmethod
     async def save(self, player: Player) -> None:
         pass
 

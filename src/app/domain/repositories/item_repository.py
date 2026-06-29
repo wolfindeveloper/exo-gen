@@ -19,6 +19,11 @@ class ItemRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_by_ids(self, item_ids: list[UUID]) -> list[Item]:
+        """Возвращает предметы по списку их ID"""
+        pass
+
+    @abstractmethod
     async def get_consumables_with_effect(self, effect_key: str) -> list[Item]:
         """Возвращает все consumable предметы, имеющие указанный ключ в effect"""
         pass

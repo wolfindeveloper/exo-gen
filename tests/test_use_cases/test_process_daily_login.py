@@ -54,6 +54,7 @@ class TestProcessDailyLogin:
         mock_loot_box_service,
         mock_loot_box_repo,
         mock_inventory_repo,
+        mock_item_repo,
         mock_uow,
         player_id,
     ):
@@ -64,6 +65,7 @@ class TestProcessDailyLogin:
             mock_loot_box_service,
             mock_loot_box_repo,
             mock_inventory_repo,
+            mock_item_repo,
         )
 
         result = await use_case.execute(TG_ID, mock_uow)
@@ -88,6 +90,7 @@ class TestProcessDailyLogin:
         mock_loot_box_service,
         mock_loot_box_repo,
         mock_inventory_repo,
+        mock_item_repo,
         mock_uow,
         player_id,
     ):
@@ -98,6 +101,7 @@ class TestProcessDailyLogin:
             mock_loot_box_service,
             mock_loot_box_repo,
             mock_inventory_repo,
+            mock_item_repo,
         )
 
         result = await use_case.execute(TG_ID, mock_uow)
@@ -121,6 +125,7 @@ class TestProcessDailyLogin:
         mock_loot_box_service,
         mock_loot_box_repo,
         mock_inventory_repo,
+        mock_item_repo,
         mock_uow,
         player_id,
     ):
@@ -132,6 +137,7 @@ class TestProcessDailyLogin:
             mock_loot_box_service,
             mock_loot_box_repo,
             mock_inventory_repo,
+            mock_item_repo,
         )
 
         result = await use_case.execute(TG_ID, mock_uow)
@@ -155,6 +161,7 @@ class TestProcessDailyLogin:
         mock_loot_box_service,
         mock_loot_box_repo,
         mock_inventory_repo,
+        mock_item_repo,
         mock_uow,
         player_id,
     ):
@@ -164,6 +171,7 @@ class TestProcessDailyLogin:
             mock_loot_box_service,
             mock_loot_box_repo,
             mock_inventory_repo,
+            mock_item_repo,
         )
 
         with pytest.raises(PlayerNotFoundError):

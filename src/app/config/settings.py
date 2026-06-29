@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     # Payments
     PUBLIC_URL: str = Field(default="http://localhost:8000", description="Public URL for Telegram webhook")
     BOT_USERNAME: str = Field(default="", description="Bot username (without @) for invoice links")
+    TELEGRAM_WEBHOOK_SECRET: str = Field(..., description="Secret token for Telegram webhook")
 
 @lru_cache
 def get_settings() -> Settings:

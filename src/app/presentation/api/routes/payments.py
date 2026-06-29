@@ -2,8 +2,9 @@ import logging
 from uuid import uuid4, UUID
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 
+from app.config.settings import settings
 from app.domain.entities.transaction import Transaction, TransactionStatus
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
@@ -23,6 +24,15 @@ router = APIRouter(prefix="/payments", tags=["Payments"])
 
 @router.post("/stars/webhook")
 async def stars_webhook(request: Request):
+    secret = request.headers.get("x-telegram-bot-api-secret-token")
+    if not secret or secret != settings.TELEGRAM_WEBHOOK_SECRET:
+        logger.warning(
+            "Webhook intrusion attempt: invalid or missing X-Telegram-Bot-Api-Secret-Token "
+            f"(ip={request.client.host if request.client else 'unknown'}, "
+            f"headers={dict(request.headers)})"
+        )
+        raise HTTPException(status_code=403, detail="Forbidden")
+
     body = await request.json()
     update = body or {}
 

@@ -10,6 +10,7 @@ from app.presentation.api.dependencies import (
     get_player_repo,
     get_inventory_repo,
     get_loot_box_repo,
+    get_item_repo,
     get_player_settings_repo,
     get_uow,
 )
@@ -20,6 +21,7 @@ from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.player_settings_repository import PlayerSettingsRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.config.settings import settings
 
@@ -82,6 +84,7 @@ async def get_current_player(
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
     settings_repo: PlayerSettingsRepository = Depends(get_player_settings_repo),
     uow: UnitOfWork = Depends(get_uow),
 ) -> Player:
@@ -108,6 +111,7 @@ async def get_current_player(
             loot_box_service=LootBoxService(),
             loot_box_repo=loot_box_repo,
             inventory_repo=inventory_repo,
+            item_repo=item_repo,
             settings_repo=settings_repo,
         )
         player = await use_case.execute(int(telegram_id), username, uow)

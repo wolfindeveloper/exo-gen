@@ -11,9 +11,10 @@ from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.application.use_cases.start_expedition import StartExpeditionUseCase
 from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.infrastructure.telegram.security import get_current_player
 
-from app.presentation.api.dependencies import get_player_repo, get_expedition_repo, get_zone_repo, get_inventory_repo, get_uow
+from app.presentation.api.dependencies import get_player_repo, get_expedition_repo, get_zone_repo, get_inventory_repo, get_item_repo, get_uow
 
 router = APIRouter(prefix="/expeditions", tags=["Expeditions"])
 
@@ -49,13 +50,15 @@ async def claim_expedition(
     zone_repo: ZoneRepository = Depends(get_zone_repo),
     expedition_repo: ExpeditionRepository = Depends(get_expedition_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow)
 ):
     use_case = ClaimExpeditionUseCase(
         player_repo,
         zone_repo,
         expedition_repo,
-        inventory_repo
+        inventory_repo,
+        item_repo
     )
     try:
         return await use_case.execute(current_player, dto, uow)

@@ -13,6 +13,7 @@ from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.infrastructure.telegram.security import get_current_player
@@ -20,6 +21,7 @@ from app.presentation.api.dependencies import (
     get_player_repo,
     get_guide_progress_repo,
     get_inventory_repo,
+    get_item_repo,
     get_loot_box_repo,
     get_uow,
 )
@@ -73,6 +75,7 @@ async def daily_login(
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -81,6 +84,7 @@ async def daily_login(
         loot_box_service=LootBoxService(),
         loot_box_repo=loot_box_repo,
         inventory_repo=inventory_repo,
+        item_repo=item_repo,
     )
     try:
         result = await use_case.execute(current_player.telegram_id, uow)

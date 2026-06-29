@@ -140,6 +140,7 @@ class UnlockArticleUseCase:
                     self.loot_box_service,
                     self.loot_box_repo,
                     self.inventory_repo,
+                    self.item_repo,
                 )
                 chapter_loot = await open_box_uc.execute(
                     player, LootBoxType.CHAPTER_REWARD, uow
