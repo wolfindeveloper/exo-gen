@@ -9,6 +9,8 @@ from app.application.dtos.ship_service_dto import RefuelShipDTO, RepairShipDTO
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
 from app.domain.entities.item import Item, ItemType
+from app.domain.entities.inventory import Inventory
+from app.domain.entities.inventory_item import InventoryItem
 from app.domain.value_objects.resources import TeaLevel, Optimism, XgenBalance, FragmentsBalance
 from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.exceptions.inventory import NoSuitableConsumableError
@@ -76,9 +78,10 @@ class TestRefuelShipUseCase:
         fuel_item = make_consumable(fuel_item_id, "restore_tea", 50.0)
         mock_item_repo.get_consumables_with_effect.return_value = [fuel_item]
 
-        inventory = MagicMock()
-        inventory.has_item.return_value = True
-        inventory.remove_item = MagicMock()
+        inventory = Inventory(
+            player_id=player_id,
+            items=[InventoryItem(id=uuid4(), player_id=player_id, item_id=fuel_item_id, quantity=5)],
+        )
         mock_inventory_repo.get_by_player_id.return_value = inventory
 
         use_case = RefuelShipUseCase(mock_player_repo, mock_inventory_repo, mock_item_repo)
@@ -87,7 +90,7 @@ class TestRefuelShipUseCase:
         assert result.new_tea_level == 80.0
         assert result.item_used_id == fuel_item_id
         assert result.tea_restored == 50.0
-        inventory.remove_item.assert_called_once_with(fuel_item_id, quantity=1)
+        assert inventory.items[0].quantity == 4
         mock_player_repo.save.assert_awaited_once()
         mock_inventory_repo.save.assert_awaited_once()
         mock_uow.commit.assert_awaited_once()
@@ -121,8 +124,10 @@ class TestRefuelShipUseCase:
         fuel_item = make_consumable(fuel_item_id, "restore_tea", 50.0)
         mock_item_repo.get_consumables_with_effect.return_value = [fuel_item]
 
-        inventory = MagicMock()
-        inventory.has_item.return_value = False
+        inventory = Inventory(
+            player_id=player_id,
+            items=[],
+        )
         mock_inventory_repo.get_by_player_id.return_value = inventory
 
         use_case = RefuelShipUseCase(mock_player_repo, mock_inventory_repo, mock_item_repo)
@@ -164,9 +169,10 @@ class TestRepairShipUseCase:
         repair_item = make_consumable(repair_item_id, "restore_optimism", 30.0)
         mock_item_repo.get_consumables_with_effect.return_value = [repair_item]
 
-        inventory = MagicMock()
-        inventory.has_item.return_value = True
-        inventory.remove_item = MagicMock()
+        inventory = Inventory(
+            player_id=player_id,
+            items=[InventoryItem(id=uuid4(), player_id=player_id, item_id=repair_item_id, quantity=3)],
+        )
         mock_inventory_repo.get_by_player_id.return_value = inventory
 
         use_case = RepairShipUseCase(mock_player_repo, mock_inventory_repo, mock_item_repo)
@@ -175,7 +181,7 @@ class TestRepairShipUseCase:
         assert result.new_optimism_level == 80.0
         assert result.item_used_id == repair_item_id
         assert result.optimism_restored == 30.0
-        inventory.remove_item.assert_called_once_with(repair_item_id, quantity=1)
+        assert inventory.items[0].quantity == 2
         mock_player_repo.save.assert_awaited_once()
         mock_inventory_repo.save.assert_awaited_once()
         mock_uow.commit.assert_awaited_once()

@@ -5,11 +5,12 @@ from app.domain.exceptions.inventory import NoSuitableConsumableError
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.item_repository import ItemRepository
+from app.domain.services.consumable_selector import ConsumableSelector
 from app.application.dtos.ship_service_dto import RepairShipDTO, RepairShipResponseDTO
 
 
 class RepairShipUseCase:
-    """Ищет первый consumable с эффектом restore_optimism в инвентаре и применяет его к кораблю."""
+    """Выбирает оптимальный consumable с эффектом restore_optimism в инвентаре и применяет его к кораблю."""
 
     EFFECT_KEY = "restore_optimism"
 
@@ -22,6 +23,7 @@ class RepairShipUseCase:
         self.player_repo = player_repo
         self.inventory_repo = inventory_repo
         self.item_repo = item_repo
+        self.selector = ConsumableSelector()
 
     async def execute(
         self, player: Player, dto: RepairShipDTO, uow: UnitOfWork
@@ -36,15 +38,22 @@ class RepairShipUseCase:
         if not candidate_items:
             raise NoSuitableConsumableError(self.EFFECT_KEY)
 
-        chosen_item = None
-        for item in candidate_items:
-            if inventory.has_item(item.id, quantity=1):
-                chosen_item = item
-                break
+        available_items = [
+            (item, inv_item.quantity)
+            for item in candidate_items
+            if (inv_item := next((i for i in inventory.items if i.item_id == item.id), None))
+            and inv_item.quantity > 0
+        ]
 
-        if chosen_item is None:
+        decision = self.selector.select_for_repair(
+            available_items=available_items,
+            current_optimism=ship.optimism.value,
+        )
+
+        if decision.chosen_item is None:
             raise NoSuitableConsumableError(self.EFFECT_KEY)
 
+        chosen_item = decision.chosen_item
         optimism_restored = float(chosen_item.effect[self.EFFECT_KEY])
         ship.restore_optimism(optimism_restored)
 

@@ -96,9 +96,7 @@ class ProcessTriggerUseCase:
                                 season is not None and season.is_currently_active()
                             )
                         if not season_cache[chapter.season_id]:
-                            raise SeasonExpiredError(
-                                "a seasonal chapter"
-                            )
+                            raise SeasonExpiredError(chapter.name)
                     now = datetime.now(timezone.utc)
                     unlocked = UnlockedArticle(
                         id=uuid4(),
