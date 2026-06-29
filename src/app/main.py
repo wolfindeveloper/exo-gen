@@ -1,8 +1,13 @@
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from redis.asyncio import Redis
+
 from app.config.settings import settings
 from app.presentation.api.routes.player import router as player_router
 from app.presentation.api.routes.admin import router as admin_router
@@ -14,6 +19,9 @@ from app.presentation.api.routes.equipment import router as equipment_router
 from app.presentation.api.routes.ships import router as ships_router
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.messaging.event_handlers import setup_event_handlers
+from app.infrastructure.security.rate_limiter import limiter
+from app.infrastructure.middleware.request_id import RequestIDMiddleware
+from app.domain.exceptions import DomainError
 
 
 logger = logging.getLogger(__name__)
@@ -37,14 +45,26 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
+    # Request ID middleware (first — generates ID for all subsequent middleware)
+    app.add_middleware(RequestIDMiddleware)
+
+    # CORS
+    origins = settings.ALLOWED_ORIGINS
+    if settings.DEBUG:
+        origins = ["*"]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # В проде ограничим!
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
 
+    # Rate limiting
+    app.state.limiter = limiter
+    app.add_middleware(SlowAPIMiddleware)
+
+    # Routes
     app.include_router(player_router)
     app.include_router(admin_router)
     app.include_router(zones_router)
@@ -54,9 +74,53 @@ def create_app() -> FastAPI:
     app.include_router(equipment_router)
     app.include_router(ships_router)
 
+    # System endpoints
     @app.get("/healthcheck", tags=["System"])
     async def healthcheck():
         return {"status": "ok", "message": "Mostly Harmless"}
+
+    @app.get("/healthcheck/redis", tags=["System"])
+    async def healthcheck_redis():
+        try:
+            redis = Redis.from_url(settings.redis_url, socket_connect_timeout=3)
+            await redis.ping()
+            await redis.close()
+            return {"status": "ok"}
+        except Exception as e:
+            return JSONResponse(
+                status_code=503,
+                content={"status": "error", "detail": str(e)},
+            )
+
+    # Global exception handlers
+    @app.exception_handler(DomainError)
+    async def domain_error_handler(request: Request, exc: DomainError):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": str(exc)},
+        )
+
+    @app.exception_handler(RateLimitExceeded)
+    async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+        retry_after = None
+        if hasattr(exc, "retry_after") and exc.retry_after:
+            retry_after = str(exc.retry_after)
+        headers = {}
+        if retry_after:
+            headers["Retry-After"] = retry_after
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Rate limit exceeded. Try again later."},
+            headers=headers,
+        )
+
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logger.exception("Unhandled exception: %s", exc)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal server error"},
+        )
 
     return app
 

@@ -33,6 +33,19 @@ class Settings(BaseSettings):
         # Иначе собираем из компонентов (для локальной разработки)
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
+    # CORS
+    ALLOWED_ORIGINS: list[str] = [
+        "https://app.exo-gen.com",
+        "https://telegram.org",
+    ]
+
+    # Rate limiting
+    RATE_LIMIT_REQUESTS_PER_MINUTE: int = 60
+    RATE_LIMIT_BURST: int = 20
+
+    # Telegram auth
+    TELEGRAM_AUTH_MAX_AGE_SECONDS: int = 86400  # 24 часа
+
     # Telegram
     ADMIN_TELEGRAM_IDS: list[int] = []
     BOT_TOKEN: str = Field(..., description="Telegram Bot Token from BotFather")

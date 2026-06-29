@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app.infrastructure.security.rate_limiter import limiter
 from app.application.dtos.expedition_dto import ExpeditionResponseDTO, StartExpeditionDTO
 from app.application.dtos.claim_expedition_dto import ClaimExpeditionDTO, ClaimExpeditionResponseDTO
 from app.application.use_cases.claim_expedition import ClaimExpeditionUseCase
@@ -17,7 +18,9 @@ from app.presentation.api.dependencies import get_player_repo, get_expedition_re
 router = APIRouter(prefix="/expeditions", tags=["Expeditions"])
 
 @router.post("/start", response_model=ExpeditionResponseDTO)
+@limiter.limit("10/minute")
 async def start_expedition(
+    request: Request,
     dto: StartExpeditionDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
@@ -37,7 +40,9 @@ async def start_expedition(
 
 
 @router.post("/claim", response_model=ClaimExpeditionResponseDTO)
+@limiter.limit("20/minute")
 async def claim_expedition(
+    request: Request,
     dto: ClaimExpeditionDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),

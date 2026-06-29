@@ -1,6 +1,7 @@
 import hmac
 import hashlib
 import json
+import time
 from urllib.parse import parse_qs
 
 from fastapi import Header, HTTPException, Depends
@@ -33,6 +34,21 @@ def verify_telegram_signature(init_data: str) -> dict:
     received_hash = data_dict.pop("hash", None)
     if not received_hash:
         raise HTTPException(status_code=401, detail="Missing hash")
+
+    # Проверка auth_date для защиты от replay-атак
+    auth_date_str = data_dict.get("auth_date")
+    if auth_date_str is None:
+        raise HTTPException(status_code=401, detail="Missing auth_date")
+    try:
+        auth_date = int(auth_date_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid auth_date format")
+    now = int(time.time())
+    if now - auth_date > settings.TELEGRAM_AUTH_MAX_AGE_SECONDS:
+        raise HTTPException(
+            status_code=401,
+            detail="Auth data too old. Possible replay attack.",
+        )
 
     # 1. Сортируем ключи по алфавиту и склеиваем в строку
     sorted_items = sorted(data_dict.items())

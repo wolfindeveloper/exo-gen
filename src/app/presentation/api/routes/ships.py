@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app.infrastructure.security.rate_limiter import limiter
 from app.domain.entities.player import Player
 from app.domain.exceptions import DomainError
 from app.domain.uow import UnitOfWork
@@ -25,7 +26,9 @@ router = APIRouter(prefix="/ships", tags=["Ships"])
 
 
 @router.post("/refuel", response_model=RefuelShipResponseDTO)
+@limiter.limit("30/minute")
 async def refuel_ship(
+    request: Request,
     dto: RefuelShipDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
@@ -42,7 +45,9 @@ async def refuel_ship(
 
 
 @router.post("/repair", response_model=RepairShipResponseDTO)
+@limiter.limit("30/minute")
 async def repair_ship(
+    request: Request,
     dto: RepairShipDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),

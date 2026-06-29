@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app.infrastructure.security.rate_limiter import limiter
 from app.application.dtos.player_dto import CreatePlayerDTO
 from app.application.dtos.player_response_dto import PlayerResponseDTO
 from app.application.use_cases.create_player import CreatePlayerUseCase
@@ -21,7 +22,9 @@ router = APIRouter(prefix="/players", tags=["Players"])
 
 
 @router.post("/register", status_code=201)
+@limiter.limit("10/minute")
 async def register_player(
+    request: Request,
     dto: CreatePlayerDTO,
     player_repo: PlayerRepository = Depends(get_player_repo),
     uow: UnitOfWork = Depends(get_uow),
@@ -49,7 +52,9 @@ async def get_player(
 
 
 @router.post("/{telegram_id}/daily-login")
+@limiter.limit("5/minute")
 async def daily_login(
+    request: Request,
     telegram_id: int,
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),

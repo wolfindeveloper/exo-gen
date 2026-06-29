@@ -1,6 +1,7 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from app.infrastructure.security.rate_limiter import limiter
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.season_repository import SeasonRepository
@@ -52,7 +53,9 @@ async def get_guide(
 
 
 @router.post("/unlock", response_model=UnlockArticleResponseDTO)
+@limiter.limit("20/minute")
 async def unlock_article(
+    request: Request,
     dto: UnlockArticleDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
@@ -79,7 +82,9 @@ async def unlock_article(
 
 
 @router.post("/trigger", response_model=TriggerEventResponseDTO)
+@limiter.limit("30/minute")
 async def process_trigger(
+    request: Request,
     dto: TriggerEventDTO,
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
