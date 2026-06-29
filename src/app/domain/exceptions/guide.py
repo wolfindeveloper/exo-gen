@@ -15,3 +15,8 @@ class ArticleAlreadyUnlockedError(DomainError):
 
 class CannotBuySecretArticleError(DomainError):
     pass
+
+
+class SeasonExpiredError(DomainError):
+    def __init__(self, season_name: str):
+        super().__init__(f"Season '{season_name}' has ended")

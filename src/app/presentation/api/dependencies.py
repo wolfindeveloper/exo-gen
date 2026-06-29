@@ -19,9 +19,13 @@ from app.infrastructure.persistence.repositories.sqlalchemy_expedition_repositor
     SQLAlchemyExpeditionRepository,
 )
 from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_chapter_repository import (
     SQLAlchemyChapterRepository,
+)
+from app.infrastructure.persistence.repositories.sqlalchemy_season_repository import (
+    SQLAlchemySeasonRepository,
 )
 from app.infrastructure.persistence.repositories.sqlalchemy_guide_progress_repository import (
     SQLAlchemyGuideProgressRepository,
@@ -82,6 +86,12 @@ async def get_chapter_repo(
     session: AsyncSession = Depends(get_db_session),
 ) -> ChapterRepository:
     return SQLAlchemyChapterRepository(session)
+
+
+async def get_season_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> SeasonRepository:
+    return SQLAlchemySeasonRepository(session)
 
 
 async def get_guide_progress_repo(

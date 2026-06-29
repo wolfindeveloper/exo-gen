@@ -1,5 +1,5 @@
 import logging
-from uuid import uuid4
+from uuid import UUID, uuid4
 from datetime import datetime, timezone
 
 from app.domain.entities.player import Player
@@ -12,9 +12,11 @@ from app.domain.entities.guide_progress import (
 )
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.exceptions.guide import SeasonExpiredError
 from app.domain.services.loot_box_service import LootBoxService
 from app.application.dtos.guide_dto import TriggerEventDTO, TriggerEventResponseDTO
 from app.domain.events.player_events import ArticleUnlockedEvent, ChapterCompletedEvent
@@ -29,6 +31,7 @@ class ProcessTriggerUseCase:
         self,
         player_repo: PlayerRepository,
         chapter_repo: ChapterRepository,
+        season_repo: SeasonRepository,
         guide_repo: GuideProgressRepository,
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
@@ -36,6 +39,7 @@ class ProcessTriggerUseCase:
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
+        self.season_repo = season_repo
         self.guide_repo = guide_repo
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
@@ -52,6 +56,7 @@ class ProcessTriggerUseCase:
         box_xgen = 0
         box_fragments = 0
         box_items: list[dict] = []
+        season_cache: dict[UUID, bool] = {}
 
         for chapter in chapters:
             triggered_articles = [
@@ -84,6 +89,16 @@ class ProcessTriggerUseCase:
                 threshold_reached = progress.increment(article.trigger_threshold)
 
                 if threshold_reached:
+                    if chapter.season_id is not None:
+                        if chapter.season_id not in season_cache:
+                            season = await self.season_repo.get_by_id(chapter.season_id)
+                            season_cache[chapter.season_id] = (
+                                season is not None and season.is_currently_active()
+                            )
+                        if not season_cache[chapter.season_id]:
+                            raise SeasonExpiredError(
+                                "a seasonal chapter"
+                            )
                     now = datetime.now(timezone.utc)
                     unlocked = UnlockedArticle(
                         id=uuid4(),

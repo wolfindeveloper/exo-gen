@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
@@ -28,6 +29,7 @@ from app.application.dtos.guide_dto import (
 from app.presentation.api.dependencies import (
     get_player_repo,
     get_chapter_repo,
+    get_season_repo,
     get_guide_progress_repo,
     get_inventory_repo,
     get_loot_box_repo,
@@ -41,10 +43,11 @@ router = APIRouter(prefix="/guide", tags=["Guide"])
 async def get_guide(
     current_player: Player = Depends(get_current_player),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    season_repo: SeasonRepository = Depends(get_season_repo),
     progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
 ):
 
-    use_case = GetGuideUseCase(chapter_repo, progress_repo)
+    use_case = GetGuideUseCase(chapter_repo, season_repo, progress_repo)
     return await use_case.execute(current_player)
 
 
@@ -54,6 +57,7 @@ async def unlock_article(
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    season_repo: SeasonRepository = Depends(get_season_repo),
     guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
@@ -62,6 +66,7 @@ async def unlock_article(
     use_case = UnlockArticleUseCase(
         player_repo,
         chapter_repo,
+        season_repo,
         guide_repo,
         loot_box_service=LootBoxService(),
         loot_box_repo=loot_box_repo,
@@ -79,6 +84,7 @@ async def process_trigger(
     current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    season_repo: SeasonRepository = Depends(get_season_repo),
     guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
@@ -87,6 +93,7 @@ async def process_trigger(
     use_case = ProcessTriggerUseCase(
         player_repo,
         chapter_repo,
+        season_repo,
         guide_repo,
         loot_box_service=LootBoxService(),
         loot_box_repo=loot_box_repo,

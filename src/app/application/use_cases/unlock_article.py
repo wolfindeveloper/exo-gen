@@ -10,9 +10,11 @@ from app.domain.exceptions.guide import (
     ChapterNotFoundError,
     ArticleAlreadyUnlockedError,
     CannotBuySecretArticleError,
+    SeasonExpiredError,
 )
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
@@ -27,6 +29,7 @@ class UnlockArticleUseCase:
         self,
         player_repo: PlayerRepository,
         chapter_repo: ChapterRepository,
+        season_repo: SeasonRepository,
         guide_repo: GuideProgressRepository,
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
@@ -34,6 +37,7 @@ class UnlockArticleUseCase:
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
+        self.season_repo = season_repo
         self.guide_repo = guide_repo
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
@@ -57,6 +61,13 @@ class UnlockArticleUseCase:
             player_id=player.id, article_id=article.id
         ):
             raise ArticleAlreadyUnlockedError(f"Article {article_id} already unlocked")
+
+        if chapter.season_id is not None:
+            season = await self.season_repo.get_by_id(chapter.season_id)
+            if season is None or not season.is_currently_active():
+                raise SeasonExpiredError(
+                    season.name if season else "unknown"
+                )
 
         player.spend_fragments(article.fragment_cost)
 

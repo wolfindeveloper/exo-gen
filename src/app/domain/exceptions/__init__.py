@@ -29,6 +29,7 @@ from app.domain.exceptions.guide import (
     ChapterNotFoundError,
     ArticleAlreadyUnlockedError,
     CannotBuySecretArticleError,
+    SeasonExpiredError,
 )
 from app.domain.exceptions.zone import ZoneNotFoundError
 from app.domain.exceptions.equipment import (
@@ -59,6 +60,7 @@ __all__ = [
     "ChapterNotFoundError",
     "ArticleAlreadyUnlockedError",
     "CannotBuySecretArticleError",
+    "SeasonExpiredError",
     "ZoneNotFoundError",
     "EquipmentNotFoundError",
     "ArtifactNotEquippedError",
