@@ -56,9 +56,11 @@ class EquipArtifactUseCase:
         if not equipment:
             equipment = Equipment(ship_id=ship.id)
 
-        equipment.equip(item.id, slot_type, bonuses)
+        replaced = equipment.equip(item.id, slot_type, bonuses)
 
         inventory.remove_item(item.id, quantity=1)
+        if replaced is not None:
+            inventory.add_item(replaced.item_id, quantity=1)
 
         uow.track(equipment)
         await self.equipment_repo.save(equipment)

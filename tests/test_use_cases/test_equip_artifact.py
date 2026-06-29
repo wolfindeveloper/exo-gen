@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock, AsyncMock
 from uuid import uuid4
-from datetime import date
 
 import pytest
 
@@ -185,6 +184,47 @@ class TestEquipArtifactUseCase:
 
         with pytest.raises(ValueError, match="not an artifact"):
             await use_case.execute(player, dto, mock_uow)
+
+    @pytest.mark.asyncio
+    async def test_equip_replaces_artifact_returns_to_inventory(
+        self, mock_item_repo, mock_inventory_repo, mock_equipment_repo, mock_uow
+    ):
+        player_id = uuid4()
+        ship_id = uuid4()
+        item_id_a = uuid4()
+        item_id_b = uuid4()
+
+        player = make_player(player_id, ships=[make_ship(ship_id, player_id)])
+
+        artifact_b = make_artifact(item_id_b, effect={"bonus_speed": 0.2, "slot_type": "speed"})
+
+        mock_item_repo.get_by_id.return_value = artifact_b
+
+        inventory = MagicMock()
+        inventory.has_item.return_value = True
+        inventory.add_item = MagicMock()
+        inventory.remove_item = MagicMock()
+        mock_inventory_repo.get_by_player_id.return_value = inventory
+
+        existing_equipment = Equipment(ship_id=ship_id)
+        existing_equipment.equip(item_id_a, SlotType.SPEED, {"speed": 0.1})
+        mock_equipment_repo.get_by_ship_id.return_value = existing_equipment
+
+        use_case = EquipArtifactUseCase(mock_item_repo, mock_inventory_repo, mock_equipment_repo)
+
+        result = await use_case.execute(
+            player, EquipArtifactDTO(ship_id=ship_id, item_id=item_id_b), mock_uow
+        )
+
+        assert "Equipped" in result.message
+        assert len(result.equipment.artifacts) == 1
+        assert result.equipment.artifacts[0].item_id == item_id_b
+
+        inventory.add_item.assert_called_once_with(item_id_a, quantity=1)
+        inventory.remove_item.assert_called_once_with(item_id_b, quantity=1)
+        mock_equipment_repo.save.assert_awaited_once()
+        mock_inventory_repo.save.assert_awaited_once()
+        mock_uow.commit.assert_awaited_once()
 
     @pytest.mark.asyncio
     async def test_equip_multiple_artifacts_stacks_bonuses(self, mock_uow):
