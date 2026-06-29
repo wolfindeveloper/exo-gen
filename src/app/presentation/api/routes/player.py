@@ -2,17 +2,23 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from app.infrastructure.security.rate_limiter import limiter
 from app.application.dtos.player_dto import CreatePlayerDTO
 from app.application.dtos.player_response_dto import PlayerResponseDTO
+from app.application.dtos.profile_dto import ProfileResponseDTO
 from app.application.use_cases.create_player import CreatePlayerUseCase
 from app.application.use_cases.get_player import GetPlayerUseCase
 from app.application.use_cases.process_daily_login import ProcessDailyLoginUseCase
+from app.application.use_cases.get_profile import GetProfileUseCase
+from app.domain.entities.player import Player
 from app.domain.exceptions import DomainError
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.services.loot_box_service import LootBoxService
+from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import (
     get_player_repo,
+    get_guide_progress_repo,
     get_inventory_repo,
     get_loot_box_repo,
     get_uow,
@@ -38,24 +44,33 @@ async def register_player(
     }
 
 
-@router.get("/telegram_id", response_model=PlayerResponseDTO)
+@router.get("/me", response_model=PlayerResponseDTO)
 async def get_player(
-    telegram_id: int, player_repo: PlayerRepository = Depends(get_player_repo)
+    current_player: Player = Depends(get_current_player),
+    player_repo: PlayerRepository = Depends(get_player_repo),
 ):
-
     use_case = GetPlayerUseCase(player_repo=player_repo)
-    player = await use_case.execute(telegram_id=telegram_id)
+    player = await use_case.execute(telegram_id=current_player.telegram_id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
 
     return player
 
 
-@router.post("/{telegram_id}/daily-login")
+@router.get("/me/profile", response_model=ProfileResponseDTO)
+async def get_profile(
+    current_player: Player = Depends(get_current_player),
+    guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
+):
+    use_case = GetProfileUseCase(guide_progress_repo)
+    return await use_case.execute(current_player)
+
+
+@router.post("/daily-login")
 @limiter.limit("5/minute")
 async def daily_login(
     request: Request,
-    telegram_id: int,
+    current_player: Player = Depends(get_current_player),
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
@@ -68,7 +83,7 @@ async def daily_login(
         inventory_repo=inventory_repo,
     )
     try:
-        result = await use_case.execute(telegram_id, uow)
+        result = await use_case.execute(current_player.telegram_id, uow)
         return result
     except DomainError as e:
         raise HTTPException(status_code=404, detail=str(e))

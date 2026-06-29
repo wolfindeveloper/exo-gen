@@ -3,9 +3,11 @@ from datetime import datetime, timezone
 
 from app.domain.entities.player import Player
 from app.domain.entities.ship import Ship
+from app.domain.entities.player_settings import PlayerSettings
 from app.domain.uow import UnitOfWork
 from app.domain.value_objects.loot_box import LootBoxType
 from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.repositories.player_settings_repository import PlayerSettingsRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.services.loot_box_service import LootBoxService
@@ -20,11 +22,13 @@ class AutoRegisterPlayerUseCase:
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
         inventory_repo: InventoryRepository,
+        settings_repo: PlayerSettingsRepository | None = None,
     ):
         self.player_repo = player_repo
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
         self.inventory_repo = inventory_repo
+        self.settings_repo = settings_repo
 
     async def execute(self, telegram_id: int, username: str, uow: UnitOfWork) -> Player:
         player = await self.player_repo.get_by_telegram_id(telegram_id)
@@ -51,6 +55,14 @@ class AutoRegisterPlayerUseCase:
             )
         )
         uow.track(player)
+
+        settings = PlayerSettings(
+            player_id=player_id,
+            language="en",
+            music_enabled=True,
+        )
+        if self.settings_repo:
+            await self.settings_repo.save(settings)
 
         open_box_uc = OpenLootBoxUseCase(
             self.loot_box_service,

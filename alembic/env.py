@@ -12,7 +12,11 @@ from app.infrastructure.persistence.models import (player_orm, ship_orm, zone_or
                                                     guide_progress_orm,
                                                     item_orm, inventory_item_orm,
                                                     equipment_orm,
-                                                    loot_box_config_orm)
+                                                    loot_box_config_orm,
+                                                    shop_orm,
+                                                    stars_package_orm,
+                                                    transaction_orm,
+                                                    player_settings_orm)
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config

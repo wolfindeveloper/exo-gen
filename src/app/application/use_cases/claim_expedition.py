@@ -57,6 +57,7 @@ class ClaimExpeditionUseCase:
 
         player.add_xgen(loot["xgen"])
         player.add_fragments(loot["fragments"])
+        player.increment_expeditions()
 
         inventory = await self.inventory_repo.get_by_player_id(player.id)
         claimed_items_dtos = []
@@ -66,19 +67,23 @@ class ClaimExpeditionUseCase:
             amount = item_drop["amount"]
 
             inventory.add_item(item_id=item_id, quantity=amount)
+            player.increment_artifacts_found(amount)
 
             claimed_items_dtos.append(ClaimedItemDTO(item_id=item_id, amount=amount))
 
         damage = max(0.0, zone.optimism_risk - ship.defense)
         ship.apply_expedition_wear_and_tear(zone.optimism_risk)
 
-        expedition.complete(
-            player_id=player.id,
-            telegram_id=player.telegram_id,
-            xgen_earned=loot["xgen"],
-            fragments_earned=loot["fragments"],
-            items_earned=loot.get("items", [])
-        )
+        if expedition.status == ExpeditionStatus.FINISHED:
+            expedition.status = ExpeditionStatus.COMPLETED
+        else:
+            expedition.complete(
+                player_id=player.id,
+                telegram_id=player.telegram_id,
+                xgen_earned=loot["xgen"],
+                fragments_earned=loot["fragments"],
+                items_earned=loot.get("items", []),
+            )
 
         uow.track(player, expedition)
         await self.player_repo.save(player)

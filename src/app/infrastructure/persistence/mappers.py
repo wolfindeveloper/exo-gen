@@ -20,6 +20,9 @@ from app.domain.entities.inventory import Inventory
 from app.domain.entities.equipment import Equipment, EquippedArtifact
 from app.domain.entities.loot_box_config import LootBoxConfig
 from app.domain.value_objects.loot_box import LootBoxType, LootBoxEntry
+from app.domain.entities.stars_package import StarsPackage
+from app.domain.entities.transaction import Transaction, TransactionStatus
+from app.domain.entities.player_settings import PlayerSettings
 from app.infrastructure.persistence.models.loot_box_config_orm import LootBoxConfigORM
 from app.infrastructure.persistence.models.player_orm import PlayerORM
 from app.infrastructure.persistence.models.ship_orm import ShipORM
@@ -31,6 +34,11 @@ from app.infrastructure.persistence.models.season_orm import SeasonORM
 from app.infrastructure.persistence.models.item_orm import ItemORM
 from app.infrastructure.persistence.models.inventory_item_orm import InventoryItemORM
 from app.infrastructure.persistence.models.equipment_orm import EquipmentORM
+from app.infrastructure.persistence.models.stars_package_orm import StarsPackageORM
+from app.infrastructure.persistence.models.transaction_orm import TransactionORM
+from app.infrastructure.persistence.models.player_settings_orm import PlayerSettingsORM
+from app.domain.entities.shop import ShopItem, PurchaseHistory
+from app.infrastructure.persistence.models.shop_orm import ShopItemORM, PurchaseHistoryORM
 
 
 class PlayerMapper:
@@ -76,6 +84,8 @@ class PlayerMapper:
             fragments_balance=player.fragments_balance.value,
             daily_streak=player.daily_streak,
             last_login_date=player.last_login_date,
+            total_expeditions=player.total_expeditions,
+            total_artifacts_found=player.total_artifacts_found,
             ships=[cls.ship_to_orm(ship, player_id=player.id) for ship in player.ships],
         )
 
@@ -90,6 +100,8 @@ class PlayerMapper:
             fragments_balance=FragmentsBalance(player_orm.fragments_balance),
             daily_streak=player_orm.daily_streak,
             last_login_date=player_orm.last_login_date,
+            total_expeditions=player_orm.total_expeditions,
+            total_artifacts_found=player_orm.total_artifacts_found,
             ships=[cls.ship_to_domain(ship) for ship in player_orm.ships],
         )
 
@@ -362,4 +374,112 @@ class LootBoxMapper:
             description=domain.description,
             entries=entries,
             is_active=domain.is_active,
+        )
+
+
+class ShopItemMapper:
+    @staticmethod
+    def to_domain(orm: ShopItemORM) -> ShopItem:
+        return ShopItem(
+            id=orm.id,
+            item_id=orm.item_id,
+            price_xgen=orm.price_xgen,
+            daily_limit=orm.daily_limit,
+            stock_limit=orm.stock_limit,
+            is_active=orm.is_active,
+        )
+
+    @staticmethod
+    def to_orm(domain: ShopItem) -> ShopItemORM:
+        return ShopItemORM(
+            id=domain.id,
+            item_id=domain.item_id,
+            price_xgen=domain.price_xgen,
+            daily_limit=domain.daily_limit,
+            stock_limit=domain.stock_limit,
+            is_active=domain.is_active,
+        )
+
+
+class PurchaseHistoryMapper:
+    @staticmethod
+    def to_domain(orm: PurchaseHistoryORM) -> PurchaseHistory:
+        return PurchaseHistory(
+            id=orm.id,
+            player_id=orm.player_id,
+            shop_item_id=orm.shop_item_id,
+            purchased_at=orm.purchased_at,
+        )
+
+    @staticmethod
+    def to_orm(domain: PurchaseHistory) -> PurchaseHistoryORM:
+        return PurchaseHistoryORM(
+            id=domain.id,
+            player_id=domain.player_id,
+            shop_item_id=domain.shop_item_id,
+            purchased_at=domain.purchased_at,
+        )
+
+
+class StarsPackageMapper:
+    @staticmethod
+    def to_domain(orm: StarsPackageORM) -> StarsPackage:
+        return StarsPackage(
+            id=orm.id,
+            stars_amount=orm.stars_amount,
+            xgen_reward=orm.xgen_reward,
+            is_active=orm.is_active,
+        )
+
+    @staticmethod
+    def to_orm(domain: StarsPackage) -> StarsPackageORM:
+        return StarsPackageORM(
+            id=domain.id,
+            stars_amount=domain.stars_amount,
+            xgen_reward=domain.xgen_reward,
+            is_active=domain.is_active,
+        )
+
+
+class PlayerSettingsMapper:
+    @staticmethod
+    def to_domain(orm: PlayerSettingsORM) -> PlayerSettings:
+        return PlayerSettings(
+            player_id=orm.player_id,
+            language=orm.language,
+            music_enabled=orm.music_enabled,
+        )
+
+    @staticmethod
+    def to_orm(domain: PlayerSettings) -> PlayerSettingsORM:
+        return PlayerSettingsORM(
+            player_id=domain.player_id,
+            language=domain.language,
+            music_enabled=domain.music_enabled,
+        )
+
+
+class TransactionMapper:
+    @staticmethod
+    def to_domain(orm: TransactionORM) -> Transaction:
+        return Transaction(
+            id=orm.id,
+            player_id=orm.player_id,
+            telegram_charge_id=orm.telegram_charge_id,
+            stars_amount=orm.stars_amount,
+            xgen_amount=orm.xgen_amount,
+            status=TransactionStatus(orm.status),
+            created_at=orm.created_at,
+        )
+
+    @staticmethod
+    def to_orm(domain: Transaction) -> TransactionORM:
+        return TransactionORM(
+            id=domain.id,
+            player_id=domain.player_id,
+            telegram_charge_id=domain.telegram_charge_id,
+            stars_amount=domain.stars_amount,
+            xgen_amount=domain.xgen_amount,
+            status=domain.status.value,
+            created_at=domain.created_at,
         )

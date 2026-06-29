@@ -12,7 +12,12 @@ class ExpeditionRepository(ABC):
     @abstractmethod
     async def get_by_id(self, expedition_id: UUID) -> Expedition | None:
         pass
-        
+
+
+    @abstractmethod
+    async def get_finished_expeditions(self) -> list[Expedition]:
+        pass
+
 
     @abstractmethod
     async def save(self, expedition: Expedition) -> None:

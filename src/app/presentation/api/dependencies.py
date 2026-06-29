@@ -6,6 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.database.session import AsyncSessionLocal
 from app.domain.uow import UnitOfWork
 from app.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
+from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_shop_repository import (
+    SQLAlchemyShopItemRepository,
+    SQLAlchemyPurchaseHistoryRepository,
+)
 from app.domain.repositories.player_repository import PlayerRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_player_repository import (
     SQLAlchemyPlayerRepository,
@@ -42,9 +47,18 @@ from app.domain.repositories.equipment_repository import EquipmentRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_equipment_repository import (
     SQLAlchemyEquipmentRepository,
 )
+from app.domain.repositories.stars_repository import StarsPackageRepository, TransactionRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_stars_repository import (
+    SQLAlchemyStarsPackageRepository,
+    SQLAlchemyTransactionRepository,
+)
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_loot_box_repository import (
     SQLAlchemyLootBoxRepository,
+)
+from app.domain.repositories.player_settings_repository import PlayerSettingsRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_player_settings_repository import (
+    SQLAlchemyPlayerSettingsRepository,
 )
 
 
@@ -122,3 +136,33 @@ async def get_loot_box_repo(
     session: AsyncSession = Depends(get_db_session),
 ) -> LootBoxRepository:
     return SQLAlchemyLootBoxRepository(session)
+
+
+async def get_shop_item_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ShopItemRepository:
+    return SQLAlchemyShopItemRepository(session)
+
+
+async def get_purchase_history_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> PurchaseHistoryRepository:
+    return SQLAlchemyPurchaseHistoryRepository(session)
+
+
+async def get_stars_package_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> StarsPackageRepository:
+    return SQLAlchemyStarsPackageRepository(session)
+
+
+async def get_player_settings_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> PlayerSettingsRepository:
+    return SQLAlchemyPlayerSettingsRepository(session)
+
+
+async def get_transaction_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> TransactionRepository:
+    return SQLAlchemyTransactionRepository(session)

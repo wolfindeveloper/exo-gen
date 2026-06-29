@@ -7,6 +7,7 @@ class ItemType(str, Enum):
     ARTIFACT = "artifact"      # Артефакты (дают пассивные бонусы)
     MATERIAL = "material"      # Материалы (для будущих крафтов)
     KEY_ITEM = "key_item"      # Ключевые предметы (для открытия статей/дверей)
+    LOOT_BOX = "loot_box"      # Лутбоксы (покупаются в магазине, открываются через OpenLootBoxUseCase)
 
 @dataclass
 class Item:

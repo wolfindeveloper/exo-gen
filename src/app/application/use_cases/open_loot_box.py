@@ -48,8 +48,10 @@ class OpenLootBoxUseCase:
             item_id = UUID(item_drop["item_id"])
             amount = item_drop["amount"]
             inventory.add_item(item_id=item_id, quantity=amount)
+            player.increment_artifacts_found(amount)
             items_earned.append({"item_id": item_id, "amount": amount})
 
+        uow.track(player)
         await self.inventory_repo.save(inventory)
 
         return OpenLootBoxResult(

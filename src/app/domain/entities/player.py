@@ -20,6 +20,14 @@ class Player(AggregateRoot):
     daily_streak: int = 0
     last_login_date: date | None = None
     ships: list[Ship] = field(default_factory=list)
+    total_expeditions: int = 0
+    total_artifacts_found: int = 0
+
+    def increment_expeditions(self) -> None:
+        self.total_expeditions += 1
+
+    def increment_artifacts_found(self, count: int = 1) -> None:
+        self.total_artifacts_found += count
 
     def process_daily_login(self, clock: Clock = None):
         if clock is None:
@@ -65,6 +73,9 @@ class Player(AggregateRoot):
 
     def spend_fragments(self, amount: int) -> None:
         self.fragments_balance = self.fragments_balance.spend(amount)
+
+    def spend_xgen(self, amount: int) -> None:
+        self.xgen_balance = self.xgen_balance.spend(amount)
 
     def add_xgen(self, amount: int) -> None:
         self.xgen_balance = self.xgen_balance.add(amount)

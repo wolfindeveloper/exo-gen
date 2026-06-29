@@ -17,6 +17,10 @@ from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
 from app.presentation.api.routes.equipment import router as equipment_router
 from app.presentation.api.routes.ships import router as ships_router
+from app.presentation.api.routes.shop import router as shop_router
+from app.presentation.api.routes.payments import router as payments_router
+from app.presentation.api.routes.leaderboard import router as leaderboard_router
+from app.presentation.api.routes.settings import router as settings_router
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.messaging.event_handlers import setup_event_handlers
 from app.infrastructure.security.rate_limiter import limiter
@@ -33,6 +37,13 @@ async def lifespan(app: FastAPI):
 
     bot_service = TelegramBotService()
     setup_event_handlers(bot_service)
+
+    webhook_url = f"{settings.PUBLIC_URL.rstrip('/')}/payments/stars/webhook"
+    result = await bot_service.set_webhook(webhook_url)
+    if result:
+        logger.info(f"Telegram webhook set to {webhook_url}")
+    else:
+        logger.warning(f"Failed to set Telegram webhook at {webhook_url}")
 
     yield
     logger.info("Shutting down...")
@@ -73,6 +84,10 @@ def create_app() -> FastAPI:
     app.include_router(inventory_router)
     app.include_router(equipment_router)
     app.include_router(ships_router)
+    app.include_router(shop_router)
+    app.include_router(payments_router)
+    app.include_router(leaderboard_router)
+    app.include_router(settings_router)
 
     # System endpoints
     @app.get("/healthcheck", tags=["System"])

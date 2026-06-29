@@ -14,5 +14,19 @@ class PlayerRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_by_ship_id(self, ship_id: UUID) -> Player | None:
+        pass
+
+    @abstractmethod
     async def save(self, player: Player) -> None:
+        pass
+
+    @abstractmethod
+    async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        """Возвращает топ игроков по XP: список (username, xp, id)"""
+        pass
+
+    @abstractmethod
+    async def get_player_rank_by_xp(self, player_id: UUID) -> int:
+        """Возвращает место игрока в глобальном рейтинге по XP (1-based)"""
         pass

@@ -19,6 +19,8 @@ class PlayerORM(Base):
     fragments_balance: Mapped[int] = mapped_column(Integer, server_default="0")
     daily_streak: Mapped[int] = mapped_column(Integer, default=0)
     last_login_date: Mapped[Date | None] = mapped_column(Date, nullable=True)
+    total_expeditions: Mapped[int] = mapped_column(Integer, default=0)
+    total_artifacts_found: Mapped[int] = mapped_column(Integer, default=0)
     ships: Mapped[List["ShipORM"]] = relationship(
         back_populates="player", 
         cascade="all, delete-orphan"

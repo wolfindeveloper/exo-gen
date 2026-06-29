@@ -62,6 +62,10 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str = "redis://redis:6381/1"
     CELERY_RESULT_BACKEND: str = "redis://redis:6381/2"
 
+    # Payments
+    PUBLIC_URL: str = Field(default="http://localhost:8000", description="Public URL for Telegram webhook")
+    BOT_USERNAME: str = Field(default="", description="Bot username (without @) for invoice links")
+
 @lru_cache
 def get_settings() -> Settings:
     return Settings()

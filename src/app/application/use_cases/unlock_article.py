@@ -11,6 +11,7 @@ from app.domain.exceptions.guide import (
     ArticleAlreadyUnlockedError,
     CannotBuySecretArticleError,
     SeasonExpiredError,
+    KeyItemRequiredError,
 )
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
@@ -18,6 +19,7 @@ from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.application.dtos.guide_dto import UnlockArticleResponseDTO
 from app.domain.events.player_events import ArticleUnlockedEvent, ChapterCompletedEvent
@@ -34,6 +36,7 @@ class UnlockArticleUseCase:
         loot_box_service: LootBoxService,
         loot_box_repo: LootBoxRepository,
         inventory_repo: InventoryRepository,
+        item_repo: ItemRepository,
     ):
         self.player_repo = player_repo
         self.chapter_repo = chapter_repo
@@ -42,6 +45,7 @@ class UnlockArticleUseCase:
         self.loot_box_service = loot_box_service
         self.loot_box_repo = loot_box_repo
         self.inventory_repo = inventory_repo
+        self.item_repo = item_repo
 
     async def execute(
         self, player: Player, article_id: UUID, uow: UnitOfWork
@@ -69,7 +73,15 @@ class UnlockArticleUseCase:
                     season.name if season else "unknown"
                 )
 
-        player.spend_fragments(article.fragment_cost)
+        inventory = await self.inventory_repo.get_by_player_id(player.id)
+
+        if article.required_item_id and article.fragment_cost == 0 and not article.trigger_event_type:
+            if not inventory.has_item(article.required_item_id):
+                item = await self.item_repo.get_by_id(article.required_item_id)
+                raise KeyItemRequiredError(item.name if item else None)
+            inventory.remove_item(article.required_item_id, 1)
+        else:
+            player.spend_fragments(article.fragment_cost)
 
         now = datetime.now(timezone.utc)
         unlocked = UnlockedArticle(
@@ -135,6 +147,7 @@ class UnlockArticleUseCase:
 
         uow.track(player)
         await self.player_repo.save(player)
+        await self.inventory_repo.save(inventory)
         await uow.commit()
 
         return UnlockArticleResponseDTO(

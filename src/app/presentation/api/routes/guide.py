@@ -8,6 +8,7 @@ from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
+from app.domain.repositories.item_repository import ItemRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.application.use_cases.get_guide import GetGuideUseCase
 from app.application.use_cases.unlock_article import UnlockArticleUseCase
@@ -34,6 +35,7 @@ from app.presentation.api.dependencies import (
     get_guide_progress_repo,
     get_inventory_repo,
     get_loot_box_repo,
+    get_item_repo,
     get_uow,
 )
 
@@ -64,6 +66,7 @@ async def unlock_article(
     guide_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     use_case = UnlockArticleUseCase(
@@ -74,6 +77,7 @@ async def unlock_article(
         loot_box_service=LootBoxService(),
         loot_box_repo=loot_box_repo,
         inventory_repo=inventory_repo,
+        item_repo=item_repo,
     )
     try:
         return await use_case.execute(current_player, dto.article_id, uow)

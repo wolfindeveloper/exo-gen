@@ -23,6 +23,7 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
             )
             .order_by(ExpeditionORM.started_at.desc())
             .limit(1)
+            .with_for_update()
         )
         result = await self.session.execute(stmt)
 
@@ -44,6 +45,22 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
             return None
 
         return ExpeditionMapper.expedition_to_domain(expedition_orm=expedition_orm)
+
+    async def get_finished_expeditions(self) -> list[Expedition]:
+        now = datetime.now(timezone.utc)
+        stmt = (
+            select(ExpeditionORM)
+            .where(
+                ExpeditionORM.status == "in_progress",
+                ExpeditionORM.ends_at <= now,
+            )
+            .with_for_update()
+        )
+        result = await self.session.execute(stmt)
+        expeditions_orm = result.scalars().all()
+        return [
+            ExpeditionMapper.expedition_to_domain(e) for e in expeditions_orm
+        ]
 
     async def save(self, expedition: Expedition) -> None:
         expedition_orm = ExpeditionMapper.expedition_to_orm(expedition)

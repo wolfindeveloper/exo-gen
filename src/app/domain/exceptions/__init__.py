@@ -30,11 +30,21 @@ from app.domain.exceptions.guide import (
     ArticleAlreadyUnlockedError,
     CannotBuySecretArticleError,
     SeasonExpiredError,
+    KeyItemRequiredError,
 )
 from app.domain.exceptions.zone import ZoneNotFoundError
 from app.domain.exceptions.equipment import (
     EquipmentNotFoundError,
     ArtifactNotEquippedError,
+)
+from app.domain.exceptions.shop import (
+    ShopItemNotFoundError,
+    ShopItemDailyLimitReachedError,
+    ShopItemOutOfStockError,
+)
+from app.domain.exceptions.stars import (
+    StarsPackageNotFoundError,
+    TransactionAlreadyProcessedError,
 )
 
 __all__ = [
@@ -61,7 +71,13 @@ __all__ = [
     "ArticleAlreadyUnlockedError",
     "CannotBuySecretArticleError",
     "SeasonExpiredError",
+    "KeyItemRequiredError",
     "ZoneNotFoundError",
     "EquipmentNotFoundError",
     "ArtifactNotEquippedError",
+    "ShopItemNotFoundError",
+    "ShopItemDailyLimitReachedError",
+    "ShopItemOutOfStockError",
+    "StarsPackageNotFoundError",
+    "TransactionAlreadyProcessedError",
 ]
