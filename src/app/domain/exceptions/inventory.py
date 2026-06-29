@@ -25,3 +25,9 @@ class InsufficientItemQuantityError(DomainError):
         self.required = required
         self.available = available
         super().__init__(f"Insufficient quantity of item {item_id}: required {required}, available {available}")
+
+
+class NoSuitableConsumableError(DomainError):
+    def __init__(self, effect_key: str):
+        self.effect_key = effect_key
+        super().__init__(f"No consumable with effect '{effect_key}' found in inventory")

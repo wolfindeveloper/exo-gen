@@ -26,3 +26,14 @@ class SQLAlchemyItemRepository(ItemRepository):
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
         return [ItemMapper.to_domain(o) for o in orms]
+
+    async def get_consumables_with_effect(self, effect_key: str) -> list[Item]:
+        from app.domain.entities.item import ItemType
+        stmt = (
+            select(ItemORM)
+            .where(ItemORM.type == ItemType.CONSUMABLE.value)
+            .where(ItemORM.effect.has_key(effect_key))
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ItemMapper.to_domain(o) for o in orms]

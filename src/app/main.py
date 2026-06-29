@@ -11,6 +11,7 @@ from app.presentation.api.routes.expeditions import router as expeditions_router
 from app.presentation.api.routes.guide import router as guide_router
 from app.presentation.api.routes.inventory import router as inventory_router
 from app.presentation.api.routes.equipment import router as equipment_router
+from app.presentation.api.routes.ships import router as ships_router
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.messaging.event_handlers import setup_event_handlers
 
@@ -51,6 +52,7 @@ def create_app() -> FastAPI:
     app.include_router(guide_router)
     app.include_router(inventory_router)
     app.include_router(equipment_router)
+    app.include_router(ships_router)
 
     @app.get("/healthcheck", tags=["System"])
     async def healthcheck():

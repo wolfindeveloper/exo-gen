@@ -22,6 +22,7 @@ from app.domain.exceptions.inventory import (
     ItemNotInInventoryError,
     ItemNotConsumableError,
     InsufficientItemQuantityError,
+    NoSuitableConsumableError,
 )
 from app.domain.exceptions.guide import (
     ArticleNotFoundError,
@@ -53,6 +54,7 @@ __all__ = [
     "ItemNotInInventoryError",
     "ItemNotConsumableError",
     "InsufficientItemQuantityError",
+    "NoSuitableConsumableError",
     "ArticleNotFoundError",
     "ChapterNotFoundError",
     "ArticleAlreadyUnlockedError",

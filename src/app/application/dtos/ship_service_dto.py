@@ -1,0 +1,26 @@
+from pydantic import BaseModel
+from uuid import UUID
+
+
+class RefuelShipDTO(BaseModel):
+    ship_id: UUID
+
+
+class RepairShipDTO(BaseModel):
+    ship_id: UUID
+
+
+class RefuelShipResponseDTO(BaseModel):
+    message: str
+    item_used_id: UUID
+    item_used_name: str
+    tea_restored: float
+    new_tea_level: float
+
+
+class RepairShipResponseDTO(BaseModel):
+    message: str
+    item_used_id: UUID
+    item_used_name: str
+    optimism_restored: float
+    new_optimism_level: float

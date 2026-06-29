@@ -17,3 +17,8 @@ class ItemRepository(ABC):
     async def get_all(self) -> list[Item]:
         """Возвращает все предметы (для админки или магазина)"""
         pass
+
+    @abstractmethod
+    async def get_consumables_with_effect(self, effect_key: str) -> list[Item]:
+        """Возвращает все consumable предметы, имеющие указанный ключ в effect"""
+        pass
