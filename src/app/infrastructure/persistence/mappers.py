@@ -406,6 +406,7 @@ class ShopItemMapper:
             daily_limit=orm.daily_limit,
             stock_limit=orm.stock_limit,
             is_active=orm.is_active,
+            bundle_items=orm.bundle_items or [],
             deleted_at=orm.deleted_at,
         )
 
@@ -418,6 +419,7 @@ class ShopItemMapper:
             daily_limit=domain.daily_limit,
             stock_limit=domain.stock_limit,
             is_active=domain.is_active,
+            bundle_items=domain.bundle_items,
             deleted_at=domain.deleted_at,
         )
 

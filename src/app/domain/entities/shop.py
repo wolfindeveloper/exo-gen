@@ -17,6 +17,7 @@ class ShopItem(AggregateRoot):
     daily_limit: int = 0
     stock_limit: int = 0
     is_active: bool = True
+    bundle_items: list[dict] = field(default_factory=list)
     deleted_at: datetime | None = None
 
     def update(

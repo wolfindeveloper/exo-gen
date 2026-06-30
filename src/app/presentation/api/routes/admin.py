@@ -74,10 +74,10 @@ from app.application.use_cases.soft_delete_season import SoftDeleteSeasonUseCase
 from app.application.use_cases.soft_delete_loot_box_config import SoftDeleteLootBoxConfigUseCase
 from app.application.use_cases.soft_delete_shop_item import SoftDeleteShopItemUseCase
 from app.application.use_cases.soft_delete_stars_package import SoftDeleteStarsPackageUseCase
-from app.application.use_cases.simulate_zone_loot import SimulateZoneLootUseCase
-from app.application.use_cases.simulate_loot_box import SimulateLootBoxUseCase
-from app.application.use_cases.get_shop_item_analytics import GetShopItemAnalyticsUseCase
-from app.application.use_cases.reorder_chapter_articles import ReorderChapterArticlesUseCase
+from app.application.use_cases.simulate_zone_loot import SimulateZoneLootUseCase as SimulateZoneLoot
+from app.application.use_cases.simulate_loot_box import SimulateLootBoxUseCase as SimulateLootBox
+from app.application.use_cases.get_shop_item_analytics import GetShopItemAnalyticsUseCase as GetShopItemAnalytics
+from app.application.use_cases.reorder_chapter_articles import ReorderChapterArticlesUseCase as ReorderChapterArticles
 from app.application.dtos.simulation_dto import (
     SimulateLootRequestDTO,
     LootSimulationResultDTO,
@@ -454,6 +454,21 @@ async def get_all_shop_items(
             )
         )
     return results
+
+
+@router.get("/shop-items/{item_id}/analytics")
+async def get_shop_analytics(
+    item_id: UUID,
+    admin_id: int = Depends(verify_admin),
+    shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
+    purchase_repo: PurchaseRepository = Depends(get_purchase_repo),
+):
+    use_case = GetShopItemAnalytics(
+        shop_item_repo=shop_item_repo,
+        purchase_repo=purchase_repo,
+    )
+    result = await use_case.execute(item_id)
+    return result
 
 
 @router.patch("/shop-items/{shop_item_id}", response_model=ShopItemResponseDTO)

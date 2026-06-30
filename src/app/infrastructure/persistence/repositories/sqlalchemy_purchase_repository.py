@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -44,3 +44,12 @@ class SQLAlchemyPurchaseRepository(PurchaseRepository):
         )
         result = await self.session.execute(stmt)
         return result.scalar() or 0
+
+    async def add(self, player_id: UUID, shop_item_id: UUID, xgen_spent: int) -> None:
+        purchase = PurchaseHistoryORM(
+            id=uuid4(),
+            player_id=player_id,
+            shop_item_id=shop_item_id,
+            purchased_at=datetime.now(timezone.utc),
+        )
+        self.session.add(purchase)

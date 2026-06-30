@@ -3,17 +3,27 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.domain.uow import UnitOfWork
 from app.domain.entities.base import AggregateRoot
 from app.domain.events.dispatcher import dispatcher
+from app.domain.repositories.purchase_repository import PurchaseRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_purchase_repository import SQLAlchemyPurchaseRepository
 
 
 class SQLAlchemyUnitOfWork(UnitOfWork):
     def __init__(self, session: AsyncSession):
         self.session = session
         self._aggregates: list[AggregateRoot] = []
+        self._purchases: PurchaseRepository | None = None
+
+    @property
+    def purchases(self) -> PurchaseRepository:
+        if self._purchases is None:
+            self._purchases = SQLAlchemyPurchaseRepository(self.session)
+        return self._purchases
 
     def track(self, *aggregates: AggregateRoot) -> None:
         self._aggregates.extend(aggregates)
 
     async def __aenter__(self) -> "SQLAlchemyUnitOfWork":
+        self._purchases = SQLAlchemyPurchaseRepository(self.session)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:

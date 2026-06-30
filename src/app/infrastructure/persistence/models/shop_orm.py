@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, String, Uuid, Boolean, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.persistence.models.base import Base
@@ -20,6 +21,7 @@ class ShopItemORM(Base):
     daily_limit: Mapped[int] = mapped_column(Integer, default=0)
     stock_limit: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    bundle_items: Mapped[list[dict]] = mapped_column(JSONB, nullable=False, default=list)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     item: Mapped["ItemORM"] = relationship()

@@ -17,3 +17,8 @@ class PurchaseRepository(ABC):
     async def sum_xgen_by_shop_item(self, shop_item_id: UUID) -> int:
         """Возвращает суммарную выручку в xgen по товару"""
         pass
+
+    @abstractmethod
+    async def add(self, player_id: UUID, shop_item_id: UUID, xgen_spent: int) -> None:
+        """Добавляет запись о покупке"""
+        pass

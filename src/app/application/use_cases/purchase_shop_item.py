@@ -63,23 +63,35 @@ class PurchaseShopItemUseCase:
 
         locked_player.spend_xgen(shop_item.price_xgen)
 
-        item = await self.item_repo.get_by_id(shop_item.item_id)
-        if not item:
-            raise ShopItemNotFoundError(dto.shop_item_id)
-
-        quantity = 1
-        if item.type == ItemType.LOOT_BOX:
-            open_box_uc = OpenLootBoxUseCase(
-                loot_box_service=self.loot_box_service,
-                loot_box_repo=self.loot_box_repo,
-                inventory_repo=self.inventory_repo,
-                item_repo=self.item_repo,
-            )
-            await open_box_uc.execute(locked_player, LootBoxType.SHOP, uow)
-        else:
+        if shop_item.bundle_items:
             inventory = await self.inventory_repo.get_by_player_id(locked_player.id)
-            inventory.add_item(item_id=item.id, quantity=quantity)
+            for bundle_item in shop_item.bundle_items:
+                inventory.add_item(
+                    item_id=bundle_item["item_id"],
+                    quantity=bundle_item["quantity"],
+                )
             await self.inventory_repo.save(inventory)
+            item_id = shop_item.id
+            quantity = sum(b["quantity"] for b in shop_item.bundle_items)
+        else:
+            item = await self.item_repo.get_by_id(shop_item.item_id)
+            if not item:
+                raise ShopItemNotFoundError(dto.shop_item_id)
+
+            quantity = 1
+            if item.type == ItemType.LOOT_BOX:
+                open_box_uc = OpenLootBoxUseCase(
+                    loot_box_service=self.loot_box_service,
+                    loot_box_repo=self.loot_box_repo,
+                    inventory_repo=self.inventory_repo,
+                    item_repo=self.item_repo,
+                )
+                await open_box_uc.execute(locked_player, LootBoxType.SHOP, uow)
+            else:
+                inventory = await self.inventory_repo.get_by_player_id(locked_player.id)
+                inventory.add_item(item_id=item.id, quantity=quantity)
+                await self.inventory_repo.save(inventory)
+            item_id = item.id
 
         purchase = PurchaseHistory(
             id=uuid4(),
@@ -95,7 +107,7 @@ class PurchaseShopItemUseCase:
         return PurchaseItemResponseDTO(
             success=True,
             message="Item purchased successfully",
-            item_id=item.id,
+            item_id=item_id,
             quantity=quantity,
             xgen_spent=shop_item.price_xgen,
         )

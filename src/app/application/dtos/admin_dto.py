@@ -54,30 +54,14 @@ class PaginatedResponseDTO(BaseModel, Generic[T]):
     total_pages: int
 
 
-class ConsumableEffect(BaseModel):
-    restore_tea: int | None = None
-    restore_optimism: int | None = None
-
-
-class ArtifactEffect(BaseModel):
-    bonus_speed: float | None = None
-    bonus_defense: float | None = None
-    bonus_capacity: float | None = None
-    bonus_luck: float | None = None
-    bonus_fuel: float | None = None
-    bonus_repair: float | None = None
-    bonus_xp: float | None = None
-    bonus_fragment: float | None = None
-
-
-class ItemEffectValidator(RootModel[ConsumableEffect | ArtifactEffect]):
+class ItemEffectValidator(RootModel[ConsumableEffectDTO | ArtifactEffectDTO]):
     @field_validator("root", mode="after")
     @classmethod
-    def validate_effect(cls, v: ConsumableEffect | ArtifactEffect) -> ConsumableEffect | ArtifactEffect:
-        if isinstance(v, ConsumableEffect):
+    def validate_effect(cls, v: ConsumableEffectDTO | ArtifactEffectDTO) -> ConsumableEffectDTO | ArtifactEffectDTO:
+        if isinstance(v, ConsumableEffectDTO):
             if v.restore_tea is None and v.restore_optimism is None:
                 raise ValueError("Consumable must have restore_tea or restore_optimism")
-        if isinstance(v, ArtifactEffect):
+        if isinstance(v, ArtifactEffectDTO):
             if not any(
                 [
                     v.bonus_speed,
@@ -177,17 +161,40 @@ class UpdateLootBoxConfigDTO(BaseModel):
     is_active: bool | None = None
 
 
+class BundleItemDTO(BaseModel):
+    item_id: UUID
+    quantity: int = Field(gt=0)
+
+
 class UpdateShopItemDTO(BaseModel):
     price_xgen: int | None = None
     daily_limit: int | None = None
     stock_limit: int | None = None
     is_active: bool | None = None
+    bundle_items: list[BundleItemDTO] | None = None
 
 
 class UpdateStarsPackageDTO(BaseModel):
     stars_amount: int | None = None
     xgen_reward: int | None = None
     is_active: bool | None = None
+
+
+class CreateShopItemDTO(BaseModel):
+    item_id: UUID | None = None
+    price_xgen: int = Field(ge=0)
+    daily_limit: int = Field(ge=0, default=0)
+    stock_limit: int = Field(ge=0, default=0)
+    is_active: bool = True
+    bundle_items: list[BundleItemDTO] = []
+
+    @model_validator(mode='after')
+    def validate_bundle(self):
+        if self.bundle_items and self.item_id:
+            raise ValueError("Provide either item_id OR bundle_items, not both")
+        if not self.bundle_items and not self.item_id:
+            raise ValueError("Provide either item_id or bundle_items")
+        return self
 
 
 # --- Create DTOs (обязательные поля) ---
