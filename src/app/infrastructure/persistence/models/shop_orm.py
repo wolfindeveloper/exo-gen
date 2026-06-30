@@ -1,10 +1,14 @@
 from uuid import UUID
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, String, Uuid, Boolean, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.persistence.models.base import Base
+
+if TYPE_CHECKING:
+    from app.infrastructure.persistence.models.item_orm import ItemORM
 
 
 class ShopItemORM(Base):
@@ -17,6 +21,8 @@ class ShopItemORM(Base):
     stock_limit: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    item: Mapped["ItemORM"] = relationship()
 
 
 class PurchaseHistoryORM(Base):

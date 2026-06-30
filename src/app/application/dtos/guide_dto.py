@@ -2,6 +2,8 @@ from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
+from app.application.dtos.admin_dto import ChapterRewardItem
+
 
 # --- DTO для создания (Запросы) ---
 
@@ -18,12 +20,12 @@ class CreateArticleDTO(BaseModel):
 class CreateChapterDTO(BaseModel):
     name: str
     description: str
-    is_secret: bool
+    is_secret: bool = False
     season_id: UUID | None = None
     reward_xgen: int = 0
     reward_fragments: int = 0
-    # В Pydantic V2 безопасно использовать просто []
-    articles: list[CreateArticleDTO] = []
+    reward_items: list[ChapterRewardItem] = []
+    article_ids: list[UUID] = []
 
 
 class CreateSeasonDTO(BaseModel):
@@ -64,6 +66,7 @@ class ChapterResponseDTO(BaseModel):
     season_id: UUID | None = None
     reward_xgen: int = 0
     reward_fragments: int = 0
+    reward_items: list[dict] = []
     articles: list[ArticleResponseDTO] = []
 
 

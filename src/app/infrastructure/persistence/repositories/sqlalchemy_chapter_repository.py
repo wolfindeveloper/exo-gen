@@ -121,6 +121,16 @@ class SQLAlchemyChapterRepository(ChapterRepository):
         chapter.articles = [a for a in chapter.articles if a.deleted_at is None]
         return chapter
 
+    async def get_articles_by_ids(self, article_ids: list[UUID]) -> list[Article]:
+        stmt = (
+            select(ArticleORM)
+            .where(ArticleORM.id.in_(article_ids))
+            .where(ArticleORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ArticleMapper.article_to_domain(o) for o in orms]
+
     async def get_chapter_by_article_id(self, article_id: UUID) -> Chapter | None:
         stmt = (
             select(ChapterORM)

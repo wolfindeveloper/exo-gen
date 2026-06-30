@@ -12,6 +12,7 @@ class Article:
     trigger_event_type: str | None = None
     required_item_id: UUID | None = None
     trigger_threshold: int = 1
+    sort_order: int = 0
     deleted_at: datetime | None = None
 
     def update(

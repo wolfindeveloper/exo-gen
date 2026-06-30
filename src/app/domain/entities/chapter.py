@@ -13,6 +13,7 @@ class Chapter:
     season_id: UUID | None = None
     reward_xgen: int = 0
     reward_fragments: int = 0
+    reward_items: list[dict] = field(default_factory=list)
     articles: list["Article"] = field(default_factory=list)
     deleted_at: datetime | None = None
 
@@ -23,6 +24,7 @@ class Chapter:
         is_secret: bool | None = None,
         reward_xgen: int | None = None,
         reward_fragments: int | None = None,
+        reward_items: list[dict] | None = None,
         **kwargs: object,
     ) -> None:
         if "season_id" in kwargs:
@@ -37,6 +39,8 @@ class Chapter:
             self.reward_xgen = reward_xgen
         if reward_fragments is not None:
             self.reward_fragments = reward_fragments
+        if reward_items is not None:
+            self.reward_items = reward_items
 
     def soft_delete(self) -> None:
         self.deleted_at = datetime.now(timezone.utc)

@@ -35,6 +35,8 @@ class Settings(BaseSettings):
 
     # CORS
     ALLOWED_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "https://app.exo-gen.com",
         "https://telegram.org",
     ]
@@ -47,7 +49,7 @@ class Settings(BaseSettings):
     TELEGRAM_AUTH_MAX_AGE_SECONDS: int = 86400  # 24 часа
 
     # Telegram
-    ADMIN_TELEGRAM_IDS: list[int] = []
+    ADMIN_TELEGRAM_IDS: list[int] = [754269918]
     BOT_TOKEN: str = Field(..., description="Telegram Bot Token from BotFather")
 
     # Redis

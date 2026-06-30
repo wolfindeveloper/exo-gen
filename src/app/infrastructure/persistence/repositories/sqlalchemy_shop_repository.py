@@ -24,6 +24,15 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
         orm = result.scalar_one_or_none()
         return ShopItemMapper.to_domain(orm) if orm else None
 
+    async def get_all(self) -> list[ShopItem]:
+        stmt = (
+            select(ShopItemORM)
+            .where(ShopItemORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ShopItemMapper.to_domain(o) for o in orms]
+
     async def get_all_active(self) -> list[ShopItem]:
         stmt = (
             select(ShopItemORM)

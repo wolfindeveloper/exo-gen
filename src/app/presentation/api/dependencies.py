@@ -1,7 +1,9 @@
 from typing import AsyncGenerator
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.config.settings import settings
 
 from app.infrastructure.database.session import AsyncSessionLocal
 from app.domain.uow import UnitOfWork
@@ -55,6 +57,10 @@ from app.infrastructure.persistence.repositories.sqlalchemy_stars_repository imp
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_loot_box_repository import (
     SQLAlchemyLootBoxRepository,
+)
+from app.domain.repositories.purchase_repository import PurchaseRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_purchase_repository import (
+    SQLAlchemyPurchaseRepository,
 )
 from app.domain.repositories.player_settings_repository import PlayerSettingsRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_player_settings_repository import (
@@ -166,3 +172,25 @@ async def get_transaction_repo(
     session: AsyncSession = Depends(get_db_session),
 ) -> TransactionRepository:
     return SQLAlchemyTransactionRepository(session)
+
+
+async def get_purchase_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> PurchaseRepository:
+    return SQLAlchemyPurchaseRepository(session)
+
+
+async def get_current_admin(
+    telegram_id: int = Query(..., description="Admin Telegram ID"),
+) -> int:
+    if telegram_id not in settings.ADMIN_TELEGRAM_IDS:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return telegram_id
+
+
+async def verify_admin(
+    telegram_id: int = Query(..., alias="telegram_id"),
+) -> int:
+    if telegram_id not in settings.ADMIN_TELEGRAM_IDS:
+        raise HTTPException(status_code=403, detail="Forbidden: Admin access required")
+    return telegram_id

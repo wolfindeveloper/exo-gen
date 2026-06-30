@@ -36,6 +36,11 @@ from app.domain.exceptions.guide import (
     SeasonHasProgressError,
     ArticleHasUnlocksError,
 )
+from app.domain.exceptions.item import (
+    ItemInUseInInventoryError,
+    ItemUsedInActiveZoneError,
+    ItemListedInShopError,
+)
 from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
 from app.domain.exceptions.equipment import (
     EquipmentNotFoundError,
@@ -83,6 +88,9 @@ __all__ = [
     "SeasonActiveError",
     "SeasonHasProgressError",
     "ArticleHasUnlocksError",
+    "ItemInUseInInventoryError",
+    "ItemUsedInActiveZoneError",
+    "ItemListedInShopError",
     "ZoneNotFoundError",
     "ZoneHasActiveExpeditionsError",
     "EquipmentNotFoundError",

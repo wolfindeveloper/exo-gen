@@ -204,6 +204,7 @@ class ArticleMapper:
             trigger_event_type=article_orm.trigger_event_type,
             required_item_id=article_orm.required_item_id,
             trigger_threshold=article_orm.trigger_threshold,
+            sort_order=article_orm.sort_order,
             deleted_at=article_orm.deleted_at,
         )
 
@@ -218,6 +219,7 @@ class ArticleMapper:
             trigger_event_type=article.trigger_event_type,
             required_item_id=article.required_item_id,
             trigger_threshold=article.trigger_threshold,
+            sort_order=article.sort_order,
             deleted_at=article.deleted_at,
         )
 
@@ -226,6 +228,7 @@ class ChapterMapper:
     @classmethod
     def chapter_to_domain(cls, chapter_orm: ChapterORM) -> Chapter:
         articles = [ArticleMapper.article_to_domain(a) for a in chapter_orm.articles]
+        articles.sort(key=lambda a: a.sort_order)
 
         return Chapter(
             id=chapter_orm.id,
@@ -235,6 +238,7 @@ class ChapterMapper:
             season_id=chapter_orm.season_id,
             reward_xgen=chapter_orm.reward_xgen,
             reward_fragments=chapter_orm.reward_fragments,
+            reward_items=chapter_orm.reward_items or [],
             articles=articles,
             deleted_at=chapter_orm.deleted_at,
         )
@@ -251,6 +255,7 @@ class ChapterMapper:
             season_id=chapter.season_id,
             reward_xgen=chapter.reward_xgen,
             reward_fragments=chapter.reward_fragments,
+            reward_items=chapter.reward_items or [],
             articles=articles,
             deleted_at=chapter.deleted_at,
         )

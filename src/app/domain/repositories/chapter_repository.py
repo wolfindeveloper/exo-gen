@@ -48,3 +48,8 @@ class ChapterRepository(ABC):
     @abstractmethod
     async def get_chapter_by_article_id(self, article_id: UUID) -> Chapter | None:
         pass
+
+    @abstractmethod
+    async def get_articles_by_ids(self, article_ids: list[UUID]) -> list[Article]:
+        """Возвращает статьи по списку ID (только не удалённые)"""
+        pass

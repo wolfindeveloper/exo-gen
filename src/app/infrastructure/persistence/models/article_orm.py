@@ -19,6 +19,7 @@ class ArticleORM(Base):
     fragment_cost: Mapped[int] = mapped_column(Integer, default=0)
     trigger_event_type: Mapped[str | None] = mapped_column(String, nullable=True)
     trigger_threshold: Mapped[int] = mapped_column(Integer, default=1)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     required_item_id: Mapped[UUID | None] = mapped_column(Uuid, ForeignKey("items.id"), nullable=True)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 

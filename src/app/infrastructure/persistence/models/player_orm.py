@@ -8,6 +8,7 @@ from app.infrastructure.persistence.models.base import Base
 
 if TYPE_CHECKING:
     from app.infrastructure.persistence.models.ship_orm import ShipORM
+    from app.infrastructure.persistence.models.transaction_orm import TransactionORM
 
 class PlayerORM(Base):
     __tablename__ = "players"
@@ -27,3 +28,4 @@ class PlayerORM(Base):
         back_populates="player", 
         cascade="all, delete-orphan"
     )
+    transactions: Mapped[list["TransactionORM"]] = relationship(back_populates="player")

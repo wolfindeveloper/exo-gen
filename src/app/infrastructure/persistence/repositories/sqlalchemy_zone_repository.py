@@ -1,7 +1,8 @@
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, cast
+from sqlalchemy.dialects.postgresql import JSONB
 
 from app.domain.entities.zone import Zone
 from app.infrastructure.persistence.models.zone_orm import ZoneORM
@@ -64,6 +65,19 @@ class SQLAlchemyZoneRepository(ZoneRepository):
             return None
 
         return ZoneMapper.zone_to_domain(zone_orm=zone_orm)
+
+    async def count_active_by_loot_item_id(self, item_id: UUID) -> int:
+        result = await self.session.execute(
+            select(func.count())
+            .select_from(ZoneORM)
+            .where(ZoneORM.deleted_at.is_(None))
+            .where(
+                ZoneORM.loot_table.cast(JSONB).contains(
+                    [{"item_id": str(item_id)}]
+                )
+            )
+        )
+        return result.scalar_one()
 
     async def save(self, zone: Zone) -> None:
         zone_orm = ZoneMapper.zone_to_orm(zone)

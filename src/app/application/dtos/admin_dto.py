@@ -2,9 +2,40 @@ from datetime import datetime
 from typing import Generic, Literal, TypeVar
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator, model_validator, validator
 
 T = TypeVar("T")
+
+
+# --- Валидаторы эффектов ---
+class ConsumableEffectDTO(BaseModel):
+    restore_tea: int | None = None
+    restore_optimism: int | None = None
+
+
+class ArtifactEffectDTO(BaseModel):
+    bonus_speed: float | None = None
+    bonus_defense: float | None = None
+    bonus_capacity: float | None = None
+    bonus_luck: float | None = None
+    bonus_fuel: float | None = None
+    bonus_repair: float | None = None
+    bonus_xp: float | None = None
+    bonus_fragment: float | None = None
+
+
+# --- Валидаторы лута ---
+class LootDropEntryDTO(BaseModel):
+    drop_type: Literal["xgen", "fragments", "item"]
+    amount: int = Field(gt=0)
+    chance: float = Field(ge=0.0, le=1.0)
+    item_id: UUID | None = None
+
+    @validator('item_id', always=True)
+    def check_item_id(cls, v, values):
+        if values.get('drop_type') == 'item' and v is None:
+            raise ValueError("item_id required for drop_type 'item'")
+        return v
 
 
 class PaginationParams(BaseModel):
@@ -23,6 +54,70 @@ class PaginatedResponseDTO(BaseModel, Generic[T]):
     total_pages: int
 
 
+class ConsumableEffect(BaseModel):
+    restore_tea: int | None = None
+    restore_optimism: int | None = None
+
+
+class ArtifactEffect(BaseModel):
+    bonus_speed: float | None = None
+    bonus_defense: float | None = None
+    bonus_capacity: float | None = None
+    bonus_luck: float | None = None
+    bonus_fuel: float | None = None
+    bonus_repair: float | None = None
+    bonus_xp: float | None = None
+    bonus_fragment: float | None = None
+
+
+class ItemEffectValidator(RootModel[ConsumableEffect | ArtifactEffect]):
+    @field_validator("root", mode="after")
+    @classmethod
+    def validate_effect(cls, v: ConsumableEffect | ArtifactEffect) -> ConsumableEffect | ArtifactEffect:
+        if isinstance(v, ConsumableEffect):
+            if v.restore_tea is None and v.restore_optimism is None:
+                raise ValueError("Consumable must have restore_tea or restore_optimism")
+        if isinstance(v, ArtifactEffect):
+            if not any(
+                [
+                    v.bonus_speed,
+                    v.bonus_defense,
+                    v.bonus_capacity,
+                    v.bonus_luck,
+                    v.bonus_fuel,
+                    v.bonus_repair,
+                    v.bonus_xp,
+                    v.bonus_fragment,
+                ]
+            ):
+                raise ValueError("Artifact must have at least one bonus")
+        return v
+
+
+class LootDropEntry(BaseModel):
+    drop_type: Literal["xgen", "fragments", "item"]
+    amount: int = Field(gt=0)
+    chance: float = Field(ge=0.0, le=1.0)
+    item_id: UUID | None = None
+
+    @model_validator(mode="after")
+    def validate_item_id(self) -> "LootDropEntry":
+        if self.drop_type == "item" and self.item_id is None:
+            raise ValueError("item_id is required when drop_type is 'item'")
+        if self.drop_type != "item" and self.item_id is not None:
+            raise ValueError("item_id should be null for non-item drops")
+        return self
+
+
+class LootTableValidator(RootModel[list[LootDropEntry]]):
+    @field_validator("root", mode="after")
+    @classmethod
+    def validate_loot_table(cls, v: list[LootDropEntry]) -> list[LootDropEntry]:
+        if not v:
+            raise ValueError("Loot table cannot be empty")
+        return v
+
+
 class UpdateZoneDTO(BaseModel):
     name: str | None = None
     description: str | None = None
@@ -30,14 +125,19 @@ class UpdateZoneDTO(BaseModel):
     fuel_cost: float | None = None
     optimism_risk: float | None = None
     duration_seconds: int | None = None
-    loot_table: list[dict] | None = None
+    loot_table: list[LootDropEntryDTO] | None = None
+
+
+class ChapterRewardItem(BaseModel):
+    item_id: UUID
+    quantity: int = Field(gt=0)
 
 
 class UpdateItemDTO(BaseModel):
     name: str | None = None
     description: str | None = None
     rarity: str | None = None
-    effect: dict | None = None
+    effect: ConsumableEffectDTO | ArtifactEffectDTO | None = None
     is_tradable: bool | None = None
     sell_price: int | None = None
 
@@ -48,6 +148,7 @@ class UpdateChapterDTO(BaseModel):
     is_secret: bool | None = None
     reward_xgen: int | None = None
     reward_fragments: int | None = None
+    reward_items: list[ChapterRewardItem] | None = None
 
 
 class UpdateArticleDTO(BaseModel):
@@ -87,6 +188,26 @@ class UpdateStarsPackageDTO(BaseModel):
     stars_amount: int | None = None
     xgen_reward: int | None = None
     is_active: bool | None = None
+
+
+# --- Create DTOs (обязательные поля) ---
+class CreateItemDTO(BaseModel):
+    name: str
+    description: str
+    rarity: str
+    effect: ConsumableEffectDTO | ArtifactEffectDTO
+    is_tradable: bool
+    sell_price: int
+
+
+class CreateZoneDTO(BaseModel):
+    name: str
+    description: str
+    image_url: str
+    fuel_cost: float
+    optimism_risk: float
+    duration_seconds: int
+    loot_table: list[LootDropEntryDTO]
 
 
 class LootBoxConfigResponseDTO(BaseModel):

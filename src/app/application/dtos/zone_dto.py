@@ -1,6 +1,9 @@
 from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 
+from app.application.dtos.admin_dto import LootTableValidator
+
+
 class LootItemDTO(BaseModel):
     item_type: str
     amount: int
@@ -15,7 +18,7 @@ class CreateZoneDTO(BaseModel):
     fuel_cost: float
     optimism_risk: float
     duration_seconds: int
-    loot_table: list[LootItemDTO]
+    loot_table: LootTableValidator
 
 
 class ZoneResponseDTO(BaseModel):

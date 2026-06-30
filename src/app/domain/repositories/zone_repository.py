@@ -25,5 +25,10 @@ class ZoneRepository(ABC):
         pass
 
     @abstractmethod
+    async def count_active_by_loot_item_id(self, item_id: UUID) -> int:
+        """Возвращает количество активных зон, в loot_table которых есть указанный item_id"""
+        pass
+
+    @abstractmethod
     async def save(self, zone: Zone) -> None:
         pass
