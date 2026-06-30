@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.presentation.api.dependencies import (
     get_uow, get_zone_repo, get_season_repo, get_chapter_repo,
     get_item_repo, get_loot_box_repo, get_shop_item_repo,
-    get_stars_package_repo, get_inventory_repo, get_expedition_repo,
+    get_stars_package_repo, get_expedition_repo,
     get_guide_progress_repo,
 )
 from app.domain.uow import UnitOfWork
@@ -15,7 +15,6 @@ from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.repositories.shop_repository import ShopItemRepository
 from app.domain.repositories.stars_repository import StarsPackageRepository
-from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.exceptions import ItemNotFoundError
@@ -438,20 +437,10 @@ async def delete_article(
 async def delete_item(
     item_id: UUID,
     item_repo: ItemRepository = Depends(get_item_repo),
-    inventory_repo: InventoryRepository = Depends(get_inventory_repo),
-    zone_repo: ZoneRepository = Depends(get_zone_repo),
-    loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
-    shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = SoftDeleteItemUseCase(
-            item_repo=item_repo,
-            inventory_repo=inventory_repo,
-            zone_repo=zone_repo,
-            loot_box_repo=loot_box_repo,
-            shop_item_repo=shop_item_repo,
-        )
+        use_case = SoftDeleteItemUseCase(item_repo=item_repo)
         await use_case.execute(item_id, uow)
     except ItemNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

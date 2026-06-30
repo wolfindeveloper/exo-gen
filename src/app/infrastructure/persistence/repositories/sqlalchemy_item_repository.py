@@ -2,9 +2,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from uuid import UUID
 
-from app.domain.entities.item import Item
+from app.domain.entities.item import Item, ItemUsageReport
 from app.domain.repositories.item_repository import ItemRepository
 from app.infrastructure.persistence.models.item_orm import ItemORM
+from app.infrastructure.persistence.models.zone_orm import ZoneORM
+from app.infrastructure.persistence.models.loot_box_config_orm import LootBoxConfigORM
+from app.infrastructure.persistence.models.shop_orm import ShopItemORM
+from app.infrastructure.persistence.models.inventory_item_orm import InventoryItemORM
 from app.infrastructure.persistence.mappers import ItemMapper
 
 _ITEM_SORT_WHITELIST = {"name", "type", "rarity", "sell_price"}
@@ -72,6 +76,51 @@ class SQLAlchemyItemRepository(ItemRepository):
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
         return [ItemMapper.to_domain(o) for o in orms]
+
+    async def check_usage(self, item_id: UUID) -> ItemUsageReport:
+        inventory_count_result = await self.session.execute(
+            select(func.count())
+            .select_from(InventoryItemORM)
+            .where(InventoryItemORM.item_id == item_id)
+        )
+        inventory_count = inventory_count_result.scalar_one()
+
+        zones_result = await self.session.execute(
+            select(ZoneORM.name)
+            .where(
+                ZoneORM.deleted_at.is_(None),
+                ZoneORM.loot_table.contains([{"item_id": str(item_id)}]),
+            )
+        )
+        zone_names = [row[0] for row in zones_result.all()]
+
+        loot_boxes_result = await self.session.execute(
+            select(LootBoxConfigORM.name)
+            .where(
+                LootBoxConfigORM.deleted_at.is_(None),
+                LootBoxConfigORM.entries.contains([{"item_id": str(item_id)}]),
+            )
+        )
+        loot_box_names = [row[0] for row in loot_boxes_result.all()]
+
+        active_shop_result = await self.session.execute(
+            select(func.count())
+            .select_from(ShopItemORM)
+            .where(
+                ShopItemORM.item_id == item_id,
+                ShopItemORM.is_active,
+                ShopItemORM.deleted_at.is_(None),
+            )
+        )
+        active_shop_items = active_shop_result.scalar_one()
+
+        return ItemUsageReport(
+            item_id=item_id,
+            inventory_count=inventory_count,
+            zone_names=zone_names,
+            loot_box_names=loot_box_names,
+            active_shop_items=active_shop_items,
+        )
 
     async def get_consumables_with_effect(self, effect_key: str) -> list[Item]:
         from app.domain.entities.item import ItemType

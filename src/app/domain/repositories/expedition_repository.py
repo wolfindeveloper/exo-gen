@@ -8,11 +8,9 @@ class ExpeditionRepository(ABC):
     async def get_active_by_ship_id(self, ship_id: UUID) -> Expedition | None:
         pass
 
-
     @abstractmethod
     async def get_by_id(self, expedition_id: UUID, for_update: bool = False) -> Expedition | None:
         pass
-
 
     @abstractmethod
     async def get_finished_expeditions(self) -> list[Expedition]:
@@ -20,9 +18,8 @@ class ExpeditionRepository(ABC):
 
     @abstractmethod
     async def count_by_zone_id(self, zone_id: UUID) -> int:
-        """Возвращает количество экспедиций в указанной зоне (любой статус)"""
+        """Возвращает количество активных экспедиций (IN_PROGRESS, FINISHED) в указанной зоне"""
         pass
-
 
     @abstractmethod
     async def save(self, expedition: Expedition) -> None:

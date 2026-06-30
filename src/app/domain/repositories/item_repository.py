@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
-from app.domain.entities.item import Item
+from app.domain.entities.item import Item, ItemUsageReport
 
 class ItemRepository(ABC):
     @abstractmethod
@@ -32,6 +32,11 @@ class ItemRepository(ABC):
     @abstractmethod
     async def get_by_ids(self, item_ids: list[UUID]) -> list[Item]:
         """Возвращает предметы по списку их ID"""
+        pass
+
+    @abstractmethod
+    async def check_usage(self, item_id: UUID) -> ItemUsageReport:
+        """Проверяет, используется ли предмет в инвентарях, лут-таблицах, магазине"""
         pass
 
     @abstractmethod

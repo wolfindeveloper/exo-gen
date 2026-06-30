@@ -52,3 +52,21 @@ class Item:
 
     def is_deleted(self) -> bool:
         return self.deleted_at is not None
+
+
+@dataclass
+class ItemUsageReport:
+    item_id: UUID
+    inventory_count: int = 0
+    zone_names: list[str] = field(default_factory=list)
+    loot_box_names: list[str] = field(default_factory=list)
+    active_shop_items: int = 0
+
+    @property
+    def in_use(self) -> bool:
+        return bool(
+            self.inventory_count > 0
+            or self.zone_names
+            or self.loot_box_names
+            or self.active_shop_items > 0
+        )

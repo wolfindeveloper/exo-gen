@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.domain.entities.expedition import Expedition
+from app.domain.entities.expedition import Expedition, ExpeditionStatus
 from app.infrastructure.persistence.models.expedition_orm import ExpeditionORM
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.infrastructure.persistence.mappers import ExpeditionMapper
@@ -52,7 +52,13 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
         stmt = (
             select(func.count())
             .select_from(ExpeditionORM)
-            .where(ExpeditionORM.zone_id == zone_id)
+            .where(
+                ExpeditionORM.zone_id == zone_id,
+                ExpeditionORM.status.in_([
+                    ExpeditionStatus.IN_PROGRESS.value,
+                    ExpeditionStatus.FINISHED.value,
+                ])
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one()
