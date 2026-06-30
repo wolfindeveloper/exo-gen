@@ -31,3 +31,9 @@ class NoSuitableConsumableError(DomainError):
     def __init__(self, effect_key: str):
         self.effect_key = effect_key
         super().__init__(f"No consumable with effect '{effect_key}' found in inventory")
+
+
+class ItemInUseError(DomainError):
+    def __init__(self, item_name: str, details: list[str]):
+        self.details = details
+        super().__init__(f"Cannot delete item '{item_name}': used in {', '.join(details)}")

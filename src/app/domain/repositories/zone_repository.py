@@ -14,5 +14,16 @@ class ZoneRepository(ABC):
         
 
     @abstractmethod
+    async def get_paginated(
+        self,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str = "desc",
+    ) -> tuple[list[Zone], int]:
+        pass
+
+    @abstractmethod
     async def save(self, zone: Zone) -> None:
         pass

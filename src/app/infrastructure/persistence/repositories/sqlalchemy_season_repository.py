@@ -1,13 +1,15 @@
 from datetime import datetime, timezone
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
 from uuid import UUID
 
 from app.domain.repositories.season_repository import SeasonRepository
 from app.domain.entities.season import Season
 from app.infrastructure.persistence.models.season_orm import SeasonORM
 from app.infrastructure.persistence.mappers import SeasonMapper
+
+_SEASON_SORT_WHITELIST = {"name", "start_date", "end_date", "reward_xgen", "reward_fragments"}
 
 
 class SQLAlchemySeasonRepository(SeasonRepository):
@@ -27,6 +29,35 @@ class SQLAlchemySeasonRepository(SeasonRepository):
         result = await self.session.execute(stmt)
         orm = result.scalar_one_or_none()
         return SeasonMapper.season_to_domain(orm) if orm else None
+
+    async def get_paginated(
+        self,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str = "desc",
+    ) -> tuple[list[Season], int]:
+        base = select(SeasonORM).where(SeasonORM.deleted_at.is_(None))
+
+        if search:
+            base = base.where(SeasonORM.name.ilike(f"%{search}%"))
+
+        total_result = await self.session.execute(
+            select(func.count()).select_from(base.subquery())
+        )
+        total = total_result.scalar_one()
+
+        if sort_by in _SEASON_SORT_WHITELIST:
+            column = getattr(SeasonORM, sort_by)
+            base = base.order_by(column.desc() if sort_order == "desc" else column.asc())
+
+        offset = (page - 1) * page_size
+        base = base.offset(offset).limit(page_size)
+
+        result = await self.session.execute(base)
+        orms = result.scalars().all()
+        return [SeasonMapper.season_to_domain(o) for o in orms], total
 
     async def get_all(self) -> list[Season]:
         stmt = (

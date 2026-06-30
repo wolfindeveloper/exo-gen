@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.presentation.api.dependencies import (
     get_uow, get_zone_repo, get_season_repo, get_chapter_repo,
     get_item_repo, get_loot_box_repo, get_shop_item_repo,
-    get_stars_package_repo,
+    get_stars_package_repo, get_inventory_repo, get_expedition_repo,
+    get_guide_progress_repo,
 )
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
@@ -14,12 +15,19 @@ from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.repositories.shop_repository import ShopItemRepository
 from app.domain.repositories.stars_repository import StarsPackageRepository
+from app.domain.repositories.inventory_repository import InventoryRepository
+from app.domain.repositories.expedition_repository import ExpeditionRepository
+from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.exceptions import ItemNotFoundError
-from app.domain.exceptions.guide import SeasonNotFoundError, ChapterNotFoundError, ArticleNotFoundError
-from app.domain.exceptions.zone import ZoneNotFoundError
+from app.domain.exceptions.guide import (
+    SeasonNotFoundError, ChapterNotFoundError, ArticleNotFoundError,
+    SeasonActiveError, SeasonHasProgressError, ArticleHasUnlocksError,
+)
+from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
 from app.domain.exceptions.shop import ShopItemNotFoundError
 from app.domain.exceptions.stars import StarsPackageNotFoundError
 from app.domain.exceptions.loot_box import LootBoxConfigNotFoundError
+from app.domain.exceptions.inventory import ItemInUseError
 from app.infrastructure.telegram.security import get_admin_player
 
 from app.application.dtos.guide_dto import (
@@ -35,6 +43,7 @@ from app.application.dtos.admin_dto import (
     UpdateZoneDTO, UpdateItemDTO, UpdateChapterDTO,
     UpdateArticleDTO, UpdateSeasonDTO, UpdateLootBoxConfigDTO,
     UpdateShopItemDTO, UpdateStarsPackageDTO, LootBoxConfigResponseDTO,
+    PaginationParams, PaginatedResponseDTO,
 )
 from app.application.use_cases.create_zone import CreateZoneUseCase
 from app.application.use_cases.create_season import CreateSeasonUseCase
@@ -131,40 +140,109 @@ async def create_item(
 # ─── READ ──────────────────────────────────────────────────────
 
 
-@router.get("/zones", response_model=list[ZoneResponseDTO])
+@router.get("/zones", response_model=PaginatedResponseDTO[ZoneResponseDTO])
 async def get_all_zones(
+    pagination: PaginationParams = Depends(),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
 ):
-    return await zone_repo.get_all()
+    zones, total = await zone_repo.get_paginated(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[ZoneResponseDTO.model_validate(z) for z in zones],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
 
 
-@router.get("/seasons", response_model=list[SeasonResponseDTO])
+@router.get("/seasons", response_model=PaginatedResponseDTO[SeasonResponseDTO])
 async def get_all_seasons(
+    pagination: PaginationParams = Depends(),
     season_repo: SeasonRepository = Depends(get_season_repo),
 ):
-    return await season_repo.get_all()
+    seasons, total = await season_repo.get_paginated(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[SeasonResponseDTO.model_validate(s) for s in seasons],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
 
 
-@router.get("/chapters", response_model=list[ChapterResponseDTO])
+@router.get("/chapters", response_model=PaginatedResponseDTO[ChapterResponseDTO])
 async def get_all_chapters(
+    pagination: PaginationParams = Depends(),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
 ):
-    return await chapter_repo.get_all_with_articles()
+    chapters, total = await chapter_repo.get_paginated(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[ChapterResponseDTO.model_validate(c) for c in chapters],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
 
 
-@router.get("/articles", response_model=list[ArticleResponseDTO])
+@router.get("/articles", response_model=PaginatedResponseDTO[ArticleResponseDTO])
 async def get_all_articles(
+    pagination: PaginationParams = Depends(),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
 ):
-    chapters = await chapter_repo.get_all_with_articles()
-    return [article for chapter in chapters for article in chapter.articles]
+    articles, total = await chapter_repo.get_paginated_articles(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[ArticleResponseDTO.model_validate(a) for a in articles],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
 
 
-@router.get("/items", response_model=list[ItemResponseDTO])
+@router.get("/items", response_model=PaginatedResponseDTO[ItemResponseDTO])
 async def get_all_items(
+    pagination: PaginationParams = Depends(),
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
-    return await item_repo.get_all()
+    items, total = await item_repo.get_paginated(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[ItemResponseDTO.model_validate(i) for i in items],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
 
 
 # ─── UPDATE ────────────────────────────────────────────────────
@@ -289,26 +367,39 @@ async def update_stars_package(
 async def delete_zone(
     zone_id: UUID,
     zone_repo: ZoneRepository = Depends(get_zone_repo),
+    expedition_repo: ExpeditionRepository = Depends(get_expedition_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = SoftDeleteZoneUseCase(zone_repo=zone_repo)
+        use_case = SoftDeleteZoneUseCase(zone_repo=zone_repo, expedition_repo=expedition_repo)
         await use_case.execute(zone_id, uow)
     except ZoneNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except ZoneHasActiveExpeditionsError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.delete("/seasons/{season_id}", status_code=204)
 async def delete_season(
     season_id: UUID,
     season_repo: SeasonRepository = Depends(get_season_repo),
+    chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = SoftDeleteSeasonUseCase(season_repo=season_repo)
+        use_case = SoftDeleteSeasonUseCase(
+            season_repo=season_repo,
+            chapter_repo=chapter_repo,
+            guide_progress_repo=guide_progress_repo,
+        )
         await use_case.execute(season_id, uow)
     except SeasonNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except SeasonActiveError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+    except SeasonHasProgressError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.delete("/chapters/{chapter_id}", status_code=204)
@@ -328,26 +419,44 @@ async def delete_chapter(
 async def delete_article(
     article_id: UUID,
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
+    guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = SoftDeleteArticleUseCase(chapter_repo=chapter_repo)
+        use_case = SoftDeleteArticleUseCase(
+            chapter_repo=chapter_repo,
+            guide_progress_repo=guide_progress_repo,
+        )
         await use_case.execute(article_id, uow)
     except ArticleNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except ArticleHasUnlocksError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.delete("/items/{item_id}", status_code=204)
 async def delete_item(
     item_id: UUID,
     item_repo: ItemRepository = Depends(get_item_repo),
+    inventory_repo: InventoryRepository = Depends(get_inventory_repo),
+    zone_repo: ZoneRepository = Depends(get_zone_repo),
+    loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = SoftDeleteItemUseCase(item_repo=item_repo)
+        use_case = SoftDeleteItemUseCase(
+            item_repo=item_repo,
+            inventory_repo=inventory_repo,
+            zone_repo=zone_repo,
+            loot_box_repo=loot_box_repo,
+            shop_item_repo=shop_item_repo,
+        )
         await use_case.execute(item_id, uow)
     except ItemNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except ItemInUseError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.delete("/loot-boxes/{config_id}", status_code=204)

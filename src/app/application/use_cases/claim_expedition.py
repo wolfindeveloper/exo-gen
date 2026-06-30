@@ -11,6 +11,7 @@ from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.entities.expedition import ExpeditionStatus
 from app.domain.exceptions.expedition import ExpeditionNotFoundError, ExpeditionNotFinishedError, ExpeditionAlreadyClaimedError
+from app.domain.exceptions.player import PlayerNotFoundError
 from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.exceptions.zone import ZoneNotFoundError
 
@@ -42,12 +43,16 @@ class ClaimExpeditionUseCase:
         if not expedition:
             raise ExpeditionNotFoundError(f"Expedition {dto.expedition_id} not found")
 
+        if expedition.status == ExpeditionStatus.COMPLETED:
+            raise ExpeditionAlreadyClaimedError("Loot already claimed")
+
+        player = await self.player_repo.get_by_id_for_update(player.id)
+        if not player:
+            raise PlayerNotFoundError(f"Player {player.id} not found")
+
         ship = next((s for s in player.ships if s.id == expedition.ship_id), None)
         if not ship:
             raise ShipNotFoundError("Expedition does not belong to player's ship")
-
-        if expedition.status == ExpeditionStatus.COMPLETED:
-            raise ExpeditionAlreadyClaimedError("Loot already claimed")
 
         now = datetime.now(timezone.utc)
         if now < expedition.ends_at:
@@ -63,7 +68,7 @@ class ClaimExpeditionUseCase:
         player.add_fragments(loot["fragments"])
         player.increment_expeditions()
 
-        inventory = await self.inventory_repo.get_by_player_id(player.id)
+        inventory = await self.inventory_repo.get_by_player_id(player.id, for_update=True)
         claimed_items_dtos = []
 
         loot_items = loot.get("items", [])

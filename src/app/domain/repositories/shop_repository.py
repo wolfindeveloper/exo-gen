@@ -15,6 +15,11 @@ class ShopItemRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_all_by_item_id(self, item_id: UUID) -> list[ShopItem]:
+        """Возвращает все shop_items, ссылающиеся на указанный item_id"""
+        pass
+
+    @abstractmethod
     async def save(self, shop_item: ShopItem) -> None:
         pass
 

@@ -31,3 +31,18 @@ class KeyItemRequiredError(DomainError):
     def __init__(self, item_name: str | None = None):
         msg = f"Key item required: {item_name}" if item_name else "Required item not found in inventory"
         super().__init__(msg)
+
+
+class SeasonActiveError(DomainError):
+    def __init__(self, season_name: str):
+        super().__init__(f"Cannot delete active season '{season_name}'")
+
+
+class SeasonHasProgressError(DomainError):
+    def __init__(self, season_name: str):
+        super().__init__(f"Cannot delete season '{season_name}': players have unlocked articles in its chapters")
+
+
+class ArticleHasUnlocksError(DomainError):
+    def __init__(self, article_title: str, count: int):
+        super().__init__(f"Cannot delete: {count} players unlocked article '{article_title}'")

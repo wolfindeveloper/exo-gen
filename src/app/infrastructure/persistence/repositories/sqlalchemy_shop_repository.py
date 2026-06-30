@@ -34,6 +34,16 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
         orms = result.scalars().all()
         return [ShopItemMapper.to_domain(o) for o in orms]
 
+    async def get_all_by_item_id(self, item_id: UUID) -> list[ShopItem]:
+        stmt = (
+            select(ShopItemORM)
+            .where(ShopItemORM.item_id == item_id)
+            .where(ShopItemORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ShopItemMapper.to_domain(o) for o in orms]
+
     async def save(self, shop_item: ShopItem) -> None:
         orm_obj = ShopItemMapper.to_orm(shop_item)
         await self.session.merge(orm_obj)

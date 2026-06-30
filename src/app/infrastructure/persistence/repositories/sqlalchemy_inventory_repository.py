@@ -11,8 +11,20 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def get_by_player_id(self, player_id: UUID) -> Inventory:
+    async def count_by_item_id(self, item_id: UUID) -> int:
+        from sqlalchemy import func
+        stmt = (
+            select(func.count())
+            .select_from(InventoryItemORM)
+            .where(InventoryItemORM.item_id == item_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def get_by_player_id(self, player_id: UUID, for_update: bool = False) -> Inventory:
         stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == player_id)
+        if for_update:
+            stmt = stmt.with_for_update()
         result = await self.session.execute(stmt)
         items_orm = result.scalars().all()
         

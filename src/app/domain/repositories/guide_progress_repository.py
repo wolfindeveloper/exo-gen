@@ -28,6 +28,16 @@ class GuideProgressRepository(ABC):
         pass
 
     @abstractmethod
+    async def count_unlocked_by_article_id(self, article_id: UUID) -> int:
+        """Возвращает количество игроков, открывших указанную статью"""
+        pass
+
+    @abstractmethod
+    async def count_unlocked_by_chapter_ids(self, chapter_ids: list[UUID]) -> int:
+        """Возвращает количество записей unlocked_articles для указанных глав"""
+        pass
+
+    @abstractmethod
     async def get_trigger_progress(self, player_id: UUID, article_id: UUID) -> ArticleTriggerProgress | None:
         pass
 

@@ -1,7 +1,26 @@
 from datetime import datetime
+from typing import Generic, Literal, TypeVar
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+T = TypeVar("T")
+
+
+class PaginationParams(BaseModel):
+    page: int = Field(1, ge=1)
+    page_size: int = Field(50, ge=1, le=200)
+    search: str | None = None
+    sort_by: str | None = None
+    sort_order: Literal["asc", "desc"] = "desc"
+
+
+class PaginatedResponseDTO(BaseModel, Generic[T]):
+    items: list[T]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
 
 
 class UpdateZoneDTO(BaseModel):

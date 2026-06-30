@@ -19,6 +19,17 @@ class ItemRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_paginated(
+        self,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str = "desc",
+    ) -> tuple[list[Item], int]:
+        pass
+
+    @abstractmethod
     async def get_by_ids(self, item_ids: list[UUID]) -> list[Item]:
         """Возвращает предметы по списку их ID"""
         pass

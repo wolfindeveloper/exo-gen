@@ -23,6 +23,7 @@ from app.domain.exceptions.inventory import (
     ItemNotConsumableError,
     InsufficientItemQuantityError,
     NoSuitableConsumableError,
+    ItemInUseError,
 )
 from app.domain.exceptions.guide import (
     ArticleNotFoundError,
@@ -31,8 +32,11 @@ from app.domain.exceptions.guide import (
     CannotBuySecretArticleError,
     SeasonExpiredError,
     KeyItemRequiredError,
+    SeasonActiveError,
+    SeasonHasProgressError,
+    ArticleHasUnlocksError,
 )
-from app.domain.exceptions.zone import ZoneNotFoundError
+from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
 from app.domain.exceptions.equipment import (
     EquipmentNotFoundError,
     ArtifactNotEquippedError,
@@ -69,13 +73,18 @@ __all__ = [
     "ItemNotConsumableError",
     "InsufficientItemQuantityError",
     "NoSuitableConsumableError",
+    "ItemInUseError",
     "ArticleNotFoundError",
     "ChapterNotFoundError",
     "ArticleAlreadyUnlockedError",
     "CannotBuySecretArticleError",
     "SeasonExpiredError",
     "KeyItemRequiredError",
+    "SeasonActiveError",
+    "SeasonHasProgressError",
+    "ArticleHasUnlocksError",
     "ZoneNotFoundError",
+    "ZoneHasActiveExpeditionsError",
     "EquipmentNotFoundError",
     "ArtifactNotEquippedError",
     "ShopItemNotFoundError",

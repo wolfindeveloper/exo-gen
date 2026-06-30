@@ -59,6 +59,29 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
         return await self.session.scalar(stmt)
 
 
+    async def count_unlocked_by_article_id(self, article_id: UUID) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(UnlockedArticleORM)
+            .where(UnlockedArticleORM.article_id == article_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
+    async def count_unlocked_by_chapter_ids(self, chapter_ids: list[UUID]) -> int:
+        if not chapter_ids:
+            return 0
+        from app.infrastructure.persistence.models.article_orm import ArticleORM
+        stmt = (
+            select(func.count())
+            .select_from(UnlockedArticleORM)
+            .join(ArticleORM, UnlockedArticleORM.article_id == ArticleORM.id)
+            .where(ArticleORM.chapter_id.in_(chapter_ids))
+            .where(ArticleORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def get_trigger_progress(self, player_id: UUID, article_id: UUID) -> ArticleTriggerProgress | None:
         stmt = select(ArticleTriggerProgressORM).where(
             ArticleTriggerProgressORM.player_id == player_id,

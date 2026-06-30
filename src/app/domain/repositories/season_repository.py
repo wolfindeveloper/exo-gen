@@ -19,6 +19,17 @@ class SeasonRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_paginated(
+        self,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str = "desc",
+    ) -> tuple[list[Season], int]:
+        pass
+
+    @abstractmethod
     async def get_active_seasons(self) -> list[Season]:
         """Возвращает все активные сезоны (start_date <= now <= end_date)"""
         pass

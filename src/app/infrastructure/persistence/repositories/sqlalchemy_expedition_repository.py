@@ -47,6 +47,16 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
 
         return ExpeditionMapper.expedition_to_domain(expedition_orm=expedition_orm)
 
+    async def count_by_zone_id(self, zone_id: UUID) -> int:
+        from sqlalchemy import func
+        stmt = (
+            select(func.count())
+            .select_from(ExpeditionORM)
+            .where(ExpeditionORM.zone_id == zone_id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def get_finished_expeditions(self) -> list[Expedition]:
         now = datetime.now(timezone.utc)
         stmt = (

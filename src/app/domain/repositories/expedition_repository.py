@@ -18,6 +18,11 @@ class ExpeditionRepository(ABC):
     async def get_finished_expeditions(self) -> list[Expedition]:
         pass
 
+    @abstractmethod
+    async def count_by_zone_id(self, zone_id: UUID) -> int:
+        """Возвращает количество экспедиций в указанной зоне (любой статус)"""
+        pass
+
 
     @abstractmethod
     async def save(self, expedition: Expedition) -> None:
