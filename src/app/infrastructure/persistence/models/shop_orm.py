@@ -16,7 +16,7 @@ class ShopItemORM(Base):
     __tablename__ = "shop_items"
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
-    item_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("items.id"), nullable=False)
+    item_id: Mapped[UUID | None] = mapped_column(Uuid, ForeignKey("items.id", ondelete="CASCADE"), nullable=True)
     price_xgen: Mapped[int] = mapped_column(Integer, default=0)
     daily_limit: Mapped[int] = mapped_column(Integer, default=0)
     stock_limit: Mapped[int] = mapped_column(Integer, default=0)

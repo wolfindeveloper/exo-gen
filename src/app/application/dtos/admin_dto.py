@@ -112,7 +112,7 @@ class UpdateZoneDTO(BaseModel):
     loot_table: list[LootDropEntryDTO] | None = None
 
 
-class ChapterRewardItem(BaseModel):
+class ChapterRewardItemDTO(BaseModel):
     item_id: UUID
     quantity: int = Field(gt=0)
 
@@ -132,7 +132,7 @@ class UpdateChapterDTO(BaseModel):
     is_secret: bool | None = None
     reward_xgen: int | None = None
     reward_fragments: int | None = None
-    reward_items: list[ChapterRewardItem] | None = None
+    reward_items: list[ChapterRewardItemDTO] | None = None
 
 
 class UpdateArticleDTO(BaseModel):
