@@ -1,0 +1,7 @@
+INFO:     Started server process [5620]
+INFO:     Waiting for application startup.
+HTTP error calling Telegram setWebhook: Client error '400 Bad Request' for url 'https://api.telegram.org/bot8704974134:AAGhW97mtrTVZPm2S6bu0CnTmxUQdJmowHI/setWebhook'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+Failed to set Telegram webhook at http://localhost:8000/payments/stars/webhook
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)

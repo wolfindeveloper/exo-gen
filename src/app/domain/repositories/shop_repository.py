@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import date
 from uuid import UUID
+from typing import Any
 
 from app.domain.entities.shop import ShopItem, PurchaseHistory
 
@@ -26,6 +27,10 @@ class ShopItemRepository(ABC):
 
     @abstractmethod
     async def save(self, shop_item: ShopItem) -> None:
+        pass
+
+    @abstractmethod
+    async def add(self, data: dict) -> Any:
         pass
 
 

@@ -12,8 +12,8 @@ from app.domain.exceptions.shop import (
 @dataclass
 class ShopItem(AggregateRoot):
     id: UUID
-    item_id: UUID
     price_xgen: int
+    item_id: UUID | None = None
     daily_limit: int = 0
     stock_limit: int = 0
     is_active: bool = True

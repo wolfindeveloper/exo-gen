@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -56,6 +56,13 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
     async def save(self, shop_item: ShopItem) -> None:
         orm_obj = ShopItemMapper.to_orm(shop_item)
         await self.session.merge(orm_obj)
+
+    async def add(self, data: dict) -> dict:
+        data.setdefault("id", uuid4())
+        orm = ShopItemORM(**data)
+        self.session.add(orm)
+        await self.session.flush()
+        return {c.name: getattr(orm, c.name) for c in orm.__table__.columns}
 
 
 class SQLAlchemyPurchaseHistoryRepository(PurchaseHistoryRepository):
