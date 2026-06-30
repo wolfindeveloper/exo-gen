@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from uuid import UUID
 
 from app.domain.services.clock import Clock, SystemClock
@@ -22,6 +22,10 @@ class Player(AggregateRoot):
     ships: list[Ship] = field(default_factory=list)
     total_expeditions: int = 0
     total_artifacts_found: int = 0
+    deleted_at: datetime | None = None
+
+    def soft_delete(self) -> None:
+        self.deleted_at = datetime.now(timezone.utc)
 
     def increment_expeditions(self) -> None:
         self.total_expeditions += 1

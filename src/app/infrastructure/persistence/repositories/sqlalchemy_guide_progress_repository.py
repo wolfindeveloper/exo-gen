@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, exists
+from sqlalchemy import select, exists, func
 from uuid import UUID
 
 from app.domain.entities.guide_progress import UnlockedArticle, ChapterCompletion
@@ -125,5 +125,39 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
             )
             for row in result.all()
         ]
+
+    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        stmt = (
+            select(
+                PlayerORM.username,
+                func.count(UnlockedArticleORM.id).label("articles_count"),
+                PlayerORM.id,
+            )
+            .join(UnlockedArticleORM, PlayerORM.id == UnlockedArticleORM.player_id)
+            .group_by(PlayerORM.id, PlayerORM.username)
+            .order_by(func.count(UnlockedArticleORM.id).desc())
+            .limit(limit)
+        )
+        result = await self.session.execute(stmt)
+        return [(row.username, row.articles_count, row.id) for row in result.all()]
+
+    async def get_player_rank_by_unlocked_articles(self, player_id: UUID) -> int:
+        player_count = await self.session.execute(
+            select(func.count(UnlockedArticleORM.id))
+            .where(UnlockedArticleORM.player_id == player_id)
+        )
+        player_articles = player_count.scalar_one() or 0
+
+        subq = (
+            select(UnlockedArticleORM.player_id, func.count(UnlockedArticleORM.id).label("cnt"))
+            .group_by(UnlockedArticleORM.player_id)
+            .subquery()
+        )
+        result = await self.session.execute(
+            select(func.count())
+            .select_from(subq)
+            .where(subq.c.cnt > player_articles)
+        )
+        return result.scalar_one() + 1
 
 

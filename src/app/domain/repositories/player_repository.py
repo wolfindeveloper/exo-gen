@@ -35,3 +35,33 @@ class PlayerRepository(ABC):
     async def get_player_rank_by_xp(self, player_id: UUID) -> int:
         """Возвращает место игрока в глобальном рейтинге по XP (1-based)"""
         pass
+
+    @abstractmethod
+    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        """Топ игроков по количеству экспедиций: список (username, total_expeditions, id)"""
+        pass
+
+    @abstractmethod
+    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        """Топ игроков по количеству найденных артефактов: список (username, total_artifacts_found, id)"""
+        pass
+
+    @abstractmethod
+    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        """Топ игроков по балансу XGen: список (username, xgen_balance, id)"""
+        pass
+
+    @abstractmethod
+    async def get_player_rank_by_total_expeditions(self, player_id: UUID) -> int:
+        """Место игрока в рейтинге по количеству экспедиций (1-based)"""
+        pass
+
+    @abstractmethod
+    async def get_player_rank_by_total_artifacts_found(self, player_id: UUID) -> int:
+        """Место игрока в рейтинге по найденным артефактам (1-based)"""
+        pass
+
+    @abstractmethod
+    async def get_player_rank_by_xgen_balance(self, player_id: UUID) -> int:
+        """Место игрока в рейтинге по балансу XGen (1-based)"""
+        pass

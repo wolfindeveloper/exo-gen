@@ -11,7 +11,7 @@ class TransactionORM(Base):
     __tablename__ = "transactions"
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
-    player_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("players.id"), nullable=False, index=True)
+    player_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("players.id", ondelete="RESTRICT"), nullable=False, index=True)
     telegram_charge_id: Mapped[str] = mapped_column(Text, unique=True, nullable=False, index=True)
     stars_amount: Mapped[int] = mapped_column(Integer, nullable=False)
     xgen_amount: Mapped[int] = mapped_column(Integer, nullable=False)

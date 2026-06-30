@@ -1,4 +1,5 @@
 from uuid import uuid4
+from random import Random
 
 from app.domain.entities.loot_box_config import LootBoxConfig
 from app.domain.services.loot_box_service import LootBoxService, GeneratedLoot
@@ -6,10 +7,8 @@ from app.domain.value_objects.loot_box import LootBoxType, LootBoxEntry
 
 
 class TestLootBoxService:
-    def setup_method(self):
-        self.service = LootBoxService()
-
     def test_generate_xgen_only(self):
+        service = LootBoxService(rng=Random(42))
         config = LootBoxConfig(
             id=uuid4(),
             box_type=LootBoxType.WELCOME,
@@ -21,13 +20,14 @@ class TestLootBoxService:
             ],
         )
 
-        loot = self.service.generate(config, seed=42)
+        loot = service.generate(config)
 
         assert loot.xgen > 0
         assert loot.fragments == 0
         assert loot.items == []
 
     def test_generate_with_items(self):
+        service = LootBoxService(rng=Random(7))
         item_id = uuid4()
         config = LootBoxConfig(
             id=uuid4(),
@@ -40,7 +40,7 @@ class TestLootBoxService:
             ],
         )
 
-        loot = self.service.generate(config, seed=7)
+        loot = service.generate(config)
 
         assert loot.xgen == 0
         assert loot.fragments == 0
@@ -61,13 +61,14 @@ class TestLootBoxService:
             ],
         )
 
-        loot_a = self.service.generate(config, seed=123)
-        loot_b = self.service.generate(config, seed=123)
+        loot_a = LootBoxService(rng=Random(123)).generate(config)
+        loot_b = LootBoxService(rng=Random(123)).generate(config)
 
         assert loot_a.xgen == loot_b.xgen
         assert loot_a.fragments == loot_b.fragments
 
     def test_generate_empty_config(self):
+        service = LootBoxService(rng=Random(0))
         config = LootBoxConfig(
             id=uuid4(),
             box_type=LootBoxType.CHAPTER_REWARD,
@@ -76,7 +77,7 @@ class TestLootBoxService:
             entries=[],
         )
 
-        loot = self.service.generate(config, seed=0)
+        loot = service.generate(config)
 
         assert isinstance(loot, GeneratedLoot)
         assert loot.xgen == 0

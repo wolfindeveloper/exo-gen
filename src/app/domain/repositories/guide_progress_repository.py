@@ -39,3 +39,13 @@ class GuideProgressRepository(ABC):
     async def get_season_leaderboard(self, season_id: UUID, limit: int = 100) -> list[LeaderboardEntry]:
         """Возвращает топ игроков, завершивших главы указанного сезона"""
         pass
+
+    @abstractmethod
+    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        """Топ игроков по количеству открытых статей: список (username, count, id)"""
+        pass
+
+    @abstractmethod
+    async def get_player_rank_by_unlocked_articles(self, player_id: UUID) -> int:
+        """Место игрока в рейтинге по открытым статьям (1-based)"""
+        pass

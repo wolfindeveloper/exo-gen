@@ -1,5 +1,5 @@
 import logging
-import random
+from random import SystemRandom, Random
 from dataclasses import dataclass, field
 
 from app.domain.entities.loot_box_config import LootBoxConfig
@@ -15,14 +15,14 @@ class GeneratedLoot:
 
 
 class LootBoxService:
-    def generate(self, config: LootBoxConfig, seed: int | None = None) -> GeneratedLoot:
-        if seed is not None:
-            random.seed(seed)
+    def __init__(self, rng: Random | None = None) -> None:
+        self._rng = rng or SystemRandom()
 
+    def generate(self, config: LootBoxConfig) -> GeneratedLoot:
         loot = GeneratedLoot()
 
         for entry in config.entries:
-            if random.random() < entry.chance:
+            if self._rng.random() < entry.chance:
                 if entry.item_type == "xgen":
                     loot.xgen += entry.amount
                 elif entry.item_type == "fragments":

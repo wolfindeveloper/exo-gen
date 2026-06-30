@@ -38,7 +38,7 @@ class ClaimExpeditionUseCase:
         self.item_repo = item_repo
 
     async def execute(self, player: Player, dto: ClaimExpeditionDTO, uow: UnitOfWork) -> ClaimExpeditionResponseDTO:
-        expedition = await self.expedition_repo.get_by_id(dto.expedition_id)
+        expedition = await self.expedition_repo.get_by_id(dto.expedition_id, for_update=True)
         if not expedition:
             raise ExpeditionNotFoundError(f"Expedition {dto.expedition_id} not found")
 

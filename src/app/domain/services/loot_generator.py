@@ -1,6 +1,7 @@
 import logging
-import random
+from random import SystemRandom
 
+_rng = SystemRandom()
 logger = logging.getLogger(__name__)
 
 
@@ -8,7 +9,7 @@ def generate_loot(loot_table: list[dict]) -> dict:
     rewards = {"xgen": 0, "fragments": 0, "items": []}
 
     for entry in loot_table:
-        if random.random() < entry.get("chance", 0):
+        if _rng.random() < entry.get("chance", 0):
             item_type = entry.get("item_type")
 
             if item_type == "xgen":

@@ -10,7 +10,7 @@ class ExpeditionRepository(ABC):
 
 
     @abstractmethod
-    async def get_by_id(self, expedition_id: UUID) -> Expedition | None:
+    async def get_by_id(self, expedition_id: UUID, for_update: bool = False) -> Expedition | None:
         pass
 
 

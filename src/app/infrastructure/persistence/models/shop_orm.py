@@ -22,6 +22,6 @@ class PurchaseHistoryORM(Base):
     __tablename__ = "purchase_history"
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
-    player_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("players.id"), nullable=False, index=True)
+    player_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("players.id", ondelete="RESTRICT"), nullable=False, index=True)
     shop_item_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("shop_items.id"), nullable=False, index=True)
     purchased_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

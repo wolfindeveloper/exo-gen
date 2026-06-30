@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import List, TYPE_CHECKING
-from sqlalchemy import Integer, String, Date, Uuid
+from sqlalchemy import Integer, String, Date, DateTime, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.persistence.models.base import Base
@@ -21,6 +21,7 @@ class PlayerORM(Base):
     last_login_date: Mapped[Date | None] = mapped_column(Date, nullable=True)
     total_expeditions: Mapped[int] = mapped_column(Integer, default=0)
     total_artifacts_found: Mapped[int] = mapped_column(Integer, default=0)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     ships: Mapped[List["ShipORM"]] = relationship(
         back_populates="player", 
         cascade="all, delete-orphan"

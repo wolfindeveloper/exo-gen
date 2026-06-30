@@ -34,10 +34,11 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
 
         return ExpeditionMapper.expedition_to_domain(expedition_orm=expedition_orm)
 
-    async def get_by_id(self, expedition_id: UUID) -> Expedition | None:
-        result = await self.session.execute(
-            select(ExpeditionORM).where(ExpeditionORM.id == expedition_id)
-        )
+    async def get_by_id(self, expedition_id: UUID, for_update: bool = False) -> Expedition | None:
+        stmt = select(ExpeditionORM).where(ExpeditionORM.id == expedition_id)
+        if for_update:
+            stmt = stmt.with_for_update()
+        result = await self.session.execute(stmt)
 
         expedition_orm = result.scalar_one_or_none()
 

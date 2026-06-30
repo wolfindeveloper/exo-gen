@@ -86,6 +86,7 @@ class PlayerMapper:
             last_login_date=player.last_login_date,
             total_expeditions=player.total_expeditions,
             total_artifacts_found=player.total_artifacts_found,
+            deleted_at=player.deleted_at,
             ships=[cls.ship_to_orm(ship, player_id=player.id) for ship in player.ships],
         )
 
@@ -102,6 +103,7 @@ class PlayerMapper:
             last_login_date=player_orm.last_login_date,
             total_expeditions=player_orm.total_expeditions,
             total_artifacts_found=player_orm.total_artifacts_found,
+            deleted_at=player_orm.deleted_at,
             ships=[cls.ship_to_domain(ship) for ship in player_orm.ships],
         )
 

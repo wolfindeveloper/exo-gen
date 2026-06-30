@@ -26,6 +26,8 @@ from app.infrastructure.messaging.event_handlers import setup_event_handlers
 from app.infrastructure.security.rate_limiter import limiter
 from app.infrastructure.middleware.request_id import RequestIDMiddleware
 from app.domain.exceptions import DomainError
+from app.domain.exceptions.inventory import NoSuitableConsumableError
+from app.domain.exceptions.player import InsufficientXgenError, InsufficientFragmentsError
 
 
 logger = logging.getLogger(__name__)
@@ -111,6 +113,44 @@ def create_app() -> FastAPI:
             )
 
     # Global exception handlers
+    @app.exception_handler(NoSuitableConsumableError)
+    async def no_consumable_handler(request: Request, exc: NoSuitableConsumableError):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "detail": str(exc),
+                "error_code": "NO_CONSUMABLE",
+                "required_effect": exc.effect_key,
+                "redirect_to": "shop",
+            },
+        )
+
+    @app.exception_handler(InsufficientXgenError)
+    async def insufficient_xgen_handler(request: Request, exc: InsufficientXgenError):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "detail": str(exc),
+                "error_code": "INSUFFICIENT_XGEN",
+                "required": exc.required,
+                "available": exc.available,
+                "redirect_to": "shop",
+            },
+        )
+
+    @app.exception_handler(InsufficientFragmentsError)
+    async def insufficient_fragments_handler(request: Request, exc: InsufficientFragmentsError):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "detail": str(exc),
+                "error_code": "INSUFFICIENT_FRAGMENTS",
+                "required": exc.required,
+                "available": exc.available,
+                "redirect_to": "shop",
+            },
+        )
+
     @app.exception_handler(DomainError)
     async def domain_error_handler(request: Request, exc: DomainError):
         return JSONResponse(

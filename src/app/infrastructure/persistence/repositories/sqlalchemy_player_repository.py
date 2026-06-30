@@ -17,7 +17,7 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
         result = await self.session.execute(
             select(PlayerORM)
             .options(selectinload(PlayerORM.ships))
-            .where(PlayerORM.id == player_id)
+            .where(PlayerORM.id == player_id, PlayerORM.deleted_at.is_(None))
         )
         player_orm = result.scalar_one_or_none()
         if not player_orm:
@@ -30,15 +30,12 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
             .options(
                 selectinload(PlayerORM.ships).selectinload(ShipORM.equipment)
             )
-            .where(PlayerORM.telegram_id == telegram_id)
+            .where(PlayerORM.telegram_id == telegram_id, PlayerORM.deleted_at.is_(None))
             .with_for_update()
         )
-
         player_orm = result.scalar_one_or_none()
-
         if not player_orm:
             return None
-
         return PlayerMapper.player_to_domain(player_orm=player_orm)
 
 
@@ -48,7 +45,7 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
             .options(
                 selectinload(PlayerORM.ships).selectinload(ShipORM.equipment)
             )
-            .where(PlayerORM.id == player_id)
+            .where(PlayerORM.id == player_id, PlayerORM.deleted_at.is_(None))
             .with_for_update()
         )
         player_orm = result.scalar_one_or_none()
@@ -63,7 +60,7 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
                 selectinload(PlayerORM.ships).selectinload(ShipORM.equipment)
             )
             .join(PlayerORM.ships)
-            .where(ShipORM.id == ship_id)
+            .where(ShipORM.id == ship_id, PlayerORM.deleted_at.is_(None))
         )
         player_orm = result.scalar_one_or_none()
         if not player_orm:
@@ -77,18 +74,72 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
     async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
         result = await self.session.execute(
             select(PlayerORM.username, PlayerORM.xp, PlayerORM.id)
+            .where(PlayerORM.deleted_at.is_(None))
             .order_by(PlayerORM.xp.desc())
             .limit(limit)
         )
         return [(row.username, row.xp, row.id) for row in result.all()]
 
     async def get_player_rank_by_xp(self, player_id: UUID) -> int:
-        player = await self.session.get(PlayerORM, player_id)
-        if not player:
+        result = await self.session.execute(
+            select(PlayerORM.xp).where(PlayerORM.id == player_id, PlayerORM.deleted_at.is_(None))
+        )
+        player_xp = result.scalar_one_or_none()
+        if player_xp is None:
             return 0
         result = await self.session.execute(
             select(func.count())
             .select_from(PlayerORM)
-            .where(PlayerORM.xp > player.xp)
+            .where(PlayerORM.deleted_at.is_(None), PlayerORM.xp > player_xp)
         )
         return result.scalar_one() + 1
+
+    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        result = await self.session.execute(
+            select(PlayerORM.username, PlayerORM.total_expeditions, PlayerORM.id)
+            .where(PlayerORM.deleted_at.is_(None))
+            .order_by(PlayerORM.total_expeditions.desc())
+            .limit(limit)
+        )
+        return [(row.username, row.total_expeditions, row.id) for row in result.all()]
+
+    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        result = await self.session.execute(
+            select(PlayerORM.username, PlayerORM.total_artifacts_found, PlayerORM.id)
+            .where(PlayerORM.deleted_at.is_(None))
+            .order_by(PlayerORM.total_artifacts_found.desc())
+            .limit(limit)
+        )
+        return [(row.username, row.total_artifacts_found, row.id) for row in result.all()]
+
+    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+        result = await self.session.execute(
+            select(PlayerORM.username, PlayerORM.xgen_balance, PlayerORM.id)
+            .where(PlayerORM.deleted_at.is_(None))
+            .order_by(PlayerORM.xgen_balance.desc())
+            .limit(limit)
+        )
+        return [(row.username, row.xgen_balance, row.id) for row in result.all()]
+
+    async def _rank_by_column(self, player_id: UUID, column) -> int:
+        result = await self.session.execute(
+            select(column).where(PlayerORM.id == player_id, PlayerORM.deleted_at.is_(None))
+        )
+        player_value = result.scalar_one_or_none()
+        if player_value is None:
+            return 0
+        result = await self.session.execute(
+            select(func.count())
+            .select_from(PlayerORM)
+            .where(PlayerORM.deleted_at.is_(None), column > player_value)
+        )
+        return result.scalar_one() + 1
+
+    async def get_player_rank_by_total_expeditions(self, player_id: UUID) -> int:
+        return await self._rank_by_column(player_id, PlayerORM.total_expeditions)
+
+    async def get_player_rank_by_total_artifacts_found(self, player_id: UUID) -> int:
+        return await self._rank_by_column(player_id, PlayerORM.total_artifacts_found)
+
+    async def get_player_rank_by_xgen_balance(self, player_id: UUID) -> int:
+        return await self._rank_by_column(player_id, PlayerORM.xgen_balance)
