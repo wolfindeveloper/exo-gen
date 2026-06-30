@@ -120,6 +120,7 @@ class ZoneMapper:
             optimism_risk=zone.optimism_risk,
             duration_seconds=zone.duration_seconds,
             loot_table=zone.loot_table,
+            deleted_at=zone.deleted_at,
         )
 
     @staticmethod
@@ -133,6 +134,7 @@ class ZoneMapper:
             optimism_risk=zone_orm.optimism_risk,
             duration_seconds=zone_orm.duration_seconds,
             loot_table=zone_orm.loot_table,
+            deleted_at=zone_orm.deleted_at,
         )
 
 
@@ -172,6 +174,7 @@ class SeasonMapper:
             reward_xgen=season_orm.reward_xgen,
             reward_fragments=season_orm.reward_fragments,
             is_active=season_orm.is_active,
+            deleted_at=season_orm.deleted_at,
         )
 
     @staticmethod
@@ -185,6 +188,7 @@ class SeasonMapper:
             reward_xgen=season.reward_xgen,
             reward_fragments=season.reward_fragments,
             is_active=season.is_active,
+            deleted_at=season.deleted_at,
         )
 
 
@@ -200,6 +204,7 @@ class ArticleMapper:
             trigger_event_type=article_orm.trigger_event_type,
             required_item_id=article_orm.required_item_id,
             trigger_threshold=article_orm.trigger_threshold,
+            deleted_at=article_orm.deleted_at,
         )
 
     @staticmethod
@@ -213,6 +218,7 @@ class ArticleMapper:
             trigger_event_type=article.trigger_event_type,
             required_item_id=article.required_item_id,
             trigger_threshold=article.trigger_threshold,
+            deleted_at=article.deleted_at,
         )
 
 
@@ -230,6 +236,7 @@ class ChapterMapper:
             reward_xgen=chapter_orm.reward_xgen,
             reward_fragments=chapter_orm.reward_fragments,
             articles=articles,
+            deleted_at=chapter_orm.deleted_at,
         )
 
     @classmethod
@@ -245,6 +252,7 @@ class ChapterMapper:
             reward_xgen=chapter.reward_xgen,
             reward_fragments=chapter.reward_fragments,
             articles=articles,
+            deleted_at=chapter.deleted_at,
         )
 
 
@@ -255,11 +263,12 @@ class ItemMapper:
             id=orm.id,
             name=orm.name,
             description=orm.description,
-            type=ItemType(orm.type),  # Строка из БД превращается в Enum
+            type=ItemType(orm.type),
             rarity=orm.rarity,
             effect=orm.effect,
             is_tradable=orm.is_tradable,
             sell_price=orm.sell_price,
+            deleted_at=orm.deleted_at,
         )
 
     @staticmethod
@@ -268,11 +277,12 @@ class ItemMapper:
             id=domain.id,
             name=domain.name,
             description=domain.description,
-            type=domain.type.value,  # Enum превращается в строку для БД
+            type=domain.type.value,
             rarity=domain.rarity,
             effect=domain.effect,
             is_tradable=domain.is_tradable,
             sell_price=domain.sell_price,
+            deleted_at=domain.deleted_at,
         )
 
 
@@ -356,6 +366,7 @@ class LootBoxMapper:
             description=orm.description,
             entries=entries,
             is_active=orm.is_active,
+            deleted_at=orm.deleted_at,
         )
 
     @staticmethod
@@ -376,6 +387,7 @@ class LootBoxMapper:
             description=domain.description,
             entries=entries,
             is_active=domain.is_active,
+            deleted_at=domain.deleted_at,
         )
 
 
@@ -389,6 +401,7 @@ class ShopItemMapper:
             daily_limit=orm.daily_limit,
             stock_limit=orm.stock_limit,
             is_active=orm.is_active,
+            deleted_at=orm.deleted_at,
         )
 
     @staticmethod
@@ -400,6 +413,7 @@ class ShopItemMapper:
             daily_limit=domain.daily_limit,
             stock_limit=domain.stock_limit,
             is_active=domain.is_active,
+            deleted_at=domain.deleted_at,
         )
 
 
@@ -431,6 +445,7 @@ class StarsPackageMapper:
             stars_amount=orm.stars_amount,
             xgen_reward=orm.xgen_reward,
             is_active=orm.is_active,
+            deleted_at=orm.deleted_at,
         )
 
     @staticmethod
@@ -440,6 +455,7 @@ class StarsPackageMapper:
             stars_amount=domain.stars_amount,
             xgen_reward=domain.xgen_reward,
             is_active=domain.is_active,
+            deleted_at=domain.deleted_at,
         )
 
 

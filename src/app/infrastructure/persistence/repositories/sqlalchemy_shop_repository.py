@@ -15,13 +15,21 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
         self.session = session
 
     async def get_by_id(self, shop_item_id: UUID) -> ShopItem | None:
-        stmt = select(ShopItemORM).where(ShopItemORM.id == shop_item_id)
+        stmt = (
+            select(ShopItemORM)
+            .where(ShopItemORM.id == shop_item_id)
+            .where(ShopItemORM.deleted_at.is_(None))
+        )
         result = await self.session.execute(stmt)
         orm = result.scalar_one_or_none()
         return ShopItemMapper.to_domain(orm) if orm else None
 
     async def get_all_active(self) -> list[ShopItem]:
-        stmt = select(ShopItemORM).where(ShopItemORM.is_active == True)
+        stmt = (
+            select(ShopItemORM)
+            .where(ShopItemORM.is_active == True)
+            .where(ShopItemORM.deleted_at.is_(None))
+        )
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
         return [ShopItemMapper.to_domain(o) for o in orms]

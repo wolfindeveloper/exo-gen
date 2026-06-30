@@ -1,6 +1,7 @@
+from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import String, Uuid, Boolean, Text
+from sqlalchemy import String, Uuid, Boolean, Text, DateTime
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -16,3 +17,4 @@ class LootBoxConfigORM(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     entries: Mapped[list[dict]] = mapped_column(JSONB, default=list)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

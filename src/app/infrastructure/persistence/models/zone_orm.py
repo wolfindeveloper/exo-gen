@@ -1,5 +1,6 @@
-from uuid import UUID
-from sqlalchemy import Integer, String, Float, Uuid, Text
+from datetime import datetime
+
+from sqlalchemy import Integer, String, Float, Uuid, Text, DateTime
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -17,3 +18,4 @@ class ZoneORM(Base):
     optimism_risk: Mapped[float] = mapped_column(Float, nullable=False)
     duration_seconds: Mapped[int] = mapped_column(Integer, nullable=False)
     loot_table: Mapped[list[dict]] = mapped_column(JSONB, nullable=False)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -16,3 +16,4 @@ class SeasonORM(Base):
     reward_xgen: Mapped[int] = mapped_column(Integer, default=0)
     reward_fragments: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

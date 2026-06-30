@@ -16,13 +16,21 @@ class SQLAlchemyStarsPackageRepository(StarsPackageRepository):
         self.session = session
 
     async def get_by_id(self, package_id: UUID) -> StarsPackage | None:
-        stmt = select(StarsPackageORM).where(StarsPackageORM.id == package_id)
+        stmt = (
+            select(StarsPackageORM)
+            .where(StarsPackageORM.id == package_id)
+            .where(StarsPackageORM.deleted_at.is_(None))
+        )
         result = await self.session.execute(stmt)
         orm = result.scalar_one_or_none()
         return StarsPackageMapper.to_domain(orm) if orm else None
 
     async def get_all_active(self) -> list[StarsPackage]:
-        stmt = select(StarsPackageORM).where(StarsPackageORM.is_active == True)
+        stmt = (
+            select(StarsPackageORM)
+            .where(StarsPackageORM.is_active == True)
+            .where(StarsPackageORM.deleted_at.is_(None))
+        )
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
         return [StarsPackageMapper.to_domain(o) for o in orms]

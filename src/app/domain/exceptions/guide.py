@@ -9,6 +9,11 @@ class ChapterNotFoundError(DomainError):
     pass
 
 
+class SeasonNotFoundError(DomainError):
+    def __init__(self, season_id: str):
+        super().__init__(f"Season with id '{season_id}' not found")
+
+
 class ArticleAlreadyUnlockedError(DomainError):
     pass
 

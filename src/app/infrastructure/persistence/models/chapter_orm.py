@@ -1,6 +1,7 @@
+from datetime import datetime
 from uuid import UUID
 from typing import TYPE_CHECKING
-from sqlalchemy import Integer, String, Uuid, ForeignKey, Boolean, Text
+from sqlalchemy import Integer, String, Uuid, ForeignKey, Boolean, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infrastructure.persistence.models.base import Base
@@ -18,4 +19,5 @@ class ChapterORM(Base):
     season_id: Mapped[UUID | None] = mapped_column(Uuid, ForeignKey("seasons.id"), nullable=True)
     reward_xgen: Mapped[int] = mapped_column(Integer, default=0)
     reward_fragments: Mapped[int] = mapped_column(Integer, default=0)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     articles: Mapped[list["ArticleORM"]] = relationship(back_populates="chapter", cascade="all, delete-orphan")

@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from uuid import UUID
 
 from app.domain.entities.article import Article
@@ -13,6 +14,35 @@ class Chapter:
     reward_xgen: int = 0
     reward_fragments: int = 0
     articles: list["Article"] = field(default_factory=list)
+    deleted_at: datetime | None = None
+
+    def update(
+        self,
+        name: str | None = None,
+        description: str | None = None,
+        is_secret: bool | None = None,
+        reward_xgen: int | None = None,
+        reward_fragments: int | None = None,
+        **kwargs: object,
+    ) -> None:
+        if "season_id" in kwargs:
+            raise ValueError("Cannot change season_id directly")
+        if name is not None:
+            self.name = name
+        if description is not None:
+            self.description = description
+        if is_secret is not None:
+            self.is_secret = is_secret
+        if reward_xgen is not None:
+            self.reward_xgen = reward_xgen
+        if reward_fragments is not None:
+            self.reward_fragments = reward_fragments
+
+    def soft_delete(self) -> None:
+        self.deleted_at = datetime.now(timezone.utc)
+
+    def is_deleted(self) -> bool:
+        return self.deleted_at is not None
 
     def is_seasonal(self) -> bool:
         return self.season_id is not None

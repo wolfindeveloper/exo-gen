@@ -37,6 +37,9 @@ from app.domain.exceptions.equipment import (
     EquipmentNotFoundError,
     ArtifactNotEquippedError,
 )
+from app.domain.exceptions.loot_box import (
+    LootBoxConfigNotFoundError,
+)
 from app.domain.exceptions.shop import (
     ShopItemNotFoundError,
     ShopItemDailyLimitReachedError,

@@ -16,6 +16,7 @@ class ShopItemORM(Base):
     daily_limit: Mapped[int] = mapped_column(Integer, default=0)
     stock_limit: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class PurchaseHistoryORM(Base):

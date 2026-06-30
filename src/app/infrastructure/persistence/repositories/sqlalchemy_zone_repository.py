@@ -14,13 +14,17 @@ class SQLAlchemyZoneRepository(ZoneRepository):
         self.session = session
 
     async def get_all(self) -> list[Zone]:
-        result = await self.session.execute(select(ZoneORM))
+        result = await self.session.execute(
+            select(ZoneORM).where(ZoneORM.deleted_at.is_(None))
+        )
         zones_orm = result.scalars().all()
         return [ZoneMapper.zone_to_domain(z) for z in zones_orm]
 
     async def get_by_id(self, zone_id: UUID) -> Zone | None:
         result = await self.session.execute(
-            select(ZoneORM).where(ZoneORM.id == zone_id)
+            select(ZoneORM)
+            .where(ZoneORM.id == zone_id)
+            .where(ZoneORM.deleted_at.is_(None))
         )
 
         zone_orm = result.scalar_one_or_none()

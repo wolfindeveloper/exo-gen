@@ -5,6 +5,11 @@ from app.domain.entities.chapter import Chapter
 
 class ChapterRepository(ABC):
     @abstractmethod
+    async def save(self, chapter: Chapter) -> None:
+        """Сохраняет новую главу или обновляет существующую (каскадно со статьями)"""
+        pass
+
+    @abstractmethod
     async def get_all_with_articles(self) -> list[Chapter]:
         """Возвращает все главы вместе со статьями (для проверки доступности)"""
         pass
