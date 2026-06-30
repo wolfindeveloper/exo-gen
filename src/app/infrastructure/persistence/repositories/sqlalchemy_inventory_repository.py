@@ -32,6 +32,11 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         # и InventoryMapper создаст пустой Агрегат.
         return InventoryMapper.to_domain(player_id, items_orm)
 
+    async def add_item_to_player(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
+        inventory = await self.get_by_player_id(player_id)
+        inventory.add_item(item_id, quantity)
+        await self.save(inventory)
+
     async def save(self, inventory: Inventory) -> None:
         stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
         result = await self.session.execute(stmt)

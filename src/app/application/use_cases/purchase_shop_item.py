@@ -63,35 +63,24 @@ class PurchaseShopItemUseCase:
 
         locked_player.spend_xgen(shop_item.price_xgen)
 
+        # Выдача предметов из покупки
         if shop_item.bundle_items:
-            inventory = await self.inventory_repo.get_by_player_id(locked_player.id)
             for bundle_item in shop_item.bundle_items:
-                inventory.add_item(
+                await uow.inventory.add_item_to_player(
+                    player_id=locked_player.id,
                     item_id=bundle_item["item_id"],
                     quantity=bundle_item["quantity"],
                 )
-            await self.inventory_repo.save(inventory)
             item_id = shop_item.id
             quantity = sum(b["quantity"] for b in shop_item.bundle_items)
         else:
-            item = await self.item_repo.get_by_id(shop_item.item_id)
-            if not item:
-                raise ShopItemNotFoundError(dto.shop_item_id)
-
+            await uow.inventory.add_item_to_player(
+                player_id=locked_player.id,
+                item_id=shop_item.item_id,
+                quantity=1,
+            )
+            item_id = shop_item.item_id
             quantity = 1
-            if item.type == ItemType.LOOT_BOX:
-                open_box_uc = OpenLootBoxUseCase(
-                    loot_box_service=self.loot_box_service,
-                    loot_box_repo=self.loot_box_repo,
-                    inventory_repo=self.inventory_repo,
-                    item_repo=self.item_repo,
-                )
-                await open_box_uc.execute(locked_player, LootBoxType.SHOP, uow)
-            else:
-                inventory = await self.inventory_repo.get_by_player_id(locked_player.id)
-                inventory.add_item(item_id=item.id, quantity=quantity)
-                await self.inventory_repo.save(inventory)
-            item_id = item.id
 
         purchase = PurchaseHistory(
             id=uuid4(),

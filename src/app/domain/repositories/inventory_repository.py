@@ -17,3 +17,11 @@ class InventoryRepository(ABC):
     async def save(self, inventory: Inventory) -> None:
         """Синхронизирует состояние Агрегата с базой данных (добавляет новые, обновляет количество, удаляет пустые)."""
         pass
+
+    @abstractmethod
+    async def add_item_to_player(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
+        """Удобный метод для добавления предмета в инвентарь игрока.
+
+        Внутри использует паттерн: get_by_player_id() → inventory.add_item() → save()
+        """
+        pass

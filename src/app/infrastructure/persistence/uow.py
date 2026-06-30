@@ -4,7 +4,9 @@ from app.domain.uow import UnitOfWork
 from app.domain.entities.base import AggregateRoot
 from app.domain.events.dispatcher import dispatcher
 from app.domain.repositories.purchase_repository import PurchaseRepository
+from app.domain.repositories.inventory_repository import InventoryRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_purchase_repository import SQLAlchemyPurchaseRepository
+from app.infrastructure.persistence.repositories.sqlalchemy_inventory_repository import SQLAlchemyInventoryRepository
 
 
 class SQLAlchemyUnitOfWork(UnitOfWork):
@@ -12,12 +14,19 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
         self.session = session
         self._aggregates: list[AggregateRoot] = []
         self._purchases: PurchaseRepository | None = None
+        self._inventory: InventoryRepository | None = None
 
     @property
     def purchases(self) -> PurchaseRepository:
         if self._purchases is None:
             self._purchases = SQLAlchemyPurchaseRepository(self.session)
         return self._purchases
+
+    @property
+    def inventory(self) -> InventoryRepository:
+        if self._inventory is None:
+            self._inventory = SQLAlchemyInventoryRepository(self.session)
+        return self._inventory
 
     def track(self, *aggregates: AggregateRoot) -> None:
         self._aggregates.extend(aggregates)
