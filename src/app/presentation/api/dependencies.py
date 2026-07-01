@@ -1,9 +1,10 @@
 from typing import AsyncGenerator
 
-from fastapi import Depends, HTTPException, Query
+from fastapi import Depends, HTTPException, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.settings import settings
+from app.domain.entities.player import Player
 
 from app.infrastructure.database.session import AsyncSessionLocal
 from app.domain.uow import UnitOfWork
@@ -180,17 +181,26 @@ async def get_purchase_repo(
     return SQLAlchemyPurchaseRepository(session)
 
 
-async def get_current_admin(
-    telegram_id: int = Query(..., description="Admin Telegram ID"),
-) -> int:
-    if telegram_id not in settings.ADMIN_TELEGRAM_IDS:
-        raise HTTPException(status_code=403, detail="Access denied")
-    return telegram_id
-
-
 async def verify_admin(
-    telegram_id: int = Query(..., alias="telegram_id"),
-) -> int:
-    if telegram_id not in settings.ADMIN_TELEGRAM_IDS:
-        raise HTTPException(status_code=403, detail="Forbidden: Admin access required")
-    return telegram_id
+    authorization: str = Header(..., description="tghash <init_data>"),
+    player_repo: PlayerRepository = Depends(get_player_repo),
+    inventory_repo: InventoryRepository = Depends(get_inventory_repo),
+    loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
+    settings_repo: PlayerSettingsRepository = Depends(get_player_settings_repo),
+    uow: UnitOfWork = Depends(get_uow),
+) -> Player:
+    from app.infrastructure.telegram.security import get_current_player
+
+    current_player = await get_current_player(
+        authorization=authorization,
+        player_repo=player_repo,
+        inventory_repo=inventory_repo,
+        loot_box_repo=loot_box_repo,
+        item_repo=item_repo,
+        settings_repo=settings_repo,
+        uow=uow,
+    )
+    if current_player.telegram_id not in settings.ADMIN_TELEGRAM_IDS:
+        raise HTTPException(status_code=403, detail="Access denied. Admins only.")
+    return current_player

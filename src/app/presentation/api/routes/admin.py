@@ -95,7 +95,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 @router.post("/zones", status_code=201)
 async def create_zone(
     dto: CreateZoneDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -107,7 +107,7 @@ async def create_zone(
 @router.post("/seasons", response_model=SeasonResponseDTO, status_code=201)
 async def create_season(
     dto: CreateSeasonDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     season_repo: SeasonRepository = Depends(get_season_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -119,7 +119,7 @@ async def create_season(
 @router.post("/chapters", response_model=ChapterResponseDTO, status_code=201)
 async def create_chapter(
     dto: CreateChapterDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     season_repo: SeasonRepository = Depends(get_season_repo),
     item_repo: ItemRepository = Depends(get_item_repo),
@@ -144,7 +144,7 @@ async def create_chapter(
 @router.post("/articles", response_model=ArticleResponseDTO, status_code=201)
 async def create_article(
     dto: CreateArticleDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -161,7 +161,7 @@ async def create_article(
 @router.post("/items", response_model=ItemResponseDTO, status_code=201)
 async def create_item(
     dto: CreateItemDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -173,7 +173,7 @@ async def create_item(
 @router.post("/shop-items", status_code=201)
 async def create_shop_item(
     data: CreateShopItemDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     uow: UnitOfWork = Depends(get_uow),
 ):
     """Создание товара в магазине (обычный товар или бандл)"""
@@ -187,7 +187,7 @@ async def create_shop_item(
 
 @router.get("/zones", response_model=PaginatedResponseDTO[ZoneResponseDTO])
 async def get_all_zones(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
 ):
@@ -211,7 +211,7 @@ async def get_all_zones(
 async def simulate_zone_loot(
     zone_id: UUID,
     request: SimulateLootRequestDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
@@ -224,7 +224,7 @@ async def simulate_zone_loot(
 
 @router.get("/seasons", response_model=PaginatedResponseDTO[SeasonResponseDTO])
 async def get_all_seasons(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
     season_repo: SeasonRepository = Depends(get_season_repo),
 ):
@@ -246,7 +246,7 @@ async def get_all_seasons(
 
 @router.get("/chapters", response_model=PaginatedResponseDTO[ChapterResponseDTO])
 async def get_all_chapters(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
 ):
@@ -268,7 +268,7 @@ async def get_all_chapters(
 
 @router.get("/articles", response_model=PaginatedResponseDTO[ArticleResponseDTO])
 async def get_all_articles(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
 ):
@@ -290,7 +290,7 @@ async def get_all_articles(
 
 @router.get("/items", response_model=PaginatedResponseDTO[ItemResponseDTO])
 async def get_all_items(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
@@ -317,7 +317,7 @@ async def get_all_items(
 async def update_zone(
     zone_id: UUID,
     dto: UpdateZoneDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -332,7 +332,7 @@ async def update_zone(
 async def update_season(
     season_id: UUID,
     dto: UpdateSeasonDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     season_repo: SeasonRepository = Depends(get_season_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -347,7 +347,7 @@ async def update_season(
 async def update_chapter(
     chapter_id: UUID,
     dto: UpdateChapterDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow),
@@ -365,7 +365,7 @@ async def update_chapter(
 async def reorder_chapter_articles(
     chapter_id: UUID,
     article_ids: list[UUID],
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -382,7 +382,7 @@ async def reorder_chapter_articles(
 async def update_article(
     article_id: UUID,
     dto: UpdateArticleDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -397,7 +397,7 @@ async def update_article(
 async def update_item(
     item_id: UUID,
     dto: UpdateItemDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     item_repo: ItemRepository = Depends(get_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -412,7 +412,7 @@ async def update_item(
 async def update_loot_box_config(
     config_id: UUID,
     dto: UpdateLootBoxConfigDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     config_repo: LootBoxRepository = Depends(get_loot_box_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -427,7 +427,7 @@ async def update_loot_box_config(
 async def simulate_loot_box(
     box_id: UUID,
     request: SimulateLootRequestDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
@@ -440,7 +440,7 @@ async def simulate_loot_box(
 
 @router.get("/shop-items", response_model=list[ShopItemWithAnalyticsDTO])
 async def get_all_shop_items(
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     purchase_repo: PurchaseRepository = Depends(get_purchase_repo),
 ):
@@ -473,7 +473,7 @@ async def get_all_shop_items(
 @router.get("/shop-items/{item_id}/analytics")
 async def get_shop_analytics(
     item_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     purchase_repo: PurchaseRepository = Depends(get_purchase_repo),
 ):
@@ -489,7 +489,7 @@ async def get_shop_analytics(
 async def update_shop_item(
     shop_item_id: UUID,
     dto: UpdateShopItemDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -504,7 +504,7 @@ async def update_shop_item(
 async def update_stars_package(
     package_id: UUID,
     dto: UpdateStarsPackageDTO,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     package_repo: StarsPackageRepository = Depends(get_stars_package_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -521,7 +521,7 @@ async def update_stars_package(
 @router.delete("/zones/{zone_id}", status_code=204)
 async def delete_zone(
     zone_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
     expedition_repo: ExpeditionRepository = Depends(get_expedition_repo),
     uow: UnitOfWork = Depends(get_uow),
@@ -538,7 +538,7 @@ async def delete_zone(
 @router.delete("/seasons/{season_id}", status_code=204)
 async def delete_season(
     season_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     season_repo: SeasonRepository = Depends(get_season_repo),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
@@ -562,7 +562,7 @@ async def delete_season(
 @router.delete("/chapters/{chapter_id}", status_code=204)
 async def delete_chapter(
     chapter_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     uow: UnitOfWork = Depends(get_uow),
@@ -582,7 +582,7 @@ async def delete_chapter(
 @router.delete("/articles/{article_id}", status_code=204)
 async def delete_article(
     article_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     chapter_repo: ChapterRepository = Depends(get_chapter_repo),
     guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
     uow: UnitOfWork = Depends(get_uow),
@@ -602,7 +602,7 @@ async def delete_article(
 @router.delete("/items/{item_id}", status_code=204)
 async def delete_item(
     item_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     item_repo: ItemRepository = Depends(get_item_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     zone_repo: ZoneRepository = Depends(get_zone_repo),
@@ -630,7 +630,7 @@ async def delete_item(
 @router.delete("/loot-boxes/{config_id}", status_code=204)
 async def delete_loot_box_config(
     config_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     config_repo: LootBoxRepository = Depends(get_loot_box_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -644,7 +644,7 @@ async def delete_loot_box_config(
 @router.delete("/shop-items/{shop_item_id}", status_code=204)
 async def delete_shop_item(
     shop_item_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -658,7 +658,7 @@ async def delete_shop_item(
 @router.delete("/stars-packages/{package_id}", status_code=204)
 async def delete_stars_package(
     package_id: UUID,
-    admin_id: int = Depends(verify_admin),
+    _admin = Depends(verify_admin),
     package_repo: StarsPackageRepository = Depends(get_stars_package_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
