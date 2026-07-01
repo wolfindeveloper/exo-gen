@@ -18,4 +18,5 @@ class ItemORM(Base):
     effect: Mapped[dict] = mapped_column(JSONB, default=dict)
     is_tradable: Mapped[bool] = mapped_column(Boolean, default=False)
     sell_price: Mapped[int] = mapped_column(Integer, default=0)
+    image_url: Mapped[str] = mapped_column(String(500), default="", server_default="")
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

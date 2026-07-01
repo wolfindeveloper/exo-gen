@@ -313,6 +313,7 @@ export interface AdminItem {
   effect: Record<string, unknown>
   is_tradable: boolean
   sell_price: number
+  image_url: string
 }
 
 export interface AdminItemsResponse {
@@ -328,9 +329,10 @@ export interface CreateItemPayload {
   description: string
   type: ItemType
   rarity?: ItemRarity
-  effect: ItemEffect
+  effect?: ItemEffect
   is_tradable?: boolean
   sell_price?: number
+  image_url?: string
 }
 
 export interface UpdateItemPayload {
@@ -340,4 +342,5 @@ export interface UpdateItemPayload {
   effect?: ItemEffect
   is_tradable?: boolean
   sell_price?: number
+  image_url?: string
 }

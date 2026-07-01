@@ -8,9 +8,10 @@ class CreateItemDTO(BaseModel):
     description: str
     type: ItemType
     rarity: str = "common"
-    effect: ItemEffectValidator
+    effect: ItemEffectValidator | None = None
     is_tradable: bool = False
     sell_price: int = 0
+    image_url: str = ""
 
 class ItemResponseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -23,3 +24,4 @@ class ItemResponseDTO(BaseModel):
     effect: dict
     is_tradable: bool
     sell_price: int
+    image_url: str

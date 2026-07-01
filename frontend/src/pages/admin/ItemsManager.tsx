@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Pencil, Plus, Trash2, X } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { ChevronLeft, ChevronRight, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
 
 import { api } from '../../api/client'
-import type { AdminItem, CreateItemPayload, ItemRarity, ItemType, UpdateItemPayload } from '../../types'
+import type { AdminItem, AdminItemsResponse, CreateItemPayload, ItemRarity, ItemType, UpdateItemPayload } from '../../types'
 
 const ITEM_TYPES: ItemType[] = ['consumable', 'artifact', 'material', 'key_item', 'loot_box']
 const RARITIES: ItemRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary']
@@ -23,6 +23,15 @@ const TYPE_LABELS: Record<string, string> = {
   loot_box: 'Лутбокс',
 }
 
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: 'name', label: 'По имени' },
+  { value: 'rarity', label: 'По редкости' },
+  { value: 'sell_price', label: 'По цене' },
+  { value: 'created_at', label: 'По дате создания' },
+]
+
+const PAGE_SIZE = 20
+
 interface FormState {
   name: string
   description: string
@@ -30,6 +39,7 @@ interface FormState {
   rarity: ItemRarity
   is_tradable: boolean
   sell_price: string
+  image_url: string
   restore_tea: string
   restore_optimism: string
   bonus_speed: string
@@ -49,6 +59,7 @@ const EMPTY_FORM: FormState = {
   rarity: 'common',
   is_tradable: false,
   sell_price: '0',
+  image_url: '',
   restore_tea: '',
   restore_optimism: '',
   bonus_speed: '',
@@ -66,34 +77,25 @@ function numOrNull(val: string): number | null {
   return isNaN(n) ? null : n
 }
 
-function buildEffect(form: FormState): Record<string, unknown> {
+function buildEffect(form: FormState): Record<string, unknown> | undefined {
   if (form.type === 'consumable') {
     const effect: Record<string, unknown> = {}
     const rt = numOrNull(form.restore_tea)
     const ro = numOrNull(form.restore_optimism)
     if (rt !== null) effect.restore_tea = rt
     if (ro !== null) effect.restore_optimism = ro
-    return effect
+    return Object.keys(effect).length > 0 ? effect : undefined
   }
   if (form.type === 'artifact') {
     const effect: Record<string, unknown> = {}
-    const fields: [keyof FormState, string][] = [
-      ['bonus_speed', 'bonus_speed'],
-      ['bonus_defense', 'bonus_defense'],
-      ['bonus_capacity', 'bonus_capacity'],
-      ['bonus_luck', 'bonus_luck'],
-      ['bonus_fuel', 'bonus_fuel'],
-      ['bonus_repair', 'bonus_repair'],
-      ['bonus_xp', 'bonus_xp'],
-      ['bonus_fragment', 'bonus_fragment'],
-    ]
-    for (const [, backendKey] of fields) {
-      const val = numOrNull(form[backendKey as keyof FormState] as string)
-      if (val !== null) effect[backendKey] = val
+    const keys = ['bonus_speed', 'bonus_defense', 'bonus_capacity', 'bonus_luck', 'bonus_fuel', 'bonus_repair', 'bonus_xp', 'bonus_fragment'] as const
+    for (const k of keys) {
+      const val = numOrNull(form[k])
+      if (val !== null) effect[k] = val
     }
-    return effect
+    return Object.keys(effect).length > 0 ? effect : undefined
   }
-  return { restore_tea: 0 }
+  return undefined
 }
 
 function formFromItem(item: AdminItem): FormState {
@@ -105,6 +107,7 @@ function formFromItem(item: AdminItem): FormState {
     rarity: item.rarity,
     is_tradable: item.is_tradable,
     sell_price: String(item.sell_price),
+    image_url: item.image_url || '',
     restore_tea: e.restore_tea != null ? String(e.restore_tea) : '',
     restore_optimism: e.restore_optimism != null ? String(e.restore_optimism) : '',
     bonus_speed: e.bonus_speed != null ? String(e.bonus_speed) : '',
@@ -136,9 +139,18 @@ const ARTIFACT_FIELDS: { key: keyof FormState; label: string }[] = [
 
 export function ItemsManager() {
   const [items, setItems] = useState<AdminItem[]>([])
+  const [total, setTotal] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [forbidden, setForbidden] = useState(false)
+
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined)
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<AdminItem | null>(null)
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
@@ -146,13 +158,17 @@ export function ItemsManager() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
 
-  const loadItems = useCallback(async () => {
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  const loadItems = useCallback(async (p: number, s: string, sb?: string, so?: 'asc' | 'desc') => {
     try {
       setLoading(true)
       setForbidden(false)
       setError(null)
-      const data = await api.getAdminItems()
+      const data: AdminItemsResponse = await api.getAdminItems(p, PAGE_SIZE, s || undefined, sb, so)
       setItems(data.items)
+      setTotal(data.total)
+      setTotalPages(data.total_pages)
     } catch (e) {
       const err = e as Error & { status?: number }
       if (err.status === 403 || err.message.includes('Access denied')) {
@@ -166,8 +182,27 @@ export function ItemsManager() {
   }, [])
 
   useEffect(() => {
-    loadItems()
-  }, [loadItems])
+    loadItems(page, search, sortBy, sortOrder)
+  }, [page, search, sortBy, sortOrder, loadItems])
+
+  const handleSearchInput = (val: string) => {
+    setSearchInput(val)
+    if (searchTimer.current) clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => {
+      setPage(1)
+      setSearch(val)
+    }, 400)
+  }
+
+  const handleSort = (col: string) => {
+    if (sortBy === col) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(col)
+      setSortOrder('asc')
+    }
+    setPage(1)
+  }
 
   const openCreate = () => {
     setEditingItem(null)
@@ -201,10 +236,11 @@ export function ItemsManager() {
           name: form.name,
           description: form.description,
           rarity: form.rarity,
-          effect,
           is_tradable: form.is_tradable,
           sell_price: parseInt(form.sell_price) || 0,
+          image_url: form.image_url,
         }
+        if (effect !== undefined) payload.effect = effect
         await api.updateAdminItem(editingItem.id, payload)
       } else {
         const payload: CreateItemPayload = {
@@ -212,14 +248,15 @@ export function ItemsManager() {
           description: form.description,
           type: form.type,
           rarity: form.rarity,
-          effect,
           is_tradable: form.is_tradable,
           sell_price: parseInt(form.sell_price) || 0,
+          image_url: form.image_url,
         }
+        if (effect !== undefined) payload.effect = effect
         await api.createAdminItem(payload)
       }
       closeForm()
-      await loadItems()
+      await loadItems(page, search, sortBy, sortOrder)
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -233,7 +270,7 @@ export function ItemsManager() {
       setDeleting(true)
       await api.deleteAdminItem(deleteId)
       setDeleteId(null)
-      await loadItems()
+      await loadItems(page, search, sortBy, sortOrder)
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -252,30 +289,50 @@ export function ItemsManager() {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-gray-400 animate-pulse">Загрузка предметов...</p>
-      </div>
-    )
-  }
-
   const effectFields = form.type === 'consumable' ? CONSUMABLE_FIELDS : form.type === 'artifact' ? ARTIFACT_FIELDS : []
+
+  const sortIcon = (col: string) => {
+    if (sortBy !== col) return null
+    return sortOrder === 'asc' ? ' ↑' : ' ↓'
+  }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-xl font-bold">Предметы</h2>
-          <p className="text-sm text-gray-500">Всего: {items.length}</p>
+          <p className="text-sm text-gray-500">Всего: {total}</p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm"
         >
           <Plus size={18} />
           Создать предмет
         </button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => handleSearchInput(e.target.value)}
+            placeholder="Поиск по имени..."
+            className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-9 pr-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
+          />
+        </div>
+        <select
+          value={sortBy || ''}
+          onChange={(e) => { setSortBy(e.target.value || undefined); setPage(1) }}
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
+        >
+          <option value="">Без сортировки</option>
+          {SORT_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </select>
       </div>
 
       {error && (
@@ -284,69 +341,112 @@ export function ItemsManager() {
         </div>
       )}
 
-      {items.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-gray-400 animate-pulse">Загрузка...</p>
+        </div>
+      ) : items.length === 0 ? (
         <div className="bg-gray-800 rounded-lg p-8 text-center text-gray-500">
-          Предметов пока нет. Создайте первый!
+          {search ? 'Ничего не найдено' : 'Предметов пока нет. Создайте первый!'}
         </div>
       ) : (
-        <div className="bg-gray-800 rounded-lg overflow-x-auto">
-          <table className="w-full text-sm min-w-[480px]">
-            <thead>
-              <tr className="bg-gray-750 border-b border-gray-700 text-left text-gray-400">
-                <th className="px-3 py-3 font-medium">Имя</th>
-                <th className="px-3 py-3 font-medium">Тип</th>
-                <th className="px-3 py-3 font-medium">Редкость</th>
-                <th className="px-3 py-3 font-medium hidden sm:table-cell">Цена</th>
-                <th className="px-3 py-3 font-medium hidden sm:table-cell">Статус</th>
-                <th className="px-3 py-3 font-medium text-right">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
-                  <td className="px-3 py-3 font-medium text-white">{item.name}</td>
-                  <td className="px-3 py-3 text-gray-400">{TYPE_LABELS[item.type] || item.type}</td>
-                  <td className={`px-3 py-3 font-medium ${RARITY_COLORS[item.rarity] || 'text-gray-400'}`}>
-                    {item.rarity}
-                  </td>
-                  <td className="px-3 py-3 text-gray-400 hidden sm:table-cell">{item.sell_price}</td>
-                  <td className="px-3 py-3 hidden sm:table-cell">
-                    {item.is_tradable ? (
-                      <span className="text-green-400 text-xs">Продается</span>
-                    ) : (
-                      <span className="text-gray-600 text-xs">—</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(item)}
-                        className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-gray-700 rounded transition-colors"
-                        title="Редактировать"
-                      >
-                        <Pencil size={16} />
-                      </button>
-                      <button
-                        onClick={() => setDeleteId(item.id)}
-                        className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
-                        title="Удалить"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
+        <>
+          <div className="bg-gray-800 rounded-lg overflow-x-auto mb-4">
+            <table className="w-full text-sm min-w-[480px]">
+              <thead>
+                <tr className="bg-gray-750 border-b border-gray-700 text-left text-gray-400">
+                  <th className="px-3 py-3 font-medium cursor-pointer select-none hover:text-white" onClick={() => handleSort('name')}>
+                    Имя{sortIcon('name')}
+                  </th>
+                  <th className="px-3 py-3 font-medium">Тип</th>
+                  <th className="px-3 py-3 font-medium cursor-pointer select-none hover:text-white" onClick={() => handleSort('rarity')}>
+                    Редкость{sortIcon('rarity')}
+                  </th>
+                  <th className="px-3 py-3 font-medium hidden sm:table-cell cursor-pointer select-none hover:text-white" onClick={() => handleSort('sell_price')}>
+                    Цена{sortIcon('sell_price')}
+                  </th>
+                  <th className="px-3 py-3 font-medium hidden sm:table-cell">Статус</th>
+                  <th className="px-3 py-3 font-medium text-right">Действия</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
+                    <td className="px-3 py-3 font-medium text-white">
+                      <div className="flex items-center gap-2">
+                        {item.image_url && (
+                          <img src={item.image_url} alt="" className="w-7 h-7 rounded object-cover shrink-0" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                        )}
+                        {item.name}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 text-gray-400">{TYPE_LABELS[item.type] || item.type}</td>
+                    <td className={`px-3 py-3 font-medium ${RARITY_COLORS[item.rarity] || 'text-gray-400'}`}>
+                      {item.rarity}
+                    </td>
+                    <td className="px-3 py-3 text-gray-400 hidden sm:table-cell">{item.sell_price}</td>
+                    <td className="px-3 py-3 hidden sm:table-cell">
+                      {item.is_tradable ? (
+                        <span className="text-green-400 text-xs">Продается</span>
+                      ) : (
+                        <span className="text-gray-600 text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-3">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(item)}
+                          className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-gray-700 rounded transition-colors"
+                          title="Редактировать"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => setDeleteId(item.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
+                          title="Удалить"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-500">Стр. {page} из {totalPages}</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page <= 1}
+                  className="flex items-center gap-1 bg-gray-800 hover:bg-gray-700 disabled:opacity-30 text-gray-300 px-3 py-1.5 rounded-lg text-sm transition-colors"
+                >
+                  <ChevronLeft size={16} />
+                  Назад
+                </button>
+                <button
+                  onClick={() => setPage(Math.min(totalPages, page + 1))}
+                  disabled={page >= totalPages}
+                  className="flex items-center gap-1 bg-gray-800 hover:bg-gray-700 disabled:opacity-30 text-gray-300 px-3 py-1.5 rounded-lg text-sm transition-colors"
+                >
+                  Вперёд
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeForm} />
           <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 sticky top-0 bg-gray-800">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
               <h3 className="text-lg font-bold">
                 {editingItem ? 'Редактировать предмет' : 'Новый предмет'}
               </h3>
@@ -376,6 +476,22 @@ export function ItemsManager() {
                   rows={3}
                   placeholder="Описание предмета"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Картинка (URL)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={form.image_url}
+                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                    className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                    placeholder="https://..."
+                  />
+                  {form.image_url && (
+                    <img src={form.image_url} alt="" className="w-10 h-10 rounded-lg object-cover border border-gray-700" onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }} />
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -428,6 +544,10 @@ export function ItemsManager() {
                 </div>
               )}
 
+              {effectFields.length === 0 && (
+                <p className="text-xs text-gray-600 italic">Для этого типа предмета эффекты не требуются.</p>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">Цена продажи</label>
@@ -476,8 +596,10 @@ export function ItemsManager() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteId(null)} />
           <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-sm p-6">
-            <h3 className="text-lg font-bold mb-2">Удалить предмет?</h3>
-            <p className="text-sm text-gray-400 mb-6">Это действие нельзя отменить.</p>
+            <h3 className="text-lg font-bold mb-2">Скрыть предмет?</h3>
+            <p className="text-sm text-gray-400 mb-6">
+              Предмет будет скрыт (soft delete). Игроки больше не смогут его получить, но существующие записи сохранятся.
+            </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteId(null)}
@@ -490,7 +612,7 @@ export function ItemsManager() {
                 disabled={deleting}
                 className="bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
               >
-                {deleting ? 'Удаление...' : 'Удалить'}
+                {deleting ? 'Скрытие...' : 'Скрыть'}
               </button>
             </div>
           </div>

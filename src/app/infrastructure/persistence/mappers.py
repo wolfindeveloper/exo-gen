@@ -273,6 +273,7 @@ class ItemMapper:
             effect=orm.effect,
             is_tradable=orm.is_tradable,
             sell_price=orm.sell_price,
+            image_url=orm.image_url,
             deleted_at=orm.deleted_at,
         )
 
@@ -287,6 +288,7 @@ class ItemMapper:
             effect=domain.effect,
             is_tradable=domain.is_tradable,
             sell_price=domain.sell_price,
+            image_url=domain.image_url,
             deleted_at=domain.deleted_at,
         )
 

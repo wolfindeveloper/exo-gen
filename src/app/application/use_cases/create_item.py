@@ -11,7 +11,10 @@ class CreateItemUseCase:
         self.item_repo = item_repo
 
     async def execute(self, dto: CreateItemDTO, uow: UnitOfWork) -> Item:
-        effect_raw = dto.effect.model_dump() if hasattr(dto.effect, 'model_dump') else dto.effect
+        if dto.effect is not None:
+            effect_raw = dto.effect.model_dump() if hasattr(dto.effect, 'model_dump') else dto.effect
+        else:
+            effect_raw = {}
         item = Item(
             id=uuid.uuid4(),
             name=dto.name,
@@ -21,6 +24,7 @@ class CreateItemUseCase:
             effect=effect_raw,
             is_tradable=dto.is_tradable,
             sell_price=dto.sell_price,
+            image_url=dto.image_url,
         )
 
         await self.item_repo.save(item)

@@ -9,6 +9,7 @@ from app.domain.exceptions import ItemNotFoundError
 from app.domain.exceptions.item import (
     ItemInUseInInventoryError,
     ItemUsedInActiveZoneError,
+    ItemUsedInLootBoxError,
     ItemListedInShopError,
 )
 
@@ -31,18 +32,19 @@ class SoftDeleteItemUseCase:
         if not item or item.is_deleted():
             raise ItemNotFoundError(item_id)
 
-        inventory_count = await self.inventory_repo.count_by_item_id(item_id)
-        if inventory_count > 0:
-            raise ItemInUseInInventoryError(item.name, inventory_count)
+        usage = await self.item_repo.check_usage(item_id)
 
-        zone_count = await self.zone_repo.count_active_by_loot_item_id(item_id)
-        if zone_count > 0:
-            raise ItemUsedInActiveZoneError(item.name, zone_count)
+        if usage.inventory_count > 0:
+            raise ItemInUseInInventoryError(item.name, usage.inventory_count)
 
-        shop_items = await self.shop_item_repo.get_all_by_item_id(item_id)
-        active_shop_items = [s for s in shop_items if s.is_active]
-        if active_shop_items:
-            raise ItemListedInShopError(item.name, len(active_shop_items))
+        if usage.zone_names:
+            raise ItemUsedInActiveZoneError(item.name, len(usage.zone_names))
+
+        if usage.loot_box_names:
+            raise ItemUsedInLootBoxError(item.name, len(usage.loot_box_names))
+
+        if usage.active_shop_items > 0:
+            raise ItemListedInShopError(item.name, usage.active_shop_items)
 
         item.soft_delete()
         uow.track(item)

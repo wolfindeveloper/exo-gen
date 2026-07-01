@@ -124,6 +124,7 @@ class UpdateItemDTO(BaseModel):
     effect: ConsumableEffectDTO | ArtifactEffectDTO | None = None
     is_tradable: bool | None = None
     sell_price: int | None = None
+    image_url: str | None = None
 
 
 class UpdateChapterDTO(BaseModel):

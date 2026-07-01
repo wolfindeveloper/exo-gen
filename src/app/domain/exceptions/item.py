@@ -11,6 +11,11 @@ class ItemUsedInActiveZoneError(DomainError):
         super().__init__(f"Cannot delete item '{item_name}': used in loot table of {zone_count} active zones")
 
 
+class ItemUsedInLootBoxError(DomainError):
+    def __init__(self, item_name: str, box_count: int):
+        super().__init__(f"Cannot delete item '{item_name}': used in {box_count} loot box configs")
+
+
 class ItemListedInShopError(DomainError):
     def __init__(self, item_name: str, shop_count: int):
         super().__init__(f"Cannot delete item '{item_name}': listed in {shop_count} active shop items")

@@ -20,6 +20,7 @@ class Item:
     effect: dict = field(default_factory=dict)
     is_tradable: bool = False
     sell_price: int = 0
+    image_url: str = ""
     deleted_at: datetime | None = None
 
     def update(
@@ -30,6 +31,7 @@ class Item:
         effect: dict | None = None,
         is_tradable: bool | None = None,
         sell_price: int | None = None,
+        image_url: str | None = None,
         **kwargs: object,
     ) -> None:
         if "type" in kwargs:
@@ -46,6 +48,8 @@ class Item:
             self.is_tradable = is_tradable
         if sell_price is not None:
             self.sell_price = sell_price
+        if image_url is not None:
+            self.image_url = image_url
 
     def soft_delete(self) -> None:
         self.deleted_at = datetime.now(timezone.utc)

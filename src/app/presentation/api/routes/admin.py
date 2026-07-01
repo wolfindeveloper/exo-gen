@@ -32,6 +32,7 @@ from app.domain.exceptions.loot_box import LootBoxConfigNotFoundError
 from app.domain.exceptions.item import (
     ItemInUseInInventoryError,
     ItemUsedInActiveZoneError,
+    ItemUsedInLootBoxError,
     ItemListedInShopError,
 )
 
@@ -406,6 +407,8 @@ async def update_item(
         return await use_case.execute(item_id, dto, uow)
     except ItemNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 
 @router.patch("/loot-boxes/{config_id}", response_model=LootBoxConfigResponseDTO)
@@ -622,6 +625,8 @@ async def delete_item(
     except ItemInUseInInventoryError as e:
         raise HTTPException(status_code=409, detail=str(e))
     except ItemUsedInActiveZoneError as e:
+        raise HTTPException(status_code=409, detail=str(e))
+    except ItemUsedInLootBoxError as e:
         raise HTTPException(status_code=409, detail=str(e))
     except ItemListedInShopError as e:
         raise HTTPException(status_code=409, detail=str(e))
