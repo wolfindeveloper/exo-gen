@@ -18,6 +18,9 @@ import { Inventory } from './pages/Inventory'
 import { Profile } from './pages/Profile'
 import { Shop } from './pages/Shop'
 import { PageTransition } from './components/PageTransition'
+import { AdminLayout } from './pages/admin/AdminLayout'
+import { ItemsManager } from './pages/admin/ItemsManager'
+import { PlaceholderPage } from './pages/admin/PlaceholderPage'
 
 function AppContent() {
   const location = useLocation()
@@ -29,6 +32,8 @@ function AppContent() {
   const isContentReady = useGameStore((s) => s.isContentReady)
   const error = useGameStore((s) => s.error)
   const initFailed = useGameStore((s) => s.initFailed)
+
+  const isAdminRoute = location.pathname.startsWith('/admin')
 
   useEffect(() => {
     const tg = getTelegramWebApp()
@@ -49,6 +54,19 @@ function AppContent() {
     if (musicEnabled) playMusic()
     else stopMusic()
   }, [musicEnabled])
+
+  if (isAdminRoute) {
+    return (
+      <Routes location={location}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="items" element={<ItemsManager />} />
+          <Route path="zones" element={<PlaceholderPage title="Зоны" />} />
+          <Route path="shop" element={<PlaceholderPage title="Магазин" />} />
+          <Route path="guide" element={<PlaceholderPage title="Гайд" />} />
+        </Route>
+      </Routes>
+    )
+  }
 
   if (!isAuthReady || !isContentReady) {
     return (

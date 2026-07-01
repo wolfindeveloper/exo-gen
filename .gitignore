@@ -19,3 +19,4 @@ build/
 .coverage
 htmlcov/
 node_modules/
+about_project/

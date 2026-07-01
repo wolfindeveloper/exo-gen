@@ -652,6 +652,21 @@ export function Profile() {
           )
         })}
       </motion.div>
+
+      {(() => {
+        const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
+        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user
+        const isAdmin = tgUser != null && ADMIN_IDS.includes(tgUser.id)
+        if (!isAdmin) return null
+        return (
+          <button
+            onClick={() => navigate('/admin')}
+            className="mt-4 w-full bg-red-600/80 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-colors"
+          >
+            ⚙️ Админ-панель
+          </button>
+        )
+      })()}
     </div>
   )
 }

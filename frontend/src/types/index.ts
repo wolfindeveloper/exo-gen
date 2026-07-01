@@ -282,3 +282,62 @@ export interface ShopBuyResponse {
   balance_xgen: number
   balance_stars: number
 }
+
+export type ItemType = 'consumable' | 'artifact' | 'material' | 'key_item' | 'loot_box'
+export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+
+export interface ConsumableEffect {
+  restore_tea?: number | null
+  restore_optimism?: number | null
+}
+
+export interface ArtifactEffect {
+  bonus_speed?: number | null
+  bonus_defense?: number | null
+  bonus_capacity?: number | null
+  bonus_luck?: number | null
+  bonus_fuel?: number | null
+  bonus_repair?: number | null
+  bonus_xp?: number | null
+  bonus_fragment?: number | null
+}
+
+export type ItemEffect = ConsumableEffect | ArtifactEffect
+
+export interface AdminItem {
+  id: string
+  name: string
+  description: string
+  type: ItemType
+  rarity: ItemRarity
+  effect: Record<string, unknown>
+  is_tradable: boolean
+  sell_price: number
+}
+
+export interface AdminItemsResponse {
+  items: AdminItem[]
+  total: number
+  page: number
+  page_size: number
+  total_pages: number
+}
+
+export interface CreateItemPayload {
+  name: string
+  description: string
+  type: ItemType
+  rarity?: ItemRarity
+  effect: ItemEffect
+  is_tradable?: boolean
+  sell_price?: number
+}
+
+export interface UpdateItemPayload {
+  name?: string
+  description?: string
+  rarity?: ItemRarity
+  effect?: ItemEffect
+  is_tradable?: boolean
+  sell_price?: number
+}

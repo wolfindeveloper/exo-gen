@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference } from '../types'
+import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || 'https://api.exo-gen.com').replace(/\/+$/, '')
 
@@ -21,7 +21,9 @@ apiClient.interceptors.response.use(
   (res) => res,
   (err) => {
     const detail = err.response?.data?.detail || err.message || 'Request failed'
-    return Promise.reject(new Error(typeof detail === 'string' ? detail : JSON.stringify(detail)))
+    const error = new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
+    ;(error as Error & { status?: number }).status = err.response?.status
+    return Promise.reject(error)
   },
 )
 
@@ -323,5 +325,26 @@ export const api = {
 
   claimAchievement: async (achievementId: string) => {
     return { status: 'ok', achievement_id: achievementId, xp_gained: 0, xgen_gained: 0 } as ClaimAchievementResponse
+  },
+
+  getAdminItems: async (page = 1, pageSize = 50) => {
+    const data = await apiClient.get<{ items: AdminItem[]; total: number; page: number; page_size: number; total_pages: number }>(
+      `/admin/items?page=${page}&page_size=${pageSize}`,
+    ).then((r) => r.data)
+    return data as AdminItemsResponse
+  },
+
+  createAdminItem: async (payload: CreateItemPayload) => {
+    const data = await apiClient.post<AdminItem>('/admin/items', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminItem: async (id: string, payload: UpdateItemPayload) => {
+    const data = await apiClient.patch<AdminItem>(`/admin/items/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminItem: async (id: string) => {
+    await apiClient.delete(`/admin/items/${id}`)
   },
 }
