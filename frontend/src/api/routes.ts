@@ -1,6 +1,7 @@
 import apiClient from './client';
 import type {
   Player,
+  Ship,
   Zone,
   RegisterPlayerRequest,
   RegisterPlayerResponse,
@@ -33,5 +34,10 @@ export const dailyLogin = async (): Promise<DailyLoginResponse> => {
 
 export const getZones = async (): Promise<Zone[]> => {
   const response = await apiClient.get<Zone[]>('/zones/');
+  return response.data;
+};
+
+export const getShip = async (): Promise<Ship> => {
+  const response = await apiClient.get<Ship>('/ships/me');
   return response.data;
 };

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from uuid import UUID
 
 
@@ -24,3 +24,15 @@ class RepairShipResponseDTO(BaseModel):
     item_used_name: str
     optimism_restored: float
     new_optimism_level: float
+
+
+class ShipResponseDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    name: str
+    tea_level: float
+    optimism: float
+    speed: float
+    defense: float
+    luck: float

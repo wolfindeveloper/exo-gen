@@ -13,7 +13,7 @@ export function NavBar() {
   const navigate = useNavigate();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-cosmos-800 border-t border-cosmos-700 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-lg border-t border-white/10">
       <div className="flex justify-around items-center h-16 max-w-md mx-auto">
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location.pathname === path;
@@ -21,12 +21,22 @@ export function NavBar() {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors ${
-                isActive ? 'text-accent-blue' : 'text-text-secondary'
-              }`}
+              className="flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200"
             >
-              <Icon className="w-6 h-6" />
-              <span className="text-xs">{label}</span>
+              <Icon
+                className={`transition-all duration-200 ${
+                  isActive
+                    ? 'w-7 h-7 text-[#1ADAFC] drop-shadow-[0_0_8px_#1ADAFC]'
+                    : 'w-6 h-6 text-[#6b7280]'
+                }`}
+              />
+              <span
+                className={`text-[10px] transition-colors duration-200 ${
+                  isActive ? 'text-[#1ADAFC]' : 'text-[#6b7280]'
+                }`}
+              >
+                {label}
+              </span>
             </button>
           );
         })}

@@ -13,6 +13,7 @@ from app.application.dtos.ship_service_dto import (
     RefuelShipResponseDTO,
     RepairShipDTO,
     RepairShipResponseDTO,
+    ShipResponseDTO,
 )
 from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import (
@@ -23,6 +24,28 @@ from app.presentation.api.dependencies import (
 )
 
 router = APIRouter(prefix="/ships", tags=["Ships"])
+
+
+@router.get("/me", response_model=ShipResponseDTO)
+@limiter.limit("60/minute")
+async def get_my_ship(
+    request: Request,
+    current_player: Player = Depends(get_current_player),
+):
+    """Получить текущий корабль игрока."""
+    if not current_player.ships:
+        raise HTTPException(status_code=404, detail="Ship not found")
+    
+    ship = current_player.ships[0]
+    return ShipResponseDTO(
+        id=ship.id,
+        name=ship.name,
+        tea_level=ship.tea_level.value,
+        optimism=ship.optimism.value,
+        speed=ship.speed,
+        defense=ship.defense,
+        luck=ship.luck,
+    )
 
 
 @router.post("/refuel", response_model=RefuelShipResponseDTO)

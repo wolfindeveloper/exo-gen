@@ -17,25 +17,25 @@ function AppContent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cosmos-900">
-        <Loader2 className="w-12 h-12 text-accent-blue animate-spin" />
-        <p className="mt-4 text-text-secondary text-lg">Загрузка галактики...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-[#0A0B0E]">
+        <Loader2 className="w-12 h-12 text-[#1ADAFC] animate-spin drop-shadow-[0_0_12px_#1ADAFC]" />
+        <p className="mt-4 text-white/60 text-lg">Загрузка галактики...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cosmos-900 p-4">
-        <p className="text-red-500 text-lg text-center">Ошибка: {error}</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-[#0A0B0E] p-4">
+        <p className="text-red-400 text-lg text-center">Ошибка: {error}</p>
       </div>
     );
   }
 
   if (!player) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cosmos-900">
-        <p className="text-text-secondary text-lg">Игрок не найден</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-[#0A0B0E]">
+        <p className="text-white/60 text-lg">Игрок не найден</p>
       </div>
     );
   }
