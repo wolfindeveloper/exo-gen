@@ -1,24 +1,20 @@
 import { motion } from 'framer-motion';
-import { HudBar } from '../components/HudBar';
 
 export function InventoryPage() {
   return (
-    <div className="flex flex-col h-screen bg-transparent">
-      <div className="px-4 pt-4">
-        <HudBar />
-      </div>
-      <div className="flex-1 flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="glass-panel rounded-2xl p-8 w-full max-w-md"
-        >
-          <h1 className="text-2xl font-bold text-center neon-text-cyan">Инвентарь</h1>
-          <p className="text-white/60 text-center mt-4 text-sm">
-            Управляйте своими артефактами и ресурсами
-          </p>
-        </motion.div>
+    <div className="p-4 pb-28">
+      <motion.header
+        className="mb-5"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <h1 className="font-display text-lg uppercase tracking-[0.2em] text-neon-purple">Инвентарь</h1>
+        <p className="text-xs text-slate-500 mt-1">Ваша коллекция космического хлама</p>
+      </motion.header>
+
+      <div className="glass-card p-8 text-center">
+        <p className="text-slate-500 text-xs">Инвентарь пока пуст</p>
+        <p className="text-[10px] text-slate-600 mt-2">Отправляйтесь в экспедицию, чтобы найти артефакты</p>
       </div>
     </div>
   );

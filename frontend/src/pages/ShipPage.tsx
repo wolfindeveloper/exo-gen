@@ -1,108 +1,350 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Rocket } from 'lucide-react';
-import { HudBar } from '../components/HudBar';
+import { User } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
+import { HexSlot } from '../components/HexSlot';
 
-const slotPositions = [
-  { top: '5%', left: '50%' },
-  { top: '20%', left: '85%' },
-  { top: '50%', left: '95%' },
-  { top: '80%', left: '85%' },
-  { top: '95%', left: '50%' },
-  { top: '80%', left: '15%' },
-  { top: '50%', left: '5%' },
-  { top: '20%', left: '15%' },
+const SLOT_LABELS: { icon: string; name: string }[] = [
+  { icon: '🥜', name: 'Ядро' },
+  { icon: '🧻', name: '' },
+  { icon: '💨', name: 'Факел' },
+  { icon: '👁️', name: 'Око' },
+  { icon: '🛒', name: '' },
+  { icon: '🥩', name: 'Сердце' },
+  { icon: '🎞️', name: 'Память' },
+  { icon: '🕳️', name: '' },
 ];
 
-export function ShipPage() {
+export default function ShipPage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const player = useGameStore((s) => s.player);
+  const ship = useGameStore((s) => s.ship);
   const navigate = useNavigate();
-  const ship = useGameStore((state) => state.ship);
 
-  const teaLevel = ship?.tea_level ?? 80;
-  const optimism = ship?.optimism ?? 45;
+  const shipName = ship?.name ?? 'VEGA MK-II';
+  const teaLevel = ship?.tea_level ?? 50;
+  const optimism = ship?.optimism ?? 100;
+  const speed = ship?.speed ?? 1.0;
 
-  const handleSlotClick = () => {
-    alert('Слот артефакта');
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let stars: { x: number; y: number; r: number; a: number; speed: number; phase: number }[] = [];
+
+    function resize() {
+      canvas!.width = window.innerWidth;
+      canvas!.height = window.innerHeight;
+      stars = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas!.width,
+        y: Math.random() * canvas!.height,
+        r: 0.3 + Math.random() * 1.2,
+        a: 0.2 + Math.random() * 0.6,
+        speed: 0.2 + Math.random() * 0.8,
+        phase: Math.random() * Math.PI * 2,
+      }));
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function draw(t: number) {
+      const w = canvas!.width;
+      const h = canvas!.height;
+      ctx!.clearRect(0, 0, w, h);
+
+      for (const s of stars) {
+        const tw = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.phase));
+        ctx!.beginPath();
+        ctx!.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(180,230,255,${s.a * tw})`;
+        ctx!.fill();
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+    animId = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  const handleSlotClick = (i: number) => {
+    alert(`Слот артефакта ${i + 1}`);
   };
 
   return (
-    <div className="flex flex-col h-screen bg-transparent">
-      <div className="px-4 pt-4">
-        <HudBar />
-      </div>
+    <div
+      className="min-h-screen text-white font-mono relative overflow-hidden"
+      style={{ background: 'radial-gradient(circle at center, #1a2a40 0%, #050505 100%)' }}
+    >
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
 
-      <div className="px-4 mt-4">
-        <div className="glass-panel rounded-xl p-4 space-y-3">
-          <div>
-            <div className="flex justify-between text-xs text-white/60 mb-2">
-              <span className="font-medium">Космическая заварка</span>
-              <span className="font-bold text-green-400">{Math.round(teaLevel)}%</span>
+      <div
+        className="absolute inset-0 pointer-events-none z-[1] opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(0,245,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,.15) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      />
+
+      <div
+        className="absolute inset-0 pointer-events-none z-[2]"
+        style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.7) 100%)' }}
+      />
+
+      <div
+        className="absolute inset-0 pointer-events-none z-[3] opacity-[0.04]"
+        style={{
+          background:
+            'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,245,255,.08) 2px, rgba(0,245,255,.08) 4px)',
+        }}
+      />
+
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-4 flex flex-col min-h-screen">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3 bg-white/5 backdrop-blur-[12px] rounded-full pr-5 pl-1.5 py-1 border border-cyan-500/20 shadow-[0_0_20px_rgba(0,245,255,.06),inset_0_1px_0_rgba(255,255,255,.06)]">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-purple-500/20 blur-sm" />
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border border-cyan-400/30 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-transparent" />
+                <User className="w-5 h-5 text-cyan-300 drop-shadow-[0_0_6px_rgba(0,245,255,.3)]" />
+              </div>
             </div>
-            <div className="h-[10px] bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(34,197,94,0.6)]"
-                style={{ width: `${teaLevel}%` }}
-              />
+            <div>
+              <div className="text-white font-bold text-sm tracking-wide drop-shadow-[0_0_4px_rgba(0,245,255,.1)]">
+                {player?.username || 'Капитан'}
+              </div>
+              <div className="text-[5px] text-cyan-400/15 leading-tight mt-0.5 max-w-[120px]">
+                Пока еще не поглощен черной дырой
+              </div>
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between text-xs text-white/60 mb-2">
-              <span className="font-medium">Уровень оптимизма</span>
-              <span className="font-bold text-cyan-400">{Math.round(optimism)}%</span>
+          <div className="relative bg-white/5 backdrop-blur-[12px] rounded-lg px-3 py-2 border border-cyan-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,.06)]">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-cyan-400/30 font-semibold tracking-wider">XGEN</span>
+                <span className="text-white font-bold text-sm drop-shadow-[0_0_4px_rgba(0,245,255,.2)]">
+                  {player?.xgen_balance ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-amber-400/30 font-semibold tracking-wider">📜</span>
+                <span className="text-amber-300 font-bold text-sm drop-shadow-[0_0_4px_rgba(251,191,36,.2)]">
+                  {player?.fragments_balance ?? 0}
+                </span>
+              </div>
             </div>
-            <div className="h-[10px] bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-cyan-500 to-blue-400 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
-                style={{ width: `${optimism}%` }}
-              />
+            <div className="text-[5px] text-cyan-400/15 leading-tight mt-1 text-right">
+              *Курс валюты постоянно колеблется
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex-1 relative flex items-center justify-center px-4">
-        <div className="relative w-72 h-72">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-float">
-              <div className="relative">
-                <Rocket 
-                  className="w-40 h-40 text-gray-200 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]" 
-                  strokeWidth={1.2} 
+        <div className="flex-1 flex flex-col items-center justify-center relative py-1">
+          <div className="flex items-center justify-center relative">
+            <div className="flex flex-col gap-4 z-20 -mr-2">
+              {[0, 1, 2].map((i) => (
+                <HexSlot
+                  key={i}
+                  active={false}
+                  icon="+"
+                  name={SLOT_LABELS[i].name}
+                  tier={1}
+                  side="left"
+                  onClick={() => handleSlotClick(i)}
                 />
+              ))}
+            </div>
+
+            <div className="absolute inset-0 pointer-events-none z-10 blur-sm">
+              <svg className="w-full h-full opacity-60" viewBox="0 0 400 500" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lg-left" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.5" />
+                    <stop offset="30%" stopColor="#a855f7" stopOpacity="0.4" />
+                    <stop offset="70%" stopColor="#00f5ff" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.15" />
+                  </linearGradient>
+                  <linearGradient id="lg-right" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#a855f7" stopOpacity="0.5" />
+                    <stop offset="30%" stopColor="#00f5ff" stopOpacity="0.4" />
+                    <stop offset="70%" stopColor="#a855f7" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#00f5ff" stopOpacity="0.15" />
+                  </linearGradient>
+                </defs>
+                <path d="M55 60 L48 78 L60 84 L46 104 L62 114 L42 138 L64 150 L40 175" stroke="url(#lg-left)" strokeWidth="2" fill="none" style={{ animation: 'lightning-flicker 2s ease-in-out infinite' }} />
+                <path d="M55 175 L50 192 L62 199 L46 214 L60 224 L42 242 L64 254 L44 272 L60 282" stroke="url(#lg-left)" strokeWidth="1.5" fill="none" style={{ animation: 'lightning-flicker 2.8s ease-in-out infinite 0.4s' }} />
+                <path d="M55 282 L48 298 L62 306 L44 320 L58 332 L40 348 L64 360 L42 378" stroke="url(#lg-left)" strokeWidth="1.2" fill="none" style={{ animation: 'lightning-flicker 2.4s ease-in-out infinite 0.9s' }} />
+                <path d="M345 60 L352 78 L340 84 L354 104 L338 114 L358 138 L336 150 L360 175" stroke="url(#lg-right)" strokeWidth="2" fill="none" style={{ animation: 'lightning-flicker 2s ease-in-out infinite 0.3s' }} />
+                <path d="M345 175 L350 192 L338 199 L354 214 L340 224 L358 242 L336 254 L356 272 L340 282" stroke="url(#lg-right)" strokeWidth="1.5" fill="none" style={{ animation: 'lightning-flicker 2.8s ease-in-out infinite 0.7s' }} />
+                <path d="M345 282 L352 298 L340 306 L356 320 L342 332 L360 348 L336 360 L358 378" stroke="url(#lg-right)" strokeWidth="1.2" fill="none" style={{ animation: 'lightning-flicker 2.4s ease-in-out infinite 1.2s' }} />
+                <circle cx="55" cy="60" r="2.5" fill="#00f5ff" opacity="0.5" />
+                <circle cx="55" cy="175" r="2" fill="#00f5ff" opacity="0.4" />
+                <circle cx="55" cy="282" r="1.5" fill="#00f5ff" opacity="0.3" />
+                <circle cx="345" cy="60" r="2.5" fill="#a855f7" opacity="0.5" />
+                <circle cx="345" cy="175" r="2" fill="#a855f7" opacity="0.4" />
+                <circle cx="345" cy="282" r="1.5" fill="#a855f7" opacity="0.3" />
+              </svg>
+            </div>
+
+            <div className="relative z-10">
+              <div className="absolute -inset-4 bg-gradient-to-b from-purple-500/12 via-cyan-500/8 to-purple-500/12 rounded-[18px] blur-xl animate-pulse-slow" />
+              <div className="absolute -inset-2 bg-gradient-to-b from-cyan-400/4 via-purple-500/4 to-cyan-400/4 rounded-[14px] blur-md" />
+
+              <div className="relative bg-white/5 backdrop-blur-[12px] rounded-2xl border border-cyan-500/25 p-4 w-56 shadow-[0_0_40px_rgba(0,245,255,.1),inset_0_1px_0_rgba(255,255,255,.06)]">
+                <div className="text-center mb-2 relative">
+                  <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent" />
+                  <h2 className="text-white font-bold text-xs tracking-[0.2em] relative inline-block px-3 bg-white/5">
+                    {shipName}
+                  </h2>
+                  <p className="text-[5px] text-cyan-400/15 italic tracking-wider mt-0.5">Может лететь куда угодно, кроме нужного вам места.</p>
+                </div>
+
+                <div className="relative aspect-square bg-gradient-to-b from-gray-800/40 to-gray-900/40 rounded-xl border border-cyan-500/15 overflow-hidden shadow-[inset_0_0_30px_rgba(0,0,0,.3)]">
+                  <div className="absolute inset-0 opacity-20">
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div key={`h-${i}`} className="absolute w-full h-px bg-cyan-400/30" style={{ top: `${i * 10}%` }} />
+                    ))}
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div key={`v-${i}`} className="absolute h-full w-px bg-cyan-400/30" style={{ left: `${i * 10}%` }} />
+                    ))}
+                  </div>
+
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,transparent_30%,rgba(0,245,255,.02))]" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/5 to-transparent animate-glitch-sweep" />
+                  <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent animate-scanline-down" />
+                  <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-cyan-400/20" />
+                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-cyan-400/20" />
+                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-cyan-400/20" />
+                  <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-cyan-400/20" />
+
+                  <svg viewBox="0 0 100 100" className="w-full h-full p-3 relative z-10">
+                    <defs>
+                      <radialGradient id="eg" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#00f5ff" stopOpacity="0.15" />
+                        <stop offset="100%" stopColor="#00f5ff" stopOpacity="0" />
+                      </radialGradient>
+                      <radialGradient id="eg2" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#f97316" stopOpacity="0.1" />
+                        <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+                      </radialGradient>
+                    </defs>
+                    <ellipse cx="50" cy="85" rx="12" ry="6" fill="url(#eg)" style={{ animation: 'pulse-slow 4s ease-in-out infinite' }} />
+                    <ellipse cx="50" cy="88" rx="6" ry="4" fill="url(#eg2)" style={{ animation: 'pulse-slow 4s ease-in-out infinite' }} />
+                    <path
+                      d="M 50 8 L 42 20 L 38 35 L 35 55 L 38 75 L 45 88 L 50 92 L 55 88 L 62 75 L 65 55 L 62 35 L 58 20 Z"
+                      fill="rgba(0,245,255,.02)"
+                      stroke="#00f5ff"
+                      strokeWidth="1.2"
+                      style={{ filter: 'drop-shadow(0 0 4px rgba(0,245,255,.15))' }}
+                    />
+                    <path d="M 44 25 L 44 50 M 56 25 L 56 50" stroke="#00f5ff" strokeWidth="0.3" opacity="0.4" />
+                    <ellipse cx="50" cy="32" rx="5" ry="8" fill="rgba(0,245,255,.04)" stroke="#00f5ff" strokeWidth="0.8" style={{ filter: 'drop-shadow(0 0 4px rgba(0,245,255,.3))' }} />
+                    <ellipse cx="50" cy="32" rx="2" ry="4" fill="#00f5ff" opacity="0.06" />
+                    <path d="M 35 55 L 18 68 L 22 78 L 35 72" fill="rgba(0,245,255,.01)" stroke="#00f5ff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 4px rgba(0,245,255,.2))' }} />
+                    <line x1="25" y1="62" x2="30" y2="60" stroke="#00f5ff" strokeWidth="0.3" opacity="0.3" />
+                    <path d="M 65 55 L 82 68 L 78 78 L 65 72" fill="rgba(0,245,255,.01)" stroke="#00f5ff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 4px rgba(0,245,255,.2))' }} />
+                    <line x1="75" y1="62" x2="70" y2="60" stroke="#00f5ff" strokeWidth="0.3" opacity="0.3" />
+                    <circle cx="50" cy="52" r="4" fill="none" stroke="#00f5ff" strokeWidth="0.8" />
+                    <circle cx="50" cy="52" r="1.5" fill="#00f5ff" style={{ animation: 'pulse-slow 4s ease-in-out infinite', filter: 'drop-shadow(0 0 8px rgba(0,245,255,.6))' }} />
+                    <path d="M 42 48 L 38 52 L 42 56" fill="none" stroke="#00f5ff" strokeWidth="0.5" opacity="0.5" />
+                    <path d="M 58 48 L 62 52 L 58 56" fill="none" stroke="#00f5ff" strokeWidth="0.5" opacity="0.5" />
+                    <path d="M 45 18 L 42 14 L 48 16" fill="none" stroke="#00f5ff" strokeWidth="0.5" opacity="0.4" />
+                    <path d="M 55 18 L 58 14 L 52 16" fill="none" stroke="#00f5ff" strokeWidth="0.5" opacity="0.4" />
+                    <line x1="45" y1="80" x2="45" y2="86" stroke="#00f5ff" strokeWidth="0.4" opacity="0.3" />
+                    <line x1="55" y1="80" x2="55" y2="86" stroke="#00f5ff" strokeWidth="0.4" opacity="0.3" />
+                    <circle cx="50" cy="50" r="32" fill="none" stroke="#00f5ff" strokeWidth="0.3" opacity="0.06" strokeDasharray="3 4" />
+                    <circle cx="50" cy="50" r="22" fill="none" stroke="#a855f7" strokeWidth="0.3" opacity="0.04" strokeDasharray="2 5" />
+                  </svg>
+                </div>
+
+                <div className="flex justify-between mt-2 text-[7px] text-cyan-400/20 tracking-wider">
+                  <span>PWR {Math.round(teaLevel)}/100</span>
+                  <span>SHLD {Math.round(optimism)}%</span>
+                  <span>SPD {speed.toFixed(2)}</span>
+                </div>
               </div>
+            </div>
+
+            <div className="flex flex-col gap-4 z-20 -ml-2">
+              {[3, 4, 5].map((i) => (
+                <HexSlot
+                  key={i}
+                  active={false}
+                  icon="+"
+                  name={SLOT_LABELS[i].name}
+                  tier={1}
+                  side="right"
+                  onClick={() => handleSlotClick(i)}
+                />
+              ))}
             </div>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-32 h-4 bg-black/40 rounded-full blur-xl" />
+          <div className="flex gap-8 mt-2 z-20">
+            {[6, 7].map((i) => (
+              <HexSlot
+                key={i}
+                active={false}
+                icon="+"
+                name={SLOT_LABELS[i].name}
+                tier={1}
+                onClick={() => handleSlotClick(i)}
+              />
+            ))}
+          </div>
 
-          {slotPositions.map((pos, index) => (
-            <button
-              key={index}
-              onClick={handleSlotClick}
-              className="absolute w-14 h-14 hexagon bg-black/60 border border-white/10 flex items-center justify-center hover:neon-border-cyan transition-all duration-300 group"
-              style={{
-                top: pos.top,
-                left: pos.left,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <div className="w-10 h-10 hexagon bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-white/20 group-hover:bg-cyan-400 group-hover:shadow-[0_0_8px_rgba(26,218,252,0.8)] transition-all" />
+          <div className="absolute left-6 top-8 z-0 pointer-events-none opacity-[0.04] animate-paper-plane">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" strokeWidth="0.5">
+              <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" />
+            </svg>
+          </div>
+
+          <div className="w-full max-w-[280px] mt-3 bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-3 shadow-[0_0_20px_rgba(0,245,255,.04)]">
+            <div className="flex flex-col gap-3">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[7px] text-orange-400/40 font-semibold tracking-wider">УРОВЕНЬ ЧАЯ В БАКЕ</span>
+                  <span className="text-[8px] text-orange-400/40 font-mono">{Math.round(teaLevel)}/100</span>
+                </div>
+                <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-orange-500/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-orange-600 to-orange-400 transition-all duration-500"
+                    style={{ width: `${Math.min(100, teaLevel)}%`, boxShadow: '0 0 6px rgba(249,115,22,.3)' }}
+                  />
+                </div>
               </div>
-            </button>
-          ))}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[7px] text-green-400/40 font-semibold tracking-wider">УРОВЕНЬ ОПТИМИЗМА</span>
+                  <span className="text-[8px] text-green-400/40 font-mono">{Math.round(optimism)}/100</span>
+                </div>
+                <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-green-500/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400 transition-all duration-500"
+                    style={{ width: `${Math.min(100, optimism)}%`, boxShadow: '0 0 6px rgba(34,197,94,.3)' }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="px-4 pb-24">
-        <div className="glass-panel rounded-xl p-1">
-          <button
-            onClick={() => navigate('/zones')}
-            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 hover:shadow-cyan-500/50"
-          >
-            Отправиться в экспедицию
-          </button>
+        <div className="flex justify-center w-full mt-2 mb-20">
+          <div className="w-full max-w-[280px] bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-3 shadow-[0_0_20px_rgba(0,245,255,.04)]">
+            <button
+              onClick={() => navigate('/zones')}
+              className="w-full py-2 rounded-lg bg-gradient-to-r from-neon-cyan/80 to-neon-purple/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all hover:from-neon-cyan hover:to-neon-purple"
+            >
+              🚀 ЗАПУСК ЭКСПЕДИЦИИ
+            </button>
+          </div>
         </div>
       </div>
     </div>

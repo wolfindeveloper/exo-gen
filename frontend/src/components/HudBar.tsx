@@ -1,44 +1,49 @@
-import { Coins, Puzzle, Star } from 'lucide-react';
+import { useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 
 export function HudBar() {
-  const player = useGameStore((state) => state.player);
+  const navigate = useNavigate();
+  const player = useGameStore((s) => s.player);
+
+  const handleAvatarClick = useCallback(() => {
+    navigate('/profile');
+  }, [navigate]);
 
   if (!player) return null;
 
   const avatarLetter = (player.username || 'P')[0].toUpperCase();
 
   return (
-    <div className="glass-panel rounded-b-2xl px-4 py-3">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full neon-border-cyan flex items-center justify-center">
-            <span className="text-sm font-bold text-white">{avatarLetter}</span>
-          </div>
-          <span className="text-sm text-white font-medium truncate max-w-20">
-            {player.username || 'Player'}
+    <motion.header
+      className="flex items-center gap-2 px-4 py-2.5 border-b border-white/5"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <button
+        onClick={handleAvatarClick}
+        className="w-9 h-9 rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple shrink-0 overflow-hidden transition-transform active:scale-95"
+      >
+        <div className="w-full h-full flex items-center justify-center text-[10px] font-display text-white">
+          {avatarLetter}
+        </div>
+      </button>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-sm font-display truncate text-slate-200">
+            {player.username || 'Капитан'}
           </span>
         </div>
-
-        <div className="flex-1" />
-
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <Coins className="w-4 h-4 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]" />
-            <span className="text-sm font-bold text-white">{player.xgen_balance}</span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <Puzzle className="w-4 h-4 text-purple-400 drop-shadow-[0_0_4px_rgba(192,132,252,0.6)]" />
-            <span className="text-sm font-bold text-white">{player.fragments_balance}</span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <Star className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_4px_rgba(34,211,238,0.6)]" />
-            <span className="text-sm font-bold text-white">{player.xp}</span>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <span className="text-[11px] text-neon-cyan font-mono tabular-nums shrink-0">
+        🔷{player.xgen_balance}
+      </span>
+      <span className="text-[11px] text-amber-400/80 font-mono tabular-nums shrink-0">
+        📜{player.fragments_balance}
+      </span>
+    </motion.header>
   );
 }
