@@ -657,7 +657,17 @@ export function Profile() {
         const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
         const tgId = user?.telegram_id ?? window.Telegram?.WebApp?.initDataUnsafe?.user?.id
         const isAdmin = tgId != null && ADMIN_IDS.includes(tgId)
-        if (!isAdmin) return null
+        if (!isAdmin) {
+          return (
+            <div className="mt-4 p-3 bg-gray-800 rounded-xl text-[10px] text-gray-400 font-mono break-all">
+              <p>ADMIN_IDS: {JSON.stringify(ADMIN_IDS)}</p>
+              <p>user.telegram_id: {String(user?.telegram_id)}</p>
+              <p>window tg id: {String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id)}</p>
+              <p>resolved tgId: {String(tgId)}</p>
+              <p>isAdmin: {String(isAdmin)}</p>
+            </div>
+          )
+        }
         return (
           <button
             onClick={() => navigate('/admin')}
