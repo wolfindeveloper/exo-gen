@@ -289,28 +289,28 @@ export function ItemsManager() {
           Предметов пока нет. Создайте первый!
         </div>
       ) : (
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-gray-800 rounded-lg overflow-x-auto">
+          <table className="w-full text-sm min-w-[480px]">
             <thead>
               <tr className="bg-gray-750 border-b border-gray-700 text-left text-gray-400">
-                <th className="px-4 py-3 font-medium">Имя</th>
-                <th className="px-4 py-3 font-medium">Тип</th>
-                <th className="px-4 py-3 font-medium">Редкость</th>
-                <th className="px-4 py-3 font-medium">Цена продажи</th>
-                <th className="px-4 py-3 font-medium">Статус</th>
-                <th className="px-4 py-3 font-medium text-right">Действия</th>
+                <th className="px-3 py-3 font-medium">Имя</th>
+                <th className="px-3 py-3 font-medium">Тип</th>
+                <th className="px-3 py-3 font-medium">Редкость</th>
+                <th className="px-3 py-3 font-medium hidden sm:table-cell">Цена</th>
+                <th className="px-3 py-3 font-medium hidden sm:table-cell">Статус</th>
+                <th className="px-3 py-3 font-medium text-right">Действия</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
-                  <td className="px-4 py-3 font-medium text-white">{item.name}</td>
-                  <td className="px-4 py-3 text-gray-400">{TYPE_LABELS[item.type] || item.type}</td>
-                  <td className={`px-4 py-3 font-medium ${RARITY_COLORS[item.rarity] || 'text-gray-400'}`}>
+                  <td className="px-3 py-3 font-medium text-white">{item.name}</td>
+                  <td className="px-3 py-3 text-gray-400">{TYPE_LABELS[item.type] || item.type}</td>
+                  <td className={`px-3 py-3 font-medium ${RARITY_COLORS[item.rarity] || 'text-gray-400'}`}>
                     {item.rarity}
                   </td>
-                  <td className="px-4 py-3 text-gray-400">{item.sell_price}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-3 py-3 text-gray-400 hidden sm:table-cell">{item.sell_price}</td>
+                  <td className="px-3 py-3 hidden sm:table-cell">
                     {item.is_tradable ? (
                       <span className="text-green-400 text-xs">Продается</span>
                     ) : (
@@ -345,7 +345,7 @@ export function ItemsManager() {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeForm} />
-          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 sticky top-0 bg-gray-800">
               <h3 className="text-lg font-bold">
                 {editingItem ? 'Редактировать предмет' : 'Новый предмет'}
