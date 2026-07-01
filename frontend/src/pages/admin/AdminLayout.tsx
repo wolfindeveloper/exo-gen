@@ -4,15 +4,10 @@ import { ArrowLeft, Boxes, Map, ShoppingBag, BookOpen } from 'lucide-react'
 
 import { useGameStore } from '../../store/game'
 
-const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
-
 export function AdminLayout() {
   const navigate = useNavigate()
-  const user = useGameStore((s) => s.user)
+  const isAdmin = useGameStore((s) => s.isAdmin)
   const isAuthReady = useGameStore((s) => s.isAuthReady)
-
-  const tgId = user?.telegram_id ?? window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-  const isAdmin = tgId != null && ADMIN_IDS.includes(tgId)
 
   useEffect(() => {
     if (isAuthReady && !isAdmin) {

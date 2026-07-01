@@ -90,6 +90,7 @@ export function Profile() {
   const artifactsContent = useGameStore((s) => s.artifactsContent)
   const zonesContent = useGameStore((s) => s.zonesContent)
   const resourcesContent = useGameStore((s) => s.resourcesContent)
+  const isAdmin = useGameStore((s) => s.isAdmin)
   const [editing, setEditing] = useState(false)
   const [nick, setNick] = useState('')
   const [claiming, setClaiming] = useState<string | null>(null)
@@ -653,30 +654,14 @@ export function Profile() {
         })}
       </motion.div>
 
-      {(() => {
-        const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
-        const tgId = user?.telegram_id ?? window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-        const isAdmin = tgId != null && ADMIN_IDS.includes(tgId)
-        if (!isAdmin) {
-          return (
-            <div className="mt-4 p-3 bg-gray-800 rounded-xl text-[10px] text-gray-400 font-mono break-all">
-              <p>ADMIN_IDS: {JSON.stringify(ADMIN_IDS)}</p>
-              <p>user.telegram_id: {String(user?.telegram_id)}</p>
-              <p>window tg id: {String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id)}</p>
-              <p>resolved tgId: {String(tgId)}</p>
-              <p>isAdmin: {String(isAdmin)}</p>
-            </div>
-          )
-        }
-        return (
-          <button
-            onClick={() => navigate('/admin')}
-            className="mt-4 w-full bg-red-600/80 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-colors"
-          >
-            ⚙️ Админ-панель
-          </button>
-        )
-      })()}
+      {isAdmin && (
+        <button
+          onClick={() => navigate('/admin')}
+          className="mt-4 w-full bg-red-600/80 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-colors"
+        >
+          ⚙️ Админ-панель
+        </button>
+      )}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
+from app.config.settings import settings
 from app.infrastructure.security.rate_limiter import limiter
 from app.application.dtos.player_dto import CreatePlayerDTO
 from app.application.dtos.player_response_dto import PlayerResponseDTO
@@ -66,6 +67,14 @@ async def get_profile(
 ):
     use_case = GetProfileUseCase(guide_progress_repo)
     return await use_case.execute(current_player)
+
+
+@router.get("/me/admin-status")
+async def get_admin_status(
+    current_player: Player = Depends(get_current_player),
+):
+    is_admin = current_player.telegram_id in settings.ADMIN_TELEGRAM_IDS
+    return {"is_admin": is_admin}
 
 
 @router.post("/daily-login")

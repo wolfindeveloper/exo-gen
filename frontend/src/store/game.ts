@@ -23,6 +23,7 @@ interface GameState {
   isLoading: boolean
   isAuthReady: boolean
   isContentReady: boolean
+  isAdmin: boolean
   initFailed: boolean
   error: string | null
 
@@ -49,6 +50,7 @@ interface GameState {
   researchEntry: (chapterId: string, entryId: string) => Promise<void>
   fixGlitch: (chapterId: string, entryId: string) => Promise<void>
   claimGuideReward: (chapterId: string) => Promise<GuideClaimRewardResponse | undefined>
+  loadAdminStatus: () => Promise<void>
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -69,6 +71,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   isLoading: false,
   isAuthReady: false,
   isContentReady: false,
+  isAdmin: false,
   initFailed: false,
   error: null,
 
@@ -81,6 +84,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         const data = await api.authInit()
         const { is_new, box_rewards, ...rest } = data as UserProfile & { is_new?: boolean; box_rewards?: Record<string, unknown> }
         set({ user: rest as UserProfile, boxRewards: (box_rewards as Record<string, unknown>) || null, isLoading: false, isAuthReady: true })
+        get().loadAdminStatus()
         return
       } catch (e) {
         const isLast = attempt >= 4
@@ -327,6 +331,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       return result
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false })
+    }
+  },
+
+  loadAdminStatus: async () => {
+    try {
+      const isAdmin = await api.checkAdminStatus()
+      set({ isAdmin })
+    } catch {
+      set({ isAdmin: false })
     }
   },
 }))

@@ -103,6 +103,11 @@ export const api = {
     } as UserProfile
   },
 
+  checkAdminStatus: async () => {
+    const data = await apiClient.get<{ is_admin: boolean }>('/players/me/admin-status').then((r) => r.data)
+    return data.is_admin
+  },
+
   getInventory: async () => {
     const data = await apiClient.get<{ items: { item: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, unknown>; is_tradable: boolean; sell_price: number }; quantity: number }[] }>('/inventory').then((r) => r.data)
     return data.items.map((i) => ({
