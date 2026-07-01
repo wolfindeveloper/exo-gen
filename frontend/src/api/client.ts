@@ -9,9 +9,10 @@ export const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
-  const initData = window.Telegram?.WebApp?.initData
+  const initData = window.Telegram?.WebApp?.initData || ''
+  console.log('[API Request]', config.url, 'InitData:', initData ? 'Exists' : 'EMPTY')
   if (initData) {
-    config.headers.Authorization = `tma ${initData}`
+    config.headers['Authorization'] = `tghash ${initData}`
   }
   return config
 })
@@ -58,6 +59,11 @@ export const api = {
   health: () => apiClient.get<{ status: string }>('/health').then((r) => r.data),
 
   authInit: async () => {
+    const initData = window.Telegram?.WebApp?.initData || ''
+    if (!initData) {
+      console.error('Telegram context is not available')
+      throw new Error('Telegram context is not available')
+    }
     const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user as { id: number; first_name?: string; username?: string; language_code?: string } | undefined
     if (tgUser) {
       await apiClient.post('/players/register', {

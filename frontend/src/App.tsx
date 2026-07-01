@@ -11,6 +11,7 @@ import { SettingsSheet } from './components/SettingsSheet'
 import { useGameStore } from './store/game'
 import { useSettingsStore } from './store/settings'
 import { initAudio, playMusic, stopMusic } from './lib/audio'
+import { getTelegramWebApp } from './lib/telegram'
 import ShipPage from './pages/ShipPage'
 import GuidePage from './pages/GuidePage'
 import { Inventory } from './pages/Inventory'
@@ -30,8 +31,14 @@ function AppContent() {
   const initFailed = useGameStore((s) => s.initFailed)
 
   useEffect(() => {
-    initAuth()
-    loadContent()
+    const tg = getTelegramWebApp()
+    tg?.ready()
+    tg?.expand()
+    const timer = setTimeout(() => {
+      initAuth()
+      loadContent()
+    }, 100)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
