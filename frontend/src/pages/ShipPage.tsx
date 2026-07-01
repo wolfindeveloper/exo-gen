@@ -4,14 +4,14 @@ import { HudBar } from '../components/HudBar';
 import { useGameStore } from '../store/gameStore';
 
 const slotPositions = [
-  { top: '0%', left: '50%' },
-  { top: '15%', left: '85%' },
-  { top: '50%', left: '100%' },
-  { top: '85%', left: '85%' },
-  { top: '100%', left: '50%' },
-  { top: '85%', left: '15%' },
-  { top: '50%', left: '0%' },
-  { top: '15%', left: '15%' },
+  { top: '5%', left: '50%' },
+  { top: '20%', left: '85%' },
+  { top: '50%', left: '95%' },
+  { top: '80%', left: '85%' },
+  { top: '95%', left: '50%' },
+  { top: '80%', left: '15%' },
+  { top: '50%', left: '5%' },
+  { top: '20%', left: '15%' },
 ];
 
 export function ShipPage() {
@@ -26,34 +26,34 @@ export function ShipPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#0A0B0E]">
+    <div className="flex flex-col h-screen bg-transparent">
       <div className="px-4 pt-4">
         <HudBar />
       </div>
 
       <div className="px-4 mt-4">
-        <div className="bg-white/5 p-4 rounded-2xl backdrop-blur-sm space-y-3">
+        <div className="glass-panel rounded-xl p-4 space-y-3">
           <div>
-            <div className="flex justify-between text-xs text-white/60 mb-1">
-              <span>Космическая заварка</span>
-              <span>{Math.round(teaLevel)}%</span>
+            <div className="flex justify-between text-xs text-white/60 mb-2">
+              <span className="font-medium">Космическая заварка</span>
+              <span className="font-bold text-green-400">{Math.round(teaLevel)}%</span>
             </div>
-            <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-[10px] bg-gray-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#22c55e] rounded-full transition-all duration-500 shadow-[0_0_12px_#22c55e80]"
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(34,197,94,0.6)]"
                 style={{ width: `${teaLevel}%` }}
               />
             </div>
           </div>
 
           <div>
-            <div className="flex justify-between text-xs text-white/60 mb-1">
-              <span>Уровень оптимизма</span>
-              <span>{Math.round(optimism)}%</span>
+            <div className="flex justify-between text-xs text-white/60 mb-2">
+              <span className="font-medium">Уровень оптимизма</span>
+              <span className="font-bold text-cyan-400">{Math.round(optimism)}%</span>
             </div>
-            <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-[10px] bg-gray-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#1ADAFC] rounded-full transition-all duration-500 shadow-[0_0_12px_#1ADAFC80]"
+                className="h-full bg-gradient-to-r from-cyan-500 to-blue-400 rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
                 style={{ width: `${optimism}%` }}
               />
             </div>
@@ -61,34 +61,49 @@ export function ShipPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center relative px-4">
-        <div className="relative w-64 h-64">
-          <div className="absolute inset-8 rounded-full border border-cyan-500/30 bg-cyan-500/5 shadow-[0_0_60px_rgba(26,218,252,0.15)] flex items-center justify-center">
-            <Rocket className="w-40 h-40 text-gray-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]" strokeWidth={1} />
+      <div className="flex-1 relative flex items-center justify-center px-4">
+        <div className="relative w-72 h-72">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-float">
+              <div className="relative">
+                <Rocket 
+                  className="w-40 h-40 text-gray-200 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]" 
+                  strokeWidth={1.2} 
+                />
+              </div>
+            </div>
           </div>
+
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-32 h-4 bg-black/40 rounded-full blur-xl" />
 
           {slotPositions.map((pos, index) => (
             <button
               key={index}
               onClick={handleSlotClick}
-              className="absolute w-12 h-12 rounded-full bg-black/50 border border-dashed border-white/20 hover:border-[#1ADAFC] hover:shadow-[0_0_12px_#1ADAFC40] transition-all duration-200"
+              className="absolute w-14 h-14 hexagon bg-black/60 border border-white/10 flex items-center justify-center hover:neon-border-cyan transition-all duration-300 group"
               style={{
                 top: pos.top,
                 left: pos.left,
                 transform: 'translate(-50%, -50%)',
               }}
-            />
+            >
+              <div className="w-10 h-10 hexagon bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-white/20 group-hover:bg-cyan-400 group-hover:shadow-[0_0_8px_rgba(26,218,252,0.8)] transition-all" />
+              </div>
+            </button>
           ))}
         </div>
       </div>
 
       <div className="px-4 pb-24">
-        <button
-          onClick={() => navigate('/zones')}
-          className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/30 active:scale-95 transition-transform"
-        >
-          Отправиться в экспедицию
-        </button>
+        <div className="glass-panel rounded-xl p-1">
+          <button
+            onClick={() => navigate('/zones')}
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 hover:shadow-cyan-500/50"
+          >
+            Отправиться в экспедицию
+          </button>
+        </div>
       </div>
     </div>
   );
