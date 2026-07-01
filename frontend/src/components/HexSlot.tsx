@@ -1,19 +1,19 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
 interface HexSlotProps {
-  active: boolean;
-  icon: string;
-  name?: string;
-  tier?: number;
-  onClick?: () => void;
-  side?: 'left' | 'right';
-  flicker?: boolean;
+  active: boolean
+  icon: string
+  name?: string
+  tier?: number
+  onClick?: () => void
+  side?: 'left' | 'right'
+  flicker?: boolean
 }
 
-const TIER_COLORS = ['#94a3b8', '#22c55e', '#a855f7', '#f59e0b', '#ffd700'];
+const TIER_COLORS = ['#94a3b8', '#22c55e', '#a855f7', '#f59e0b', '#ffd700']
 
 export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }: HexSlotProps) {
-  const color = active ? TIER_COLORS[Math.min(tier - 1, 4)] : '#4a5568';
+  const color = active ? TIER_COLORS[Math.min(tier - 1, 4)] : '#4a5568'
 
   const dust = useMemo(
     () =>
@@ -25,10 +25,11 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
         duration: 3 + (i % 3) * 1.2,
       })),
     [],
-  );
+  )
 
   return (
     <div className="relative group cursor-pointer" onClick={onClick}>
+      {/* outer glow layers */}
       {active && (
         <>
           <div
@@ -42,6 +43,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
         </>
       )}
 
+      {/* slot circle */}
       <div
         className={`w-14 h-14 relative rounded-full transition-all duration-300 overflow-hidden ${
           active ? 'border-[2.5px]' : 'border border-dashed border-gray-700/20 bg-gray-900/40'
@@ -54,6 +56,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
           boxShadow: active ? `0 0 25px ${color}44, inset 0 0 30px ${color}11` : undefined,
         }}
       >
+        {/* nebulous inner glow */}
         {active && (
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
@@ -61,6 +64,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
           />
         )}
 
+        {/* space dust particles */}
         {active && dust.map((d, i) => (
           <div
             key={i}
@@ -80,6 +84,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
           />
         ))}
 
+        {/* icon */}
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <span
             className="text-[16px] leading-none"
@@ -90,6 +95,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
         </div>
       </div>
 
+      {/* name label */}
       {name && (
         <span
           className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[6px] text-center whitespace-nowrap font-semibold tracking-wider"
@@ -99,6 +105,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
         </span>
       )}
 
+      {/* active dot indicator */}
       {active && (
         <div
           className={`absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full ${
@@ -111,5 +118,5 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
         />
       )}
     </div>
-  );
+  )
 }
