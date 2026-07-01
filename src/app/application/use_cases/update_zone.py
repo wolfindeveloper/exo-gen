@@ -5,6 +5,7 @@ from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.exceptions.zone import ZoneNotFoundError
 from app.application.dtos.admin_dto import UpdateZoneDTO
+from app.infrastructure.cache.redis_client import redis_client
 
 
 class UpdateZoneUseCase:
@@ -21,4 +22,5 @@ class UpdateZoneUseCase:
         uow.track(zone)
         await self.zone_repo.save(zone)
         await uow.commit()
+        await redis_client.delete("zones:*")
         return zone

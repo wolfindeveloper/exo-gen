@@ -55,14 +55,15 @@ class Settings(BaseSettings):
     # Redis
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6381
+    REDIS_URL: str = "redis://redis:6379/1"
 
     @property
     def redis_url(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
 
     # Celery
-    CELERY_BROKER_URL: str = "redis://redis:6381/1"
-    CELERY_RESULT_BACKEND: str = "redis://redis:6381/2"
+    CELERY_BROKER_URL: str = "redis://redis:6379/0"
+    CELERY_RESULT_BACKEND: str = "redis://redis:6379/0"
 
     # Payments
     PUBLIC_URL: str = Field(default="http://localhost:8000", description="Public URL for Telegram webhook")

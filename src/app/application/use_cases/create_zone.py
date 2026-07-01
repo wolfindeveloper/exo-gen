@@ -4,6 +4,7 @@ from app.domain.entities.zone import Zone
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.application.dtos.zone_dto import CreateZoneDTO
+from app.infrastructure.cache.redis_client import redis_client
 
 
 class CreateZoneUseCase:
@@ -26,6 +27,7 @@ class CreateZoneUseCase:
 
         await self.zone_repo.save(zone)
         await uow.commit()
+        await redis_client.delete("zones:*")
 
         return zone
 

@@ -21,6 +21,7 @@ from app.presentation.api.routes.shop import router as shop_router
 from app.presentation.api.routes.payments import router as payments_router
 from app.presentation.api.routes.leaderboard import router as leaderboard_router
 from app.presentation.api.routes.settings import router as settings_router
+from app.infrastructure.cache.redis_client import redis_client
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.messaging.event_handlers import setup_event_handlers
 from app.infrastructure.security.rate_limiter import limiter
@@ -50,7 +51,13 @@ async def lifespan(app: FastAPI):
     else:
         logger.warning(f"Failed to set Telegram webhook at {webhook_url}")
 
+    await redis_client.connect()
+    logger.info("Redis connected")
+
     yield
+
+    await redis_client.disconnect()
+    logger.info("Redis disconnected")
     logger.info("Shutting down...")
 
 def create_app() -> FastAPI:

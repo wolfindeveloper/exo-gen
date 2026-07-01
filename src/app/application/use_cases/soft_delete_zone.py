@@ -4,6 +4,7 @@ from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
+from app.infrastructure.cache.redis_client import redis_client
 
 
 class SoftDeleteZoneUseCase:
@@ -28,3 +29,4 @@ class SoftDeleteZoneUseCase:
         uow.track(zone)
         await self.zone_repo.save(zone)
         await uow.commit()
+        await redis_client.delete("zones:*")

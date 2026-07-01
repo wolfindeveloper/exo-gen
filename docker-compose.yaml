@@ -8,6 +8,9 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - PYTHONPATH=/app/src
     restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.exo-app.rule=Host(`api.exo-gen.com`)"
@@ -19,9 +22,42 @@ services:
       - coolify
       - default
 
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - default
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A src.app.infrastructure.messaging.celery_app:celery_app worker --loglevel=info
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - coolify
+      - default
+
 networks:
   coolify:
     external: true
   default:
     external: true
     name: coolify
+
+volumes:
+  redis_data:

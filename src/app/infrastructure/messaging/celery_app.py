@@ -34,6 +34,7 @@ celery_app.conf.beat_schedule = {
 }
 
 celery_app.conf.timezone = "UTC"
+celery_app.conf.task_track_started = True
 
 
 async def _run_check_finished_expeditions() -> int:
