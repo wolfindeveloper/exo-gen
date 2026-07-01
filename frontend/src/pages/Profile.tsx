@@ -655,8 +655,8 @@ export function Profile() {
 
       {(() => {
         const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
-        const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user
-        const isAdmin = tgUser != null && ADMIN_IDS.includes(tgUser.id)
+        const tgId = user?.telegram_id ?? window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+        const isAdmin = tgId != null && ADMIN_IDS.includes(tgId)
         if (!isAdmin) return null
         return (
           <button

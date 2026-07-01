@@ -2,19 +2,31 @@ import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Boxes, Map, ShoppingBag, BookOpen } from 'lucide-react'
 
+import { useGameStore } from '../../store/game'
+
 const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(',').map(Number) || []
 
 export function AdminLayout() {
   const navigate = useNavigate()
+  const user = useGameStore((s) => s.user)
+  const isAuthReady = useGameStore((s) => s.isAuthReady)
 
-  const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user
-  const isAdmin = tgUser != null && ADMIN_IDS.includes(tgUser.id)
+  const tgId = user?.telegram_id ?? window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+  const isAdmin = tgId != null && ADMIN_IDS.includes(tgId)
 
   useEffect(() => {
-    if (!isAdmin) {
+    if (isAuthReady && !isAdmin) {
       navigate('/', { replace: true })
     }
-  }, [isAdmin, navigate])
+  }, [isAuthReady, isAdmin, navigate])
+
+  if (!isAuthReady) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <p className="text-gray-500 animate-pulse">Загрузка...</p>
+      </div>
+    )
+  }
 
   if (!isAdmin) return null
 
