@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useGameStore } from './store/gameStore';
 import { Loader2 } from 'lucide-react';
+import { NavBar } from './components/layout/NavBar';
+import { ShipPage } from './pages/ShipPage';
+import { ZonesPage } from './pages/ZonesPage';
+import { InventoryPage } from './pages/InventoryPage';
+import { ProfilePage } from './pages/ProfilePage';
 
-function App() {
+function AppContent() {
   const { player, isLoading, error, initApp } = useGameStore();
 
   useEffect(() => {
@@ -35,18 +41,23 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-cosmos-900 p-4">
-      <div className="max-w-md mx-auto pt-8">
-        <h1 className="text-2xl font-bold text-text-primary mb-4">
-          Добро пожаловать, {player.username || 'Путешественник'}!
-        </h1>
-        <div className="bg-cosmos-800 rounded-lg p-4">
-          <p className="text-text-secondary">
-            Ваш XGen: <span className="text-accent-blue font-semibold">{player.xgen_balance}</span>
-          </p>
-        </div>
-      </div>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<ShipPage />} />
+        <Route path="/zones" element={<ZonesPage />} />
+        <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+      <NavBar />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

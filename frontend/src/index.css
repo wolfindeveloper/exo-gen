@@ -37,6 +37,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(180deg, #0A0B0E 0%, #121315 100%);
 }
 
 #root {
