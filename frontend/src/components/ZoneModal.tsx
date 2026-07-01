@@ -6,17 +6,6 @@ import { statLabels } from '../lib/stats'
 import { useGameStore } from '../store/game'
 import type { Zone } from '../types'
 
-const tierGradients = [
-  '',
-  'from-neon-cyan/30 via-space-800 to-space-950',
-  'from-neon-green/30 via-space-800 to-space-950',
-  'from-neon-purple/30 via-space-800 to-space-950',
-  'from-neon-amber/30 via-space-800 to-space-950',
-  'from-neon-red/30 via-space-800 to-space-950',
-]
-
-const tierAccent = ['', 'text-neon-cyan', 'text-neon-green', 'text-neon-purple', 'text-neon-amber', 'text-neon-red']
-
 const zoneEmoji: Record<string, string> = {
   the_outskirts_of_sanity: '🌌',
   scrap_yard: '🗑️',
@@ -54,9 +43,6 @@ interface ZoneModalProps {
 
 export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps) {
   const ships = useGameStore((s) => s.ships)
-  const shipsContent = useGameStore((s) => s.shipsContent)
-  const resourcesContent = useGameStore((s) => s.resourcesContent)
-  const artifactsContent = useGameStore((s) => s.artifactsContent)
   const loadShips = useGameStore((s) => s.loadShips)
   const [confirming, setConfirming] = useState(false)
   const [imgError, setImgError] = useState(false)
@@ -65,13 +51,6 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
     if (ships.length === 0) loadShips()
   }, [])
 
-  const shipConfigLookup = useMemo(() => new Map(shipsContent.map((s) => [s.id, s])), [shipsContent])
-  const lootNames = useMemo(() => {
-    const m = new Map<string, string>()
-    for (const r of resourcesContent) m.set(r.id, r.name)
-    for (const a of artifactsContent) m.set(a.id, a.name)
-    return m
-  }, [resourcesContent, artifactsContent])
   const totalWeight = useMemo(
     () => zone.loot_table.reduce((s, l) => s + l.chance, 0),
     [zone.loot_table],
@@ -102,7 +81,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
     )
   }, [mainShip, speedMod, zone, artifactBonuses])
 
-  const canLaunch = mainShip && mainShip.status === 'idle' && calcedStats?.fuelOk
+  const canLaunch = !!mainShip && !!calcedStats?.fuelOk
 
   return (
     <motion.div
@@ -220,7 +199,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
             <div className="flex flex-wrap gap-1.5">
               {zone.loot_table.map((loot, idx) => (
                   <span key={loot.item_id || idx} className="text-[10px] bg-space-700/50 px-2.5 py-1 rounded-full text-slate-400 border border-white/5">
-                    📦 {lootNames.get(loot.item_id || '') || loot.item_type} {Math.round(loot.chance / totalWeight * 100)}% x{loot.amount}шт
+                    📦 {loot.item_type} {Math.round(loot.chance / totalWeight * 100)}% x{loot.amount}шт
                   </span>
                 ))}
             </div>
@@ -229,10 +208,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
           {!mainShip && (
             <p className="text-xs text-neon-amber/70 text-center">Нет корабля</p>
           )}
-          {mainShip && mainShip.status !== 'idle' && (
-            <p className="text-xs text-neon-amber/70 text-center">Корабль в полёте</p>
-          )}
-          {mainShip && mainShip.status === 'idle' && calcedStats && !calcedStats.fuelOk && (
+          {mainShip && calcedStats && !calcedStats.fuelOk && (
             <p className="text-xs text-neon-red text-center">Недостаточно ⛽ для запуска</p>
           )}
 
@@ -274,8 +250,6 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
                 'Загрузка...'
               ) : !calcedStats.fuelOk ? (
                 'Недостаточно ⛽'
-              ) : mainShip?.status !== 'idle' ? (
-                'Корабль занят'
               ) : (
                 '🚀 Запуск'
               )}

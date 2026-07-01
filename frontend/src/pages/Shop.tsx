@@ -358,7 +358,7 @@ export function Shop() {
               const isPremium = item.price.currency === 'stars'
               const canAfford = isPremium
                 ? (user?.balance_stars ?? 0) >= item.price.amount
-                : (user?.balance_xgen ?? 0) >= item.price.amount
+                : (user?.xgen_balance ?? 0) >= item.price.amount
               const isBuying = buying === item.id
 
               return (

@@ -13,7 +13,7 @@ export function useNotifications() {
   }, [])
 
   const hasCompletedExpedition = activeExpeditions.some(
-    (e) => e.status === 'active' && new Date(e.end_time).getTime() <= now,
+    (e) => e.status === 'active' && new Date(e.ends_at).getTime() <= now,
   )
 
   let hasUnlockedGuideEntry = false

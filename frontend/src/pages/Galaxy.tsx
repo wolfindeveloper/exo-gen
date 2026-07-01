@@ -50,7 +50,7 @@ export function Galaxy() {
 
       <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex gap-2 mb-4 overflow-x-auto pb-1">
         {Array.from({ length: maxTier }, (_, i) => i + 1).map((tier) => {
-          const count = zones.filter((z) => z.tier === tier).length
+          const count = zones.length
           const active = tierFilter === tier
           return (
             <motion.button

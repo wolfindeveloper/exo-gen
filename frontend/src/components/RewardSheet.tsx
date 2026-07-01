@@ -5,18 +5,10 @@ import { useGameStore } from '../store/game'
 import type { LootItem } from '../types'
 
 function lootLabel(item: LootItem): string {
-  const { resourcesContent, artifactsContent } = useGameStore.getState()
-  const res = resourcesContent.find((r) => r.id === item.item_config_id)
-  if (res) return res.name
-  const art = artifactsContent.find((a) => a.id === item.item_config_id)
-  if (art) return art.name
   return item.item_config_id
 }
 
-function lootIcon(item: LootItem): string {
-  const { resourcesContent } = useGameStore.getState()
-  const res = resourcesContent.find((r) => r.id === item.item_config_id)
-  if (res?.icon_path) return res.icon_path
+function lootIcon(_item: LootItem): string {
   return ''
 }
 

@@ -2,7 +2,6 @@ import { memo, useMemo } from 'react'
 import { motion } from 'motion/react'
 
 import { cardHover } from '../lib/animations'
-import { useGameStore } from '../store/game'
 import type { Zone } from '../types'
 
 interface ZoneCardProps {
@@ -16,14 +15,6 @@ const tierColors = ['', 'text-neon-cyan', 'text-neon-green', 'text-neon-purple',
 const tierBorders = ['', 'border-neon-cyan/20', 'border-neon-green/20', 'border-neon-purple/20', 'border-neon-amber/20', 'border-neon-red/20']
 
 export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index = 0 }: ZoneCardProps) {
-  const resourcesContent = useGameStore((s) => s.resourcesContent)
-  const artifactsContent = useGameStore((s) => s.artifactsContent)
-  const lootNames = useMemo(() => {
-    const m = new Map<string, string>()
-    for (const r of resourcesContent) m.set(r.id, r.name)
-    for (const a of artifactsContent) m.set(a.id, a.name)
-    return m
-  }, [resourcesContent, artifactsContent])
   const totalWeight = useMemo(
     () => zone.loot_table.reduce((s, l) => s + l.chance, 0),
     [zone.loot_table],
@@ -54,7 +45,7 @@ export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index
       <div className="flex flex-wrap gap-1.5">
         {zone.loot_table.slice(0, 4).map((loot) => (
           <span key={loot.item_id} className="text-[9px] bg-space-500/50 px-2 py-0.5 rounded-full text-slate-400 border border-white/5">
-            {lootNames.get(loot.item_id!) || loot.item_type} {Math.round(loot.chance / totalWeight * 100)}%
+            {loot.item_type} {Math.round(loot.chance / totalWeight * 100)}%
           </span>
         ))}
         {lootOverflow && (

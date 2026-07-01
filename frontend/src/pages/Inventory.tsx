@@ -5,7 +5,7 @@ import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
 import { statIcons, statLabels } from '../lib/stats'
 import { useGameStore } from '../store/game'
-import type { Artifact, InventoryItem, Resource } from '../types'
+import type { InventoryItem } from '../types'
 
 const rarityConfig: Record<string, { border: string; bg: string; text: string; glow: string }> = {
   common: { border: 'border-slate-500/20', bg: 'bg-slate-500/5', text: 'text-slate-300', glow: 'rgba(100,116,139,0.15)' },
@@ -117,8 +117,6 @@ function buildSections(
 
 export function Inventory() {
   const inventory = useGameStore((s) => s.inventory)
-  const resourcesContent = useGameStore((s) => s.resourcesContent)
-  const artifactsContent = useGameStore((s) => s.artifactsContent)
   const ships = useGameStore((s) => s.ships)
   const loadInventory = useGameStore((s) => s.loadInventory)
   const loadShips = useGameStore((s) => s.loadShips)
@@ -149,7 +147,6 @@ export function Inventory() {
   const usableItems = useMemo(() => {
     const usable = new Set<string>()
     for (const ship of ships) {
-      if (ship.status !== 'idle') continue
       if (ship.tea_level < 100) {
         usable.add('fuel')
       }
@@ -230,10 +227,10 @@ export function Inventory() {
               <motion.div className="flex flex-col gap-2" variants={staggerContainer} initial="hidden" animate="visible">
                 {section.items.map(({ item, info }) => (
                   <InventoryRow
-                    key={item.id}
+                    key={item.item.id}
                     item={item}
                     info={info}
-                    isUsable={usableItems.has(item.item_config_id)}
+                    isUsable={usableItems.has(item.item.id)}
                     onTap={handleItemTap}
                   />
                 ))}
@@ -376,7 +373,6 @@ function ItemDetailSheet({
   onClose: () => void
 }) {
   const ships = useGameStore((s) => s.ships)
-  const shipsContent = useGameStore((s) => s.shipsContent)
   const refuelShip = useGameStore((s) => s.refuelShip)
   const repairShip = useGameStore((s) => s.repairShip)
   const loadInventory = useGameStore((s) => s.loadInventory)
@@ -392,7 +388,6 @@ function ItemDetailSheet({
   const matchingShips = useMemo(() => {
     if (!isUsableType) return []
     return ships.filter((s) => {
-      if (s.status !== 'idle') return false
       if (isFuel) {
         if (s.tea_level >= 100) return false
       }

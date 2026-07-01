@@ -59,7 +59,6 @@ export default function ShipPage() {
   const user = useGameStore((s) => s.user)
   const setUser = useGameStore((s) => s.setUser)
   const ships = useGameStore((s) => s.ships)
-  const shipsContent = useGameStore((s) => s.shipsContent)
   const artifactsContent = useGameStore((s) => s.artifactsContent)
   const inventory = useGameStore((s) => s.inventory)
   const equipSlot = useGameStore((s) => s.equipSlot)
@@ -177,7 +176,7 @@ export default function ShipPage() {
     .filter((i) => i.item.id.startsWith('repair'))
     .reduce((sum, i) => sum + i.quantity, 0)
 
-  const isShipIdle = mainShip?.status === 'idle'
+  const isShipIdle = !!mainShip
 
   const handleRefuel = async () => {
     if (!mainShip || fuelInInventory === 0) return

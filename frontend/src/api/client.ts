@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { AchievementStatus, Artifact, ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Rank, Resource, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, ShipConfig, Zone, ProfileStats, ItemReference } from '../types'
+import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || 'https://api.exo-gen.com').replace(/\/+$/, '')
 
@@ -9,7 +9,7 @@ export const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
-  const initData = (window as Record<string, unknown>).Telegram?.WebApp?.initData as string | undefined
+  const initData = window.Telegram?.WebApp?.initData
   if (initData) {
     config.headers.Authorization = `tma ${initData}`
   }
@@ -58,7 +58,7 @@ export const api = {
   health: () => apiClient.get<{ status: string }>('/health').then((r) => r.data),
 
   authInit: async () => {
-    const tgUser = (window as Record<string, unknown>).Telegram?.WebApp?.initDataUnsafe?.user as { id: number; first_name?: string; username?: string; language_code?: string } | undefined
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user as { id: number; first_name?: string; username?: string; language_code?: string } | undefined
     if (tgUser) {
       await apiClient.post('/players/register', {
         telegram_id: tgUser.id,
@@ -158,7 +158,7 @@ export const api = {
     } as UserStats
   },
 
-  updateProfile: async (data: { username?: string; add_xgen?: number }) => {
+  updateProfile: async (_data: { username?: string; add_xgen?: number }) => {
     const me = await apiClient.get<{ id: string; telegram_id: number; username: string | null; xp: number; xgen_balance: number; fragments_balance: number; daily_streak: number; ship_count: number; ship_id: string }>('/players/me').then((r) => r.data)
     return {
       ...me,
@@ -170,27 +170,27 @@ export const api = {
     } as UserProfile
   },
 
-  refuelShip: async (shipId: string, resourceId: string) => {
-    const data = await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; tea_restored: number; new_tea_level: number }>('/ships/refuel', { ship_id: shipId }).then((r) => r.data)
+  refuelShip: async (shipId: string, _resourceId: string) => {
+    await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; tea_restored: number; new_tea_level: number }>('/ships/refuel', { ship_id: shipId })
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  repairShip: async (shipId: string, resourceId: string) => {
-    const data = await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; optimism_restored: number; new_optimism_level: number }>('/ships/repair', { ship_id: shipId }).then((r) => r.data)
+  repairShip: async (shipId: string, _resourceId: string) => {
+    await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; optimism_restored: number; new_optimism_level: number }>('/ships/repair', { ship_id: shipId })
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  equipSlot: async (shipId: string, slotIndex: number, artifactId: string) => {
+  equipSlot: async (_shipId: string, _slotIndex: number, _artifactId: string) => {
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  unequipSlot: async (shipId: string, slotIndex: number) => {
+  unequipSlot: async (_shipId: string, _slotIndex: number) => {
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
@@ -270,16 +270,16 @@ export const api = {
     } as GuideChapterDetail
   },
 
-  researchEntry: async (chapterId: string, entryId: string) => {
+  researchEntry: async (_chapterId: string, entryId: string) => {
     const data = await apiClient.post<{ content: string; new_fragments_balance: number; chapter_completed: boolean; xgen_rewarded: number; fragments_rewarded: number; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Record<string, unknown>[] }>('/guide/unlock', { article_id: entryId }).then((r) => r.data)
     return { status: 'ok', fixed: true, balance_fragments: data.new_fragments_balance } as GuideResearchResponse
   },
 
-  fixGlitch: async (chapterId: string, entryId: string) => {
+  fixGlitch: async (_chapterId: string, _entryId: string) => {
     return { status: 'ok', balance_fragments: 0 } as GuideFixGlitchResponse
   },
 
-  claimReward: async (chapterId: string) => {
+  claimReward: async (_chapterId: string) => {
     return { status: 'ok', artifact_id: '', artifact_name: '' } as GuideClaimRewardResponse
   },
 
