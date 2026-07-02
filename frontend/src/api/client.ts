@@ -297,8 +297,7 @@ export const api = {
   },
 
   logEvent: async (eventKey: string) => {
-    await apiClient.post('/guide/trigger', { event_type: eventKey }).catch(() => {})
-    return { status: 'ok' }
+    return apiClient.post<{ newly_unlocked_articles: string[]; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Record<string, unknown>[] }>('/guide/trigger', { event_type: eventKey }).then((r) => r.data).catch(() => null)
   },
 
   getShopCatalog: async () => {

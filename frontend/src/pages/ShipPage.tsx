@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User } from 'lucide-react'
+import { User, BookOpen } from 'lucide-react'
 import { useGameStore } from '../store/game'
 import { HexSlot } from '../components/HexSlot'
 import SlotSelectModal from '../components/SlotSelectModal'
@@ -91,7 +91,9 @@ export default function ShipPage() {
   const [consoleMsg, setConsoleMsg] = useState<string | null>(null)
   const [fuelLabel, setFuelLabel] = useState<string | null>(null)
   const [muteCount, setMuteCount] = useState(0)
-  const [stareTimer, setStareTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+  const stareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasFiredRef = useRef(false)
+  const [unlockToast, setUnlockToast] = useState<string[] | null>(null)
   const [redClicks, setRedClicks] = useState(() => {
     const saved = localStorage.getItem(RED_BUTTON_LS)
     return saved ? +saved : 0
@@ -126,23 +128,38 @@ export default function ShipPage() {
     return () => clearTimeout(t)
   }, [fuelLabel])
 
+  const handleTriggerEvent = useCallback(async (eventKey: string) => {
+    const result = await api.logEvent(eventKey)
+    if (result?.newly_unlocked_articles?.length) {
+      setUnlockToast(result.newly_unlocked_articles)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!unlockToast) return
+    const t = setTimeout(() => setUnlockToast(null), 6000)
+    return () => clearTimeout(t)
+  }, [unlockToast])
+
   /* ── Idle timer for stare_60s event ── */
   useEffect(() => {
     function resetIdle() {
-      if (stareTimer) clearTimeout(stareTimer)
-      const t = setTimeout(() => {
-        api.logEvent('stare_60s').catch(() => {})
+      if (stareTimerRef.current) clearTimeout(stareTimerRef.current)
+      hasFiredRef.current = false
+      stareTimerRef.current = setTimeout(() => {
+        if (hasFiredRef.current) return
+        hasFiredRef.current = true
+        handleTriggerEvent('stare_60s')
       }, 60_000)
-      setStareTimer(t)
     }
     const events = ['mousedown', 'mousemove', 'touchstart', 'keydown', 'scroll']
     events.forEach((e) => window.addEventListener(e, resetIdle))
     resetIdle()
     return () => {
       events.forEach((e) => window.removeEventListener(e, resetIdle))
-      if (stareTimer) clearTimeout(stareTimer)
+      if (stareTimerRef.current) clearTimeout(stareTimerRef.current)
     }
-  }, [])
+  }, [handleTriggerEvent])
 
   const stickerMessages = [
     'НЕ НАЖИМАТЬ',
@@ -161,9 +178,9 @@ export default function ShipPage() {
   /* ── fuel_below_5 event check ── */
   useEffect(() => {
     if (mainShip && mainShip.tea_level <= 5 && mainShip.tea_level > 0) {
-      api.logEvent('fuel_below_5').catch(() => {})
+      handleTriggerEvent('fuel_below_5')
     }
-  }, [mainShip?.tea_level])
+  }, [mainShip?.tea_level, handleTriggerEvent])
   const shipName = mainShip?.name ?? 'VEGA MK-II'
 
   const slotArtifacts: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
@@ -332,6 +349,23 @@ export default function ShipPage() {
 
       {/* content */}
       <div className="relative z-10 max-w-md mx-auto px-4 pt-4 flex flex-col min-h-screen">
+
+        {/* ── Article unlock toast ── */}
+        {unlockToast && (
+          <div className="fixed top-4 left-4 right-4 z-[100] mx-auto max-w-md animate-fade-in">
+            <div className="bg-purple-950/95 backdrop-blur-sm border border-purple-500/30 rounded-xl px-4 py-3 shadow-[0_0_20px_rgba(168,85,247,.15)] flex items-center gap-3">
+              <BookOpen size={20} className="text-purple-400 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-display text-purple-300 uppercase tracking-wider">Новая статья Путеводителя</p>
+                {unlockToast.map((title) => (
+                  <p key={title} className="text-sm text-white font-medium truncate mt-0.5">«{title}»</p>
+                ))}
+              </div>
+              <button onClick={() => setUnlockToast(null)} className="text-purple-400/50 hover:text-purple-300 shrink-0 text-lg leading-none">×</button>
+            </div>
+          </div>
+        )}
+
         {/* ═══ glassmorphism header ═══ */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3 bg-white/5 backdrop-blur-[12px] rounded-full pr-5 pl-1.5 py-1 border border-cyan-500/20 shadow-[0_0_20px_rgba(0,245,255,.06),inset_0_1px_0_rgba(255,255,255,.06)]">
@@ -389,7 +423,7 @@ export default function ShipPage() {
                 const next = muteCount + 1
                 setMuteCount(next)
                 if (next >= 5) {
-                  api.logEvent('toggle_sound_5x').catch(() => {})
+                  handleTriggerEvent('toggle_sound_5x')
                   setMuteCount(0)
                 }
               }}
@@ -601,7 +635,7 @@ active={false}
               setRedClicks(newClicks)
               localStorage.setItem(RED_BUTTON_LS, String(newClicks))
               if (newClicks >= 3) {
-                setTimeout(() => api.logEvent('red_button_3x').catch(() => {}), 10_000)
+                setTimeout(() => handleTriggerEvent('red_button_3x'), 10_000)
                 localStorage.removeItem(RED_BUTTON_LS)
                 setRedClicks(0)
               }
