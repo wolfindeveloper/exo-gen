@@ -39,11 +39,15 @@ class SQLAlchemyItemRepository(ItemRepository):
         search: str | None = None,
         sort_by: str | None = None,
         sort_order: str = "desc",
+        rarity: str | None = None,
     ) -> tuple[list[Item], int]:
         base = select(ItemORM).where(ItemORM.deleted_at.is_(None))
 
         if search:
             base = base.where(ItemORM.name.ilike(f"%{search}%"))
+
+        if rarity:
+            base = base.where(ItemORM.rarity == rarity)
 
         total_result = await self.session.execute(
             select(func.count()).select_from(base.subquery())

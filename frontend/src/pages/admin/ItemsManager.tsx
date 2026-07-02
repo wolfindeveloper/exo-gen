@@ -150,22 +150,22 @@ export function ItemsManager() {
   const [searchInput, setSearchInput] = useState('')
   const [sortBy, setSortBy] = useState<string | undefined>(undefined)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [rarityFilter, setRarityFilter] = useState<string>('')
 
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<AdminItem | null>(null)
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  const loadItems = useCallback(async (p: number, s: string, sb?: string, so?: 'asc' | 'desc') => {
+  const loadItems = useCallback(async (p: number, s: string, sb?: string, so?: 'asc' | 'desc', r?: string) => {
     try {
       setLoading(true)
       setForbidden(false)
       setError(null)
-      const data: AdminItemsResponse = await api.getAdminItems(p, PAGE_SIZE, s || undefined, sb, so)
+      const data: AdminItemsResponse = await api.getAdminItems(p, PAGE_SIZE, s || undefined, sb, so, r || undefined)
       setItems(data.items)
       setTotal(data.total)
       setTotalPages(data.total_pages)
@@ -182,8 +182,8 @@ export function ItemsManager() {
   }, [])
 
   useEffect(() => {
-    loadItems(page, search, sortBy, sortOrder)
-  }, [page, search, sortBy, sortOrder, loadItems])
+    loadItems(page, search, sortBy, sortOrder, rarityFilter)
+  }, [page, search, sortBy, sortOrder, rarityFilter, loadItems])
 
   const handleSearchInput = (val: string) => {
     setSearchInput(val)
@@ -227,6 +227,10 @@ export function ItemsManager() {
       setError('Имя и описание обязательны')
       return
     }
+    if (!form.image_url.trim()) {
+      setError('URL картинки обязателен')
+      return
+    }
     try {
       setSubmitting(true)
       setError(null)
@@ -256,7 +260,7 @@ export function ItemsManager() {
         await api.createAdminItem(payload)
       }
       closeForm()
-      await loadItems(page, search, sortBy, sortOrder)
+      await loadItems(page, search, sortBy, sortOrder, rarityFilter)
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -264,13 +268,12 @@ export function ItemsManager() {
     }
   }
 
-  const handleDelete = async () => {
-    if (!deleteId) return
+  const handleDelete = async (itemId: string) => {
+    if (!window.confirm('Вы уверены, что хотите удалить этот предмет? Это мягкое удаление.')) return
     try {
       setDeleting(true)
-      await api.deleteAdminItem(deleteId)
-      setDeleteId(null)
-      await loadItems(page, search, sortBy, sortOrder)
+      await api.deleteAdminItem(itemId)
+      await loadItems(page, search, sortBy, sortOrder, rarityFilter)
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -323,6 +326,16 @@ export function ItemsManager() {
             className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-9 pr-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
           />
         </div>
+        <select
+          value={rarityFilter}
+          onChange={(e) => { setRarityFilter(e.target.value); setPage(1) }}
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
+        >
+          <option value="">Все редкости</option>
+          {RARITIES.map((r) => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
         <select
           value={sortBy || ''}
           onChange={(e) => { setSortBy(e.target.value || undefined); setPage(1) }}
@@ -402,8 +415,9 @@ export function ItemsManager() {
                           <Pencil size={16} />
                         </button>
                         <button
-                          onClick={() => setDeleteId(item.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
+                          onClick={() => handleDelete(item.id)}
+                          disabled={deleting}
+                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors disabled:opacity-30"
                           title="Удалить"
                         >
                           <Trash2 size={16} />
@@ -586,33 +600,6 @@ export function ItemsManager() {
                 className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
               >
                 {submitting ? 'Сохранение...' : editingItem ? 'Сохранить' : 'Создать'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteId(null)} />
-          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-sm p-6">
-            <h3 className="text-lg font-bold mb-2">Скрыть предмет?</h3>
-            <p className="text-sm text-gray-400 mb-6">
-              Предмет будет скрыт (soft delete). Игроки больше не смогут его получить, но существующие записи сохранятся.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setDeleteId(null)}
-                className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
-              >
-                Отмена
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
-              >
-                {deleting ? 'Скрытие...' : 'Скрыть'}
               </button>
             </div>
           </div>

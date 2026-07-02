@@ -331,13 +331,14 @@ export const api = {
     return { status: 'ok', achievement_id: achievementId, xp_gained: 0, xgen_gained: 0 } as ClaimAchievementResponse
   },
 
-  getAdminItems: async (page = 1, pageSize = 20, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc') => {
+  getAdminItems: async (page = 1, pageSize = 20, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc', rarity?: string) => {
     const params = new URLSearchParams()
     params.set('page', String(page))
     params.set('page_size', String(pageSize))
     if (search) params.set('search', search)
     if (sortBy) params.set('sort_by', sortBy)
     if (sortOrder) params.set('sort_order', sortOrder)
+    if (rarity) params.set('rarity', rarity)
     const data = await apiClient.get<{ items: AdminItem[]; total: number; page: number; page_size: number; total_pages: number }>(
       `/admin/items?${params.toString()}`,
     ).then((r) => r.data)

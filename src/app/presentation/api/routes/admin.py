@@ -293,6 +293,7 @@ async def get_all_articles(
 async def get_all_items(
     _admin = Depends(verify_admin),
     pagination: PaginationParams = Depends(),
+    rarity: str | None = None,
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
     items, total = await item_repo.get_paginated(
@@ -301,6 +302,7 @@ async def get_all_items(
         search=pagination.search,
         sort_by=pagination.sort_by,
         sort_order=pagination.sort_order,
+        rarity=rarity,
     )
     return PaginatedResponseDTO(
         items=[ItemResponseDTO.model_validate(i) for i in items],
