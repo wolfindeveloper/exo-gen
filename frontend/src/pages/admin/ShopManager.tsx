@@ -61,7 +61,7 @@ export function ShopManager() {
   const [bundleItemSelect, setBundleItemSelect] = useState('')
   const [bundleItemQty, setBundleItemQty] = useState(1)
 
-  const searchTimer = useRef<ReturnType<typeof setTimeout>>()
+  const searchTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const itemNameMap = useRef<Map<string, string>>(new Map())
 
   useEffect(() => {
