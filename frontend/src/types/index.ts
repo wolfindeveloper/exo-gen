@@ -344,3 +344,138 @@ export interface UpdateItemPayload {
   sell_price?: number
   image_url?: string
 }
+
+export type DropType = 'xgen' | 'fragments' | 'item'
+
+export interface AdminLootItem {
+  item_type: string
+  amount: number
+  chance: number
+  item_id: string | null
+}
+
+export interface AdminZone {
+  id: string
+  name: string
+  description: string
+  image_url: string
+  fuel_cost: number
+  optimism_risk: number
+  duration_seconds: number
+  loot_table: AdminLootItem[]
+}
+
+export interface AdminZonesResponse {
+  items: AdminZone[]
+  total: number
+  page: number
+  page_size: number
+  total_pages: number
+}
+
+export interface LootDropPayload {
+  drop_type: DropType
+  amount: number
+  chance: number
+  item_id?: string | null
+}
+
+export interface CreateZonePayload {
+  name: string
+  description: string
+  image_url: string
+  fuel_cost: number
+  optimism_risk: number
+  duration_seconds: number
+  loot_table: LootDropPayload[]
+}
+
+export interface UpdateZonePayload {
+  name?: string
+  description?: string
+  image_url?: string
+  fuel_cost?: number
+  optimism_risk?: number
+  duration_seconds?: number
+  loot_table?: LootDropPayload[]
+}
+
+export interface AdminLootBoxEntry {
+  item_type: string
+  amount: number
+  chance: number
+  item_id: string | null
+}
+
+export interface AdminLootBox {
+  id: string
+  box_type: string
+  name: string
+  description: string
+  entries: AdminLootBoxEntry[]
+  is_active: boolean
+}
+
+export interface CreateLootBoxPayload {
+  box_type: string
+  name: string
+  description: string
+  entries: { item_type: string; amount: number; chance: number; item_id?: string | null }[]
+  is_active?: boolean
+}
+
+export interface UpdateLootBoxPayload {
+  name?: string
+  description?: string
+  entries?: { item_type: string; amount: number; chance: number; item_id?: string | null }[]
+  is_active?: boolean
+}
+
+export interface LootBoxSimResult {
+  drop_type: string
+  item_id: string | null
+  item_name: string | null
+  total_dropped: number
+  percentage: number
+  total_xgen: number | null
+  total_fragments: number | null
+}
+
+export interface AdminShopBundleItem {
+  item_id: string
+  quantity: number
+}
+
+export interface AdminShopAnalytics {
+  total_purchases: number
+  today_purchases: number
+  revenue_xgen: number
+}
+
+export interface AdminShopItem {
+  id: string
+  item_id: string | null
+  price_xgen: number
+  daily_limit: number
+  stock_limit: number
+  is_active: boolean
+  bundle_items: AdminShopBundleItem[]
+  analytics: AdminShopAnalytics
+}
+
+export interface CreateAdminShopItemPayload {
+  item_id?: string
+  price_xgen: number
+  daily_limit?: number
+  stock_limit?: number
+  is_active?: boolean
+  bundle_items?: AdminShopBundleItem[]
+}
+
+export interface UpdateAdminShopItemPayload {
+  price_xgen?: number
+  daily_limit?: number
+  stock_limit?: number
+  is_active?: boolean
+  bundle_items?: AdminShopBundleItem[]
+}

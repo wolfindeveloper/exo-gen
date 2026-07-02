@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload } from '../types'
+import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || 'https://api.exo-gen.com').replace(/\/+$/, '')
 
@@ -357,5 +357,75 @@ export const api = {
 
   deleteAdminItem: async (id: string) => {
     await apiClient.delete(`/admin/items/${id}`)
+  },
+
+  getAdminZones: async (page = 1, pageSize = 20, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc') => {
+    const params = new URLSearchParams()
+    params.set('page', String(page))
+    params.set('page_size', String(pageSize))
+    if (search) params.set('search', search)
+    if (sortBy) params.set('sort_by', sortBy)
+    if (sortOrder) params.set('sort_order', sortOrder)
+    const data = await apiClient.get<{ items: AdminZone[]; total: number; page: number; page_size: number; total_pages: number }>(
+      `/admin/zones?${params.toString()}`,
+    ).then((r) => r.data)
+    return data as AdminZonesResponse
+  },
+
+  createAdminZone: async (payload: CreateZonePayload) => {
+    const data = await apiClient.post<AdminZone>('/admin/zones', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminZone: async (id: string, payload: UpdateZonePayload) => {
+    const data = await apiClient.patch<AdminZone>(`/admin/zones/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminZone: async (id: string) => {
+    await apiClient.delete(`/admin/zones/${id}`)
+  },
+
+  getAdminLootBoxes: async () => {
+    const data = await apiClient.get<AdminLootBox[]>('/admin/loot-boxes').then((r) => r.data)
+    return data
+  },
+
+  createAdminLootBox: async (payload: CreateLootBoxPayload) => {
+    const data = await apiClient.post<AdminLootBox>('/admin/loot-boxes', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminLootBox: async (id: string, payload: UpdateLootBoxPayload) => {
+    const data = await apiClient.patch<AdminLootBox>(`/admin/loot-boxes/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminLootBox: async (id: string) => {
+    await apiClient.delete(`/admin/loot-boxes/${id}`)
+  },
+
+  simulateLootBox: async (id: string, count: number) => {
+    const data = await apiClient.post<LootBoxSimResult[]>(`/admin/loot-boxes/${id}/simulate`, { count }).then((r) => r.data)
+    return data
+  },
+
+  getAdminShopItems: async () => {
+    const data = await apiClient.get<AdminShopItem[]>('/admin/shop-items').then((r) => r.data)
+    return data
+  },
+
+  createAdminShopItem: async (payload: CreateAdminShopItemPayload) => {
+    const data = await apiClient.post('/admin/shop-items', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminShopItem: async (id: string, payload: UpdateAdminShopItemPayload) => {
+    const data = await apiClient.patch(`/admin/shop-items/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminShopItem: async (id: string) => {
+    await apiClient.delete(`/admin/shop-items/${id}`)
   },
 }

@@ -2,13 +2,13 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from uuid import UUID
 
-from app.domain.value_objects.loot_box import LootBoxType, LootBoxEntry
+from app.domain.value_objects.loot_box import LootBoxEntry
 
 
 @dataclass
 class LootBoxConfig:
     id: UUID
-    box_type: LootBoxType
+    box_type: str
     name: str
     description: str
     entries: list[LootBoxEntry] = field(default_factory=list)

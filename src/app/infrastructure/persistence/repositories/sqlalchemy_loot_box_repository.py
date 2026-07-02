@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.entities.loot_box_config import LootBoxConfig
 from app.domain.repositories.loot_box_repository import LootBoxRepository
-from app.domain.value_objects.loot_box import LootBoxType
 from app.infrastructure.persistence.mappers import LootBoxMapper
 from app.infrastructure.persistence.models.loot_box_config_orm import LootBoxConfigORM
 
@@ -24,10 +23,10 @@ class SQLAlchemyLootBoxRepository(LootBoxRepository):
         orm = result.scalar_one_or_none()
         return LootBoxMapper.to_domain(orm) if orm else None
 
-    async def get_by_type(self, box_type: LootBoxType) -> LootBoxConfig | None:
+    async def get_by_type(self, box_type: str) -> LootBoxConfig | None:
         stmt = (
             select(LootBoxConfigORM)
-            .where(LootBoxConfigORM.box_type == box_type.value)
+            .where(LootBoxConfigORM.box_type == box_type)
             .where(LootBoxConfigORM.deleted_at.is_(None))
         )
         result = await self.session.execute(stmt)

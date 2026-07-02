@@ -22,11 +22,12 @@ class ShopItemAnalyticsDTO(BaseModel):
 
 class ShopItemWithAnalyticsDTO(BaseModel):
     id: UUID
-    item_id: UUID
+    item_id: UUID | None = None
     price_xgen: int
     daily_limit: int
     stock_limit: int
     is_active: bool
+    bundle_items: list[dict] = []
     analytics: ShopItemAnalyticsDTO
 
 

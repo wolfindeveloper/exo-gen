@@ -54,12 +54,14 @@ from app.application.dtos.admin_dto import (
     UpdateArticleDTO, UpdateSeasonDTO, UpdateLootBoxConfigDTO,
     UpdateShopItemDTO, UpdateStarsPackageDTO, LootBoxConfigResponseDTO,
     PaginationParams, PaginatedResponseDTO, CreateShopItemDTO,
+    CreateLootBoxConfigDTO,
 )
 from app.application.use_cases.create_zone import CreateZoneUseCase
 from app.application.use_cases.create_season import CreateSeasonUseCase
 from app.application.use_cases.create_chapter import CreateChapterUseCase
 from app.application.use_cases.create_article import CreateArticleUseCase
 from app.application.use_cases.create_item import CreateItemUseCase
+from app.application.use_cases.create_loot_box_config import CreateLootBoxConfigUseCase
 from app.application.use_cases.create_shop_item import CreateShopItem
 from app.application.use_cases.update_zone import UpdateZoneUseCase
 from app.application.use_cases.update_item import UpdateItemUseCase
@@ -413,6 +415,25 @@ async def update_item(
         raise HTTPException(status_code=422, detail=str(e))
 
 
+@router.get("/loot-boxes", response_model=list[LootBoxConfigResponseDTO])
+async def get_all_loot_boxes(
+    _admin = Depends(verify_admin),
+    config_repo: LootBoxRepository = Depends(get_loot_box_repo),
+):
+    return await config_repo.get_all()
+
+
+@router.post("/loot-boxes", response_model=LootBoxConfigResponseDTO, status_code=201)
+async def create_loot_box_config(
+    dto: CreateLootBoxConfigDTO,
+    _admin = Depends(verify_admin),
+    config_repo: LootBoxRepository = Depends(get_loot_box_repo),
+    uow: UnitOfWork = Depends(get_uow),
+):
+    use_case = CreateLootBoxConfigUseCase(config_repo=config_repo)
+    return await use_case.execute(dto, uow)
+
+
 @router.patch("/loot-boxes/{config_id}", response_model=LootBoxConfigResponseDTO)
 async def update_loot_box_config(
     config_id: UUID,
@@ -465,6 +486,7 @@ async def get_all_shop_items(
                 daily_limit=item.daily_limit,
                 stock_limit=item.stock_limit,
                 is_active=item.is_active,
+                bundle_items=item.bundle_items,
                 analytics=ShopItemAnalyticsDTO(
                     total_purchases=analytics_result.total_purchases,
                     today_purchases=analytics_result.today_purchases,

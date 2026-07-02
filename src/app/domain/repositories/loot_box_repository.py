@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from app.domain.entities.loot_box_config import LootBoxConfig
-from app.domain.value_objects.loot_box import LootBoxType
 
 
 class LootBoxRepository(ABC):
@@ -11,7 +10,7 @@ class LootBoxRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_by_type(self, box_type: LootBoxType) -> LootBoxConfig | None:
+    async def get_by_type(self, box_type: str) -> LootBoxConfig | None:
         pass
 
     @abstractmethod

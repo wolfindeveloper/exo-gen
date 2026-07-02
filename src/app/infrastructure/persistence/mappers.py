@@ -368,7 +368,7 @@ class LootBoxMapper:
         ]
         return LootBoxConfig(
             id=orm.id,
-            box_type=LootBoxType(orm.box_type),
+            box_type=orm.box_type,
             name=orm.name,
             description=orm.description,
             entries=entries,
@@ -389,7 +389,7 @@ class LootBoxMapper:
         ]
         return LootBoxConfigORM(
             id=domain.id,
-            box_type=domain.box_type.value,
+            box_type=domain.box_type,
             name=domain.name,
             description=domain.description,
             entries=entries,

@@ -162,6 +162,14 @@ class UpdateLootBoxConfigDTO(BaseModel):
     is_active: bool | None = None
 
 
+class CreateLootBoxConfigDTO(BaseModel):
+    box_type: str
+    name: str
+    description: str
+    entries: list[dict] = []
+    is_active: bool = True
+
+
 class BundleItemDTO(BaseModel):
     item_id: UUID
     quantity: int = Field(gt=0)

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Boxes, Map, ShoppingBag, BookOpen } from 'lucide-react'
+import { ArrowLeft, Boxes, Map, ShoppingBag, BookOpen, LayoutDashboard, Gift, Calendar, Star } from 'lucide-react'
 
 import { useGameStore } from '../../store/game'
 
@@ -26,10 +26,14 @@ export function AdminLayout() {
   if (!isAdmin) return null
 
   const navItems = [
+    { to: '/admin/dashboard', label: 'Дашборд', icon: LayoutDashboard },
     { to: '/admin/items', label: 'Предметы', icon: Boxes },
     { to: '/admin/zones', label: 'Зоны', icon: Map },
     { to: '/admin/shop', label: 'Магазин', icon: ShoppingBag },
+    { to: '/admin/loot-boxes', label: 'Лутбоксы', icon: Gift },
     { to: '/admin/guide', label: 'Гайд', icon: BookOpen },
+    { to: '/admin/seasons', label: 'Сезоны', icon: Calendar },
+    { to: '/admin/stars-packages', label: 'Stars пакеты', icon: Star },
   ]
 
   return (

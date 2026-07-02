@@ -20,6 +20,9 @@ import { Shop } from './pages/Shop'
 import { PageTransition } from './components/PageTransition'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { ItemsManager } from './pages/admin/ItemsManager'
+import { ZonesManager } from './pages/admin/ZonesManager'
+import { LootBoxManager } from './pages/admin/LootBoxManager'
+import { ShopManager } from './pages/admin/ShopManager'
 import { PlaceholderPage } from './pages/admin/PlaceholderPage'
 
 function AppContent() {
@@ -59,10 +62,14 @@ function AppContent() {
     return (
       <Routes location={location}>
         <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<PlaceholderPage title="Дашборд" />} />
           <Route path="items" element={<ItemsManager />} />
-          <Route path="zones" element={<PlaceholderPage title="Зоны" />} />
-          <Route path="shop" element={<PlaceholderPage title="Магазин" />} />
+          <Route path="zones" element={<ZonesManager />} />
+          <Route path="shop" element={<ShopManager />} />
+          <Route path="loot-boxes" element={<LootBoxManager />} />
           <Route path="guide" element={<PlaceholderPage title="Гайд" />} />
+          <Route path="seasons" element={<PlaceholderPage title="Сезоны" />} />
+          <Route path="stars-packages" element={<PlaceholderPage title="Пакеты Stars" />} />
         </Route>
       </Routes>
     )

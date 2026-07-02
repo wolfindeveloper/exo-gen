@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from app.domain.entities.player import Player
 from app.domain.entities.item import ItemType
 from app.domain.uow import UnitOfWork
-from app.domain.value_objects.loot_box import LootBoxType
 from app.domain.services.loot_box_service import LootBoxService
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
@@ -34,7 +33,7 @@ class OpenLootBoxUseCase:
     async def execute(
         self,
         player: Player,
-        box_type: LootBoxType,
+        box_type: str,
         uow: UnitOfWork,
     ) -> OpenLootBoxResult:
         config = await self.loot_box_repo.get_by_type(box_type)
