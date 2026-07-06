@@ -12,7 +12,7 @@ class CreateZoneUseCase:
         self.zone_repo = zone_repo
 
     async def execute(self, dto: CreateZoneDTO, uow: UnitOfWork) -> Zone:
-        raw_loot_table = [item.model_dump() for item in dto.loot_table]
+        raw_loot_table = [item.model_dump(mode='json') for item in dto.loot_table]
 
         zone = Zone(
             id=uuid.uuid4(),
