@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload } from '../types'
+import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || 'https://api.exo-gen.com').replace(/\/+$/, '')
 
@@ -427,5 +427,49 @@ export const api = {
 
   deleteAdminShopItem: async (id: string) => {
     await apiClient.delete(`/admin/shop-items/${id}`)
+  },
+
+  getAdminSeasons: async (page = 1, pageSize = 20, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc') => {
+    const params = new URLSearchParams()
+    params.set('page', String(page))
+    params.set('page_size', String(pageSize))
+    if (search) params.set('search', search)
+    if (sortBy) params.set('sort_by', sortBy)
+    if (sortOrder) params.set('sort_order', sortOrder)
+    const data = await apiClient.get<AdminPaginatedResponse<AdminSeason>>(`/admin/seasons?${params.toString()}`).then((r) => r.data)
+    return data
+  },
+
+  createAdminSeason: async (payload: CreateAdminSeasonPayload) => {
+    const data = await apiClient.post<AdminSeason>('/admin/seasons', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminSeason: async (id: string, payload: UpdateAdminSeasonPayload) => {
+    const data = await apiClient.patch<AdminSeason>(`/admin/seasons/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminSeason: async (id: string) => {
+    await apiClient.delete(`/admin/seasons/${id}`)
+  },
+
+  getStarsPackages: async () => {
+    const data = await apiClient.get<AdminStarsPackage[]>('/stars-packages').then((r) => r.data)
+    return data
+  },
+
+  createAdminStarsPackage: async (payload: { stars_amount: number; xgen_reward: number; is_active: boolean }) => {
+    const data = await apiClient.post<AdminStarsPackage>('/admin/stars-packages', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminStarsPackage: async (id: string, payload: UpdateAdminStarsPackagePayload) => {
+    const data = await apiClient.patch<AdminStarsPackage>(`/admin/stars-packages/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminStarsPackage: async (id: string) => {
+    await apiClient.delete(`/admin/stars-packages/${id}`)
   },
 }

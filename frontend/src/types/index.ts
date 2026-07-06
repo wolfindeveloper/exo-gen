@@ -441,6 +441,58 @@ export interface LootBoxSimResult {
   total_fragments: number | null
 }
 
+export interface AdminStarsPackage {
+  id: string
+  stars_amount: number
+  xgen_reward: number
+  is_active: boolean
+}
+
+export interface UpdateAdminStarsPackagePayload {
+  stars_amount?: number
+  xgen_reward?: number
+  is_active?: boolean
+}
+
+export interface AdminSeason {
+  id: string
+  name: string
+  description: string
+  start_date: string
+  end_date: string
+  reward_xgen: number
+  reward_fragments: number
+  is_active: boolean
+}
+
+export interface CreateAdminSeasonPayload {
+  name: string
+  description: string
+  start_date: string
+  end_date: string
+  reward_xgen?: number
+  reward_fragments?: number
+  is_active?: boolean
+}
+
+export interface UpdateAdminSeasonPayload {
+  name?: string
+  description?: string
+  start_date?: string
+  end_date?: string
+  reward_xgen?: number
+  reward_fragments?: number
+  is_active?: boolean
+}
+
+export interface AdminPaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  page_size: number
+  total_pages: number
+}
+
 export interface AdminShopBundleItem {
   item_id: string
   quantity: number

@@ -23,6 +23,8 @@ import { ItemsManager } from './pages/admin/ItemsManager'
 import { ZonesManager } from './pages/admin/ZonesManager'
 import { LootBoxManager } from './pages/admin/LootBoxManager'
 import { ShopManager } from './pages/admin/ShopManager'
+import { SeasonsManager } from './pages/admin/SeasonsManager'
+import { StarsPackagesManager } from './pages/admin/StarsPackagesManager'
 import { PlaceholderPage } from './pages/admin/PlaceholderPage'
 
 function AppContent() {
@@ -68,8 +70,8 @@ function AppContent() {
           <Route path="shop" element={<ShopManager />} />
           <Route path="loot-boxes" element={<LootBoxManager />} />
           <Route path="guide" element={<PlaceholderPage title="Гайд" />} />
-          <Route path="seasons" element={<PlaceholderPage title="Сезоны" />} />
-          <Route path="stars-packages" element={<PlaceholderPage title="Пакеты Stars" />} />
+          <Route path="seasons" element={<SeasonsManager />} />
+          <Route path="stars-packages" element={<StarsPackagesManager />} />
         </Route>
       </Routes>
     )
