@@ -72,15 +72,13 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestIDMiddleware)
 
     # CORS
-    origins = settings.ALLOWED_ORIGINS
-    if settings.DEBUG:
-        origins = ["*"]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=origins,
+        allow_origins=settings.ALLOWED_ORIGINS,
+        allow_origin_regex=r"^https?://(.*\.)?(exo-gen\.com|telegram\.org|localhost)(:\d+)?$",
         allow_credentials=True,
-        allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "Accept", "X-Request-ID"],
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     # Rate limiting
