@@ -17,7 +17,7 @@ class UpdateZoneUseCase:
         if not zone or zone.is_deleted():
             raise ZoneNotFoundError(f"Zone {zone_id} not found")
 
-        zone.update(**dto.model_dump(exclude_none=True))
+        zone.update(**dto.model_dump(exclude_none=True, mode='json'))
 
         uow.track(zone)
         await self.zone_repo.save(zone)
