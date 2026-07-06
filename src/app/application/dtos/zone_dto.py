@@ -1,11 +1,13 @@
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from uuid import UUID
 
 from app.application.dtos.admin_dto import LootDropEntry
 
 
 class LootItemDTO(BaseModel):
-    item_type: str
+    model_config = ConfigDict(populate_by_name=True)
+
+    item_type: str = Field(alias='drop_type')
     amount: int
     chance: float
     item_id: str | None = None
