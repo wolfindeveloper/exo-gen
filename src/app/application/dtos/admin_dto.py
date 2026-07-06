@@ -93,15 +93,6 @@ class LootDropEntry(BaseModel):
         return self
 
 
-class LootTableValidator(RootModel[list[LootDropEntry]]):
-    @field_validator("root", mode="after")
-    @classmethod
-    def validate_loot_table(cls, v: list[LootDropEntry]) -> list[LootDropEntry]:
-        if not v:
-            raise ValueError("Loot table cannot be empty")
-        return v
-
-
 class UpdateZoneDTO(BaseModel):
     name: str | None = None
     description: str | None = None

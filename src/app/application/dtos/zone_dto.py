@@ -1,7 +1,7 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 from uuid import UUID
 
-from app.application.dtos.admin_dto import LootTableValidator
+from app.application.dtos.admin_dto import LootDropEntry
 
 
 class LootItemDTO(BaseModel):
@@ -18,7 +18,14 @@ class CreateZoneDTO(BaseModel):
     fuel_cost: float
     optimism_risk: float
     duration_seconds: int
-    loot_table: LootTableValidator
+    loot_table: list[LootDropEntry]
+
+    @field_validator("loot_table", mode="after")
+    @classmethod
+    def validate_loot_table(cls, v: list[LootDropEntry]) -> list[LootDropEntry]:
+        if not v:
+            raise ValueError("Loot table cannot be empty")
+        return v
 
 
 class ZoneResponseDTO(BaseModel):
