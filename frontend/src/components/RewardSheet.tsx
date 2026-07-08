@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { useGameStore } from '../store/game'
-import type { LootItem, LootResult } from '../types'
+import type { LootItem } from '../types'
 
 function lootLabel(item: LootItem): string {
   return item.name || 'Неизвестный предмет'

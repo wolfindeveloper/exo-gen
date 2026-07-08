@@ -141,7 +141,7 @@ export const api = {
   },
 
   claimExpedition: async (expeditionId: string) => {
-    const data = await apiClient.post<{ xgen_earned: number; fragments_earned: number; items_earned: { item_id: string; amount: number }[]; optimism_lost: number; current_tea: number; current_optimism: number }>('/expeditions/claim', { expedition_id: expeditionId }).then((r) => r.data)
+    const data = await apiClient.post<{ xgen_earned: number; fragments_earned: number; items_earned: { item_id: string; amount: number; name?: string | null }[]; optimism_lost: number; current_tea: number; current_optimism: number }>('/expeditions/claim', { expedition_id: expeditionId }).then((r) => r.data)
     return {
       xgen_earned: data.xgen_earned,
       fragments_earned: data.fragments_earned,

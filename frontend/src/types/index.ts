@@ -100,6 +100,7 @@ export interface ClaimResult {
 export interface ClaimedItem {
   item_id: string
   amount: number
+  name?: string | null
 }
 
 export interface LootItem {
