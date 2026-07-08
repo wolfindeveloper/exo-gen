@@ -26,8 +26,9 @@ COPY src/ ./src/
 COPY alembic/ ./alembic/
 COPY alembic.ini ./
 
-# Диагностический скрипт
+# Диагностические скрипты
 COPY check_expeditions.py ./
+COPY fix_stuck_expeditions.py ./
 
 EXPOSE 8000
 
