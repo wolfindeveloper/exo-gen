@@ -15,6 +15,17 @@ class StarsPackageRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_paginated(
+        self,
+        page: int = 1,
+        page_size: int = 50,
+        search: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str = "desc",
+    ) -> tuple[list[StarsPackage], int]:
+        pass
+
+    @abstractmethod
     async def save(self, package: StarsPackage) -> None:
         pass
 

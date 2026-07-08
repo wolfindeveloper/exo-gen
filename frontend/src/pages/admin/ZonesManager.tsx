@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Dices, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
 
 import { api } from '../../api/client'
-import type { AdminZone, AdminZonesResponse, AdminItem, CreateZonePayload, DropType, UpdateZonePayload } from '../../types'
+import type { AdminZone, AdminZonesResponse, AdminItem, CreateZonePayload, DropType, LootBoxSimResult, UpdateZonePayload } from '../../types'
 
 const DROP_TYPES: DropType[] = ['xgen', 'fragments', 'item']
 
@@ -103,7 +103,11 @@ export function ZonesManager() {
   const [submitting, setSubmitting] = useState(false)
   const [deletingZone, setDeletingZone] = useState<AdminZone | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [itemsList, setItemsList] = useState<AdminItem[]>([])
+
+  const [simulating, setSimulating] = useState(false)
+  const [simResults, setSimResults] = useState<{ zone: AdminZone; results: LootBoxSimResult[] } | null>(null)
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
@@ -158,6 +162,26 @@ export function ZonesManager() {
       setSortOrder('asc')
     }
     setPage(1)
+  }
+
+  const handleSimulate = async (zone: AdminZone) => {
+    try {
+      setSimulating(true)
+      setError(null)
+      const results = await api.simulateZone(zone.id, 100)
+      const totalXgen = results.reduce((sum, r) => r.drop_type === 'xgen' ? sum + r.total_dropped : sum, 0)
+      const totalFragments = results.reduce((sum, r) => r.drop_type === 'fragments' ? sum + r.total_dropped : sum, 0)
+      const enriched: LootBoxSimResult[] = results.map((r) => ({
+        ...r,
+        total_xgen: r.drop_type === 'xgen' ? totalXgen : null,
+        total_fragments: r.drop_type === 'fragments' ? totalFragments : null,
+      }))
+      setSimResults({ zone, results: enriched })
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setSimulating(false)
+    }
   }
 
   const openCreate = () => {
@@ -255,11 +279,12 @@ export function ZonesManager() {
     if (!deletingZone) return
     try {
       setDeleting(true)
+      setDeleteError('')
       await api.deleteAdminZone(deletingZone.id)
       setDeletingZone(null)
       await loadZones(page, search, sortBy, sortOrder)
     } catch (e) {
-      setError((e as Error).message)
+      setDeleteError((e as Error).message)
     } finally {
       setDeleting(false)
     }
@@ -372,6 +397,15 @@ export function ZonesManager() {
                     <td className="px-3 py-3">
                       <div className="flex items-center justify-end gap-2">
                         <button
+                          onClick={() => handleSimulate(zone)}
+                          disabled={simulating}
+                          className="flex items-center gap-1 text-xs bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 px-2 py-1 rounded transition-colors disabled:opacity-30"
+                          title="Симуляция x100"
+                        >
+                          <Dices size={14} />
+                          x100
+                        </button>
+                        <button
                           onClick={() => openEdit(zone)}
                           className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-gray-700 rounded transition-colors"
                           title="Редактировать"
@@ -379,7 +413,7 @@ export function ZonesManager() {
                           <Pencil size={16} />
                         </button>
                         <button
-                          onClick={() => setDeletingZone(zone)}
+                          onClick={() => { setDeletingZone(zone); setDeleteError('') }}
                           className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
                           title="Удалить"
                         >
@@ -604,6 +638,7 @@ export function ZonesManager() {
             <p className="text-sm text-gray-400 mb-6">
               Вы уверены, что хотите удалить зону «{deletingZone.name}»? Это мягкое удаление, зона пометится как удаленная.
             </p>
+            {deleteError && <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-3 py-2 rounded-lg text-sm">{deleteError}</div>}
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeletingZone(null)}
@@ -617,6 +652,73 @@ export function ZonesManager() {
                 className="bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
               >
                 {deleting ? 'Удаление...' : 'Удалить'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {simResults && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSimResults(null)} />
+          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-lg max-h-[80vh] overflow-y-auto mx-4">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+              <div>
+                <h3 className="text-lg font-bold">Предпросмотр лута зоны: {simResults.zone.name}</h3>
+                <p className="text-xs text-gray-500">Симуляция x100 экспедиций</p>
+              </div>
+              <button onClick={() => setSimResults(null)} className="text-gray-400 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {simResults.results.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Нет данных. Возможно, loot_table пуста.</p>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-700 text-left text-gray-400">
+                      <th className="py-2 font-medium">Дроп</th>
+                      <th className="py-2 font-medium text-right">Кол-во</th>
+                      <th className="py-2 font-medium text-right">Процент</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {simResults.results.map((r, i) => (
+                      <tr key={i} className="border-b border-gray-700/50">
+                        <td className="py-2 text-white">
+                          {r.drop_type === 'item' ? (r.item_name || r.item_id || 'Предмет') : DROP_LABELS[r.drop_type] || r.drop_type}
+                        </td>
+                        <td className="py-2 text-right text-gray-300 font-mono">{r.total_dropped}</td>
+                        <td className="py-2 text-right text-purple-400 font-mono">{r.percentage}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  {simResults.results[0]?.total_xgen != null && (
+                    <tfoot>
+                      <tr className="border-t-2 border-gray-700">
+                        <td className="py-3 font-medium text-gray-400">Всего XGen</td>
+                        <td className="py-3 text-right text-green-400 font-mono" colSpan={2}>{simResults.results[0].total_xgen}</td>
+                      </tr>
+                      {simResults.results[0]?.total_fragments != null && (
+                        <tr>
+                          <td className="py-2 font-medium text-gray-400">Всего фрагментов</td>
+                          <td className="py-2 text-right text-amber-400 font-mono" colSpan={2}>{simResults.results[0].total_fragments}</td>
+                        </tr>
+                      )}
+                    </tfoot>
+                  )}
+                </table>
+              )}
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-700 flex justify-end">
+              <button
+                onClick={() => setSimResults(null)}
+                className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
+              >
+                Закрыть
               </button>
             </div>
           </div>

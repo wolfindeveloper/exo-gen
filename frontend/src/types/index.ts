@@ -504,6 +504,36 @@ export interface AdminShopAnalytics {
   revenue_xgen: number
 }
 
+export interface AdminArticle {
+  id: string
+  chapter_id: string
+  title: string
+  content: string | null
+  is_unlocked: boolean
+  fragment_cost: number
+  trigger_event_type: string | null
+  trigger_threshold: number
+  required_item_id?: string | null
+  sort_order?: number
+}
+
+export interface ChapterRewardItem {
+  item_id: string
+  quantity: number
+}
+
+export interface AdminChapter {
+  id: string
+  name: string
+  description: string
+  is_secret: boolean
+  season_id: string | null
+  reward_xgen: number
+  reward_fragments: number
+  reward_items: ChapterRewardItem[]
+  articles: AdminArticle[]
+}
+
 export interface AdminShopItem {
   id: string
   item_id: string | null

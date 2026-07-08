@@ -25,7 +25,9 @@ import { LootBoxManager } from './pages/admin/LootBoxManager'
 import { ShopManager } from './pages/admin/ShopManager'
 import { SeasonsManager } from './pages/admin/SeasonsManager'
 import { StarsPackagesManager } from './pages/admin/StarsPackagesManager'
-import { PlaceholderPage } from './pages/admin/PlaceholderPage'
+import { Dashboard } from './pages/admin/Dashboard'
+import { ChaptersManager } from './pages/admin/ChaptersManager'
+
 
 function AppContent() {
   const location = useLocation()
@@ -64,12 +66,12 @@ function AppContent() {
     return (
       <Routes location={location}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<PlaceholderPage title="Дашборд" />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="items" element={<ItemsManager />} />
           <Route path="zones" element={<ZonesManager />} />
           <Route path="shop" element={<ShopManager />} />
           <Route path="loot-boxes" element={<LootBoxManager />} />
-          <Route path="guide" element={<PlaceholderPage title="Гайд" />} />
+          <Route path="guide" element={<ChaptersManager />} />
           <Route path="seasons" element={<SeasonsManager />} />
           <Route path="stars-packages" element={<StarsPackagesManager />} />
         </Route>

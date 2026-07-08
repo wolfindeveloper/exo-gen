@@ -291,6 +291,28 @@ async def get_all_articles(
     )
 
 
+@router.get("/stars-packages", response_model=PaginatedResponseDTO[StarsPackageResponseDTO])
+async def get_all_stars_packages(
+    _admin = Depends(verify_admin),
+    pagination: PaginationParams = Depends(),
+    package_repo: StarsPackageRepository = Depends(get_stars_package_repo),
+):
+    packages, total = await package_repo.get_paginated(
+        page=pagination.page,
+        page_size=pagination.page_size,
+        search=pagination.search,
+        sort_by=pagination.sort_by,
+        sort_order=pagination.sort_order,
+    )
+    return PaginatedResponseDTO(
+        items=[StarsPackageResponseDTO.model_validate(p) for p in packages],
+        total=total,
+        page=pagination.page,
+        page_size=pagination.page_size,
+        total_pages=-(-total // pagination.page_size),
+    )
+
+
 @router.get("/items", response_model=PaginatedResponseDTO[ItemResponseDTO])
 async def get_all_items(
     _admin = Depends(verify_admin),

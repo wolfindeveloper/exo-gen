@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload } from '../types'
+import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
-const API_URL = (import.meta.env.VITE_API_URL || 'https://api.exo-gen.com').replace(/\/+$/, '')
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -410,6 +410,11 @@ export const api = {
     return data
   },
 
+  simulateZone: async (zoneId: string, count: number) => {
+    const data = await apiClient.post<LootBoxSimResult[]>(`/admin/zones/${zoneId}/simulate-loot`, { count }).then((r) => r.data)
+    return data
+  },
+
   getAdminShopItems: async () => {
     const data = await apiClient.get<AdminShopItem[]>('/admin/shop-items').then((r) => r.data)
     return data
@@ -454,8 +459,14 @@ export const api = {
     await apiClient.delete(`/admin/seasons/${id}`)
   },
 
-  getStarsPackages: async () => {
-    const data = await apiClient.get<AdminStarsPackage[]>('/stars-packages').then((r) => r.data)
+  getAdminStarsPackages: async (page = 1, pageSize = 20, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc') => {
+    const params = new URLSearchParams()
+    params.set('page', String(page))
+    params.set('page_size', String(pageSize))
+    if (search) params.set('search', search)
+    if (sortBy) params.set('sort_by', sortBy)
+    if (sortOrder) params.set('sort_order', sortOrder)
+    const data = await apiClient.get<AdminPaginatedResponse<AdminStarsPackage>>(`/admin/stars-packages?${params.toString()}`).then((r) => r.data)
     return data
   },
 
@@ -471,5 +482,48 @@ export const api = {
 
   deleteAdminStarsPackage: async (id: string) => {
     await apiClient.delete(`/admin/stars-packages/${id}`)
+  },
+
+  getAdminChapters: async (page = 1, pageSize = 50, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc') => {
+    const params = new URLSearchParams()
+    params.set('page', String(page))
+    params.set('page_size', String(pageSize))
+    if (search) params.set('search', search)
+    if (sortBy) params.set('sort_by', sortBy)
+    if (sortOrder) params.set('sort_order', sortOrder)
+    const data = await apiClient.get<AdminPaginatedResponse<AdminChapter>>(`/admin/chapters?${params.toString()}`).then((r) => r.data)
+    return data
+  },
+
+  createAdminChapter: async (payload: { name: string; description: string; is_secret?: boolean; season_id?: string | null; reward_xgen?: number; reward_fragments?: number; reward_items?: ChapterRewardItem[] }) => {
+    const data = await apiClient.post<AdminChapter>('/admin/chapters', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminChapter: async (id: string, payload: { name?: string; description?: string; is_secret?: boolean; reward_xgen?: number; reward_fragments?: number; reward_items?: ChapterRewardItem[] }) => {
+    const data = await apiClient.patch<AdminChapter>(`/admin/chapters/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminChapter: async (id: string) => {
+    await apiClient.delete(`/admin/chapters/${id}`)
+  },
+
+  createAdminArticle: async (payload: { chapter_id: string; title: string; content: string; fragment_cost?: number; trigger_event_type?: string | null; trigger_threshold?: number; required_item_id?: string | null }) => {
+    const data = await apiClient.post<AdminArticle>('/admin/articles', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminArticle: async (id: string, payload: { title?: string; content?: string; fragment_cost?: number; trigger_event_type?: string | null; trigger_threshold?: number; required_item_id?: string | null }) => {
+    const data = await apiClient.patch<AdminArticle>(`/admin/articles/${id}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminArticle: async (id: string) => {
+    await apiClient.delete(`/admin/articles/${id}`)
+  },
+
+  reorderChapterArticles: async (chapterId: string, articleIds: string[]) => {
+    await apiClient.patch(`/admin/chapters/${chapterId}/reorder-articles`, articleIds)
   },
 }

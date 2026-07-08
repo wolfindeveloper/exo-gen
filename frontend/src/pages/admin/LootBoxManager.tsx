@@ -73,6 +73,7 @@ export function LootBoxManager() {
   const [submitting, setSubmitting] = useState(false)
   const [deletingBox, setDeletingBox] = useState<AdminLootBox | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [itemsList, setItemsList] = useState<AdminItem[]>([])
 
   const [simulating, setSimulating] = useState(false)
@@ -195,11 +196,12 @@ export function LootBoxManager() {
     if (!deletingBox) return
     try {
       setDeleting(true)
+      setDeleteError('')
       await api.deleteAdminLootBox(deletingBox.id)
       setDeletingBox(null)
       await loadBoxes()
     } catch (e) {
-      setError((e as Error).message)
+      setDeleteError((e as Error).message)
     } finally {
       setDeleting(false)
     }
@@ -484,6 +486,7 @@ export function LootBoxManager() {
             <p className="text-sm text-gray-400 mb-6">
               Вы уверены, что хотите удалить лутбокс «{deletingBox.name}» ({deletingBox.box_type})? Это мягкое удаление.
             </p>
+            {deleteError && <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-3 py-2 rounded-lg text-sm">{deleteError}</div>}
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeletingBox(null)}

@@ -158,6 +158,7 @@ export function ItemsManager() {
   const [submitting, setSubmitting] = useState(false)
   const [deletingItem, setDeletingItem] = useState<AdminItem | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
@@ -271,17 +272,19 @@ export function ItemsManager() {
 
   const handleDelete = (item: AdminItem) => {
     setDeletingItem(item)
+    setDeleteError('')
   }
 
   const confirmDelete = async () => {
     if (!deletingItem) return
     try {
       setDeleting(true)
+      setDeleteError('')
       await api.deleteAdminItem(deletingItem.id)
       setDeletingItem(null)
       await loadItems(page, search, sortBy, sortOrder, rarityFilter)
     } catch (e) {
-      setError((e as Error).message)
+      setDeleteError((e as Error).message)
     } finally {
       setDeleting(false)
     }
@@ -619,6 +622,7 @@ export function ItemsManager() {
             <p className="text-sm text-gray-400 mb-6">
               Вы уверены, что хотите удалить предмет «{deletingItem.name}»? Это мягкое удаление, предмет пометится как удаленный.
             </p>
+            {deleteError && <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-3 py-2 rounded-lg text-sm">{deleteError}</div>}
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeletingItem(null)}

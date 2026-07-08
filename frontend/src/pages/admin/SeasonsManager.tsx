@@ -70,6 +70,7 @@ export function SeasonsManager() {
   const [deletingItem, setDeletingItem] = useState<AdminSeason | null>(null)
   const [deleteModalType, setDeleteModalType] = useState<DeleteModalType>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const searchTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -198,6 +199,7 @@ export function SeasonsManager() {
 
   const handleDelete = (item: AdminSeason) => {
     setDeletingItem(item)
+    setDeleteError('')
 
     if (item.is_active) {
       setDeleteModalType('error_active')
@@ -212,12 +214,13 @@ export function SeasonsManager() {
     if (!deletingItem) return
     try {
       setDeleting(true)
+      setDeleteError('')
       await api.deleteAdminSeason(deletingItem.id)
       setDeletingItem(null)
       setDeleteModalType(null)
       await loadItems(page, search, sortBy, sortOrder)
     } catch (e) {
-      setError((e as Error).message)
+      setDeleteError((e as Error).message)
     } finally {
       setDeleting(false)
     }
@@ -496,6 +499,7 @@ export function SeasonsManager() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeDeleteModal} />
           <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-sm p-6">
+            {deleteError && <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-3 py-2 rounded-lg text-sm">{deleteError}</div>}
             {deleteModalType === 'error_active' && (
               <>
                 <h3 className="text-lg font-bold mb-2 text-red-400">{'\u041e\u0448\u0438\u0431\u043a\u0430'}</h3>

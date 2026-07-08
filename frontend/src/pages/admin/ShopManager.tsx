@@ -57,6 +57,7 @@ export function ShopManager() {
 
   const [deletingItem, setDeletingItem] = useState<AdminShopItem | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const [bundleItemSelect, setBundleItemSelect] = useState('')
   const [bundleItemQty, setBundleItemQty] = useState(1)
@@ -272,11 +273,12 @@ export function ShopManager() {
     if (!deletingItem) return
     try {
       setDeleting(true)
+      setDeleteError('')
       await api.deleteAdminShopItem(deletingItem.id)
       setDeletingItem(null)
       await loadItems()
     } catch (e) {
-      setError((e as Error).message)
+      setDeleteError((e as Error).message)
     } finally {
       setDeleting(false)
     }
@@ -673,6 +675,7 @@ export function ShopManager() {
             <p className="text-sm text-gray-400 mb-6">
               {'\u0412\u044b \u0443\u0432\u0435\u0440\u0435\u043d\u044b, \u0447\u0442\u043e \u0445\u043e\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u044d\u0442\u043e\u0442 \u0442\u043e\u0432\u0430\u0440? \u042d\u0442\u043e \u043c\u044f\u0433\u043a\u043e\u0435 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u0435, \u0442\u043e\u0432\u0430\u0440 \u043f\u043e\u043c\u0435\u0442\u0438\u0442\u0441\u044f \u043a\u0430\u043a \u0443\u0434\u0430\u043b\u0435\u043d\u043d\u044b\u0439.'}
             </p>
+            {deleteError && <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-3 py-2 rounded-lg text-sm">{deleteError}</div>}
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeletingItem(null)}
