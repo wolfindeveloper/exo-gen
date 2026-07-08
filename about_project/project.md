@@ -16,3 +16,10 @@
   "trigger_event_type": "stare_60s",
   "trigger_threshold": 1
 }
+
+
+# 3. Проверка зависших статей
+- uv run python check_expeditions.py
+
+# 4. Очистка зависших статей
+- uv run python fix_stuck_expeditions.py
