@@ -56,7 +56,7 @@ function formFromZone(zone: AdminZone): FormState {
     optimism_risk: String(zone.optimism_risk),
     duration_seconds: String(zone.duration_seconds),
     loot_table: (zone.loot_table || []).map((entry) => ({
-      drop_type: (entry.item_type as DropType) || 'xgen',
+      drop_type: entry.drop_type,
       amount: String(entry.amount),
       chance: String(entry.chance),
       item_id: entry.item_id || '',

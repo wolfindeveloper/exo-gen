@@ -219,7 +219,7 @@ async def simulate_zone_loot(
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
     try:
-        use_case = SimulateZoneLootUseCase(zone_repo=zone_repo, item_repo=item_repo)
+        use_case = SimulateZoneLoot(zone_repo=zone_repo, item_repo=item_repo)
         return await use_case.execute(zone_id, request.count)
     except ZoneNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

@@ -348,7 +348,7 @@ export interface UpdateItemPayload {
 export type DropType = 'xgen' | 'fragments' | 'item'
 
 export interface AdminLootItem {
-  item_type: string
+  drop_type: DropType
   amount: number
   chance: number
   item_id: string | null
