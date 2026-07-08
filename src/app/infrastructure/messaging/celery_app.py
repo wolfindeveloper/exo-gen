@@ -17,8 +17,6 @@ from app.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
 from app.application.use_cases.process_finished_expeditions import (
     ProcessFinishedExpeditionsUseCase,
 )
-from app.infrastructure.messaging.tasks import finish_expedition_task
-
 logger = logging.getLogger(__name__)
 
 celery_app = Celery(
