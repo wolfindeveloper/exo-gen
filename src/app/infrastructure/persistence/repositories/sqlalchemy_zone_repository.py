@@ -56,7 +56,6 @@ class SQLAlchemyZoneRepository(ZoneRepository):
         result = await self.session.execute(
             select(ZoneORM)
             .where(ZoneORM.id == zone_id)
-            .where(ZoneORM.deleted_at.is_(None))
         )
 
         zone_orm = result.scalar_one_or_none()
