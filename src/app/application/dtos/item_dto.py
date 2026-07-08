@@ -24,4 +24,4 @@ class ItemResponseDTO(BaseModel):
     effect: dict
     is_tradable: bool
     sell_price: int
-    image_url: str
+    image_url: str = ""
