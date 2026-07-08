@@ -195,7 +195,7 @@ export function ChaptersManager() {
     try {
       const [seasonsData, itemsData] = await Promise.all([
         api.getAdminSeasons(1, 200),
-        api.getAdminItems(1, 500),
+        api.getAdminItems(1, 200),
       ])
       setSeasons(seasonsData.items)
       setAllItems(itemsData.items)

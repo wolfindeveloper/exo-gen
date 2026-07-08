@@ -81,7 +81,7 @@ export function ShopManager() {
 
       const [shopData, itemsData] = await Promise.all([
         api.getAdminShopItems(),
-        api.getAdminItems(1, 500),
+        api.getAdminItems(1, 200),
       ])
 
       setShopItems(shopData)
