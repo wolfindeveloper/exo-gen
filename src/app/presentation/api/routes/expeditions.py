@@ -5,6 +5,7 @@ from app.application.dtos.claim_expedition_dto import ClaimExpeditionDTO, ClaimE
 from app.application.use_cases.claim_expedition import ClaimExpeditionUseCase
 from app.domain.entities.player import Player
 from app.domain.exceptions import DomainError
+from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.zone_repository import ZoneRepository
@@ -17,6 +18,18 @@ from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import get_player_repo, get_expedition_repo, get_zone_repo, get_inventory_repo, get_item_repo, get_uow
 
 router = APIRouter(prefix="/expeditions", tags=["Expeditions"])
+
+
+@router.get("/active", response_model=ExpeditionResponseDTO | None)
+async def get_active_expedition(
+    current_player: Player = Depends(get_current_player),
+    expedition_repo: ExpeditionRepository = Depends(get_expedition_repo),
+):
+    if not current_player.ships:
+        raise HTTPException(status_code=404, detail="No ships found")
+    ship_id = current_player.ships[0].id
+    expedition = await expedition_repo.get_current_by_ship_id(ship_id)
+    return expedition
 
 @router.post("/start", response_model=ExpeditionResponseDTO)
 @limiter.limit("10/minute")

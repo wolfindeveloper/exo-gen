@@ -11,6 +11,7 @@ class LootItemDTO(BaseModel):
     amount: int
     chance: float
     item_id: str | None = None
+    item_name: str | None = None
 
 
 class CreateZoneDTO(BaseModel):

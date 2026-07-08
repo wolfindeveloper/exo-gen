@@ -10,7 +10,7 @@ def generate_loot(loot_table: list[dict]) -> dict:
 
     for entry in loot_table:
         if _rng.random() < entry.get("chance", 0):
-            item_type = entry.get("item_type")
+            item_type = entry.get("drop_type")
 
             if item_type == "xgen":
                 rewards["xgen"] += entry.get("amount", 0)

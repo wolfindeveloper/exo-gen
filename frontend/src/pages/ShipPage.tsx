@@ -728,7 +728,7 @@ active={false}
                   <button
                     disabled={isLoading}
                     onClick={handleClaimExpedition}
-                    className="w-full py-2 rounded-lg bg-gradient-to-r from-green-600/80 to-green-400/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all disabled:opacity-40"
+                    className="w-full py-2 rounded-lg bg-gradient-to-r from-green-600/80 to-green-400/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all disabled:opacity-40 animate-pulse"
                   >
                     {isLoading ? 'ЗАБИРАЮ...' : '🎁 ЗАБРАТЬ НАГРАДУ'}
                   </button>

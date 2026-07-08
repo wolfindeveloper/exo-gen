@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { motion } from 'motion/react'
 
 import { cardHover } from '../lib/animations'
@@ -14,11 +14,24 @@ interface ZoneCardProps {
 const tierColors = ['', 'text-neon-cyan', 'text-neon-green', 'text-neon-purple', 'text-neon-amber', 'text-neon-red']
 const tierBorders = ['', 'border-neon-cyan/20', 'border-neon-green/20', 'border-neon-purple/20', 'border-neon-amber/20', 'border-neon-red/20']
 
+function lootLabel(loot: Zone['loot_table'][number]): string {
+  if (loot.item_type === 'xgen') return 'XGen'
+  if (loot.item_type === 'fragments') return 'Фрагменты'
+  return loot.item_name || 'Неизвестный предмет'
+}
+
+function lootColor(loot: Zone['loot_table'][number]): string {
+  if (loot.item_type === 'xgen') return 'text-neon-amber border-neon-amber/20 bg-neon-amber/10'
+  if (loot.item_type === 'fragments') return 'text-neon-purple border-neon-purple/20 bg-neon-purple/10'
+  return 'text-neon-cyan border-neon-cyan/20 bg-neon-cyan/10'
+}
+
+function chanceText(chance: number): string {
+  if (chance >= 0.99) return '100%'
+  return `${Math.round(chance * 100)}%`
+}
+
 export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index = 0 }: ZoneCardProps) {
-  const totalWeight = useMemo(
-    () => zone.loot_table.reduce((s, l) => s + l.chance, 0),
-    [zone.loot_table],
-  )
   const lootOverflow = zone.loot_table.length > 4
   const zoneTier = 1
 
@@ -44,8 +57,11 @@ export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index
       </div>
       <div className="flex flex-wrap gap-1.5">
         {zone.loot_table.slice(0, 4).map((loot) => (
-          <span key={loot.item_id} className="text-[9px] bg-space-500/50 px-2 py-0.5 rounded-full text-slate-400 border border-white/5">
-            {loot.item_type} {Math.round(loot.chance / totalWeight * 100)}%
+          <span
+            key={loot.item_id ?? loot.item_type}
+            className={`text-[9px] px-2 py-0.5 rounded-full border ${lootColor(loot)}`}
+          >
+            {lootLabel(loot)} x{loot.amount}шт ({chanceText(loot.chance)})
           </span>
         ))}
         {lootOverflow && (

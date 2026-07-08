@@ -122,7 +122,8 @@ export const api = {
   },
 
   getActiveExpeditions: async () => {
-    return []
+    const data = await apiClient.get<Expedition | null>('/expeditions/active').then((r) => r.data)
+    return data ? [data] : []
   },
 
   startExpedition: async (zoneId: string) => {

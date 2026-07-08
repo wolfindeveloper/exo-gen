@@ -4,7 +4,24 @@ import { motion } from 'motion/react'
 import { calculateZoneStats } from '../lib/expeditionCalc'
 import { statLabels } from '../lib/stats'
 import { useGameStore } from '../store/game'
-import type { Zone } from '../types'
+import type { LootEntry, Zone } from '../types'
+
+function lootLabel(loot: LootEntry): string {
+  if (loot.item_type === 'xgen') return 'XGen'
+  if (loot.item_type === 'fragments') return 'Фрагменты'
+  return loot.item_name || 'Неизвестный предмет'
+}
+
+function lootColor(loot: LootEntry): string {
+  if (loot.item_type === 'xgen') return 'text-neon-amber border-neon-amber/20 bg-neon-amber/10'
+  if (loot.item_type === 'fragments') return 'text-neon-purple border-neon-purple/20 bg-neon-purple/10'
+  return 'text-neon-cyan border-neon-cyan/20 bg-neon-cyan/10'
+}
+
+function chanceText(chance: number): string {
+  if (chance >= 0.99) return '100%'
+  return `${Math.round(chance * 100)}%`
+}
 
 const zoneEmoji: Record<string, string> = {
   the_outskirts_of_sanity: '🌌',
@@ -50,11 +67,6 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
   useEffect(() => {
     if (ships.length === 0) loadShips()
   }, [])
-
-  const totalWeight = useMemo(
-    () => zone.loot_table.reduce((s, l) => s + l.chance, 0),
-    [zone.loot_table],
-  )
 
   const mainShip = ships[0] ?? null
   const speedMod = mainShip?.speed ?? 1.0
@@ -198,10 +210,13 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
             <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Возможная добыча</h4>
             <div className="flex flex-wrap gap-1.5">
               {zone.loot_table.map((loot, idx) => (
-                  <span key={loot.item_id || idx} className="text-[10px] bg-space-700/50 px-2.5 py-1 rounded-full text-slate-400 border border-white/5">
-                    📦 {loot.item_type} {Math.round(loot.chance / totalWeight * 100)}% x{loot.amount}шт
-                  </span>
-                ))}
+                <span
+                  key={loot.item_id ?? idx}
+                  className={`text-[10px] px-2.5 py-1 rounded-full border ${lootColor(loot)}`}
+                >
+                  {lootLabel(loot)} x{loot.amount}шт ({chanceText(loot.chance)})
+                </span>
+              ))}
             </div>
           </div>
 

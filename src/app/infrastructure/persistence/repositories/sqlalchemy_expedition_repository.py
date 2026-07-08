@@ -34,6 +34,25 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
 
         return ExpeditionMapper.expedition_to_domain(expedition_orm=expedition_orm)
 
+    async def get_current_by_ship_id(self, ship_id: UUID) -> Expedition | None:
+        stmt = (
+            select(ExpeditionORM)
+            .where(
+                ExpeditionORM.ship_id == ship_id,
+                ExpeditionORM.status.in_([
+                    ExpeditionStatus.IN_PROGRESS.value,
+                    ExpeditionStatus.FINISHED.value,
+                ])
+            )
+            .order_by(ExpeditionORM.started_at.desc())
+            .limit(1)
+        )
+        result = await self.session.execute(stmt)
+        expedition_orm = result.scalar_one_or_none()
+        if not expedition_orm:
+            return None
+        return ExpeditionMapper.expedition_to_domain(expedition_orm=expedition_orm)
+
     async def get_by_id(self, expedition_id: UUID, for_update: bool = False) -> Expedition | None:
         stmt = select(ExpeditionORM).where(ExpeditionORM.id == expedition_id)
         if for_update:

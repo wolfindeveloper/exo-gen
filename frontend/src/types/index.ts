@@ -34,6 +34,7 @@ export interface LootEntry {
   item_type: string
   amount: number
   chance: number
+  item_name?: string | null
 }
 
 export interface UserProfile {

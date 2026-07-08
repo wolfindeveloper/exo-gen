@@ -10,6 +10,11 @@ class ExpeditionRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_current_by_ship_id(self, ship_id: UUID) -> Expedition | None:
+        """Возвращает последнюю экспедицию корабля, которая ещё не завершена (IN_PROGRESS или FINISHED)"""
+        pass
+
+    @abstractmethod
     async def get_by_id(self, expedition_id: UUID, for_update: bool = False) -> Expedition | None:
         pass
 
