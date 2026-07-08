@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 from uuid import UUID
 from app.domain.entities.expedition import Expedition
 
@@ -19,6 +20,11 @@ class ExpeditionRepository(ABC):
     @abstractmethod
     async def count_by_zone_id(self, zone_id: UUID) -> int:
         """Возвращает количество активных экспедиций (IN_PROGRESS, FINISHED) в указанной зоне"""
+        pass
+
+    @abstractmethod
+    async def count_running_by_zone_id(self, zone_id: UUID, now: datetime) -> int:
+        """Возвращает количество экспедиций IN_PROGRESS с ends_at > now в указанной зоне"""
         pass
 
     @abstractmethod

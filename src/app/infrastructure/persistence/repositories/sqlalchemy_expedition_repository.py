@@ -63,6 +63,20 @@ class SQLAlchemyExpeditionRepository(ExpeditionRepository):
         result = await self.session.execute(stmt)
         return result.scalar_one()
 
+    async def count_running_by_zone_id(self, zone_id: UUID, now) -> int:
+        from sqlalchemy import func
+        stmt = (
+            select(func.count())
+            .select_from(ExpeditionORM)
+            .where(
+                ExpeditionORM.zone_id == zone_id,
+                ExpeditionORM.status == ExpeditionStatus.IN_PROGRESS.value,
+                ExpeditionORM.ends_at > now,
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def get_finished_expeditions(self) -> list[Expedition]:
         now = datetime.now(timezone.utc)
         stmt = (

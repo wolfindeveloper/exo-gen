@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uv run celery -A src.app.infrastructure.messaging.celery_app:celery_app worker --loglevel=info
+    command: uv run celery -A app.infrastructure.messaging.celery_app:celery_app worker -B --loglevel=info
     restart: unless-stopped
     env_file:
       - .env

@@ -4,6 +4,7 @@ from app.domain.uow import UnitOfWork
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
+from app.domain.services.clock import SystemClock
 from app.infrastructure.cache.redis_client import redis_client
 
 
@@ -21,8 +22,9 @@ class SoftDeleteZoneUseCase:
         if not zone or zone.is_deleted():
             raise ZoneNotFoundError(f"Zone {zone_id} not found")
 
-        expedition_count = await self.expedition_repo.count_by_zone_id(zone_id)
-        if expedition_count > 0:
+        clock = SystemClock()
+        active_count = await self.expedition_repo.count_running_by_zone_id(zone_id, clock.now())
+        if active_count > 0:
             raise ZoneHasActiveExpeditionsError(zone.name)
 
         zone.soft_delete()
