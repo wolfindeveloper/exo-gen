@@ -28,7 +28,7 @@ celery_app = Celery(
 
 celery_app.conf.beat_schedule = {
     "check-finished-expeditions-every-60s": {
-        "task": "app.infrastructure.messaging.celery_app.check_finished_expeditions",
+        "task": "check_finished_expeditions",
         "schedule": 60.0,
     },
 }
