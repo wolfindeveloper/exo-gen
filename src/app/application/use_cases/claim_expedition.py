@@ -76,8 +76,10 @@ class ClaimExpeditionUseCase:
             item_ids = [UUID(d["item_id"]) for d in loot_items]
             items = await self.item_repo.get_by_ids(item_ids)
             item_type_map = {item.id: item.type for item in items}
+            item_name_map = {item.id: item.name for item in items}
         else:
             item_type_map = {}
+            item_name_map = {}
 
         for item_drop in loot_items:
             item_id = UUID(item_drop["item_id"])
@@ -87,7 +89,11 @@ class ClaimExpeditionUseCase:
             if item_type_map.get(item_id) == ItemType.ARTIFACT:
                 player.increment_artifacts_found(amount)
 
-            claimed_items_dtos.append(ClaimedItemDTO(item_id=item_id, amount=amount))
+            claimed_items_dtos.append(ClaimedItemDTO(
+                item_id=item_id,
+                amount=amount,
+                name=item_name_map.get(item_id),
+            ))
 
         damage = max(0.0, zone.optimism_risk - ship.defense)
         ship.apply_expedition_wear_and_tear(zone.optimism_risk)

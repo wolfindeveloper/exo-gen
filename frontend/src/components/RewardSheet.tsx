@@ -2,18 +2,16 @@ import { useCallback } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { useGameStore } from '../store/game'
-import type { LootItem } from '../types'
+import type { LootItem, LootResult } from '../types'
 
 function lootLabel(item: LootItem): string {
-  return item.item_config_id
-}
-
-function lootIcon(_item: LootItem): string {
-  return ''
+  return item.name || 'Неизвестный предмет'
 }
 
 export function RewardSheet() {
   const lastLoot = useGameStore((s) => s.lastLoot)
+  const xgenGained = useGameStore((s) => s.lastXgenGained)
+  const fragmentsGained = useGameStore((s) => s.lastFragmentsGained)
   const clearLastLoot = useGameStore((s) => s.clearLastLoot)
 
   const handleClose = useCallback(() => clearLastLoot(), [clearLastLoot])
@@ -64,33 +62,57 @@ export function RewardSheet() {
               </div>
 
               {/* Loot list */}
-              {lastLoot && lastLoot.loot.length > 0 && (
+              {lastLoot && (
                 <div className="glass-card p-3 space-y-2">
                   <p className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">
                     Добыча
                   </p>
-                  {lastLoot.loot.map((item, i) => {
-                    const icon = lootIcon(item)
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.15 + i * 0.08 }}
-                        className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          {icon ? (
-                            <img src={icon} alt="" className="w-5 h-5 object-contain" />
-                          ) : (
-                            <span className="text-lg">📦</span>
-                          )}
-                          <span className="text-sm text-slate-200">{lootLabel(item)}</span>
-                        </div>
-                        <span className="font-display text-neon-cyan text-xs">x{item.quantity}</span>
-                      </motion.div>
-                    )
-                  })}
+
+                  {(xgenGained ?? 0) > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.15 }}
+                      className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-lg">🪙</span>
+                        <span className="text-sm text-slate-200">XGen</span>
+                      </div>
+                      <span className="font-display text-neon-amber text-xs">+{xgenGained}</span>
+                    </motion.div>
+                  )}
+
+                  {(fragmentsGained ?? 0) > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-lg">💎</span>
+                        <span className="text-sm text-slate-200">Фрагменты</span>
+                      </div>
+                      <span className="font-display text-neon-purple text-xs">+{fragmentsGained}</span>
+                    </motion.div>
+                  )}
+
+                  {lastLoot.loot.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.25 + i * 0.08 }}
+                      className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-lg">📦</span>
+                        <span className="text-sm text-slate-200">{lootLabel(item)}</span>
+                      </div>
+                      <span className="font-display text-neon-cyan text-xs">x{item.quantity}</span>
+                    </motion.div>
+                  ))}
                 </div>
               )}
 

@@ -29,7 +29,17 @@ async def get_active_expedition(
         raise HTTPException(status_code=404, detail="No ships found")
     ship_id = current_player.ships[0].id
     expedition = await expedition_repo.get_current_by_ship_id(ship_id)
-    return expedition
+    if not expedition:
+        return None
+    return ExpeditionResponseDTO(
+        id=expedition.id,
+        ship_id=expedition.ship_id,
+        zone_id=expedition.zone_id,
+        started_at=expedition.started_at,
+        ends_at=expedition.ends_at,
+        status=expedition.status.value,
+        remaining_tea=0.0,
+    )
 
 @router.post("/start", response_model=ExpeditionResponseDTO)
 @limiter.limit("10/minute")

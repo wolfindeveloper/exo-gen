@@ -105,6 +105,7 @@ export interface ClaimedItem {
 export interface LootItem {
   item_config_id: string
   quantity: number
+  name?: string | null
 }
 
 export interface LootResult {

@@ -19,6 +19,8 @@ interface GameState {
   ranksContent: Rank[]
   boxRewards: Record<string, unknown> | null
   lastLoot: LootResult | null
+  lastXgenGained: number | null
+  lastFragmentsGained: number | null
   guideChapters: GuideChapterSummary[]
   isLoading: boolean
   isAuthReady: boolean
@@ -67,6 +69,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   ranksContent: [],
   boxRewards: null,
   lastLoot: null,
+  lastXgenGained: null,
+  lastFragmentsGained: null,
   guideChapters: [],
   isLoading: false,
   isAuthReady: false,
@@ -103,7 +107,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   clearLastLoot: () => {
-    set({ lastLoot: null })
+    set({ lastLoot: null, lastXgenGained: null, lastFragmentsGained: null })
   },
 
   setUser: (user) => set({ user }),
@@ -214,6 +218,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       const lootItems = result.items_earned.map((i) => ({
         item_config_id: i.item_id,
         quantity: i.amount,
+        name: i.name,
       }))
       set({
         activeExpeditions: get().activeExpeditions.filter((e) => e.id !== expeditionId),
@@ -225,6 +230,8 @@ export const useGameStore = create<GameState>((set, get) => ({
           level: undefined,
           leveledUp: false,
         },
+        lastXgenGained: result.xgen_earned,
+        lastFragmentsGained: result.fragments_earned,
         isLoading: false,
       })
       await Promise.all([get().loadShips(), get().loadInventory(), get().loadProfile()])

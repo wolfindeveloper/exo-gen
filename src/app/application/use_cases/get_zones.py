@@ -1,9 +1,12 @@
+import logging
 from uuid import UUID
 
 from app.application.dtos.zone_dto import ZoneResponseDTO
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.infrastructure.cache.redis_client import redis_client
+
+logger = logging.getLogger(__name__)
 
 
 class GetZonesUseCase:
@@ -31,7 +34,9 @@ class GetZonesUseCase:
                         pass
 
         if item_ids:
+            logger.info("[GetZonesUseCase] querying item names for ids: %s", [str(i) for i in item_ids])
             items = await self.item_repo.get_by_ids(list(item_ids))
+            logger.info("[GetZonesUseCase] got %d items back: %s", len(items), [(str(it.id), it.name, it.deleted_at) for it in items])
             item_map = {str(it.id): it.name for it in items if not it.is_deleted()}
             for zone_dto in result:
                 for loot in zone_dto.loot_table:
