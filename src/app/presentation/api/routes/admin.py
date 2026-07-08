@@ -493,7 +493,7 @@ async def get_all_shop_items(
     purchase_repo: PurchaseRepository = Depends(get_purchase_repo),
 ):
     items = await shop_item_repo.get_all()
-    use_case = GetShopItemAnalyticsUseCase(
+    use_case = GetShopItemAnalytics(
         shop_item_repo=shop_item_repo,
         purchase_repo=purchase_repo,
     )
