@@ -69,7 +69,7 @@ function buildInfo(item: InventoryItem): ItemInfo {
     name: ref.name || ref.id,
     tier: parseTier(ref.id),
     rarity: ref.rarity || 'common',
-    icon_path: '',
+    icon_path: ref.image_url || '',
     resource_type: ref.type === 'resource' ? 'fuel' : undefined,
     description_key: ref.description || undefined,
   }
@@ -82,6 +82,7 @@ function buildSections(
   const fuel: InventoryItem[] = []
   const repair: InventoryItem[] = []
   const artifacts: InventoryItem[] = []
+  const consumables: InventoryItem[] = []
 
   for (const i of items) {
     if (i.item.type === 'resource' && i.item.id.startsWith('fuel')) {
@@ -90,12 +91,15 @@ function buildSections(
       repair.push(i)
     } else if (i.item.type === 'artifact') {
       artifacts.push(i)
+    } else {
+      consumables.push(i)
     }
   }
 
   const groups: { label: string; icon: string; items: InventoryItem[] }[] = []
   if (fuel.length) groups.push({ label: '⛽ Топливо', icon: '⛽', items: fuel })
   if (repair.length) groups.push({ label: '🔧 Ремкомплекты', icon: '🔧', items: repair })
+  if (consumables.length) groups.push({ label: '🧪 Расходники', icon: '🧪', items: consumables })
   if (artifacts.length) groups.push({ label: '✨ Артефакты', icon: '✨', items: artifacts })
 
   const sorter = (a: { item: InventoryItem; info: ItemInfo }, b: { item: InventoryItem; info: ItemInfo }) => {

@@ -17,9 +17,13 @@ class GetInventoryUseCase:
         # 1. Загружаем рюкзак игрока
         inventory = await self.inventory_repo.get_by_player_id(player.id)
 
-        # 2. Загружаем весь справочник предметов и делаем из него словарь для быстрого поиска
-        all_items = await self.item_repo.get_all()
-        items_dict = {item.id: item for item in all_items}
+        # 2. Загружаем предметы, которые есть в инвентаре (через get_by_ids — без фильтра deleted_at)
+        item_ids = [inv_item.item_id for inv_item in inventory.items]
+        if item_ids:
+            all_items = await self.item_repo.get_by_ids(item_ids)
+            items_dict = {item.id: item for item in all_items}
+        else:
+            items_dict = {}
 
         # 3. Склеиваем
         inventory_dtos = []

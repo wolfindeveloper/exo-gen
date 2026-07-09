@@ -71,6 +71,7 @@ export interface ItemReference {
   effect: Record<string, unknown>
   is_tradable: boolean
   sell_price: number
+  image_url?: string
 }
 
 export interface InventoryItem {
