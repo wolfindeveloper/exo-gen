@@ -24,9 +24,9 @@ const tierBadgeCls = [
   'border-neon-red/30 text-neon-red bg-neon-red/10',
 ]
 
-const typeIcons: Record<string, string> = { element: '🧪', resource: '', artifact: '✨' }
+const typeIcons: Record<string, string> = { element: '🧪', resource: '', artifact: '✨', consumable: '📦' }
 const typeLabels: Record<string, string> = {
-  all: 'Всё', element: 'Элементы', resource: 'Ресурсы', artifact: 'Артефакты',
+  all: 'Всё', element: 'Элементы', resource: 'Ресурсы', artifact: 'Артефакты', consumable: 'Расходники',
 }
 
 const sortLabels: Record<string, string> = { tier: 'T ↑', 'tier-desc': 'T ↓', qty: '× ↓', name: 'А—Я' }
