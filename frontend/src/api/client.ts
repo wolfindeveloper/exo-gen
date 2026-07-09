@@ -39,7 +39,7 @@ function shipFromDTO(data: { id: string; name: string; tea_level: number; optimi
   }
 }
 
-function zoneFromDTO(data: { id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { item_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[] }): Zone {
+function zoneFromDTO(data: { id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { drop_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[] }): Zone {
   return {
     id: data.id,
     name: data.name,
@@ -50,7 +50,7 @@ function zoneFromDTO(data: { id: string; name: string; description: string; imag
     duration_seconds: data.duration_seconds,
     loot_table: (data.loot_table || []).map((l) => ({
       item_id: l.item_id || null,
-      item_type: l.item_type || '',
+      item_type: l.drop_type || '',
       amount: l.amount || 1,
       chance: l.chance || 0,
       item_name: l.item_name || null,
@@ -216,7 +216,7 @@ export const api = {
   },
 
   getZonesContent: async () => {
-    const data = await apiClient.get<{ id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { item_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[] }[]>('/zones/').then((r) => r.data)
+    const data = await apiClient.get<{ id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { drop_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[] }[]>('/zones/').then((r) => r.data)
     return data.map(zoneFromDTO)
   },
 
