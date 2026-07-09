@@ -39,7 +39,8 @@ class GetInventoryUseCase:
                     rarity=item_domain.rarity,
                     effect=item_domain.effect,
                     is_tradable=item_domain.is_tradable,
-                    sell_price=item_domain.sell_price
+                    sell_price=item_domain.sell_price,
+                    image_url=item_domain.image_url or "",
                 )
                 inventory_dtos.append(InventoryItemDTO(
                     item=item_dto,
