@@ -37,12 +37,12 @@ class GetZonesUseCase:
             logger.info("[GetZonesUseCase] querying item names for ids: %s", [str(i) for i in item_ids])
             items = await self.item_repo.get_by_ids(list(item_ids))
             logger.info("[GetZonesUseCase] got %d items back: %s", len(items), [(str(it.id), it.name, it.deleted_at) for it in items])
-            item_map = {str(it.id): it.name for it in items if not it.is_deleted()}
+            item_map = {str(it.id): it.name for it in items}
             for zone_dto in result:
                 for loot in zone_dto.loot_table:
                     if loot.item_type == "item" and loot.item_id in item_map:
                         loot.item_name = item_map[loot.item_id]
 
-        await redis_client.set(cache_key, [r.model_dump(mode="json") for r in result], ex=300)
+        await redis_client.set(cache_key, [r.model_dump(mode="json", by_alias=True) for r in result], ex=300)
 
         return result
