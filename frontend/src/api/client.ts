@@ -110,7 +110,7 @@ export const api = {
   },
 
   getInventory: async () => {
-    const data = await apiClient.get<{ items: { item: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, unknown>; is_tradable: boolean; sell_price: number }; quantity: number }[] }>('/inventory').then((r) => r.data)
+    const data = await apiClient.get<{ items: { item: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, unknown>; is_tradable: boolean; sell_price: number; image_url: string }; quantity: number }[] }>('/inventory').then((r) => r.data)
     return data.items.map((i) => ({
       item: i.item as ItemReference,
       quantity: i.quantity,
