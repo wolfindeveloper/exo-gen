@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 revision: str = 'u1v2w3x4y5z6'
-down_revision: Union[str, Sequence[str], None] = '29deb3eb8ab6'
+down_revision: Union[str, Sequence[str], None] = 'c1d2e3f4a5b6'
 
 
 def upgrade() -> None:
