@@ -128,6 +128,8 @@ export interface Artifact {
   rarity: string
   stats_modifiers?: Record<string, number>
   icon_path?: string
+  sell_price?: number
+  is_tradable?: boolean
 }
 
 export interface Resource {

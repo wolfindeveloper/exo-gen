@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
+import type { Artifact, ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
@@ -37,6 +37,17 @@ function shipFromDTO(data: { id: string; name: string; tea_level: number; optimi
     defense: data.defense,
     luck: data.luck,
   }
+}
+
+function parseTierFromRarity(rarity: string): number {
+  const map: Record<string, number> = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
+    epic: 4,
+    legendary: 5,
+  }
+  return map[rarity] ?? 1
 }
 
 function zoneFromDTO(data: { id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { drop_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[]; tier?: number }): Zone {
@@ -226,7 +237,19 @@ export const api = {
   },
 
   getArtifactsContent: async () => {
-    return []
+    const data = await apiClient.get<AdminItem[]>('/items').then((r) => r.data)
+    const artifacts = data.filter((item) => item.type === 'artifact')
+    return artifacts.map((item) => ({
+      id: item.id,
+      name_key: item.name,
+      description_key: item.description,
+      tier: parseTierFromRarity(item.rarity),
+      rarity: item.rarity,
+      stats_modifiers: (item.effect || {}) as Record<string, number>,
+      icon_path: item.image_url || undefined,
+      sell_price: item.sell_price,
+      is_tradable: item.is_tradable,
+    })) as Artifact[]
   },
 
   getRanksContent: async () => {

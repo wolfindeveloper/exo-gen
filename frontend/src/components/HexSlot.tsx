@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 
+import { statIcons } from '../lib/stats'
+
 interface HexSlotProps {
   active: boolean
   icon: string
@@ -8,11 +10,12 @@ interface HexSlotProps {
   onClick?: () => void
   side?: 'left' | 'right'
   flicker?: boolean
+  stats?: Record<string, number>
 }
 
 const TIER_COLORS = ['#94a3b8', '#22c55e', '#a855f7', '#f59e0b', '#ffd700']
 
-export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }: HexSlotProps) {
+export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, stats }: HexSlotProps) {
   const color = active ? TIER_COLORS[Math.min(tier - 1, 4)] : '#4a5568'
 
   const dust = useMemo(
@@ -97,12 +100,19 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker }
 
       {/* name label */}
       {name && (
-        <span
-          className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[6px] text-center whitespace-nowrap font-semibold tracking-wider"
-          style={{ color: `${color}99` }}
-        >
-          {name}
-        </span>
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-center whitespace-nowrap">
+          <span
+            className="text-[6px] font-semibold tracking-wider block"
+            style={{ color: `${color}99` }}
+          >
+            {name}
+          </span>
+          {active && stats && Object.keys(stats).length > 0 && (
+            <span className="text-[5px] font-mono text-slate-500 block mt-0.5">
+              {Object.entries(stats).slice(0, 2).map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? v.toFixed(2) : v}`).join(' ')}
+            </span>
+          )}
+        </div>
       )}
 
       {/* active dot indicator */}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User, BookOpen } from 'lucide-react'
 import { useGameStore } from '../store/game'
@@ -183,7 +183,28 @@ export default function ShipPage() {
   }, [mainShip?.tea_level, handleTriggerEvent])
   const shipName = mainShip?.name ?? 'VEGA MK-II'
 
-  const slotArtifacts: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
+  const slotArtifacts: (Artifact | null)[] = useMemo(() => {
+    const slots: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
+    const equipped = mainShip?.equipment?.artifacts ?? []
+    equipped.forEach((ea, idx) => {
+      if (idx < 8) {
+        const fullArtifact = artifactsContent.find((a) => a.id === ea.id)
+        if (fullArtifact) {
+          slots[idx] = fullArtifact
+        } else {
+          slots[idx] = {
+            id: ea.id,
+            name_key: ea.name_key || ea.id.slice(0, 8),
+            tier: ea.tier ?? 1,
+            icon_path: ea.icon_path,
+            rarity: 'common',
+            stats_modifiers: {},
+          }
+        }
+      }
+    })
+    return slots
+  }, [mainShip?.equipment?.artifacts, artifactsContent])
 
   /* ── Inventory counts ── */
   const fuelInInventory = inventory
@@ -448,8 +469,9 @@ export default function ShipPage() {
                     key={i}
                     active={!!a}
                     icon={a ? '⚙' : '+'}
-                    name={SLOT_LABELS[i].name}
-                    tier={1}
+                    name={a?.name_key || SLOT_LABELS[i].name}
+                    tier={a?.tier ?? 1}
+                    stats={a?.stats_modifiers}
                     side="left"
                     onClick={() => handleSlotClick(i)}
                   />
@@ -575,13 +597,15 @@ export default function ShipPage() {
             {/* right slots - overlapping card */}
             <div className="flex flex-col gap-4 z-20 -ml-2">
               {[3, 4, 5].map((i) => {
+                const a = slotArtifacts[i]
                 return (
                   <HexSlot
                     key={i}
-                    active={false}
-                    icon={'+'}
-                    name={SLOT_LABELS[i].name}
-                    tier={1}
+                    active={!!a}
+                    icon={a ? '⚙' : '+'}
+                    name={a?.name_key || SLOT_LABELS[i].name}
+                    tier={a?.tier ?? 1}
+                    stats={a?.stats_modifiers}
                     side="right"
                     onClick={() => handleSlotClick(i)}
                   />
@@ -593,13 +617,15 @@ export default function ShipPage() {
           {/* bottom slots */}
           <div className="flex gap-8 mt-2 z-20">
               {[6, 7].map((i) => {
+              const a = slotArtifacts[i]
               return (
                 <HexSlot
                   key={i}
-active={false}
-                    icon={'+'}
-                    name={SLOT_LABELS[i].name}
-                  tier={1}
+                  active={!!a}
+                  icon={a ? '⚙' : '+'}
+                  name={a?.name_key || SLOT_LABELS[i].name}
+                  tier={a?.tier ?? 1}
+                  stats={a?.stats_modifiers}
                   onClick={() => handleSlotClick(i)}
                 />
               )
