@@ -24,8 +24,12 @@ export function Galaxy() {
     if (ships.length === 0) loadShips()
   }, [])
 
+  useEffect(() => {
+    setZoneModal(null)
+  }, [tierFilter])
+
   const maxTier = 5
-  const filteredZones = zones
+  const filteredZones = zones.filter((z) => z.tier === tierFilter)
 
   const handleStartFromModal = async () => {
     if (!zoneModal) return
@@ -50,7 +54,7 @@ export function Galaxy() {
 
       <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex gap-2 mb-4 overflow-x-auto pb-1">
         {Array.from({ length: maxTier }, (_, i) => i + 1).map((tier) => {
-          const count = zones.length
+          const count = zones.filter((z) => z.tier === tier).length
           const active = tierFilter === tier
           return (
             <motion.button
