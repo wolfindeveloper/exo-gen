@@ -39,7 +39,7 @@ function shipFromDTO(data: { id: string; name: string; tea_level: number; optimi
   }
 }
 
-function zoneFromDTO(data: { id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { drop_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[] }): Zone {
+function zoneFromDTO(data: { id: string; name: string; description: string; image_url: string; fuel_cost: number; optimism_risk: number; duration_seconds: number; loot_table: { drop_type: string; amount: number; chance: number; item_id: string | null; item_name?: string | null }[]; tier?: number }): Zone {
   return {
     id: data.id,
     name: data.name,
@@ -48,6 +48,7 @@ function zoneFromDTO(data: { id: string; name: string; description: string; imag
     fuel_cost: data.fuel_cost,
     optimism_risk: data.optimism_risk,
     duration_seconds: data.duration_seconds,
+    tier: data.tier ?? 1,
     loot_table: (data.loot_table || []).map((l) => ({
       item_id: l.item_id || null,
       item_type: l.drop_type || '',

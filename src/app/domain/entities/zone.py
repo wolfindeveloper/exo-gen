@@ -15,6 +15,7 @@ class Zone(AggregateRoot):
     optimism_risk: float
     duration_seconds: int
     loot_table: list[dict] | None = None
+    tier: int = 1
     deleted_at: datetime | None = None
 
     def update(
@@ -26,6 +27,7 @@ class Zone(AggregateRoot):
         optimism_risk: float | None = None,
         duration_seconds: int | None = None,
         loot_table: list[dict] | None = None,
+        tier: int | None = None,
     ) -> None:
         if name is not None:
             self.name = name
@@ -41,6 +43,8 @@ class Zone(AggregateRoot):
             self.duration_seconds = duration_seconds
         if loot_table is not None:
             self.loot_table = loot_table
+        if tier is not None:
+            self.tier = tier
 
     def soft_delete(self) -> None:
         self.deleted_at = datetime.now(timezone.utc)

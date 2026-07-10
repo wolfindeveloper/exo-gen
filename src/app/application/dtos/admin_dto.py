@@ -101,6 +101,7 @@ class UpdateZoneDTO(BaseModel):
     optimism_risk: float | None = None
     duration_seconds: int | None = None
     loot_table: list[LootDropEntryDTO] | None = None
+    tier: int | None = None
 
 
 class ChapterRewardItemDTO(BaseModel):
@@ -215,6 +216,7 @@ class CreateZoneDTO(BaseModel):
     optimism_risk: float
     duration_seconds: int
     loot_table: list[LootDropEntryDTO]
+    tier: int = 1
 
 
 class LootBoxConfigResponseDTO(BaseModel):

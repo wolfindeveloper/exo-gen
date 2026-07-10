@@ -22,6 +22,7 @@ class CreateZoneDTO(BaseModel):
     optimism_risk: float
     duration_seconds: int
     loot_table: list[LootDropEntry]
+    tier: int = 1
 
     @field_validator("loot_table", mode="after")
     @classmethod
@@ -42,3 +43,4 @@ class ZoneResponseDTO(BaseModel):
     optimism_risk: float
     duration_seconds: int
     loot_table: list[LootItemDTO]
+    tier: int = 1

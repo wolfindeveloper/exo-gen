@@ -33,7 +33,7 @@ function chanceText(chance: number): string {
 
 export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index = 0 }: ZoneCardProps) {
   const lootOverflow = zone.loot_table.length > 4
-  const zoneTier = 1
+  const zoneTier = zone.tier ?? 1
 
   return (
     <motion.button

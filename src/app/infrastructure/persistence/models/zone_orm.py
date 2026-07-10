@@ -19,4 +19,5 @@ class ZoneORM(Base):
     optimism_risk: Mapped[float] = mapped_column(Float, nullable=False)
     duration_seconds: Mapped[int] = mapped_column(Integer, nullable=False)
     loot_table: Mapped[list[dict]] = mapped_column(JSONB, nullable=False)
+    tier: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

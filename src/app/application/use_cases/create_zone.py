@@ -22,7 +22,8 @@ class CreateZoneUseCase:
             fuel_cost=dto.fuel_cost,
             optimism_risk=dto.optimism_risk,
             duration_seconds=dto.duration_seconds,
-            loot_table=raw_loot_table
+            loot_table=raw_loot_table,
+            tier=dto.tier,
         )
 
         await self.zone_repo.save(zone)

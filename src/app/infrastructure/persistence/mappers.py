@@ -120,6 +120,7 @@ class ZoneMapper:
             optimism_risk=zone.optimism_risk,
             duration_seconds=zone.duration_seconds,
             loot_table=zone.loot_table,
+            tier=zone.tier,
             deleted_at=zone.deleted_at,
         )
 
@@ -134,6 +135,7 @@ class ZoneMapper:
             optimism_risk=zone_orm.optimism_risk,
             duration_seconds=zone_orm.duration_seconds,
             loot_table=zone_orm.loot_table,
+            tier=zone_orm.tier,
             deleted_at=zone_orm.deleted_at,
         )
 

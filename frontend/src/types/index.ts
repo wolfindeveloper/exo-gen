@@ -27,6 +27,7 @@ export interface Zone {
   optimism_risk: number
   duration_seconds: number
   loot_table: LootEntry[]
+  tier: number
 }
 
 export interface LootEntry {
@@ -367,6 +368,7 @@ export interface AdminZone {
   optimism_risk: number
   duration_seconds: number
   loot_table: AdminLootItem[]
+  tier: number
 }
 
 export interface AdminZonesResponse {
@@ -392,6 +394,7 @@ export interface CreateZonePayload {
   optimism_risk: number
   duration_seconds: number
   loot_table: LootDropPayload[]
+  tier?: number
 }
 
 export interface UpdateZonePayload {
@@ -402,6 +405,7 @@ export interface UpdateZonePayload {
   optimism_risk?: number
   duration_seconds?: number
   loot_table?: LootDropPayload[]
+  tier?: number
 }
 
 export interface AdminLootBoxEntry {

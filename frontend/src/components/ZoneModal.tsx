@@ -140,7 +140,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
                   {zoneEmoji[zone.id] || '🌌'}
                 </motion.div>
                 <h2 className="font-display text-sm uppercase tracking-[0.15em] text-neon-cyan">{zone.name}</h2>
-                <span className="text-[10px] text-white/40 font-display uppercase tracking-wider mt-0.5 block">Tier 1</span>
+                <span className="text-[10px] text-white/40 font-display uppercase tracking-wider mt-0.5 block">Tier {zone.tier ?? 1}</span>
               </div>
             </div>
           )}
@@ -149,7 +149,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
               <div className="absolute inset-0 bg-gradient-to-t from-space-900/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-5">
                 <h2 className="font-display text-sm uppercase tracking-[0.15em] drop-shadow-lg text-neon-cyan">{zone.name}</h2>
-                <span className="text-[10px] text-white/50 font-display uppercase tracking-wider mt-0.5 block drop-shadow">Tier 1</span>
+                <span className="text-[10px] text-white/50 font-display uppercase tracking-wider mt-0.5 block drop-shadow">Tier {zone.tier ?? 1}</span>
               </div>
             </>
           )}

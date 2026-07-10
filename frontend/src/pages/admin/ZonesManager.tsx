@@ -34,6 +34,7 @@ interface FormState {
   fuel_cost: string
   optimism_risk: string
   duration_seconds: string
+  tier: string
   loot_table: LootRow[]
 }
 
@@ -44,6 +45,7 @@ const EMPTY_FORM: FormState = {
   fuel_cost: '10',
   optimism_risk: '5',
   duration_seconds: '3600',
+  tier: '1',
   loot_table: [{ drop_type: 'xgen', amount: '50', chance: '1', item_id: '' }],
 }
 
@@ -55,6 +57,7 @@ function formFromZone(zone: AdminZone): FormState {
     fuel_cost: String(zone.fuel_cost),
     optimism_risk: String(zone.optimism_risk),
     duration_seconds: String(zone.duration_seconds),
+    tier: String(zone.tier ?? 1),
     loot_table: (zone.loot_table || []).map((entry) => ({
       drop_type: entry.drop_type,
       amount: String(entry.amount),
@@ -252,6 +255,7 @@ export function ZonesManager() {
           optimism_risk: parseFloat(form.optimism_risk) || 0,
           duration_seconds: parseInt(form.duration_seconds) || 0,
           loot_table,
+          tier: parseInt(form.tier) || 1,
         }
         await api.updateAdminZone(editingZone.id, payload)
       } else {
@@ -263,6 +267,7 @@ export function ZonesManager() {
           optimism_risk: parseFloat(form.optimism_risk) || 0,
           duration_seconds: parseInt(form.duration_seconds) || 0,
           loot_table,
+          tier: parseInt(form.tier) || 1,
         }
         await api.createAdminZone(payload)
       }
@@ -371,6 +376,7 @@ export function ZonesManager() {
                   <th className="px-3 py-3 font-medium cursor-pointer select-none hover:text-white" onClick={() => handleSort('fuel_cost')}>
                     ⛽{sortIcon('fuel_cost')}
                   </th>
+                  <th className="px-3 py-3 font-medium">Тир</th>
                   <th className="px-3 py-3 font-medium">⚠ Риск</th>
                   <th className="px-3 py-3 font-medium cursor-pointer select-none hover:text-white" onClick={() => handleSort('duration_seconds')}>
                     ⏱ Время{sortIcon('duration_seconds')}
@@ -391,6 +397,11 @@ export function ZonesManager() {
                       </div>
                     </td>
                     <td className="px-3 py-3 text-gray-400">{zone.fuel_cost}</td>
+                    <td className="px-3 py-3">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-700 text-xs font-bold text-purple-400">
+                        T{zone.tier}
+                      </span>
+                    </td>
                     <td className="px-3 py-3 text-gray-400">{zone.optimism_risk}%</td>
                     <td className="px-3 py-3 text-gray-400">{formatDuration(zone.duration_seconds)}</td>
                     <td className="px-3 py-3 text-gray-400 hidden sm:table-cell">{zone.loot_table?.length || 0}</td>
@@ -505,7 +516,7 @@ export function ZonesManager() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">⛽ Топливо</label>
                   <input
@@ -515,6 +526,18 @@ export function ZonesManager() {
                     onChange={(e) => setForm({ ...form, fuel_cost: e.target.value })}
                     className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Тир</label>
+                  <select
+                    value={form.tier}
+                    onChange={(e) => setForm({ ...form, tier: e.target.value })}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                  >
+                    {[1, 2, 3, 4, 5].map((t) => (
+                      <option key={t} value={String(t)}>T{t}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">⚠ Риск (%)</label>
