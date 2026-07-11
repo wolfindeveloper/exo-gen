@@ -14,6 +14,8 @@ from app.application.dtos.ship_service_dto import (
     RepairShipDTO,
     RepairShipResponseDTO,
     ShipResponseDTO,
+    ShipEquipmentData,
+    EquippedArtifactData,
 )
 from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import (
@@ -37,6 +39,19 @@ async def get_my_ship(
         raise HTTPException(status_code=404, detail="Ship not found")
     
     ship = current_player.ships[0]
+    equipment_data = None
+    if ship.equipment:
+        equipment_data = ShipEquipmentData(
+            artifacts=[
+                EquippedArtifactData(
+                    item_id=a.item_id,
+                    slot_type=a.slot_type.value,
+                    bonuses=a.bonuses,
+                )
+                for a in ship.equipment.artifacts
+            ]
+        )
+
     return ShipResponseDTO(
         id=ship.id,
         name=ship.name,
@@ -45,6 +60,7 @@ async def get_my_ship(
         speed=ship.speed,
         defense=ship.defense,
         luck=ship.luck,
+        equipment=equipment_data,
     )
 
 

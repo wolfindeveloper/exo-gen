@@ -15,7 +15,7 @@ export interface Ship {
   speed: number
   defense: number
   luck: number
-  equipment?: { artifacts: Array<{ id: string; name_key?: string; tier: number; icon_path?: string }> }
+  equipment?: { artifacts: Array<{ id: string; slot_type: string; stats_modifiers: Record<string, number>; tier: number; name_key?: string; icon_path?: string }> }
 }
 
 export interface Zone {

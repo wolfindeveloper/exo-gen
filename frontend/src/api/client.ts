@@ -27,7 +27,18 @@ apiClient.interceptors.response.use(
   },
 )
 
-function shipFromDTO(data: { id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }): Ship {
+function shipFromDTO(data: {
+  id: string
+  name: string
+  tea_level: number
+  optimism: number
+  speed: number
+  defense: number
+  luck: number
+  equipment?: {
+    artifacts: Array<{ item_id: string; slot_type: string; bonuses: Record<string, number> }>
+  } | null
+}): Ship {
   return {
     id: data.id,
     name: data.name,
@@ -36,6 +47,16 @@ function shipFromDTO(data: { id: string; name: string; tea_level: number; optimi
     speed: data.speed,
     defense: data.defense,
     luck: data.luck,
+    equipment: data.equipment
+      ? {
+          artifacts: data.equipment.artifacts.map((a) => ({
+            id: a.item_id,
+            slot_type: a.slot_type,
+            stats_modifiers: a.bonuses,
+            tier: 1,
+          })),
+        }
+      : undefined,
   }
 }
 
@@ -130,7 +151,7 @@ export const api = {
   },
 
   getShips: async () => {
-    const data = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
+    const data = await apiClient.get('/ships/me').then((r) => r.data)
     return [shipFromDTO(data)]
   },
 
@@ -199,34 +220,30 @@ export const api = {
 
   refuelShip: async (shipId: string, _resourceId: string) => {
     await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; tea_restored: number; new_tea_level: number }>('/ships/refuel', { ship_id: shipId })
-    const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
+    const shipData = await apiClient.get('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
   repairShip: async (shipId: string, _resourceId: string) => {
     await apiClient.post<{ message: string; item_used_id: string; item_used_name: string; optimism_restored: number; new_optimism_level: number }>('/ships/repair', { ship_id: shipId })
-    const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
+    const shipData = await apiClient.get('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
   equipSlot: async (shipId: string, _slotIndex: number, artifactId: string) => {
     await apiClient.post('/equipment/equip', { ship_id: shipId, item_id: artifactId })
-    const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
-    const eqData = await apiClient.get<{ ship_id: string; artifacts: { item_id: string; slot_type: string; bonuses: Record<string, number> }[] }>(`/equipment/${shipId}`).then((r) => r.data)
+    const shipData = await apiClient.get('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
-    const ship = { ...shipFromDTO(shipData), equipment: { artifacts: eqData.artifacts.map((a) => ({ id: a.item_id, name_key: '', tier: 1 })) } }
-    return { ship, inventory: inv.items as InventoryItem[] } as ShipActionResponse
+    return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
   unequipSlot: async (shipId: string, _slotIndex: number, artifactId: string) => {
     await apiClient.post('/equipment/unequip', { ship_id: shipId, item_id: artifactId })
-    const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
-    const eqData = await apiClient.get<{ ship_id: string; artifacts: { item_id: string; slot_type: string; bonuses: Record<string, number> }[] }>(`/equipment/${shipId}`).then((r) => r.data)
+    const shipData = await apiClient.get('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
-    const ship = { ...shipFromDTO(shipData), equipment: { artifacts: eqData.artifacts.map((a) => ({ id: a.item_id, name_key: '', tier: 1 })) } }
-    return { ship, inventory: inv.items as InventoryItem[] } as ShipActionResponse
+    return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
   getShipsContent: async () => {
