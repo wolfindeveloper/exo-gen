@@ -836,12 +836,12 @@ export default function ShipPage() {
               ))}
             </div>
 
-            {/* console message toast */}
+            {/* console message toast — поверх корабля */}
             {consoleMsg && (
-              <div className="fixed left-1/2 -translate-x-1/2 z-[100] animate-fade-in"
-                   style={{ bottom: 'calc(env(safe-area-inset-bottom) + 80px)' }}>
-                <div className="bg-black/80 backdrop-blur-sm border border-cyan-500/20 rounded-xl px-4 py-3 shadow-[0_0_20px_rgba(0,245,255,.12)] max-w-[300px] text-center">
-                  <span className="text-[11px] text-cyan-400/80 font-mono leading-relaxed">{consoleMsg}</span>
+              <div className="fixed left-1/2 -translate-x-1/2 z-[200] animate-fade-in pointer-events-none"
+                   style={{ top: '45%' }}>
+                <div className="bg-black/85 backdrop-blur-sm border border-cyan-500/30 rounded-xl px-5 py-4 shadow-[0_0_30px_rgba(0,245,255,.2)] max-w-[320px] text-center">
+                  <span className="text-[12px] text-cyan-300 font-mono leading-relaxed">{consoleMsg}</span>
                 </div>
               </div>
             )}
