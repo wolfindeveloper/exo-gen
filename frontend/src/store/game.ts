@@ -197,7 +197,13 @@ export const useGameStore = create<GameState>((set, get) => ({
       const result = await api.equipSlot(shipId, slotIndex, artifactId)
       set({ ships: get().ships.map((s) => (s.id === shipId ? result.ship : s)), inventory: result.inventory, isLoading: false })
     } catch (e) {
-      set({ error: (e as Error).message, isLoading: false })
+      const msg = (e as Error).message || ''
+      if (msg.includes('already equipped') || msg.includes('not found in inventory')) {
+        console.warn('Equip logical error:', msg)
+        set({ isLoading: false })
+      } else {
+        set({ error: msg, isLoading: false })
+      }
     }
   },
 

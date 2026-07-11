@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 
 from app.domain.entities.base import AggregateRoot
 from app.domain.value_objects.equipment import SlotType
+from app.domain.exceptions.equipment import ArtifactAlreadyEquippedError
 
 
 @dataclass
@@ -20,7 +21,7 @@ class Equipment(AggregateRoot):
 
     def equip(self, item_id: UUID, slot_type: SlotType, bonuses: dict) -> EquippedArtifact | None:
         if any(a.item_id == item_id for a in self.artifacts):
-            raise ValueError(f"Artifact {item_id} is already equipped")
+            raise ArtifactAlreadyEquippedError(item_id)
 
         replaced_artifact: EquippedArtifact | None = None
         existing_idx = next(

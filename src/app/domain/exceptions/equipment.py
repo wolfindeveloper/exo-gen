@@ -13,3 +13,9 @@ class ArtifactNotEquippedError(DomainError):
     def __init__(self, item_id: UUID):
         self.item_id = item_id
         super().__init__(f"Artifact {item_id} is not equipped on this ship")
+
+
+class ArtifactAlreadyEquippedError(DomainError):
+    def __init__(self, item_id: UUID):
+        self.item_id = item_id
+        super().__init__(f"Artifact {item_id} is already equipped on this ship. Duplicate artifacts are not supported.")

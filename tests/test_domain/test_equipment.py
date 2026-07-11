@@ -4,6 +4,7 @@ import pytest
 
 from app.domain.entities.equipment import Equipment
 from app.domain.value_objects.equipment import SlotType
+from app.domain.exceptions.equipment import ArtifactAlreadyEquippedError
 
 
 class TestEquipmentDomain:
@@ -24,7 +25,7 @@ class TestEquipmentDomain:
 
         equipment.equip(item_id, SlotType.LUCK, {"luck": 0.05})
 
-        with pytest.raises(ValueError, match="already equipped"):
+        with pytest.raises(ArtifactAlreadyEquippedError, match="already equipped"):
             equipment.equip(item_id, SlotType.DEFENSE, {"defense": 0.1})
 
     def test_equip_replaces_existing_artifact_on_same_slot(self):
@@ -117,5 +118,5 @@ class TestEquipmentDomain:
 
         equipment.equip(item_id, SlotType.SPEED, {"speed": 0.1})
 
-        with pytest.raises(ValueError, match="already equipped"):
+        with pytest.raises(ArtifactAlreadyEquippedError, match="already equipped"):
             equipment.equip(item_id, SlotType.LUCK, {"luck": 0.05})

@@ -855,9 +855,22 @@ export default function ShipPage() {
         equippedArtifact={slotModalIndex !== null ? slotArtifacts[slotModalIndex] : null}
         inventory={inventory}
         artifactsContent={artifactsContent}
-        onEquip={(artifactId) => {
+        onEquip={async (artifactId) => {
           if (mainShip && slotModalIndex !== null) {
-            equipSlot(mainShip.id, slotModalIndex, artifactId)
+            const isAlreadyEquipped = mainShip.equipment?.artifacts?.some(a => a.id === artifactId)
+
+            if (isAlreadyEquipped) {
+              const messages = [
+                'ОШИБКА 409: Системы корабля не поддерживают дублирование одинаковых модулей.',
+                'Капитан, этот артефакт уже интегрирован в обшивку. Второй не даст двойного эффекта.',
+                'Бортовой компьютер сообщает: «Зачем мне два одинаковых квантовых стабилизатора? Я не жадный, я просто так устроен».',
+              ]
+              setConsoleMsg(messages[Math.floor(Math.random() * messages.length)])
+              closeModal()
+              return
+            }
+
+            await equipSlot(mainShip.id, slotModalIndex, artifactId)
             closeModal()
           }
         }}
