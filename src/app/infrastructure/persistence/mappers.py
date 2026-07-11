@@ -328,7 +328,7 @@ class EquipmentMapper:
             )
             for a in orm.artifacts
         ]
-        return Equipment(ship_id=orm.ship_id, artifacts=artifacts)
+        return Equipment(id=orm.id, ship_id=orm.ship_id, artifacts=artifacts)
 
     @staticmethod
     def to_orm(domain: Equipment) -> EquipmentORM:
