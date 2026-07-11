@@ -863,7 +863,10 @@ export default function ShipPage() {
         }}
         onUnequip={() => {
           if (mainShip && slotModalIndex !== null) {
-            unequipSlot(mainShip.id, slotModalIndex)
+            const equipped = slotArtifacts[slotModalIndex]
+            if (equipped) {
+              unequipSlot(mainShip.id, slotModalIndex, equipped.id)
+            }
             closeModal()
           }
         }}

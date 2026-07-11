@@ -40,7 +40,7 @@ interface GameState {
   refuelShip: (shipId: string, resourceId: string) => Promise<void>
   repairShip: (shipId: string, resourceId: string) => Promise<void>
   equipSlot: (shipId: string, slotIndex: number, artifactId: string) => Promise<void>
-  unequipSlot: (shipId: string, slotIndex: number) => Promise<void>
+  unequipSlot: (shipId: string, slotIndex: number, itemId: string) => Promise<void>
   loadStats: () => Promise<void>
   loadAchievements: () => Promise<void>
   claimAchievement: (achievementId: string) => Promise<void>
@@ -201,10 +201,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
   },
 
-  unequipSlot: async (shipId, slotIndex) => {
+  unequipSlot: async (shipId, slotIndex, itemId) => {
     try {
       set({ isLoading: true, error: null })
-      const result = await api.unequipSlot(shipId, slotIndex)
+      const result = await api.unequipSlot(shipId, slotIndex, itemId)
       set({ ships: get().ships.map((s) => (s.id === shipId ? result.ship : s)), inventory: result.inventory, isLoading: false })
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false })

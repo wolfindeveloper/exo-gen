@@ -211,16 +211,22 @@ export const api = {
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  equipSlot: async (_shipId: string, _slotIndex: number, _artifactId: string) => {
+  equipSlot: async (shipId: string, _slotIndex: number, artifactId: string) => {
+    await apiClient.post('/equipment/equip', { ship_id: shipId, item_id: artifactId })
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
+    const eqData = await apiClient.get<{ ship_id: string; artifacts: { item_id: string; slot_type: string; bonuses: Record<string, number> }[] }>(`/equipment/${shipId}`).then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
-    return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
+    const ship = { ...shipFromDTO(shipData), equipment: { artifacts: eqData.artifacts.map((a) => ({ id: a.item_id, name_key: '', tier: 1 })) } }
+    return { ship, inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  unequipSlot: async (_shipId: string, _slotIndex: number) => {
+  unequipSlot: async (shipId: string, _slotIndex: number, artifactId: string) => {
+    await apiClient.post('/equipment/unequip', { ship_id: shipId, item_id: artifactId })
     const shipData = await apiClient.get<{ id: string; name: string; tea_level: number; optimism: number; speed: number; defense: number; luck: number }>('/ships/me').then((r) => r.data)
+    const eqData = await apiClient.get<{ ship_id: string; artifacts: { item_id: string; slot_type: string; bonuses: Record<string, number> }[] }>(`/equipment/${shipId}`).then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
-    return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
+    const ship = { ...shipFromDTO(shipData), equipment: { artifacts: eqData.artifacts.map((a) => ({ id: a.item_id, name_key: '', tier: 1 })) } }
+    return { ship, inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
   getShipsContent: async () => {

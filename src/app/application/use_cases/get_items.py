@@ -16,6 +16,7 @@ class GetItemsUseCase:
                 rarity=i.rarity,
                 effect=i.effect,
                 is_tradable=i.is_tradable,
-                sell_price=i.sell_price
+                sell_price=i.sell_price,
+                image_url=i.image_url or "",
             ) for i in items
         ]
