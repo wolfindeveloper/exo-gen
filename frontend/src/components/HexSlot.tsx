@@ -11,11 +11,12 @@ interface HexSlotProps {
   side?: 'left' | 'right'
   flicker?: boolean
   stats?: Record<string, number>
+  imageUrl?: string
 }
 
 const TIER_COLORS = ['#94a3b8', '#22c55e', '#a855f7', '#f59e0b', '#ffd700']
 
-export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, stats }: HexSlotProps) {
+export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, stats, imageUrl }: HexSlotProps) {
   const color = active ? TIER_COLORS[Math.min(tier - 1, 4)] : '#4a5568'
 
   const dust = useMemo(
@@ -89,12 +90,21 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
 
         {/* icon */}
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <span
-            className="text-[16px] leading-none"
-            style={active ? { filter: `drop-shadow(0 0 8px ${color})` } : { opacity: 0.3 }}
-          >
-            {icon}
-          </span>
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={name || ''}
+              className="w-8 h-8 object-contain"
+              style={{ filter: active ? `drop-shadow(0 0 6px ${color})` : undefined }}
+            />
+          ) : (
+            <span
+              className="text-[16px] leading-none"
+              style={active ? { filter: `drop-shadow(0 0 8px ${color})` } : { opacity: 0.3 }}
+            >
+              {icon}
+            </span>
+          )}
         </div>
       </div>
 
@@ -112,7 +122,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
               {Object.entries(stats)
                 .filter(([_, v]) => v !== null && v !== undefined && v !== 0)
                 .slice(0, 2)
-                .map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? v.toFixed(2) : v}`).join(' ')}
+                .map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? `${(v * 100).toFixed(0)}%` : v}`).join(' ')}
             </span>
           )}
         </div>
