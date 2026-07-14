@@ -498,7 +498,7 @@ export default function ShipPage() {
                     key={i}
                     active={!!a}
                     icon={a ? '⚙' : '+'}
-                    name={a?.name_key || SLOT_LABELS[i].name}
+                    name={a?.name_key}
                     tier={a?.tier ?? 1}
                     stats={a?.stats_modifiers}
                     imageUrl={a?.icon_path}
@@ -633,7 +633,7 @@ export default function ShipPage() {
                     key={i}
                     active={!!a}
                     icon={a ? '⚙' : '+'}
-                    name={a?.name_key || SLOT_LABELS[i].name}
+                    name={a?.name_key}
                     tier={a?.tier ?? 1}
                     stats={a?.stats_modifiers}
                     imageUrl={a?.icon_path}
@@ -654,7 +654,7 @@ export default function ShipPage() {
                   key={i}
                   active={!!a}
                   icon={a ? '⚙' : '+'}
-                  name={a?.name_key || SLOT_LABELS[i].name}
+                  name={a?.name_key}
                   tier={a?.tier ?? 1}
                   stats={a?.stats_modifiers}
                   imageUrl={a?.icon_path}

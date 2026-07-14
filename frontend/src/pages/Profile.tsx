@@ -113,7 +113,10 @@ export function Profile() {
     [mainShip],
   )
 
-  const equippedCount = 0
+  const equippedCount = useMemo(
+    () => mainShip?.equipment?.artifacts?.length ?? 0,
+    [mainShip],
+  )
 
   const claimedSet = useMemo(() => new Set(achievements.filter((a) => a.claimed).map((a) => a.achievement_id)), [achievements])
 
