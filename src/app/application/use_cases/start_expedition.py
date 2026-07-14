@@ -5,7 +5,8 @@ from app.domain.entities.player import Player
 from app.domain.uow import UnitOfWork
 from app.application.dtos.expedition_dto import StartExpeditionDTO, ExpeditionResponseDTO
 from app.domain.exceptions.ship import ShipNotFoundError, ShipAlreadyInExpeditionError
-from app.domain.exceptions.zone import ZoneNotFoundError
+from app.domain.exceptions.zone import ZoneNotFoundError, ZoneLockedByLevelError
+from app.domain.services.level_progression import LevelProgressionService
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
@@ -29,6 +30,16 @@ class StartExpeditionUseCase:
 
         if not zone:
             raise ZoneNotFoundError(f"Zone {dto.zone_id} not found")
+
+        # Проверка доступа к зоне по уровню
+        if zone.tier is not None:
+            unlock_status = LevelProgressionService.can_access_zone(player.level, zone.tier)
+            if not unlock_status.is_unlocked:
+                raise ZoneLockedByLevelError(
+                    zone_name=zone.name,
+                    required_level=unlock_status.required_level,
+                    current_level=player.level,
+                )
 
         active_expedition = await self.expedition_repo.get_active_by_ship_id(ship_id=ship.id)
 

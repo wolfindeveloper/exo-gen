@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 
 import { calculateZoneStats } from '../lib/expeditionCalc'
 import { statLabels } from '../lib/stats'
+import { canAccessZone, formatUnlockHint } from '../lib/progression'
 import { useGameStore } from '../store/game'
 import type { LootEntry, Zone } from '../types'
 
@@ -56,13 +57,18 @@ interface ZoneModalProps {
   onClose: () => void
   onStart: () => void
   isLoading: boolean
+  playerLevel?: number
 }
 
-export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps) {
+export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }: ZoneModalProps) {
   const ships = useGameStore((s) => s.ships)
   const loadShips = useGameStore((s) => s.loadShips)
   const [confirming, setConfirming] = useState(false)
   const [imgError, setImgError] = useState(false)
+
+  const zoneTier = zone.tier ?? 1
+  const unlockStatus = canAccessZone(playerLevel, zoneTier)
+  const isLocked = !unlockStatus.isUnlocked
 
   useEffect(() => {
     if (ships.length === 0) loadShips()
@@ -227,7 +233,20 @@ export function ZoneModal({ zone, onClose, onStart, isLoading }: ZoneModalProps)
             <p className="text-xs text-neon-red text-center">Недостаточно ⛽ для запуска</p>
           )}
 
-          {confirming && canLaunch ? (
+          {isLocked ? (
+            <div className="glass-card p-4 text-center border-amber-500/20 bg-amber-500/5">
+              <div className="text-2xl mb-2">🔒</div>
+              <p className="text-xs font-display uppercase tracking-wider text-amber-400 mb-1">
+                Зона недоступна
+              </p>
+              <p className="text-[10px] text-slate-400">
+                Требуется уровень <span className="text-amber-300 font-mono">{unlockStatus.requiredLevel}</span>
+              </p>
+              <p className="text-[9px] text-slate-600 mt-1">
+                {formatUnlockHint(unlockStatus.requiredLevel!, playerLevel)}
+              </p>
+            </div>
+          ) : confirming && canLaunch ? (
             <div className="flex gap-2">
               <button
                 onClick={() => setConfirming(false)}

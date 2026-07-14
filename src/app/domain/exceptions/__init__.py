@@ -41,10 +41,12 @@ from app.domain.exceptions.item import (
     ItemUsedInActiveZoneError,
     ItemListedInShopError,
 )
-from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
+from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError, ZoneLockedByLevelError
 from app.domain.exceptions.equipment import (
     EquipmentNotFoundError,
     ArtifactNotEquippedError,
+    ArtifactAlreadyEquippedError,
+    SlotLockedByLevelError,
 )
 from app.domain.exceptions.loot_box import (
     LootBoxConfigNotFoundError,
@@ -93,8 +95,11 @@ __all__ = [
     "ItemListedInShopError",
     "ZoneNotFoundError",
     "ZoneHasActiveExpeditionsError",
+    "ZoneLockedByLevelError",
     "EquipmentNotFoundError",
     "ArtifactNotEquippedError",
+    "ArtifactAlreadyEquippedError",
+    "SlotLockedByLevelError",
     "ShopItemNotFoundError",
     "ShopItemDailyLimitReachedError",
     "ShopItemOutOfStockError",

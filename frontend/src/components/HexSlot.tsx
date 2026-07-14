@@ -12,12 +12,37 @@ interface HexSlotProps {
   flicker?: boolean
   stats?: Record<string, number>
   imageUrl?: string
+  locked?: boolean
+  requiredLevel?: number | null
+  currentLevel?: number
 }
 
 const TIER_COLORS = ['#94a3b8', '#22c55e', '#a855f7', '#f59e0b', '#ffd700']
 
-export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, stats, imageUrl }: HexSlotProps) {
+export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, stats, imageUrl, locked, requiredLevel }: HexSlotProps) {
   const color = active ? TIER_COLORS[Math.min(tier - 1, 4)] : '#4a5568'
+
+  if (locked) {
+    return (
+      <div className="relative group cursor-not-allowed">
+        <div
+          className="w-14 h-14 relative rounded-full border border-dashed border-slate-700/40 bg-slate-900/40 flex items-center justify-center opacity-40"
+        >
+          <span className="text-lg">🔒</span>
+        </div>
+        {name && (
+          <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[6px] text-center whitespace-nowrap font-semibold tracking-wider text-slate-700">
+            {name}
+          </span>
+        )}
+        {requiredLevel !== null && requiredLevel !== undefined && (
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-space-800/95 border border-amber-500/20 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-30 whitespace-nowrap">
+            <p className="text-[7px] text-amber-400 font-display">LVL {requiredLevel}</p>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   const dust = useMemo(
     () =>

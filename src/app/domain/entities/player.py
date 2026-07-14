@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta, timezone
 from uuid import UUID
 
 from app.domain.services.clock import Clock, SystemClock
+from app.domain.services.level_progression import LevelProgressionService
 from app.domain.value_objects.resources import XgenBalance, FragmentsBalance
 from app.domain.events.player_events import DailyLoginCompletedEvent
 from app.domain.entities.base import AggregateRoot
@@ -86,6 +87,13 @@ class Player(AggregateRoot):
 
     def add_fragments(self, amount: int) -> None:
         self.fragments_balance = self.fragments_balance.add(amount)
+
+    @property
+    def level(self) -> int:
+        return LevelProgressionService.calculate_level(self.xp)
+
+    def get_max_artifact_slots(self) -> int:
+        return LevelProgressionService.get_max_artifact_slots(self.level)
 
 
 @dataclass

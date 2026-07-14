@@ -6,6 +6,7 @@ import { HexSlot } from '../components/HexSlot'
 import SlotSelectModal from '../components/SlotSelectModal'
 import { useExpeditionTimer } from '../hooks/useTimer'
 import { getXpProgress } from '../lib/xp'
+import { getMaxArtifactSlots, getNextSlotUnlock } from '../lib/progression'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import type { Artifact } from '../types'
 import { api } from '../api/client'
@@ -193,6 +194,15 @@ export default function ShipPage() {
     }
   }, [mainShip?.tea_level, handleTriggerEvent])
   const shipName = mainShip?.name ?? 'VEGA MK-II'
+  const maxSlots = useMemo(
+    () => getMaxArtifactSlots(level),
+    [level],
+  )
+  const nextSlotUnlock = useMemo(
+    () => getNextSlotUnlock(level),
+    [level],
+  )
+
   const slotArtifacts: (Artifact | null)[] = useMemo(() => {
     const slots: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
     const equipped = mainShip?.equipment?.artifacts ?? []
@@ -491,6 +501,7 @@ export default function ShipPage() {
             <div className="flex flex-col gap-6 z-20 -mr-2">
               {[0, 1, 2].map((i) => {
                 const a = slotArtifacts[i]
+                const isSlotLocked = i >= maxSlots
                 return (
                   <HexSlot
                     key={i}
@@ -501,7 +512,10 @@ export default function ShipPage() {
                     stats={a?.stats_modifiers}
                     imageUrl={a?.icon_path}
                     side="left"
-                    onClick={() => handleSlotClick(i)}
+                    locked={isSlotLocked}
+                    requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
+                    currentLevel={level}
+                    onClick={() => !isSlotLocked && handleSlotClick(i)}
                   />
                 )
               })}
@@ -626,17 +640,21 @@ export default function ShipPage() {
             <div className="flex flex-col gap-6 z-20 -ml-2">
               {[3, 4, 5].map((i) => {
                 const a = slotArtifacts[i]
+                const isSlotLocked = i >= maxSlots
                 return (
                   <HexSlot
                     key={i}
-                    active={!!a}
-                    icon={a ? '⚙' : '+'}
+                    active={!!a && !isSlotLocked}
+                    icon={a && !isSlotLocked ? '⚙' : isSlotLocked ? '🔒' : '+'}
                     name={a?.name_key}
                     tier={a?.tier ?? 1}
                     stats={a?.stats_modifiers}
                     imageUrl={a?.icon_path}
                     side="right"
-                    onClick={() => handleSlotClick(i)}
+                    locked={isSlotLocked}
+                    requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
+                    currentLevel={level}
+                    onClick={() => !isSlotLocked && handleSlotClick(i)}
                   />
                 )
               })}
@@ -647,16 +665,20 @@ export default function ShipPage() {
           <div className="flex gap-8 mt-2 z-20">
               {[6, 7].map((i) => {
               const a = slotArtifacts[i]
+              const isSlotLocked = i >= maxSlots
               return (
                 <HexSlot
                   key={i}
-                  active={!!a}
-                  icon={a ? '⚙' : '+'}
+                  active={!!a && !isSlotLocked}
+                  icon={a && !isSlotLocked ? '⚙' : isSlotLocked ? '🔒' : '+'}
                   name={a?.name_key}
                   tier={a?.tier ?? 1}
                   stats={a?.stats_modifiers}
                   imageUrl={a?.icon_path}
-                  onClick={() => handleSlotClick(i)}
+                  locked={isSlotLocked}
+                  requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
+                  currentLevel={level}
+                  onClick={() => !isSlotLocked && handleSlotClick(i)}
                 />
               )
             })}
@@ -707,6 +729,24 @@ export default function ShipPage() {
             </div>
           </div>
           )}
+
+          {/* Slots progress indicator */}
+          <div className="w-full max-w-[280px] mt-2 bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[7px] text-cyan-400/40 font-semibold tracking-wider">СЛОТЫ АРТЕФАКТОВ</span>
+              <span className="text-[9px] text-cyan-300 font-mono">
+                {Math.min(slotArtifacts.filter(Boolean).length, maxSlots)} / {maxSlots}
+              </span>
+            </div>
+            {nextSlotUnlock ? (
+              <p className="text-[7px] text-slate-500 mt-1">
+                +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
+                <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span>
+              </p>
+            ) : (
+              <p className="text-[7px] text-neon-green mt-1">✓ Все слоты открыты</p>
+            )}
+          </div>
 
           {/* fuel + HP bars */}
           <div className="w-full max-w-[280px] mt-3 bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-3 shadow-[0_0_20px_rgba(0,245,255,.04)]">

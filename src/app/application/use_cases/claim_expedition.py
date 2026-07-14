@@ -67,10 +67,10 @@ class ClaimExpeditionUseCase:
         player.add_xgen(loot["xgen"])
         player.add_fragments(loot["fragments"])
 
-        # XP за экспедицию
+        # XP за экспедицию: базовая формула + минимум 5 XP
         duration_hours = zone.duration_seconds / 3600
-        risk_percent = zone.optimism_risk
-        total_xp = int(20 * duration_hours + risk_percent * 2)
+        risk_percent = zone.optimism_risk * 100  # конвертируем долю (0.05) в проценты (5)
+        total_xp = max(5, int(20 * duration_hours + risk_percent * 2))
         player.xp += total_xp
         player.increment_expeditions()
 

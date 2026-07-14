@@ -8,6 +8,8 @@ from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.equipment_repository import EquipmentRepository
 from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.exceptions.inventory import ItemNotFoundError, ItemNotInInventoryError
+from app.domain.exceptions.equipment import SlotLockedByLevelError
+from app.domain.services.level_progression import LevelProgressionService
 from app.application.dtos.equipment_dto import EquipArtifactDTO, EquipArtifactResponseDTO, EquipmentResponseDTO, EquippedArtifactDTO
 
 
@@ -55,6 +57,24 @@ class EquipArtifactUseCase:
         equipment = await self.equipment_repo.get_by_ship_id(ship.id)
         if not equipment:
             equipment = Equipment(ship_id=ship.id)
+
+        # Проверка доступности слота по уровню
+        max_slots = player.get_max_artifact_slots()
+        current_equipped = len(equipment.artifacts)
+        slot_type = self._determine_slot_type(item.effect)
+        existing_slot_idx = next(
+            (i for i, a in enumerate(equipment.artifacts) if a.slot_type == slot_type),
+            None,
+        )
+        if existing_slot_idx is None and current_equipped >= max_slots:
+            next_unlock = LevelProgressionService.get_next_slot_unlock(player.level)
+            required_level = next_unlock[0] if next_unlock else player.level + 1
+            raise SlotLockedByLevelError(
+                slot_index=current_equipped + 1,
+                required_level=required_level,
+                current_level=player.level,
+                max_slots=max_slots,
+            )
 
         replaced = equipment.equip(item.id, slot_type, bonuses)
 

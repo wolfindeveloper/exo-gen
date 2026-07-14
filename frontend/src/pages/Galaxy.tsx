@@ -17,6 +17,8 @@ export function Galaxy() {
   const isLoading = useGameStore((s) => s.isLoading)
   const ships = useGameStore((s) => s.ships)
   const loadShips = useGameStore((s) => s.loadShips)
+  const user = useGameStore((s) => s.user)
+  const playerLevel = user?.level ?? 1
   const [tierFilter, setTierFilter] = useState(1)
   const [zoneModal, setZoneModal] = useState<Zone | null>(null)
 
@@ -87,7 +89,7 @@ export function Galaxy() {
             </div>
           ) : (
             filteredZones.map((zone, i) => (
-              <ZoneCard key={zone.id} zone={zone} onSelect={() => handleZoneSelect(zone)} index={i} />
+              <ZoneCard key={zone.id} zone={zone} onSelect={() => handleZoneSelect(zone)} index={i} playerLevel={playerLevel} />
             ))
           )}
         </motion.div>
@@ -100,6 +102,7 @@ export function Galaxy() {
             onClose={handleCloseModal}
             onStart={handleStartFromModal}
             isLoading={isLoading}
+            playerLevel={playerLevel}
           />
         )}
       </AnimatePresence>

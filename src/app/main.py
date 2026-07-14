@@ -29,6 +29,8 @@ from app.infrastructure.middleware.request_id import RequestIDMiddleware
 from app.domain.exceptions import DomainError
 from app.domain.exceptions.inventory import NoSuitableConsumableError
 from app.domain.exceptions.player import InsufficientXgenError, InsufficientFragmentsError
+from app.domain.exceptions.zone import ZoneLockedByLevelError
+from app.domain.exceptions.equipment import SlotLockedByLevelError
 
 
 logger = logging.getLogger(__name__)
@@ -153,6 +155,31 @@ def create_app() -> FastAPI:
                 "required": exc.required,
                 "available": exc.available,
                 "redirect_to": "shop",
+            },
+        )
+
+    @app.exception_handler(ZoneLockedByLevelError)
+    async def zone_locked_handler(request: Request, exc: ZoneLockedByLevelError):
+        return JSONResponse(
+            status_code=403,
+            content={
+                "detail": str(exc),
+                "error_code": "ZONE_LOCKED_BY_LEVEL",
+                "required_level": exc.required_level,
+                "current_level": exc.current_level,
+            },
+        )
+
+    @app.exception_handler(SlotLockedByLevelError)
+    async def slot_locked_handler(request: Request, exc: SlotLockedByLevelError):
+        return JSONResponse(
+            status_code=403,
+            content={
+                "detail": str(exc),
+                "error_code": "SLOT_LOCKED_BY_LEVEL",
+                "required_level": exc.required_level,
+                "current_level": exc.current_level,
+                "max_slots": exc.max_slots,
             },
         )
 

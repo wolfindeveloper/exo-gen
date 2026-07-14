@@ -2,14 +2,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Award, BookOpen, Briefcase, Calendar, Clock, Flame, Fuel,
-  Globe, Hammer, Package, Pencil, RefreshCw, Rocket, Shield, Sparkles,
-  Star, Trophy, Zap,
+  Award, BookOpen, Briefcase, Calendar, Clock, Flame,   Fuel,
+  Globe, Hammer, Lock, Package, Pencil, RefreshCw, Rocket, Shield, Sparkles,
+  Star, Trophy, Unlock, Zap,
 } from 'lucide-react'
 
 import { fadeIn, staggerContainer } from '../lib/animations'
 import { useCountUp } from '../hooks/useCountUp'
 import { getNextLevelXp, getXpProgress } from '../lib/xp'
+import {
+  getMaxArtifactSlots,
+  getNextSlotUnlock,
+  getNextZoneUnlock,
+  ZONE_UNLOCK_TABLE,
+} from '../lib/progression'
 import { getTierForLevel, findRank } from '../lib/ranks'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import { useGameStore } from '../store/game'
@@ -106,6 +112,9 @@ export function Profile() {
   const xpPercent = getXpProgress(xp, level)
   const tier = getTierForLevel(level)
   const rank = findRank(level, ranksContent)
+  const maxSlots = getMaxArtifactSlots(level)
+  const nextSlotUnlock = getNextSlotUnlock(level)
+  const nextZoneUnlock = getNextZoneUnlock(level)
 
   const mainShip = ships[0] ?? null
   const shipConfig = useMemo(
@@ -418,9 +427,96 @@ export function Profile() {
           </div>
           <p className="font-display text-lg text-neon-cyan tabular-nums">
             {equippedCount}
-            <span className="text-slate-600 text-sm"> / 8</span>
+            <span className="text-slate-600 text-sm"> / {maxSlots}</span>
           </p>
           <p className="text-[9px] text-slate-600 mt-1">{shipConfig?.name_key || 'Vega MK-II'} · T{mainShip ? getTierForLevel(level) : '-'}</p>
+        </div>
+      </motion.div>
+
+      {/* Progression unlocks */}
+      <motion.div
+        className="glass-card p-4 mb-4"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles size={14} className="text-amber-400" />
+          <span className="text-[10px] font-display uppercase tracking-wider text-slate-400">
+            Разблокировки
+          </span>
+        </div>
+
+        {/* Zones tier progress */}
+        <div className="mb-3">
+          <p className="text-[9px] text-slate-500 mb-2 uppercase tracking-wider">Зоны галактики</p>
+          <div className="flex gap-1.5">
+            {[1, 2, 3, 4, 5].map((tier) => {
+              const required = ZONE_UNLOCK_TABLE[tier]
+              const isUnlocked = level >= required
+              const TIER_HEX: Record<number, string> = { 1: '#22d3ee', 2: '#22c55e', 3: '#a855f7', 4: '#fbbf24', 5: '#ef4444' }
+              const hex = TIER_HEX[tier]
+              const tierStyle = isUnlocked
+                ? { borderColor: `${hex}55`, backgroundColor: `${hex}22` }
+                : { borderColor: 'rgba(100,116,139,0.3)', backgroundColor: 'rgba(15,20,32,0.3)' }
+              return (
+                <div
+                  key={tier}
+                  className="flex-1 aspect-square rounded-lg flex flex-col items-center justify-center border"
+                  style={tierStyle}
+                >
+                  <span
+                    className="text-[10px] font-display font-bold"
+                    style={{ color: isUnlocked ? hex : '#475569' }}
+                  >
+                    T{tier}
+                  </span>
+                  {isUnlocked ? (
+                    <Unlock size={8} className="mt-0.5" style={{ color: hex }} />
+                  ) : (
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      <Lock size={6} className="text-slate-600" />
+                      <span className="text-[7px] text-slate-600 font-mono">{required}</span>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+          {nextZoneUnlock ? (
+            <p className="text-[8px] text-slate-600 mt-2 text-center">
+              Зоны T{nextZoneUnlock.tier} откроются на{' '}
+              <span className="text-amber-400">LVL {nextZoneUnlock.requiredLevel}</span>
+            </p>
+          ) : (
+            <p className="text-[8px] text-neon-green mt-2 text-center">✓ Все зоны открыты</p>
+          )}
+        </div>
+
+        {/* Artifact slots progress */}
+        <div>
+          <p className="text-[9px] text-slate-500 mb-2 uppercase tracking-wider">Слоты артефактов</p>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-2 bg-space-600 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple"
+                initial={{ width: 0 }}
+                animate={{ width: `${(maxSlots / 8) * 100}%` }}
+                transition={{ duration: 1, ease: 'easeOut' }}
+              />
+            </div>
+            <span className="text-[10px] font-mono text-slate-300 tabular-nums">
+              {maxSlots}/8
+            </span>
+          </div>
+          {nextSlotUnlock ? (
+            <p className="text-[8px] text-slate-600 mt-1.5">
+              +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
+              <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span>
+            </p>
+          ) : (
+            <p className="text-[8px] text-neon-green mt-1.5">✓ Все 8 слотов открыты</p>
+          )}
         </div>
       </motion.div>
 
