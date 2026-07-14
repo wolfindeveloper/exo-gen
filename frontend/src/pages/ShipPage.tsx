@@ -194,11 +194,11 @@ export default function ShipPage() {
         } else {
           slots[idx] = {
             id: ea.id,
-            name_key: ea.name_key || ea.id.slice(0, 8),
-            tier: ea.tier ?? 1,
-            icon_path: ea.icon_path,
+            name_key: ea.name_key || 'Артефакт',
+            tier: ea.tier || 1,
+            icon_path: ea.icon_path || '',
             rarity: 'common',
-            stats_modifiers: {},
+            stats_modifiers: ea.stats_modifiers || {},
           }
         }
       }

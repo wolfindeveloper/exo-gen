@@ -49,11 +49,13 @@ function shipFromDTO(data: {
     luck: data.luck,
     equipment: data.equipment
       ? {
-          artifacts: data.equipment.artifacts.map((a) => ({
+          artifacts: data.equipment.artifacts.map((a: any) => ({
             id: a.item_id,
-            slot_type: a.slot_type,
-            stats_modifiers: a.bonuses,
+            name_key: a.name_key || '',
             tier: 1,
+            icon_path: a.icon_path,
+            slot_type: a.slot_type,
+            stats_modifiers: a.bonuses || {},
           })),
         }
       : undefined,
