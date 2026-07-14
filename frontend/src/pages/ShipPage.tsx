@@ -237,14 +237,22 @@ export default function ShipPage() {
   const isShipIdle = !!mainShip
 
   const handleRefuel = async () => {
-    if (!mainShip || fuelInInventory === 0) return
+    if (!mainShip) return
+    if (fuelInInventory === 0) {
+      navigate('/shop')
+      return
+    }
     await refuelShip(mainShip.id, 'fuel')
   }
 
   const repairMsg = '«Уровень Оптимизма восстановлен. Корабль снова верит, что долетит до конца карты, хотя это крайне сомнительно»'
 
   const handleRepair = async () => {
-    if (!mainShip || repairInInventory === 0) return
+    if (!mainShip) return
+    if (repairInInventory === 0) {
+      navigate('/shop')
+      return
+    }
     await repairShip(mainShip.id, 'repair_kit')
     setConsoleMsg(repairMsg)
   }
