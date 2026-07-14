@@ -109,7 +109,10 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
           </span>
           {active && stats && Object.keys(stats).length > 0 && (
             <span className="text-[5px] font-mono text-slate-500 block mt-0.5">
-              {Object.entries(stats).slice(0, 2).map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? v.toFixed(2) : v}`).join(' ')}
+              {Object.entries(stats)
+                .filter(([_, v]) => v !== null && v !== undefined && v !== 0)
+                .slice(0, 2)
+                .map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? v.toFixed(2) : v}`).join(' ')}
             </span>
           )}
         </div>

@@ -10,6 +10,17 @@ import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import type { Artifact } from '../types'
 import { api } from '../api/client'
 
+function parseTierFromRarity(rarity: string): number {
+  const map: Record<string, number> = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
+    epic: 4,
+    legendary: 5,
+  }
+  return map[rarity] ?? 1
+}
+
 const RED_BUTTON_LS = 'eggs/red_button'
 
 const consoleButtons = [
@@ -182,15 +193,24 @@ export default function ShipPage() {
     }
   }, [mainShip?.tea_level, handleTriggerEvent])
   const shipName = mainShip?.name ?? 'VEGA MK-II'
-
   const slotArtifacts: (Artifact | null)[] = useMemo(() => {
     const slots: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
     const equipped = mainShip?.equipment?.artifacts ?? []
+    
     equipped.forEach((ea, idx) => {
       if (idx < 8) {
         const fullArtifact = artifactsContent.find((a) => a.id === ea.id)
         if (fullArtifact) {
-          slots[idx] = fullArtifact
+          const cleanStats: Record<string, number> = {}
+          if (fullArtifact.stats_modifiers) {
+            for (const [key, value] of Object.entries(fullArtifact.stats_modifiers)) {
+              if (value !== null && value !== undefined) {
+                cleanStats[key] = value
+              }
+            }
+          }
+          const tier = fullArtifact.tier || parseTierFromRarity(fullArtifact.rarity || 'common')
+          slots[idx] = { ...fullArtifact, tier, stats_modifiers: cleanStats }
         } else {
           slots[idx] = {
             id: ea.id,
