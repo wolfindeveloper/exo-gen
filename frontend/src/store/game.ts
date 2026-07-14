@@ -232,7 +232,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           shipName: shipName || 'Корабль',
           loot: lootItems,
           shipStability: result.current_optimism,
-          xpGained: result.xgen_earned,
+          xpGained: result.xp_earned,
           level: undefined,
           leveledUp: false,
         },

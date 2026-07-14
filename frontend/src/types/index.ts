@@ -93,6 +93,7 @@ export interface Expedition {
 export interface ClaimResult {
   xgen_earned: number
   fragments_earned: number
+  xp_earned: number
   items_earned: ClaimedItem[]
   optimism_lost: number
   current_tea: number

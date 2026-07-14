@@ -12,7 +12,8 @@ class ClaimedItemDTO(BaseModel):
 class ClaimExpeditionResponseDTO(BaseModel):
     xgen_earned: int
     fragments_earned: int
-    items_earned: list[ClaimedItemDTO] = [] # <-- НОВОЕ: Список выпавших предметов
+    xp_earned: int = 0
+    items_earned: list[ClaimedItemDTO] = []
     optimism_lost: float
     current_tea: float
     current_optimism: float
