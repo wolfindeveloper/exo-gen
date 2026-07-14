@@ -94,7 +94,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
             <img
               src={imageUrl}
               alt={name || ''}
-              className="w-8 h-8 object-contain"
+              className="w-full h-full object-cover"
               style={{ filter: active ? `drop-shadow(0 0 6px ${color})` : undefined }}
             />
           ) : (
