@@ -1,6 +1,7 @@
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.application.dtos.profile_dto import ProfileResponseDTO
 from app.domain.entities.player import Player
+from app.domain.services.level_progression import LevelProgressionService
 
 
 class GetProfileUseCase:
@@ -17,7 +18,7 @@ class GetProfileUseCase:
 
         return ProfileResponseDTO(
             xp=player.xp,
-            level=player.xp // 1000,
+            level=LevelProgressionService.calculate_level(player.xp),
             total_expeditions=player.total_expeditions,
             total_artifacts_found=player.total_artifacts_found,
             unlocked_articles=len(unlocked_ids),

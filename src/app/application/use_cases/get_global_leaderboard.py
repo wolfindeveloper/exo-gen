@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from app.domain.repositories.player_repository import PlayerRepository
+from app.domain.services.level_progression import LevelProgressionService
 from app.application.dtos.leaderboard_dto import (
     GlobalLeaderboardDTO,
     PlayerShortStatsDTO,
@@ -20,7 +21,7 @@ class GetGlobalLeaderboardUseCase:
                 rank=idx + 1,
                 username=username,
                 xp=xp,
-                level=xp // 1000,
+                level=LevelProgressionService.calculate_level(xp),
             )
             for idx, (username, xp, _) in enumerate(top_players)
         ]

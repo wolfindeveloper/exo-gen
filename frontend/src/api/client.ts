@@ -116,7 +116,7 @@ export const api = {
     ])
     return {
       ...me,
-      level: profile?.level ?? 1,
+      level: Math.max(1, profile?.level ?? 1),
       balance_stars: 0,
       daily_reward: false,
       streak_broken: false,
@@ -131,7 +131,7 @@ export const api = {
     ])
     return {
       ...me,
-      level: profile?.level ?? 1,
+      level: Math.max(1, profile?.level ?? 1),
       balance_stars: 0,
       daily_reward: false,
       streak_broken: false,
