@@ -490,7 +490,7 @@ export default function ShipPage() {
           {/* central cluster: slots + card */}
           <div className="flex items-center justify-center relative">
             {/* left slots - overlapping card */}
-            <div className="flex flex-col gap-4 z-20 -mr-2">
+            <div className="flex flex-col gap-6 z-20 -mr-2">
               {[0, 1, 2].map((i) => {
                 const a = slotArtifacts[i]
                 return (
@@ -625,7 +625,7 @@ export default function ShipPage() {
             </div>
 
             {/* right slots - overlapping card */}
-            <div className="flex flex-col gap-4 z-20 -ml-2">
+            <div className="flex flex-col gap-6 z-20 -ml-2">
               {[3, 4, 5].map((i) => {
                 const a = slotArtifacts[i]
                 return (

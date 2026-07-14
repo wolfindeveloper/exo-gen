@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 
 import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
-import { statIcons, statLabels } from '../lib/stats'
+import { statIcons, statLabels, formatBonus } from '../lib/stats'
 import { useGameStore } from '../store/game'
 import type { InventoryItem } from '../types'
 
@@ -341,10 +341,15 @@ const InventoryRow = memo(function InventoryRow({
           )}
         </p>
         {item.item.type === 'artifact' && Object.keys(meta).length > 0 && (
-          <div className="flex gap-2 mt-1">
-            {(meta.speed_mod as number) && <span className="text-[9px] text-neon-cyan/70">{statIcons.speed_mod} +{(meta.speed_mod as number).toFixed(2)}</span>}
-            {(meta.stability_bonus as number) && <span className="text-[9px] text-neon-green/70">{statIcons.stability_bonus} +{meta.stability_bonus as number}</span>}
-            {(meta.fuel_efficiency as number) && <span className="text-[9px] text-neon-amber/70">{statIcons.fuel_efficiency} +{(meta.fuel_efficiency as number).toFixed(2)}</span>}
+          <div className="flex gap-2 mt-1 flex-wrap">
+            {Object.entries(meta)
+              .filter(([, v]) => v !== null && v !== undefined && v !== 0)
+              .slice(0, 3)
+              .map(([k, v]) => (
+                <span key={k} className="text-[9px] text-neon-cyan/70">
+                  {statIcons[k] || '⚡'} {formatBonus(v)}
+                </span>
+              ))}
           </div>
         )}
       </div>
@@ -516,24 +521,18 @@ function ItemDetailSheet({
             <div>
               <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Характеристики</h4>
               <div className="grid grid-cols-2 gap-2">
-                {(meta.speed_mod as number) && (
-                  <div className="glass-card px-3 py-2 text-center">
-                    <p className="text-[10px] text-slate-500">{statLabels.speed_mod}</p>
-                    <p className="text-sm text-neon-cyan font-mono">+{(meta.speed_mod as number).toFixed(2)}</p>
-                  </div>
-                )}
-                {(meta.stability_bonus as number) && (
-                  <div className="glass-card px-3 py-2 text-center">
-                    <p className="text-[10px] text-slate-500">{statLabels.stability_bonus}</p>
-                    <p className="text-sm text-neon-green font-mono">+{meta.stability_bonus as number}</p>
-                  </div>
-                )}
-                {(meta.fuel_efficiency as number) && (
-                  <div className="glass-card px-3 py-2 text-center">
-                    <p className="text-[10px] text-slate-500">{statLabels.fuel_efficiency}</p>
-                    <p className="text-sm text-neon-amber font-mono">+{(meta.fuel_efficiency as number).toFixed(2)}</p>
-                  </div>
-                )}
+                {Object.entries(meta)
+                  .filter(([, v]) => v !== null && v !== undefined && v !== 0)
+                  .map(([k, v]) => {
+                    const label = statLabels[k] || k.replace('bonus_', '')
+                    const color = k.includes('speed') ? 'text-neon-cyan' : k.includes('defense') ? 'text-neon-green' : k.includes('fuel') ? 'text-neon-amber' : 'text-neon-cyan'
+                    return (
+                      <div key={k} className="glass-card px-3 py-2 text-center">
+                        <p className="text-[10px] text-slate-500">{label}</p>
+                        <p className={`text-sm font-mono ${color}`}>{formatBonus(v)}</p>
+                      </div>
+                    )
+                  })}
               </div>
             </div>
           )}

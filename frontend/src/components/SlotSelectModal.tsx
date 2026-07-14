@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Artifact, InventoryItem } from '../types'
-import { statLabels, statIcons } from '../lib/stats'
+import { statLabels, statIcons, formatBonus } from '../lib/stats'
 
 interface SlotSelectModalProps {
   open: boolean
@@ -134,8 +134,8 @@ export default function SlotSelectModal({
               const tierColor = TIER_COLORS[Math.min(artifact.tier - 1, 4)]
               const statsText = artifact.stats_modifiers
                 ? Object.entries(artifact.stats_modifiers)
-                    .filter(([, v]) => v !== 0)
-                    .map(([k, v]) => `${statIcons[k] || ''} ${statLabels[k] || k}: ${(v > 0 ? '+' : '')}${typeof v === 'number' ? v.toFixed(2) : v}`)
+                    .filter(([, v]) => v !== null && v !== undefined && v !== 0)
+                    .map(([k, v]) => `${statIcons[k] || ''} ${statLabels[k] || k}: ${formatBonus(v)}`)
                     .join(' · ')
                 : 'Без бонусов'
               return (

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { statIcons } from '../lib/stats'
+import { statIcons, formatBonus } from '../lib/stats'
 
 interface HexSlotProps {
   active: boolean
@@ -122,7 +122,7 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
               {Object.entries(stats)
                 .filter(([_, v]) => v !== null && v !== undefined && v !== 0)
                 .slice(0, 2)
-                .map(([k, v]) => `${statIcons[k] || '⚡'}${v > 0 ? '+' : ''}${typeof v === 'number' ? `${(v * 100).toFixed(0)}%` : v}`).join(' ')}
+                .map(([k, v]) => `${statIcons[k] || '⚡'}${formatBonus(v)}`).join(' ')}
             </span>
           )}
         </div>
