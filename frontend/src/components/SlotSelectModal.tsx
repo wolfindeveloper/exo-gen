@@ -84,11 +84,11 @@ export default function SlotSelectModal({
   const ownedArtifacts = artifactsContent.filter((a) => ownedIds.has(a.id))
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         ref={ref}
-        className="relative w-full max-w-md bg-gray-900/95 backdrop-blur-[12px] border-t border-cyan-500/20 rounded-t-2xl shadow-[0_-10px_40px_rgba(0,245,255,.06)] px-4 pt-4 pb-8 max-h-[70vh] overflow-y-auto"
+        className="relative w-full max-w-md bg-gray-900/95 backdrop-blur-[12px] border border-cyan-500/20 rounded-2xl shadow-[0_0_40px_rgba(0,245,255,.06)] px-4 pt-4 pb-8 max-h-[70vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[10px] font-bold tracking-[0.2em] text-cyan-400/40">

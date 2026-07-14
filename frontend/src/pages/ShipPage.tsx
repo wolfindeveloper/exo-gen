@@ -836,18 +836,18 @@ export default function ShipPage() {
               ))}
             </div>
 
-            {/* console message toast — поверх корабля */}
-            {consoleMsg && (
-              <div className="fixed left-1/2 -translate-x-1/2 z-[200] animate-fade-in pointer-events-none"
-                   style={{ top: '45%' }}>
-                <div className="bg-black/85 backdrop-blur-sm border border-cyan-500/30 rounded-xl px-5 py-4 shadow-[0_0_30px_rgba(0,245,255,.2)] max-w-[320px] text-center">
-                  <span className="text-[12px] text-cyan-300 font-mono leading-relaxed">{consoleMsg}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* console message toast — поверх корабля вне scroll-контекста */}
+      {consoleMsg && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none">
+          <div className="bg-black/85 backdrop-blur-sm border border-cyan-500/30 rounded-xl px-5 py-4 shadow-[0_0_30px_rgba(0,245,255,.2)] max-w-[320px] text-center animate-fade-in">
+            <span className="text-[12px] text-cyan-300 font-mono leading-relaxed">{consoleMsg}</span>
+          </div>
+        </div>
+      )}
 
       <SlotSelectModal
         open={slotModalIndex !== null}
