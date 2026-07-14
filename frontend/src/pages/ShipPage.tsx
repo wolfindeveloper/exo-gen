@@ -335,6 +335,15 @@ export default function ShipPage() {
     }
   }, [])
 
+  /* ── Debug: проверка данных артефактов ── */
+  useEffect(() => {
+    if (mainShip?.equipment?.artifacts?.length) {
+      console.log('[ShipPage] mainShip.equipment.artifacts:', mainShip.equipment.artifacts)
+      console.log('[ShipPage] artifactsContent (catalog):', artifactsContent)
+      console.log('[ShipPage] Final slotArtifacts:', slotArtifacts)
+    }
+  }, [mainShip?.equipment?.artifacts, artifactsContent, slotArtifacts])
+
   return (
     <div
       className="min-h-screen text-white font-mono relative overflow-hidden"
