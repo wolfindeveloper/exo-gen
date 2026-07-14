@@ -269,16 +269,6 @@ export default function ShipPage() {
     setSlotModalIndex(i)
   }
 
-  const SLOT_LABELS: { icon: string; name: string }[] = [
-    { icon: '🥜', name: 'Ядро' },
-    { icon: '🧻', name: '' },
-    { icon: '💨', name: 'Факел' },
-    { icon: '👁️', name: 'Око' },
-    { icon: '🛒', name: '' },
-    { icon: '🥩', name: 'Сердце' },
-    { icon: '🎞️', name: 'Память' },
-    { icon: '🕳️', name: '' },
-  ]
 
   /* ── canvas stars + particles ── */
   useEffect(() => {
