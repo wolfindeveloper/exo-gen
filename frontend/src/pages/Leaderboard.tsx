@@ -47,6 +47,7 @@ export function Leaderboard() {
           rank: e.rank, telegramId: e.telegram_id,
           name: e.username ?? `Игрок ${e.telegram_id}`,
           value: e.value,
+          subValue: undefined as string | undefined,
         }))
 
   const myRank = tab === 'xp' ? leaderboard.my_rank : leaderboard[tab].my_rank

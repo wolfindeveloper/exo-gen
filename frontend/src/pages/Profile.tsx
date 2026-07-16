@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Award, BookOpen, Briefcase, Calendar, Clock, Flame,   Fuel,
-  Globe, Hammer, Lock, Package, Pencil, RefreshCw, Rocket, Shield, Sparkles,
+  Award, BookOpen, Briefcase, Clock, Flame, Fuel,
+  Hammer, Lock, Package, Pencil, RefreshCw, Rocket, Shield, Sparkles,
   Star, Trophy, Unlock, Zap,
 } from 'lucide-react'
 
@@ -134,12 +134,6 @@ export function Profile() {
   const streakCount = useCountUp(user?.daily_streak ?? 0, 1000)
   const starsCount = useCountUp(user?.balance_stars ?? 0, 1000)
   const xgenCount = useCountUp(user?.xgen_balance ?? 0, 1200)
-  const expeditionsCount = useCountUp(stats?.total_expeditions ?? 0, 1000)
-  const completedCount = useCountUp(stats?.completed_expeditions ?? 0, 1000)
-  const artifactsCount = useCountUp(stats?.artifacts_crafted ?? 0, 1000)
-  const joinedDaysCount = useCountUp(stats?.joined_days ?? 0, 1000)
-  const xpEarnedCount = useCountUp(stats?.total_xp_earned ?? 0, 1200)
-  const zonesCount = useCountUp(stats?.zones_explored ?? 0, 1000)
   const expeditionsCompletedCount = useCountUp(stats?.completed_expeditions ?? 0, 1000)
   const expeditionsInProgressCount = useCountUp(stats?.expeditions_in_progress ?? 0, 1000)
   const artifactsFoundCount = useCountUp(stats?.artifacts_found ?? 0, 1000)
@@ -830,21 +824,4 @@ function BalanceCard({ title, value, accent, pulse, children }: {
   )
 }
 
-function StatCard({ icon: Icon, label, value, suffix }: {
-  icon: typeof Rocket; label: string; value: number; suffix?: string
-}) {
-  return (
-    <motion.div variants={fadeIn} className="glass-card p-3 text-center">
-      <Icon size={14} className="mx-auto mb-1 text-slate-500" />
-      <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">{label}</p>
-      <motion.p
-        className="font-display text-lg tabular-nums"
-        initial={{ scale: 0.5 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-      >
-        {value}{suffix ? <span className="text-slate-600 text-xs ml-0.5">{suffix}</span> : ''}
-      </motion.p>
-    </motion.div>
-  )
-}
+
