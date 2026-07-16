@@ -579,6 +579,17 @@ export interface UpdateAdminShopItemPayload {
   bundle_items?: AdminShopBundleItem[]
 }
 
+export interface DailyLoginResult {
+  earned_xp: number
+  new_streak: number
+  got_box: boolean
+  already_claimed: boolean
+  box_opened: boolean
+  box_xgen: number
+  box_fragments: number
+  box_items: Array<{ item_id: string; amount: number; name?: string }>
+}
+
 export interface PlayerShortStats {
   rank: number
   telegram_id: number

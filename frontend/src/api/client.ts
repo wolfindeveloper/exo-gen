@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { Artifact, ClaimAchievementResponse, ClaimResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
+import type { Artifact, ClaimAchievementResponse, ClaimResult, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
@@ -96,6 +96,15 @@ function zoneFromDTO(data: { id: string; name: string; description: string; imag
 export const api = {
   health: () => apiClient.get<{ status: string }>('/health').then((r) => r.data),
 
+  processDailyLogin: async () => {
+    try {
+      const data = await apiClient.post<DailyLoginResult>('/players/daily-login').then((r) => r.data)
+      return data
+    } catch {
+      return null
+    }
+  },
+
   authInit: async () => {
     const initData = window.Telegram?.WebApp?.initData || ''
     if (!initData) {
@@ -118,9 +127,6 @@ export const api = {
       ...me,
       level: Math.max(1, profile?.level ?? 1),
       balance_stars: 0,
-      daily_reward: false,
-      streak_broken: false,
-      daily_reward_items: {},
     } as UserProfile & { is_new?: boolean; box_rewards?: Record<string, unknown> }
   },
 
@@ -133,9 +139,6 @@ export const api = {
       ...me,
       level: Math.max(1, profile?.level ?? 1),
       balance_stars: 0,
-      daily_reward: false,
-      streak_broken: false,
-      daily_reward_items: {},
     } as UserProfile
   },
 
@@ -221,9 +224,6 @@ export const api = {
       ...me,
       level: 1,
       balance_stars: 0,
-      daily_reward: false,
-      streak_broken: false,
-      daily_reward_items: {},
     } as UserProfile
   },
 

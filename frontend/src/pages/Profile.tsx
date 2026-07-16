@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import {
   Award, BookOpen, Briefcase, Clock, Flame, Fuel,
-  Hammer, Lock, Package, Pencil, RefreshCw, Rocket, Shield, Sparkles,
+  Hammer, Lock, Package, Pencil, Rocket, Shield, Sparkles,
   Star, Trophy, Unlock, Zap,
 } from 'lucide-react'
 
@@ -238,27 +238,31 @@ export function Profile() {
         )}
       </AnimatePresence>
 
-      {/* Daily reward notification */}
-      {user.daily_reward && (
-        <motion.div
-          className="glass-card p-3 mb-4 flex items-center gap-3 border-neon-amber/20"
-          initial={{ opacity: 0, y: -20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-        >
-          <div className="w-10 h-10 rounded-full bg-neon-amber/20 flex items-center justify-center shrink-0">
-            {user.streak_broken ? <RefreshCw size={18} className="text-amber-400" /> : <Flame size={18} className="text-amber-400" />}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-display text-neon-amber uppercase tracking-wider">
-              {user.streak_broken ? 'Стрик сброшен' : 'Ежедневная награда!'}
+      {/* Daily streak info card */}
+      <motion.div
+        className="glass-card p-3 mb-4 flex items-center gap-3"
+        initial={{ opacity: 0, y: -20, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+      >
+        <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
+          <Flame size={18} className="text-orange-400" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-display text-orange-400 uppercase tracking-wider">
+            Ежедневный вход
+          </p>
+          <p className="text-[10px] text-slate-400 mt-0.5">
+            Стрик: <span className="text-orange-300 font-mono">{user.daily_streak}</span> дней
+            {' · '}
+            +{(user.daily_streak + 1) * 10} XP завтра
+          </p>
+          {user.daily_streak > 0 && (
+            <p className="text-[9px] text-slate-600 mt-0.5">
+              До бонус-бокса: {42 - (user.daily_streak % 42)} дн.
             </p>
-            <p className="text-[10px] text-slate-400 mt-0.5">
-              Дней подряд: {user.daily_streak}
-              {user.daily_reward_items && ` · +${user.daily_reward_items.fragments ?? 0} Фрагментов бреда`}
-            </p>
-          </div>
-        </motion.div>
-      )}
+          )}
+        </div>
+      </motion.div>
 
       {/* Hero */}
       <motion.div

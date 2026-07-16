@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import type { AchievementStatus, Artifact, Expedition, GlobalLeaderboard, GuideChapterSummary, GuideClaimRewardResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
+import type { AchievementStatus, Artifact, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterSummary, GuideClaimRewardResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
 import { api } from '../api/client'
 
 let _initStarted = false
@@ -29,6 +29,8 @@ interface GameState {
   initFailed: boolean
   error: string | null
   leaderboard: GlobalLeaderboard | null
+  dailyLoginResult: DailyLoginResult | null
+  showDailyLoginSheet: boolean
 
   initAuth: () => Promise<void>
   clearLastLoot: () => void
@@ -56,6 +58,8 @@ interface GameState {
   loadAdminStatus: () => Promise<void>
   loadLeaderboard: () => Promise<void>
   openLootBox: (boxType: string, inventoryItemId?: string) => Promise<void>
+  processDailyLogin: () => Promise<void>
+  dismissDailyLoginSheet: () => void
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -82,6 +86,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   initFailed: false,
   error: null,
   leaderboard: null,
+  dailyLoginResult: null,
+  showDailyLoginSheet: false,
 
   initAuth: async () => {
     if (_initStarted) return
@@ -93,6 +99,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         const { is_new, box_rewards, ...rest } = data as UserProfile & { is_new?: boolean; box_rewards?: Record<string, unknown> }
         set({ user: rest as UserProfile, boxRewards: (box_rewards as Record<string, unknown>) || null, isLoading: false, isAuthReady: true })
         get().loadAdminStatus()
+        get().processDailyLogin()
         return
       } catch (e) {
         const isLast = attempt >= 4
@@ -363,6 +370,44 @@ export const useGameStore = create<GameState>((set, get) => ({
   loadLeaderboard: async () => {
     const data = await api.getGlobalLeaderboard()
     set({ leaderboard: data })
+  },
+
+  processDailyLogin: async () => {
+    try {
+      const result = await api.processDailyLogin()
+      if (!result) return
+      await Promise.all([get().loadProfile(), get().loadInventory()])
+      if (!result.already_claimed) {
+        set({
+          dailyLoginResult: result,
+          showDailyLoginSheet: true,
+        })
+      }
+    } catch (e) {
+      console.warn('Daily login failed:', e)
+    }
+  },
+
+  dismissDailyLoginSheet: () => {
+    set({ showDailyLoginSheet: false })
+    setTimeout(() => {
+      const result = get().dailyLoginResult
+      if (result?.got_box && result.box_opened) {
+        set({
+          boxRewards: {
+            guaranteed: [
+              ...(result.box_xgen > 0 ? [{ type: 'xgen', quantity: result.box_xgen }] : []),
+              ...(result.box_fragments > 0 ? [{ type: 'xp', quantity: result.box_fragments }] : []),
+            ],
+            random: result.box_items.map((i) => ({
+              type: 'resource',
+              item_id: i.name || i.item_id,
+              quantity: i.amount,
+            })),
+          },
+        })
+      }
+    }, 400)
   },
 
   openLootBox: async (boxType: string, inventoryItemId?: string) => {

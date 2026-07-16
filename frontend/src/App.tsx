@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import { BoxReveal } from './components/BoxReveal'
+import { DailyLoginSheet } from './components/DailyLoginSheet'
 import { Galaxy } from './pages/Galaxy'
 import { HudBar } from './components/HudBar'
 import { NavBar } from './components/NavBar'
@@ -141,6 +142,7 @@ function AppContent() {
       <NavBar />
       <BoxReveal />
       <RewardSheet />
+      <DailyLoginSheet />
       <SettingsSheet />
     </div>
   )
