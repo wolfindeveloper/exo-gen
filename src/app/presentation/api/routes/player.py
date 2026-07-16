@@ -13,6 +13,7 @@ from app.domain.exceptions import DomainError
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
+from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
@@ -21,6 +22,7 @@ from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import (
     get_player_repo,
     get_guide_progress_repo,
+    get_chapter_repo,
     get_inventory_repo,
     get_item_repo,
     get_loot_box_repo,
@@ -64,8 +66,9 @@ async def get_player(
 async def get_profile(
     current_player: Player = Depends(get_current_player),
     guide_progress_repo: GuideProgressRepository = Depends(get_guide_progress_repo),
+    chapter_repo: ChapterRepository = Depends(get_chapter_repo),
 ):
-    use_case = GetProfileUseCase(guide_progress_repo)
+    use_case = GetProfileUseCase(guide_progress_repo, chapter_repo)
     return await use_case.execute(current_player)
 
 

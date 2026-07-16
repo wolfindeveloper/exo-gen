@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { Artifact, ClaimAchievementResponse, ClaimResult, Expedition, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
+import type { Artifact, ClaimAchievementResponse, ClaimResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
@@ -190,17 +190,23 @@ export const api = {
   },
 
   getStats: async () => {
-    const data = await apiClient.get<{ xp: number; level: number; total_expeditions: number; total_artifacts_found: number; unlocked_articles: number }>('/players/me/profile').then((r) => r.data)
+    const data = await apiClient.get<{ xp: number; level: number; total_expeditions: number; total_artifacts_found: number; unlocked_articles: number; expeditions_completed: number; expeditions_in_progress: number; artifacts_found: number; xgen_earned_total: number; articles_read: number; articles_total: number }>('/players/me/profile').then((r) => r.data)
     return {
       total_expeditions: data.total_expeditions,
-      completed_expeditions: data.total_expeditions,
+      completed_expeditions: data.expeditions_completed,
+      expeditions_in_progress: data.expeditions_in_progress,
       failed_expeditions: 0,
+      artifacts_found: data.artifacts_found,
       artifacts_crafted: 0,
       joined_days: 0,
       total_xp_earned: data.xp,
+      xgen_earned_total: data.xgen_earned_total,
+      fragments_earned_total: 0,
       zones_explored: data.total_expeditions,
       equipped_artifacts_count: 0,
       unique_artifacts: data.total_artifacts_found,
+      articles_read: data.articles_read,
+      articles_total: data.articles_total,
       resources: { fuel: 0, repair_kits: 0 },
       guide_progress: { total_chapters: 0, completed_chapters: 0, entries_researched: data.unlocked_articles },
       recent_expeditions: [],
@@ -577,5 +583,20 @@ export const api = {
 
   reorderChapterArticles: async (chapterId: string, articleIds: string[]) => {
     await apiClient.patch(`/admin/chapters/${chapterId}/reorder-articles`, articleIds)
+  },
+
+  getGlobalLeaderboard: async (): Promise<GlobalLeaderboard | null> => {
+    return apiClient
+      .get<GlobalLeaderboard>('/leaderboard/multi-metric')
+      .then((r) => r.data)
+      .catch(() => null)
+  },
+
+  openLootBox: async (boxType: string, inventoryItemId?: string) => {
+    const r = await apiClient.post('/inventory/open-box', {
+      box_type: boxType,
+      inventory_item_id: inventoryItemId ?? null,
+    })
+    return r.data
   },
 }

@@ -162,13 +162,19 @@ export interface ShipConfig {
 export interface UserStats {
   total_expeditions: number
   completed_expeditions: number
+  expeditions_in_progress: number
   failed_expeditions: number
+  artifacts_found: number
   artifacts_crafted: number
   joined_days: number
   total_xp_earned: number
+  xgen_earned_total: number
+  fragments_earned_total: number
   zones_explored: number
   equipped_artifacts_count: number
   unique_artifacts: number
+  articles_read: number
+  articles_total: number
   resources: { fuel: number; repair_kits: number }
   guide_progress: { total_chapters: number; completed_chapters: number; entries_researched: number }
   recent_expeditions: {
@@ -571,4 +577,37 @@ export interface UpdateAdminShopItemPayload {
   stock_limit?: number
   is_active?: boolean
   bundle_items?: AdminShopBundleItem[]
+}
+
+export interface PlayerShortStats {
+  rank: number
+  telegram_id: number
+  username: string | null
+  xp: number
+  level: number
+  expeditions_completed: number
+  artifacts_found: number
+  xgen_earned: number
+  articles_read: number
+}
+
+export interface MetricEntry {
+  rank: number
+  telegram_id: number
+  username: string | null
+  value: number
+}
+
+export interface MetricLeaderboard {
+  my_rank: number
+  top: MetricEntry[]
+}
+
+export interface GlobalLeaderboard {
+  my_rank: number
+  top_players: PlayerShortStats[]
+  expeditions: MetricLeaderboard
+  artifacts: MetricLeaderboard
+  xgen: MetricLeaderboard
+  articles: MetricLeaderboard
 }

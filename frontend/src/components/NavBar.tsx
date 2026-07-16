@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { BookOpen, Globe2, Package, Rocket, Settings, ShoppingBag, User } from 'lucide-react'
+import { BookOpen, Globe2, Package, Rocket, Settings, ShoppingBag, Trophy, User } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { useNotifications } from '../hooks/useNotifications'
@@ -14,6 +14,7 @@ const nav = [
   { path: '/inventory', icon: Package, key: 'nav.inv' },
   { path: '/profile', icon: User, key: 'nav.profile' },
   { path: '/shop', icon: ShoppingBag, key: 'nav.shop' },
+  { path: '/leaderboard', icon: Trophy, key: 'nav.leaders' },
 ]
 
 function BadgeDot({ color }: { color: string }) {

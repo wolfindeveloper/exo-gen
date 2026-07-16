@@ -140,6 +140,12 @@ export function Profile() {
   const joinedDaysCount = useCountUp(stats?.joined_days ?? 0, 1000)
   const xpEarnedCount = useCountUp(stats?.total_xp_earned ?? 0, 1200)
   const zonesCount = useCountUp(stats?.zones_explored ?? 0, 1000)
+  const expeditionsCompletedCount = useCountUp(stats?.completed_expeditions ?? 0, 1000)
+  const expeditionsInProgressCount = useCountUp(stats?.expeditions_in_progress ?? 0, 1000)
+  const artifactsFoundCount = useCountUp(stats?.artifacts_found ?? 0, 1000)
+  const xgenEarnedTotalCount = useCountUp(stats?.xgen_earned_total ?? 0, 1200)
+  const articlesReadCount = useCountUp(stats?.articles_read ?? 0, 1000)
+  const articlesTotalCount = useCountUp(stats?.articles_total ?? 0, 1000)
 
   useEffect(() => {
     loadProfile()
@@ -183,9 +189,11 @@ export function Profile() {
   if (!user) return <div className="p-4 pb-28 space-y-4">{Array.from({ length: 4 }, (_, i) => <div key={i} className="shimmer rounded-xl h-24" />)}</div>
 
   const safeStats = stats || {
-    total_expeditions: 0, completed_expeditions: 0, failed_expeditions: 0,
-    artifacts_crafted: 0, joined_days: 0, total_xp_earned: 0, zones_explored: 0,
+    total_expeditions: 0, completed_expeditions: 0, expeditions_in_progress: 0, failed_expeditions: 0,
+    artifacts_found: 0, artifacts_crafted: 0, joined_days: 0, total_xp_earned: 0,
+    xgen_earned_total: 0, fragments_earned_total: 0, zones_explored: 0,
     equipped_artifacts_count: 0, unique_artifacts: 0,
+    articles_read: 0, articles_total: 0,
     resources: { fuel: 0, repair_kits: 0 },
     guide_progress: { total_chapters: 0, completed_chapters: 0, entries_researched: 0 },
     recent_expeditions: [],
@@ -585,12 +593,37 @@ export function Profile() {
         initial="hidden"
         animate="visible"
       >
-        <StatCard icon={Rocket} label="Экспедиций" value={expeditionsCount} />
-        <StatCard icon={Award} label="Завершено" value={completedCount} />
-        <StatCard icon={Sparkles} label="Артефактов" value={artifactsCount} />
-        <StatCard icon={Calendar} label="В проекте" value={joinedDaysCount} suffix="дн" />
-        <StatCard icon={Globe} label="Зон открыто" value={zonesCount} />
-        <StatCard icon={Zap} label="Всего XP" value={xpEarnedCount} />
+        <motion.div variants={fadeIn} className="glass-card p-3">
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Экспедиций</p>
+          <p className="font-display text-xl text-neon-cyan tabular-nums">
+            {expeditionsCompletedCount}
+          </p>
+          <p className="text-[9px] text-slate-600">
+            Активных: {expeditionsInProgressCount}
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="glass-card p-3">
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Артефактов</p>
+          <p className="font-display text-xl text-neon-purple tabular-nums">
+            {artifactsFoundCount}
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="glass-card p-3">
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">XGen заработано</p>
+          <p className="font-display text-xl text-amber-400 tabular-nums">
+            {xgenEarnedTotalCount}
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="glass-card p-3">
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Путеводитель</p>
+          <p className="font-display text-xl text-neon-green tabular-nums">
+            {articlesReadCount}
+            <span className="text-slate-600 text-sm"> / {articlesTotalCount}</span>
+          </p>
+        </motion.div>
       </motion.div>
 
       {/* Inventory summary */}

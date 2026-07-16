@@ -28,6 +28,8 @@ const dict: Record<string, Record<Language, string>> = {
   // Common
   'common.close':   { ru: 'Закрыть', en: 'Close', ua: 'Закрити' },
   'common.save':    { ru: 'Сохранить', en: 'Save', ua: 'Зберегти' },
+
+  'nav.leaders':    { ru: 'Лидеры', en: 'Leaders', ua: 'Лідери' },
 }
 
 export function t(key: string, lang: Language): string {

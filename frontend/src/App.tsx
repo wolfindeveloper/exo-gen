@@ -17,6 +17,7 @@ import GuidePage from './pages/GuidePage'
 import { Inventory } from './pages/Inventory'
 import { Profile } from './pages/Profile'
 import { Shop } from './pages/Shop'
+import { Leaderboard } from './pages/Leaderboard'
 import { PageTransition } from './components/PageTransition'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { ItemsManager } from './pages/admin/ItemsManager'
@@ -129,6 +130,7 @@ function AppContent() {
           <Route path="/inventory" element={<PageTransition><Inventory /></PageTransition>} />
           <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
           <Route path="/shop" element={<PageTransition><Shop /></PageTransition>} />
+          <Route path="/leaderboard" element={<PageTransition><Leaderboard /></PageTransition>} />
         </Routes>
       </AnimatePresence>
       {error && (

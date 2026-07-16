@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import type { AchievementStatus, Artifact, Expedition, GuideChapterSummary, GuideClaimRewardResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
+import type { AchievementStatus, Artifact, Expedition, GlobalLeaderboard, GuideChapterSummary, GuideClaimRewardResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
 import { api } from '../api/client'
 
 let _initStarted = false
@@ -28,6 +28,7 @@ interface GameState {
   isAdmin: boolean
   initFailed: boolean
   error: string | null
+  leaderboard: GlobalLeaderboard | null
 
   initAuth: () => Promise<void>
   clearLastLoot: () => void
@@ -53,6 +54,8 @@ interface GameState {
   fixGlitch: (chapterId: string, entryId: string) => Promise<void>
   claimGuideReward: (chapterId: string) => Promise<GuideClaimRewardResponse | undefined>
   loadAdminStatus: () => Promise<void>
+  loadLeaderboard: () => Promise<void>
+  openLootBox: (boxType: string, inventoryItemId?: string) => Promise<void>
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -78,6 +81,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   isAdmin: false,
   initFailed: false,
   error: null,
+  leaderboard: null,
 
   initAuth: async () => {
     if (_initStarted) return
@@ -353,6 +357,36 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({ isAdmin })
     } catch {
       set({ isAdmin: false })
+    }
+  },
+
+  loadLeaderboard: async () => {
+    const data = await api.getGlobalLeaderboard()
+    set({ leaderboard: data })
+  },
+
+  openLootBox: async (boxType: string, inventoryItemId?: string) => {
+    try {
+      set({ isLoading: true, error: null })
+      const result: any = await api.openLootBox(boxType, inventoryItemId)
+      set({
+        lastLoot: {
+          shipName: 'Лут-бокс',
+          loot: (result.items_earned ?? []).map((i: any) => ({
+            item_config_id: i.item_id,
+            quantity: i.amount,
+            name: i.name,
+          })),
+          shipStability: 100,
+          xpGained: 0,
+        },
+        lastXgenGained: result.xgen_earned,
+        lastFragmentsGained: result.fragments_earned,
+        isLoading: false,
+      })
+      await Promise.all([get().loadInventory(), get().loadProfile()])
+    } catch (e) {
+      set({ error: (e as Error).message, isLoading: false })
     }
   },
 }))

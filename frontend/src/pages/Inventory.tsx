@@ -289,6 +289,8 @@ const InventoryRow = memo(function InventoryRow({
   const rc = rarityConfig[info.rarity] || rarityConfig.common
   const meta = item.item.effect || {}
   const iconPath = info.icon_path
+  const openLootBox = useGameStore((s) => s.openLootBox)
+  const isLoading = useGameStore((s) => s.isLoading)
 
   let icon: React.ReactNode
   if (iconPath) {
@@ -353,7 +355,7 @@ const InventoryRow = memo(function InventoryRow({
           </div>
         )}
       </div>
-      <div className="text-right shrink-0">
+      <div className="text-right shrink-0 flex flex-col items-end gap-1">
         <motion.span
           className={`text-base font-display tabular-nums ${rc.text} min-w-[1.5rem] inline-block`}
           initial={{ scale: 0 }}
@@ -362,6 +364,21 @@ const InventoryRow = memo(function InventoryRow({
         >
           {item.quantity}
         </motion.span>
+        {item.item.type === 'loot_box' && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              openLootBox(
+                (item.item.effect as any)?.box_type ?? 'shop',
+                item.item.id,
+              )
+            }}
+            disabled={isLoading}
+            className="px-3 py-1.5 rounded-lg bg-neon-purple/15 text-neon-purple border border-neon-purple/20 hover:bg-neon-purple/25 text-[10px] font-display uppercase tracking-wider disabled:opacity-50"
+          >
+            Открыть
+          </button>
+        )}
       </div>
     </motion.div>
   )
