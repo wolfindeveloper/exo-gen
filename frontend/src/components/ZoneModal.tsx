@@ -76,15 +76,24 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
 
   const mainShip = ships[0] ?? null
   const speedMod = mainShip?.speed ?? 1.0
-  const defense = mainShip?.defense ?? 0
   const luck = mainShip?.luck ?? 0
+  const artifactsContent = useGameStore((s) => s.artifactsContent)
+
+  const totalDefense = useMemo(() => {
+    const baseDefense = mainShip?.defense ?? 0
+    const equippedIds = mainShip?.equipment?.artifacts?.map(a => a.id) ?? []
+    const artifactDefense = artifactsContent
+      .filter(a => equippedIds.includes(a.id))
+      .reduce((sum, a) => sum + (a.stats_modifiers?.defense ?? 0), 0)
+    return baseDefense + artifactDefense
+  }, [mainShip, artifactsContent])
 
   const artifactBonuses = useMemo(() => {
     const mods: Record<string, number> = {}
     if (luck) mods.speed_mod = luck
-    if (defense) mods.damage_reduction = defense
+    if (totalDefense > 0) mods.damage_reduction = totalDefense
     return Object.keys(mods).length > 0 ? [mods] : []
-  }, [luck, defense])
+  }, [luck, totalDefense])
 
   const calcedStats = useMemo(() => {
     if (!mainShip) return null
@@ -170,7 +179,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
               {[
                 { label: '⛽ Топливо', base: zone.fuel_cost, calc: calcedStats?.effectiveFuelCost },
                 { label: '⏱ Время', base: `${Math.round(zone.duration_seconds / 3600)}ч`, calc: calcedStats ? `${calcedStats.durationHours}ч` : null },
-                { label: '⚠ Риск', base: `${Math.round(zone.optimism_risk * 100)}%`, calc: calcedStats ? `${calcedStats.riskPercent}%` : null },
+                { label: '⚠ Риск зоны', base: `${Math.round(zone.optimism_risk * 100)}%`, calc: null },
               ].map((item) => (
                 <div key={item.label} className="glass-card p-3 text-center">
                   <p className="text-[10px] text-slate-500 mb-1">{item.label}</p>
@@ -184,6 +193,34 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
               ))}
             </div>
           </div>
+
+          {calcedStats && (
+            <div className="space-y-2">
+              {totalDefense > 0 && (
+                <div className="flex justify-between text-xs bg-neon-green/5 border border-neon-green/20 rounded-lg px-3 py-2">
+                  <span className="text-neon-green">🛡️ Защита корабля</span>
+                  <span className="font-display text-neon-green tabular-nums">
+                    -{Math.round(totalDefense * 100)}% урона
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between text-xs bg-space-600/30 rounded-lg px-3 py-2">
+                <span className="text-slate-500">
+                  💥 Потеря прочности
+                  <span className="text-[9px] text-slate-600 ml-1">(от текущей)</span>
+                </span>
+                <span className="font-display text-neon-red tabular-nums">
+                  -{calcedStats.estimatedMaxDamage}%
+                </span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-slate-500">⚠ Эффективный риск</span>
+                <span className="font-display text-slate-400 tabular-nums">
+                  {calcedStats.riskPercent}%
+                </span>
+              </div>
+            </div>
+          )}
 
           {artifactBonuses.length > 0 && (
             <div>
@@ -202,13 +239,6 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                   )
                 })}
               </div>
-            </div>
-          )}
-
-          {calcedStats && (
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-500">Макс. повреждение</span>
-              <span className="font-display text-neon-red">-{calcedStats.estimatedMaxDamage.toFixed(1)}% прочности</span>
             </div>
           )}
 

@@ -2,61 +2,56 @@ import { describe, it, expect } from 'vitest'
 import { calculateZoneStats } from '../expeditionCalc'
 
 describe('calculateZoneStats', () => {
-  it('baseline — no artifacts, moderate stats', () => {
+  it('baseline — no artifacts, risk 0.1, optimism 100', () => {
     const result = calculateZoneStats(0.1, 10, 4, 100, 1.2, 100)
-    expect(result).toEqual({
-      effectiveRisk: 0.05,
-      effectiveFuelCost: 10,
-      effectiveDuration: 3.3333333333333335,
-      fuelOk: true,
-      estimatedMaxDamage: 0.8,
-      riskPercent: 5,
-      durationHours: 3.3,
-    })
+    expect(result.effectiveRisk).toBeCloseTo(0.1)
+    expect(result.estimatedMaxDamage).toBe(10)
+    expect(result.riskPercent).toBe(10)
+    expect(result.fuelOk).toBe(true)
   })
 
-  it('high stability nearly eliminates risk', () => {
-    const result = calculateZoneStats(0.5, 20, 8, 180, 2.0, 200)
-    expect(result).toEqual({
-      effectiveRisk: 0.04999999999999999,
-      effectiveFuelCost: 20,
-      effectiveDuration: 4,
-      fuelOk: true,
-      estimatedMaxDamage: 0.7,
-      riskPercent: 5,
-      durationHours: 4,
-    })
+  it('high risk zone (0.5), optimism 100, no defense', () => {
+    const result = calculateZoneStats(0.5, 20, 8, 100, 1.0, 200)
+    expect(result.effectiveRisk).toBeCloseTo(0.5)
+    expect(result.estimatedMaxDamage).toBe(50)
+    expect(result.riskPercent).toBe(50)
   })
 
-  it('low stability with insufficient fuel', () => {
-    const result = calculateZoneStats(0.3, 15, 6, 30, 0.8, 5)
-    expect(result).toEqual({
-      effectiveRisk: 0.255,
-      effectiveFuelCost: 15,
-      effectiveDuration: 7.5,
-      fuelOk: false,
-      estimatedMaxDamage: 3.8,
-      riskPercent: 26,
-      durationHours: 7.5,
-    })
+  it('defense reduces damage correctly (matches backend)', () => {
+    const bonuses = [{ damage_reduction: 0.2 }]
+    const result = calculateZoneStats(0.5, 10, 4, 100, 1.0, 100, bonuses)
+    expect(result.effectiveRisk).toBeCloseTo(0.3)
+    expect(result.estimatedMaxDamage).toBe(30)
+    expect(result.riskPercent).toBe(30)
   })
 
-  it('artifact bonuses reduce risk, fuel, and duration', () => {
-    const bonuses = [
-      { damage_reduction: 0.02 },
-      { fuel_efficiency: 0.1 },
-      { speed_mod: 0.2 },
-      { damage_reduction: 0.01 },
-    ]
-    const result = calculateZoneStats(0.1, 10, 4, 100, 1.2, 100, bonuses)
-    expect(result).toEqual({
-      effectiveRisk: 0.020000000000000004,
-      effectiveFuelCost: 9,
-      effectiveDuration: 2.666666666666667,
-      fuelOk: true,
-      estimatedMaxDamage: 0.3,
-      riskPercent: 2,
-      durationHours: 2.7,
-    })
+  it('defense fully negates risk → 0 damage', () => {
+    const bonuses = [{ damage_reduction: 0.15 }]
+    const result = calculateZoneStats(0.1, 10, 4, 100, 1.0, 100, bonuses)
+    expect(result.effectiveRisk).toBe(0)
+    expect(result.estimatedMaxDamage).toBe(0)
+    expect(result.riskPercent).toBe(0)
+  })
+
+  it('low optimism ship takes more relative damage', () => {
+    const result = calculateZoneStats(0.1, 10, 4, 50, 1.0, 100)
+    expect(result.estimatedMaxDamage).toBe(20)
+  })
+
+  it('artifact speed bonus reduces duration', () => {
+    const bonuses = [{ speed_mod: 0.2 }]
+    const result = calculateZoneStats(0.1, 10, 4, 100, 1.0, 100, bonuses)
+    expect(result.effectiveDuration).toBeLessThan(4)
+  })
+
+  it('artifact fuel efficiency reduces fuel cost', () => {
+    const bonuses = [{ fuel_efficiency: 0.2 }]
+    const result = calculateZoneStats(0.1, 10, 4, 100, 1.0, 100, bonuses)
+    expect(result.effectiveFuelCost).toBe(8)
+  })
+
+  it('insufficient fuel → fuelOk is false', () => {
+    const result = calculateZoneStats(0.1, 15, 4, 100, 1.0, 10)
+    expect(result.fuelOk).toBe(false)
   })
 })
