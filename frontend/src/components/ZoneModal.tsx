@@ -7,21 +7,26 @@ import { canAccessZone, formatUnlockHint } from '../lib/progression'
 import { useGameStore } from '../store/game'
 import type { LootEntry, Zone } from '../types'
 
-function lootLabel(loot: LootEntry): string {
-  if (loot.item_type === 'xgen') return 'XGen'
-  if (loot.item_type === 'fragments') return 'Фрагменты'
-  return loot.item_name || 'Неизвестный предмет'
+const DROP_TYPE_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
+  xgen: { label: 'XGen', emoji: '💎', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+  fragments: { label: 'Фрагменты', emoji: '📜', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
+  item: { label: 'Предмет', emoji: '📦', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
 }
 
-function lootColor(loot: LootEntry): string {
-  if (loot.item_type === 'xgen') return 'text-neon-amber border-neon-amber/20 bg-neon-amber/10'
-  if (loot.item_type === 'fragments') return 'text-neon-purple border-neon-purple/20 bg-neon-purple/10'
-  return 'text-neon-cyan border-neon-cyan/20 bg-neon-cyan/10'
+const RARITY_CONFIG: Record<string, { label: string; color: string; glow: string }> = {
+  common: { label: 'Обычный', color: '#94a3b8', glow: 'rgba(148,163,184,0.3)' },
+  uncommon: { label: 'Необычный', color: '#22c55e', glow: 'rgba(34,197,94,0.3)' },
+  rare: { label: 'Редкий', color: '#3b82f6', glow: 'rgba(59,130,246,0.3)' },
+  epic: { label: 'Эпический', color: '#a855f7', glow: 'rgba(168,85,247,0.3)' },
+  legendary: { label: 'Легендарный', color: '#f59e0b', glow: 'rgba(245,158,11,0.4)' },
 }
 
-function chanceText(chance: number): string {
-  if (chance >= 0.99) return '100%'
-  return `${Math.round(chance * 100)}%`
+function getChanceBadgeStyle(chance: number) {
+  const pct = Math.round(chance * 100)
+  if (pct >= 80) return { color: '#22c55e', label: 'Часто', bg: 'bg-green-500/10', border: 'border-green-500/30' }
+  if (pct >= 40) return { color: '#eab308', label: 'Средне', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' }
+  if (pct >= 15) return { color: '#f97316', label: 'Редко', bg: 'bg-orange-500/10', border: 'border-orange-500/30' }
+  return { color: '#ef4444', label: 'Очень редко', bg: 'bg-red-500/10', border: 'border-red-500/30' }
 }
 
 const zoneEmoji: Record<string, string> = {
@@ -78,6 +83,42 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
   const speedMod = mainShip?.speed ?? 1.0
   const luck = mainShip?.luck ?? 0
   const artifactsContent = useGameStore((s) => s.artifactsContent)
+  const resourcesContent = useGameStore((s) => s.resourcesContent)
+  const inventory = useGameStore((s) => s.inventory)
+
+  const itemInfoMap = useMemo(() => {
+    const map = new Map<string, { name: string; icon: string; rarity: string; type: string; description?: string }>()
+    for (const a of artifactsContent) {
+      map.set(a.id, {
+        name: a.name_key,
+        icon: a.icon_path || '⚙',
+        rarity: a.rarity || 'common',
+        type: 'artifact',
+        description: a.description_key,
+      })
+    }
+    for (const r of resourcesContent) {
+      map.set(r.id, {
+        name: r.name_key,
+        icon: r.icon_path || (r.resource_type === 'fuel' ? '⛽' : '🔧'),
+        rarity: 'common',
+        type: 'resource',
+        description: r.description_key,
+      })
+    }
+    for (const inv of inventory) {
+      if (!map.has(inv.item.id)) {
+        map.set(inv.item.id, {
+          name: inv.item.name,
+          icon: inv.item.image_url || '📦',
+          rarity: inv.item.rarity || 'common',
+          type: inv.item.type,
+          description: inv.item.description,
+        })
+      }
+    }
+    return map
+  }, [artifactsContent, resourcesContent, inventory])
 
   const totalDefense = useMemo(() => {
     const baseDefense = mainShip?.defense ?? 0
@@ -243,16 +284,103 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
           )}
 
           <div>
-            <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Возможная добыча</h4>
-            <div className="flex flex-wrap gap-1.5">
-              {zone.loot_table.map((loot, idx) => (
-                <span
-                  key={loot.item_id ?? idx}
-                  className={`text-[10px] px-2.5 py-1 rounded-full border ${lootColor(loot)}`}
-                >
-                  {lootLabel(loot)} x{loot.amount}шт ({chanceText(loot.chance)})
-                </span>
-              ))}
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500">
+                Возможная добыча
+              </h4>
+              <span className="text-[9px] text-slate-600 font-mono">
+                {zone.loot_table.length} {zone.loot_table.length === 1 ? 'предмет' : 'предметов'}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {zone.loot_table.map((loot, idx) => {
+                const dropConfig = DROP_TYPE_CONFIG[loot.item_type] || DROP_TYPE_CONFIG.item
+                const itemInfo = loot.item_id ? itemInfoMap.get(loot.item_id) : null
+                const rarityInfo = itemInfo?.rarity ? RARITY_CONFIG[itemInfo.rarity] : RARITY_CONFIG.common
+                const chanceStyle = getChanceBadgeStyle(loot.chance)
+                const pct = Math.round(loot.chance * 100)
+                const isGuaranteed = loot.chance >= 1.0
+                return (
+                  <motion.div
+                    key={loot.item_id ?? idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="flex items-center gap-3 bg-space-700/30 border border-white/5 rounded-xl p-2.5 hover:bg-space-700/50 transition-colors"
+                  >
+                    <div
+                      className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden"
+                      style={{
+                        background: itemInfo?.type === 'artifact'
+                          ? `radial-gradient(circle, ${rarityInfo.glow}, transparent 70%), rgba(15,20,32,0.6)`
+                          : dropConfig.bg,
+                        border: `1px solid ${itemInfo?.type === 'artifact' ? rarityInfo.color + '44' : dropConfig.border}`,
+                        boxShadow: itemInfo?.type === 'artifact' ? `0 0 12px ${rarityInfo.glow}` : undefined,
+                      }}
+                    >
+                      {itemInfo?.icon && itemInfo.icon.startsWith('http') ? (
+                        <img src={itemInfo.icon} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-lg">{itemInfo?.icon || dropConfig.emoji}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-xs text-slate-200 font-medium truncate">
+                          {itemInfo?.name || loot.item_name || dropConfig.label}
+                        </span>
+                        {loot.amount > 1 && (
+                          <span className="shrink-0 text-[9px] font-mono text-slate-400 bg-white/5 px-1.5 py-0.5 rounded">
+                            ×{loot.amount}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {itemInfo?.type === 'artifact' ? (
+                          <span
+                            className="text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border"
+                            style={{
+                              color: rarityInfo.color,
+                              borderColor: `${rarityInfo.color}44`,
+                              backgroundColor: `${rarityInfo.color}15`,
+                            }}
+                          >
+                            {rarityInfo.label}
+                          </span>
+                        ) : (
+                          <span className={`text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border ${dropConfig.color} ${dropConfig.border} ${dropConfig.bg}`}>
+                            {dropConfig.label}
+                          </span>
+                        )}
+                        {isGuaranteed && (
+                          <span className="text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border text-green-400 border-green-500/30 bg-green-500/10">
+                            ✓ Гарантировано
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="shrink-0 w-16 text-right">
+                      <div className="flex items-center justify-end gap-1 mb-0.5">
+                        <span className="text-sm font-mono font-bold tabular-nums" style={{ color: chanceStyle.color }}>
+                          {pct}%
+                        </span>
+                      </div>
+                      <div className="h-1 bg-space-900/50 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: chanceStyle.color }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${pct}%` }}
+                          transition={{ duration: 0.8, delay: idx * 0.05, ease: 'easeOut' }}
+                        />
+                      </div>
+                      <span className="text-[7px] uppercase tracking-wider block mt-0.5 text-right" style={{ color: chanceStyle.color }}>
+                        {chanceStyle.label}
+                      </span>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
 
