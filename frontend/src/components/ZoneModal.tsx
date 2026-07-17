@@ -318,10 +318,12 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                         boxShadow: itemInfo?.type === 'artifact' ? `0 0 12px ${rarityInfo.glow}` : undefined,
                       }}
                     >
-                      {itemInfo?.icon && itemInfo.icon.startsWith('http') ? (
+                      {itemInfo?.icon && (itemInfo.icon.startsWith('http') || itemInfo.icon.startsWith('/')) ? (
                         <img src={itemInfo.icon} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-lg">{itemInfo?.icon || dropConfig.emoji}</span>
+                        <span className="text-lg">
+                          {(itemInfo?.icon && itemInfo.icon.length > 2) ? '📦' : (itemInfo?.icon || dropConfig.emoji)}
+                        </span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
