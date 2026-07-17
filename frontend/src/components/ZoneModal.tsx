@@ -5,7 +5,7 @@ import { calculateZoneStats } from '../lib/expeditionCalc'
 import { statLabels } from '../lib/stats'
 import { canAccessZone, formatUnlockHint } from '../lib/progression'
 import { useGameStore } from '../store/game'
-import type { LootEntry, Zone } from '../types'
+import type { Zone } from '../types'
 
 const DROP_TYPE_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
   xgen: { label: 'XGen', emoji: '💎', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
