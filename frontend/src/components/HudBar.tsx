@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 
 import { useCountUp } from '../hooks/useCountUp'
-import { getXpProgress } from '../lib/xp'
+import { getXpProgress, calculateLevel } from '../lib/xp'
 import { getTierForLevel, findRank } from '../lib/ranks'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import { useGameStore } from '../store/game'
@@ -18,8 +18,8 @@ export function HudBar() {
   const avatarUrl = getAvatarUrl()
   const first = getFirstName()
 
-  const level = user?.level ?? 1
   const xp = user?.xp ?? 0
+  const level = calculateLevel(xp)
   const xpPct = getXpProgress(xp, level)
   const tier = getTierForLevel(level)
   const rank = findRank(level, ranksContent)

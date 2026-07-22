@@ -14,10 +14,10 @@ class TestCalculateLevel:
 
     def test_level_boundaries(self):
         assert LevelProgressionService.calculate_level(999) == 1
-        assert LevelProgressionService.calculate_level(1000) == 1
-        assert LevelProgressionService.calculate_level(1999) == 1
-        assert LevelProgressionService.calculate_level(2000) == 2
-        assert LevelProgressionService.calculate_level(25000) == 25
+        assert LevelProgressionService.calculate_level(1000) == 2
+        assert LevelProgressionService.calculate_level(1999) == 2
+        assert LevelProgressionService.calculate_level(2000) == 3
+        assert LevelProgressionService.calculate_level(25000) == 26
 
 
 class TestCalculateExpeditionXp:

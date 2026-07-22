@@ -5,9 +5,10 @@ import { useGameStore } from '../store/game'
 import { HexSlot } from '../components/HexSlot'
 import SlotSelectModal from '../components/SlotSelectModal'
 import { useExpeditionTimer } from '../hooks/useTimer'
-import { getXpProgress } from '../lib/xp'
+import { getXpProgress, calculateLevel } from '../lib/xp'
 import { getMaxArtifactSlots, getNextSlotUnlock } from '../lib/progression'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
+import { countFuel, countRepairKits } from '../lib/items'
 import type { Artifact } from '../types'
 import { api } from '../api/client'
 
@@ -87,8 +88,8 @@ export default function ShipPage() {
 
   useEffect(() => { loadShips(); loadInventory(); loadActiveExpeditions() }, [])
 
-  const level = user?.level ?? 1
   const xp = user?.xp ?? 0
+  const level = calculateLevel(xp)
   const xpPct = getXpProgress(xp, level)
   const navigate = useNavigate()
 
@@ -237,12 +238,8 @@ export default function ShipPage() {
   }, [mainShip?.equipment?.artifacts, artifactsContent])
 
   /* ── Inventory counts ── */
-  const fuelInInventory = inventory
-    .filter((i) => i.item.type === 'resource' || i.item.id.startsWith('fuel'))
-    .reduce((sum, i) => sum + i.quantity, 0)
-  const repairInInventory = inventory
-    .filter((i) => i.item.id.startsWith('repair'))
-    .reduce((sum, i) => sum + i.quantity, 0)
+  const fuelInInventory = useMemo(() => countFuel(inventory), [inventory])
+  const repairInInventory = useMemo(() => countRepairKits(inventory), [inventory])
 
   const isShipIdle = !!mainShip
 

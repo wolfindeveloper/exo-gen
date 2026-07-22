@@ -5,6 +5,7 @@ import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
 import { statIcons, statLabels, formatBonus } from '../lib/stats'
 import { useGameStore } from '../store/game'
+import { isFuel, isRepairKit } from '../lib/items'
 import type { InventoryItem } from '../types'
 
 const rarityConfig: Record<string, { border: string; bg: string; text: string; glow: string }> = {
@@ -65,12 +66,15 @@ type ItemInfo = {
 
 function buildInfo(item: InventoryItem): ItemInfo {
   const ref = item.item
+  let resourceType: string | undefined
+  if (isFuel(ref)) resourceType = 'fuel'
+  else if (isRepairKit(ref)) resourceType = 'repair_kit'
   return {
     name: ref.name || ref.id,
     tier: parseTier(ref.id),
     rarity: ref.rarity || 'common',
     icon_path: ref.image_url || '',
-    resource_type: ref.type === 'resource' ? 'fuel' : undefined,
+    resource_type: resourceType,
     description_key: ref.description || undefined,
   }
 }
@@ -85,9 +89,9 @@ function buildSections(
   const consumables: InventoryItem[] = []
 
   for (const i of items) {
-    if (i.item.type === 'resource' && i.item.id.startsWith('fuel')) {
+    if (isFuel(i.item)) {
       fuel.push(i)
-    } else if (i.item.type === 'resource' && i.item.id.startsWith('repair')) {
+    } else if (isRepairKit(i.item)) {
       repair.push(i)
     } else if (i.item.type === 'artifact') {
       artifacts.push(i)
@@ -148,18 +152,16 @@ export function Inventory() {
   const totalItems = inventory.reduce((s, i) => s + i.quantity, 0)
   const totalUnique = inventory.length
 
-  const usableItems = useMemo(() => {
+  const usableItemIds = useMemo(() => {
     const usable = new Set<string>()
-    for (const ship of ships) {
-      if (ship.tea_level < 100) {
-        usable.add('fuel')
-      }
-      if (ship.optimism < 100) {
-        usable.add('repair_kit')
-      }
+    const needsFuel = ships.some((s) => s.tea_level < 100)
+    const needsRepair = ships.some((s) => s.optimism < 100)
+    for (const inv of inventory) {
+      if (needsFuel && isFuel(inv.item)) usable.add(inv.item.id)
+      if (needsRepair && isRepairKit(inv.item)) usable.add(inv.item.id)
     }
     return usable
-  }, [ships])
+  }, [ships, inventory])
 
   const handleItemTap = useCallback((item: InventoryItem, info: ItemInfo) => {
     setSelectedItem({ item, info })
@@ -234,7 +236,7 @@ export function Inventory() {
                     key={item.item.id}
                     item={item}
                     info={info}
-                    isUsable={usableItems.has(item.item.id)}
+                    isUsable={usableItemIds.has(item.item.id)}
                     onTap={handleItemTap}
                   />
                 ))}
@@ -407,20 +409,18 @@ function ItemDetailSheet({
   const rc = rarityConfig[info.rarity] || rarityConfig.common
   const hasIcon = info.icon_path
 
-  const isFuel = item.item.id.startsWith('fuel')
-  const isRepairKit = item.item.id.startsWith('repair')
-  const isUsableType = isFuel || isRepairKit
+  const isFuelItem = isFuel(item.item)
+  const isRepairKitItem = isRepairKit(item.item)
+  const isUsableType = isFuelItem || isRepairKitItem
 
   const matchingShips = useMemo(() => {
     if (!isUsableType) return []
     return ships.filter((s) => {
-      if (isFuel) {
-        if (s.tea_level >= 100) return false
-      }
-      if (isRepairKit && s.optimism >= 100) return false
+      if (isFuelItem && s.tea_level >= 100) return false
+      if (isRepairKitItem && s.optimism >= 100) return false
       return true
     })
-  }, [ships, isUsableType, isFuel, isRepairKit])
+  }, [ships, isUsableType, isFuelItem, isRepairKitItem])
 
   const handleUse = useCallback(async () => {
     if (!matchingShips.length) return
@@ -428,16 +428,16 @@ function ItemDetailSheet({
 
     const ship = matchingShips[0]
     try {
-      if (isFuel) {
+      if (isFuelItem) {
         await refuelShip(ship.id, item.item.id)
-      } else if (isRepairKit) {
+      } else if (isRepairKitItem) {
         await repairShip(ship.id, item.item.id)
       }
       await Promise.all([loadInventory(), loadShips()])
     } catch {
       // error handled by store
     }
-  }, [matchingShips, isFuel, isRepairKit, refuelShip, repairShip, item.item.id, loadInventory, loadShips])
+  }, [matchingShips, isFuelItem, isRepairKitItem, refuelShip, repairShip, item.item.id, loadInventory, loadShips])
 
   let icon: React.ReactNode
   if (hasIcon) {
@@ -560,7 +560,7 @@ function ItemDetailSheet({
               {matchingShips.length > 0 ? (
                 <div className="space-y-2">
                   {matchingShips.slice(0, 3).map((ship) => {
-                    const need = isFuel
+                    const need = isFuelItem
                       ? `⛽ ${ship.tea_level}/100`
                       : `🛡️ ${ship.optimism}%`
                     return (
@@ -573,7 +573,7 @@ function ItemDetailSheet({
                           onClick={handleUse}
                           className="text-[10px] px-3 py-1.5 rounded-lg bg-neon-green/15 text-neon-green border border-neon-green/20 hover:bg-neon-green/25 transition"
                         >
-                          {isFuel ? '⛽ Заправить' : '🔧 Починить'}
+                          {isFuelItem ? '⛽ Заправить' : '🔧 Починить'}
                         </button>
                       </div>
                     )

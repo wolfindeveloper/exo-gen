@@ -9,7 +9,7 @@ import {
 
 import { fadeIn, staggerContainer } from '../lib/animations'
 import { useCountUp } from '../hooks/useCountUp'
-import { getNextLevelXp, getXpProgress } from '../lib/xp'
+import { calculateLevel, getNextLevelXp, getXpProgress, getXpToNextLevel } from '../lib/xp'
 import {
   getMaxArtifactSlots,
   getNextSlotUnlock,
@@ -106,10 +106,11 @@ export function Profile() {
   const avatarUrl = getAvatarUrl()
   const first = getFirstName()
 
-  const level = user?.level ?? 1
   const xp = user?.xp ?? 0
+  const level = calculateLevel(xp)
   const nextLevelXp = getNextLevelXp(level)
   const xpPercent = getXpProgress(xp, level)
+  const xpToNext = getXpToNextLevel(xp, level)
   const tier = getTierForLevel(level)
   const rank = findRank(level, ranksContent)
   const maxSlots = getMaxArtifactSlots(level)
@@ -404,7 +405,7 @@ export function Profile() {
         </div>
 
         <p className="text-[10px] text-slate-600 mt-2">
-          До уровня {level + 1}: ещё <span className="text-slate-400 font-mono">{(nextLevelXp - xp > 0 ? nextLevelXp - xp : 0)}</span> XP
+          До уровня {level + 1}: ещё <span className="text-slate-400 font-mono">{xpToNext}</span> XP
         </p>
       </motion.div>
 

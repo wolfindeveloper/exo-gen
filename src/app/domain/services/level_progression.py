@@ -49,7 +49,7 @@ class LevelProgressionService:
         """Вычисляет текущий уровень игрока по его XP."""
         if xp < 0:
             return 1
-        return max(1, xp // XP_PER_LEVEL)
+        return 1 + xp // XP_PER_LEVEL
 
     @staticmethod
     def calculate_expedition_xp(duration_seconds: int, optimism_risk: float) -> int:
