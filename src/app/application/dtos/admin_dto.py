@@ -219,6 +219,15 @@ class CreateZoneDTO(BaseModel):
     tier: int = 1
 
 
+class LootBoxEntryResponseDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    item_type: str
+    amount: int
+    chance: float
+    item_id: UUID | None = None
+
+
 class LootBoxConfigResponseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -226,5 +235,5 @@ class LootBoxConfigResponseDTO(BaseModel):
     box_type: str
     name: str
     description: str
-    entries: list[dict]
+    entries: list[LootBoxEntryResponseDTO]
     is_active: bool
