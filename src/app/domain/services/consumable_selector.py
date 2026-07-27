@@ -48,7 +48,7 @@ class ConsumableSelector:
         valid = [
             (item, qty)
             for item, qty in available_items
-            if qty > 0 and effect_key in item.effect
+            if qty > 0 and effect_key in item.effect and item.effect[effect_key] is not None
         ]
         if not valid:
             return ConsumptionDecision(None, "no_consumables")

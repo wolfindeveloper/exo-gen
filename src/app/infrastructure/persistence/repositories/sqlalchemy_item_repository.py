@@ -132,6 +132,7 @@ class SQLAlchemyItemRepository(ItemRepository):
             .where(ItemORM.deleted_at.is_(None))
             .where(ItemORM.type == ItemType.CONSUMABLE.value)
             .where(ItemORM.effect.has_key(effect_key))
+            .where(ItemORM.effect[effect_key].isnot(None))
         )
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
