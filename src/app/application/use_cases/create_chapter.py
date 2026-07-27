@@ -57,7 +57,7 @@ class CreateChapterUseCase:
             season_id=dto.season_id,
             reward_xgen=dto.reward_xgen,
             reward_fragments=dto.reward_fragments,
-            reward_items=[r.model_dump() for r in dto.reward_items],
+            reward_items=[r.model_dump(mode='json') for r in dto.reward_items],
             articles=articles,
         )
 
