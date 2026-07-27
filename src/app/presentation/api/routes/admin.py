@@ -397,7 +397,7 @@ async def reorder_chapter_articles(
     uow: UnitOfWork = Depends(get_uow),
 ):
     try:
-        use_case = ReorderChapterArticlesUseCase(chapter_repo=chapter_repo)
+        use_case = ReorderChapterArticles(chapter_repo=chapter_repo)
         await use_case.execute(chapter_id, article_ids, uow)
     except ChapterNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -452,7 +452,7 @@ async def create_loot_box_config(
     config_repo: LootBoxRepository = Depends(get_loot_box_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
-    use_case = CreateLootBoxConfigUseCase(config_repo=config_repo)
+    use_case = CreateLootBoxConfigUseCase(loot_box_repo=config_repo)
     return await use_case.execute(dto, uow)
 
 
@@ -480,7 +480,7 @@ async def simulate_loot_box(
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
     try:
-        use_case = SimulateLootBoxUseCase(loot_box_repo=loot_box_repo, item_repo=item_repo)
+        use_case = SimulateLootBox(loot_box_repo=loot_box_repo, item_repo=item_repo)
         return await use_case.execute(box_id, request.count)
     except LootBoxConfigNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
