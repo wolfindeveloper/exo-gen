@@ -20,7 +20,7 @@ class SQLAlchemyChapterRepository(ChapterRepository):
 
     async def save(self, chapter: Chapter) -> None:
         chapter_orm = ChapterMapper.chapter_to_orm(chapter)
-        await self.session.merge(chapter_orm)
+        await self.session.run_sync(lambda s: s.merge(chapter_orm))
 
     async def get_paginated(
         self,

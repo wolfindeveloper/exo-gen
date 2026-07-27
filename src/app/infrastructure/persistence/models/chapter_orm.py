@@ -22,4 +22,4 @@ class ChapterORM(Base):
     reward_fragments: Mapped[int] = mapped_column(Integer, default=0)
     reward_items: Mapped[list[dict]] = mapped_column(JSONB, default=list)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    articles: Mapped[list["ArticleORM"]] = relationship(back_populates="chapter", cascade="all, delete-orphan")
+    articles: Mapped[list["ArticleORM"]] = relationship(back_populates="chapter", cascade="all, delete-orphan", lazy="selectin")
