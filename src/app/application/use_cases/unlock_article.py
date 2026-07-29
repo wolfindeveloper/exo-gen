@@ -156,6 +156,7 @@ class UnlockArticleUseCase:
 
                         reward_items_db = await self.item_repo.get_by_ids(reward_item_ids)
                         reward_item_name_map = {item.id: item.name for item in reward_items_db}
+                        reward_item_image_map = {item.id: item.image_url for item in reward_items_db}
 
                         for reward_item in chapter.reward_items:
                             item_id = UUID(reward_item["item_id"]) if isinstance(reward_item["item_id"], str) else reward_item["item_id"]
@@ -165,6 +166,7 @@ class UnlockArticleUseCase:
                                 "item_id": str(item_id),
                                 "amount": quantity,
                                 "name": reward_item_name_map.get(item_id),
+                                "image_url": reward_item_image_map.get(item_id),
                             })
 
                     chapter_loot = type('obj', (object,), {

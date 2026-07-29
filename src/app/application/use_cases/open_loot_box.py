@@ -51,6 +51,7 @@ class OpenLootBoxUseCase:
         items = await self.item_repo.get_by_ids(item_ids)
         item_type_map = {item.id: item.type for item in items}
         item_name_map = {item.id: item.name for item in items}
+        item_image_map = {item.id: item.image_url for item in items}
 
         items_earned = []
         for item_drop in loot.items:
@@ -63,6 +64,7 @@ class OpenLootBoxUseCase:
                 "item_id": item_id,
                 "amount": amount,
                 "name": item_name_map.get(item_id),
+                "image_url": item_image_map.get(item_id),
             })
 
         uow.track(player)
