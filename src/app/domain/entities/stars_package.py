@@ -3,8 +3,10 @@ from datetime import datetime, timezone
 from uuid import UUID
 
 
+from app.domain.entities.base import AggregateRoot
+
 @dataclass
-class StarsPackage:
+class StarsPackage(AggregateRoot):
     id: UUID
     stars_amount: int
     xgen_reward: int

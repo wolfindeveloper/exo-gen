@@ -5,8 +5,10 @@ from uuid import UUID
 from app.domain.value_objects.loot_box import LootBoxEntry
 
 
+from app.domain.entities.base import AggregateRoot
+
 @dataclass
-class LootBoxConfig:
+class LootBoxConfig(AggregateRoot):
     id: UUID
     box_type: str
     name: str

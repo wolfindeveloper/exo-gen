@@ -10,8 +10,10 @@ class ItemType(str, Enum):
     KEY_ITEM = "key_item"
     LOOT_BOX = "loot_box"
 
+from app.domain.entities.base import AggregateRoot
+
 @dataclass
-class Item:
+class Item(AggregateRoot):
     id: UUID
     name: str
     description: str

@@ -3,9 +3,10 @@ from datetime import datetime, timezone
 from uuid import UUID
 
 from app.domain.entities.article import Article
+from app.domain.entities.base import AggregateRoot
 
 @dataclass
-class Chapter:
+class Chapter(AggregateRoot):
     id: UUID
     name: str
     description: str
