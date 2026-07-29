@@ -261,7 +261,7 @@ export interface GuideResearchResponse {
   box_opened: boolean
   box_xgen: number
   box_fragments: number
-  box_items: Array<{ item_id: string; amount: number; name?: string | null }>
+  box_items: Array<{ item_id: string; amount: number; name?: string | null; image_url?: string | null }>
 }
 
 export interface GuideFixGlitchResponse {
@@ -594,7 +594,7 @@ export interface DailyLoginResult {
   box_opened: boolean
   box_xgen: number
   box_fragments: number
-  box_items: Array<{ item_id: string; amount: number; name?: string }>
+  box_items: Array<{ item_id: string; amount: number; name?: string; image_url?: string | null }>
 }
 
 export interface PlayerShortStats {

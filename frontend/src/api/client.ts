@@ -342,7 +342,7 @@ export const api = {
   },
 
   researchEntry: async (_chapterId: string, entryId: string) => {
-    const data = await apiClient.post<{ content: string; new_fragments_balance: number; chapter_completed: boolean; xgen_rewarded: number; fragments_rewarded: number; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Array<{ item_id: string; amount: number }> }>('/guide/unlock', { article_id: entryId }).then((r) => r.data)
+    const data = await apiClient.post<{ content: string; new_fragments_balance: number; chapter_completed: boolean; xgen_rewarded: number; fragments_rewarded: number; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Array<{ item_id: string; amount: number; name?: string | null; image_url?: string | null }> }>('/guide/unlock', { article_id: entryId }).then((r) => r.data)
     return {
       status: 'ok',
       fixed: true,

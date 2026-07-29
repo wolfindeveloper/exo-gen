@@ -341,6 +341,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             item_id: i.item_id,
             quantity: i.amount,
             name: i.name,
+            image_url: i.image_url,
           })),
         }
         set({ boxRewards: boxRewards as unknown as Record<string, unknown> })
@@ -424,6 +425,7 @@ export const useGameStore = create<GameState>((set, get) => ({
               item_id: i.item_id,
               quantity: i.amount,
               name: i.name,
+              image_url: i.image_url,
             })),
           },
         })
@@ -442,6 +444,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             item_config_id: i.item_id,
             quantity: i.amount,
             name: i.name,
+            image_url: i.image_url,
           })),
           shipStability: 100,
           xpGained: 0,
