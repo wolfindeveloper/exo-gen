@@ -328,7 +328,6 @@ export const useGameStore = create<GameState>((set, get) => ({
           ...s.user,
           fragments_balance: result.balance_fragments,
           xgen_balance: s.user.xgen_balance + result.xgen_rewarded + result.box_xgen,
-          fragments_balance: result.balance_fragments + result.box_fragments,
         } : null,
       }))
       if (result.chapter_completed && result.box_opened) {
