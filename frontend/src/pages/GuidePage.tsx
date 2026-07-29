@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import { ArrowLeft, BookOpen, Check, FileText, Lock, Sparkles, TriangleAlert } from 'lucide-react'
 import { useGameStore } from '../store/game'
 import { api } from '../api/client'
@@ -10,7 +11,6 @@ export default function GuidePage() {
   const loadGuideChapters = useGameStore((s) => s.loadGuideChapters)
   const researchEntry = useGameStore((s) => s.researchEntry)
   const fixGlitch = useGameStore((s) => s.fixGlitch)
-  const claimGuideReward = useGameStore((s) => s.claimGuideReward)
   const isLoading = useGameStore((s) => s.isLoading)
   const artifactsContent = useGameStore((s) => s.artifactsContent)
 
@@ -42,11 +42,15 @@ export default function GuidePage() {
   async function handleResearch(entry: GuideEntryDetail) {
     if (!selectedChapter) return
     try {
-      await researchEntry(selectedChapter.id, entry.id)
+      const result = await researchEntry(selectedChapter.id, entry.id)
       const data = await loadChapterDetail(selectedChapter.id)
       const updated = data?.entries.find((e) => e.id === entry.id)
       if (updated) setOpenedEntry(updated)
-      setMsg(`«${entry.title}» — исследовано`)
+      if (result?.chapter_completed) {
+        setMsg(`🎉 Глава "${data?.title}" завершена!`)
+      } else {
+        setMsg(`«${entry.title}» — исследовано`)
+      }
     } catch (e) {
       setMsg((e as Error).message)
     }
@@ -60,18 +64,6 @@ export default function GuidePage() {
       const updated = data?.entries.find((e) => e.id === entry.id)
       if (updated) setOpenedEntry(updated)
       setMsg('Глюк исправлен')
-    } catch (e) {
-      setMsg((e as Error).message)
-    }
-  }
-
-  async function handleClaimReward() {
-    if (!selectedChapter) return
-    try {
-      const result = await claimGuideReward(selectedChapter.id)
-      const name = result?.artifact_name ? getArtifactName(result.artifact_name) : 'артефакт'
-      setMsg(`Награда получена: ${name}!`)
-      await loadChapterDetail(selectedChapter.id)
     } catch (e) {
       setMsg((e as Error).message)
     }
@@ -376,37 +368,24 @@ export default function GuidePage() {
               ))}
             </div>
 
-            {/* Chapter reward */}
-            {chapter.all_researched && !chapter.reward_claimed && (
-              <div className="mt-6 p-4 rounded-xl bg-gradient-to-b from-cyan-500/10 to-purple-500/5 border border-cyan-500/25">
+            {/* Chapter completed */}
+            {chapter.all_researched && chapter.reward_claimed && (
+              <motion.div
+                className="mt-6 p-4 rounded-xl bg-gradient-to-b from-green-500/10 to-cyan-500/5 border border-green-500/25"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span className="text-[10px] font-bold tracking-wider text-amber-300">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span className="text-sm font-bold tracking-wider text-green-300">
                     ГЛАВА ЗАВЕРШЕНА!
                   </span>
                 </div>
-                <p className="text-[8px] text-slate-400 mb-3">
-                  Путеводитель материализует артефакт: {getArtifactName(chapter.reward_artifact_id)}
+                <p className="text-xs text-slate-400">
+                  Поздравляем! Ты открыл все статьи в этой главе и получил награду.
                 </p>
-                <button
-                  disabled={isLoading}
-                  onClick={handleClaimReward}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 text-[9px] font-bold tracking-wider text-cyan-300 hover:from-cyan-500/30 hover:to-purple-500/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                >
-                  ЗАБРАТЬ НАГРАДУ
-                </button>
-              </div>
-            )}
-
-            {chapter.reward_claimed && (
-              <div className="mt-6 p-4 rounded-xl bg-green-500/5 border border-green-500/15">
-                <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-400" />
-                  <span className="text-[9px] text-green-300/60">
-                    Награда «{getArtifactName(chapter.reward_artifact_id)}» получена
-                  </span>
-                </div>
-              </div>
+              </motion.div>
             )}
           </div>
         )}

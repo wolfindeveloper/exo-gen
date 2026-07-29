@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import type { AchievementStatus, Artifact, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterSummary, GuideClaimRewardResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
+import type { AchievementStatus, Artifact, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterSummary, GuideClaimRewardResponse, GuideResearchResponse, InventoryItem, LootResult, Rank, Resource, Ship, ShipConfig, UserProfile, UserStats, Zone } from '../types'
 import { api } from '../api/client'
 
 let _initStarted = false
@@ -52,7 +52,7 @@ interface GameState {
   updateNickname: (username: string) => Promise<void>
   setUser: (user: UserProfile) => void
   loadGuideChapters: () => Promise<void>
-  researchEntry: (chapterId: string, entryId: string) => Promise<void>
+  researchEntry: (chapterId: string, entryId: string) => Promise<GuideResearchResponse | undefined>
   fixGlitch: (chapterId: string, entryId: string) => Promise<void>
   claimGuideReward: (chapterId: string) => Promise<GuideClaimRewardResponse | undefined>
   loadAdminStatus: () => Promise<void>
@@ -324,9 +324,29 @@ export const useGameStore = create<GameState>((set, get) => ({
       const result = await api.researchEntry(chapterId, entryId)
       set((s) => ({
         isLoading: false,
-        user: s.user ? { ...s.user, fragments_balance: result.balance_fragments } : null,
+        user: s.user ? {
+          ...s.user,
+          fragments_balance: result.balance_fragments,
+          xgen_balance: s.user.xgen_balance + result.xgen_rewarded + result.box_xgen,
+          fragments_balance: result.balance_fragments + result.box_fragments,
+        } : null,
       }))
+      if (result.chapter_completed && result.box_opened) {
+        const boxRewards = {
+          guaranteed: [
+            ...(result.box_xgen > 0 ? [{ type: 'xgen', quantity: result.box_xgen }] : []),
+            ...(result.box_fragments > 0 ? [{ type: 'xp', quantity: result.box_fragments }] : []),
+          ],
+          random: result.box_items.map((i: { item_id: string; amount: number }) => ({
+            type: 'resource',
+            item_id: i.item_id,
+            quantity: i.amount,
+          })),
+        }
+        set({ boxRewards: boxRewards as unknown as Record<string, unknown> })
+      }
       await get().loadGuideChapters()
+      return result
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false })
     }

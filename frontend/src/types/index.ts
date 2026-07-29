@@ -255,6 +255,13 @@ export interface GuideResearchResponse {
   status: string
   fixed: boolean
   balance_fragments: number
+  chapter_completed: boolean
+  xgen_rewarded: number
+  fragments_rewarded: number
+  box_opened: boolean
+  box_xgen: number
+  box_fragments: number
+  box_items: Array<{ item_id: string; amount: number }>
 }
 
 export interface GuideFixGlitchResponse {

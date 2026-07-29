@@ -342,8 +342,19 @@ export const api = {
   },
 
   researchEntry: async (_chapterId: string, entryId: string) => {
-    const data = await apiClient.post<{ content: string; new_fragments_balance: number; chapter_completed: boolean; xgen_rewarded: number; fragments_rewarded: number; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Record<string, unknown>[] }>('/guide/unlock', { article_id: entryId }).then((r) => r.data)
-    return { status: 'ok', fixed: true, balance_fragments: data.new_fragments_balance } as GuideResearchResponse
+    const data = await apiClient.post<{ content: string; new_fragments_balance: number; chapter_completed: boolean; xgen_rewarded: number; fragments_rewarded: number; box_opened: boolean; box_xgen: number; box_fragments: number; box_items: Array<{ item_id: string; amount: number }> }>('/guide/unlock', { article_id: entryId }).then((r) => r.data)
+    return {
+      status: 'ok',
+      fixed: true,
+      balance_fragments: data.new_fragments_balance,
+      chapter_completed: data.chapter_completed,
+      xgen_rewarded: data.xgen_rewarded,
+      fragments_rewarded: data.fragments_rewarded,
+      box_opened: data.box_opened,
+      box_xgen: data.box_xgen,
+      box_fragments: data.box_fragments,
+      box_items: data.box_items,
+    } as GuideResearchResponse
   },
 
   fixGlitch: async (_chapterId: string, _entryId: string) => {

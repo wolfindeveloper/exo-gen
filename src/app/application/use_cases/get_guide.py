@@ -52,6 +52,9 @@ class GetGuideUseCase:
                     trigger_threshold=art.trigger_threshold
                 ))
 
+            is_completed = await self.progress_repo.is_chapter_completed(
+                player.id, ch.id
+            )
             chapters_dto.append(ChapterResponseDTO(
                 id=ch.id,
                 name=ch.name,
@@ -60,7 +63,8 @@ class GetGuideUseCase:
                 season_id=ch.season_id,
                 reward_xgen=ch.reward_xgen,
                 reward_fragments=ch.reward_fragments,
-                articles=articles_dto
+                articles=articles_dto,
+                reward_claimed=is_completed
             ))
 
         return GuideResponseDTO(

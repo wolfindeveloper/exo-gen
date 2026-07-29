@@ -146,6 +146,21 @@ class UnlockArticleUseCase:
                     player, LootBoxType.CHAPTER_REWARD, uow
                 )
 
+                if chapter_loot is None or (chapter_loot.xgen_earned == 0 and chapter_loot.fragments_earned == 0 and not chapter_loot.items_earned):
+                    items_earned = []
+                    if chapter.reward_items:
+                        for reward_item in chapter.reward_items:
+                            item_id = UUID(reward_item["item_id"]) if isinstance(reward_item["item_id"], str) else reward_item["item_id"]
+                            quantity = reward_item["quantity"]
+                            inventory.add_item(item_id=item_id, quantity=quantity)
+                            items_earned.append({"item_id": str(item_id), "amount": quantity})
+
+                    chapter_loot = type('obj', (object,), {
+                        'xgen_earned': 0,
+                        'fragments_earned': 0,
+                        'items_earned': items_earned
+                    })()
+
         uow.track(player)
         await self.player_repo.save(player)
         await self.inventory_repo.save(inventory)

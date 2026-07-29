@@ -68,6 +68,7 @@ class ChapterResponseDTO(BaseModel):
     reward_fragments: int = 0
     reward_items: list[dict] = []
     articles: list[ArticleResponseDTO] = []
+    reward_claimed: bool = False
 
 
 class SeasonResponseDTO(BaseModel):
