@@ -149,11 +149,23 @@ class UnlockArticleUseCase:
                 if chapter_loot is None or (chapter_loot.xgen_earned == 0 and chapter_loot.fragments_earned == 0 and not chapter_loot.items_earned):
                     items_earned = []
                     if chapter.reward_items:
+                        reward_item_ids = []
+                        for reward_item in chapter.reward_items:
+                            item_id = UUID(reward_item["item_id"]) if isinstance(reward_item["item_id"], str) else reward_item["item_id"]
+                            reward_item_ids.append(item_id)
+
+                        reward_items_db = await self.item_repo.get_by_ids(reward_item_ids)
+                        reward_item_name_map = {item.id: item.name for item in reward_items_db}
+
                         for reward_item in chapter.reward_items:
                             item_id = UUID(reward_item["item_id"]) if isinstance(reward_item["item_id"], str) else reward_item["item_id"]
                             quantity = reward_item["quantity"]
                             inventory.add_item(item_id=item_id, quantity=quantity)
-                            items_earned.append({"item_id": str(item_id), "amount": quantity})
+                            items_earned.append({
+                                "item_id": str(item_id),
+                                "amount": quantity,
+                                "name": reward_item_name_map.get(item_id),
+                            })
 
                     chapter_loot = type('obj', (object,), {
                         'xgen_earned': 0,
