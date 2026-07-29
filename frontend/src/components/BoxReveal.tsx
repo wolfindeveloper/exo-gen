@@ -8,6 +8,7 @@ interface BoxItem {
   item_id?: string
   pool?: string[]
   quantity?: number
+  name?: string | null
 }
 
 interface BoxData {
@@ -20,10 +21,10 @@ export function BoxReveal() {
   const clearBoxRewards = useGameStore((s) => s.clearBoxRewards)
   const shipsContent = useGameStore((s) => s.shipsContent)
   const resourcesContent = useGameStore((s) => s.resourcesContent)
+  const artifactsContent = useGameStore((s) => s.artifactsContent)
 
   const [phase, setPhase] = useState<'idle' | 'opening' | 'rewards' | 'done'>('idle')
   const [pickedShip, setPickedShip] = useState<string | null>(null)
-  const [pickedDrops, setPickedDrops] = useState<{ label: string; qty: number }[]>([])
 
   const boxRewards = rawRewards as BoxData | null
 
@@ -40,11 +41,6 @@ export function BoxReveal() {
       chosenShip = shipEntry.pool[Math.floor(Math.random() * shipEntry.pool.length)]
     }
     setPickedShip(chosenShip)
-
-    const drops = boxRewards.random.map((r) => {
-      return { label: r.item_id || '?', qty: r.quantity || 0 }
-    })
-    setPickedDrops(drops)
 
     const t = setTimeout(() => setPhase('rewards'), 1200)
     return () => clearTimeout(t)
@@ -117,23 +113,24 @@ export function BoxReveal() {
                     if (r.type === 'xp') return <RewardRow key={i} icon="⚡" label="XP" qty={r.quantity || 0} />
                     if (r.type === 'ship') return <RewardRow key={i} icon="🚀" label={shipName || 'Корабль'} />
                     if (r.type === 'resource') {
-                      const res = resourcesContent.find((e) => e.id === r.item_id)
-                      return <RewardRow key={i} icon="📦" label={res?.name_key || r.item_id || ''} qty={r.quantity} />
+                      const label = r.name || resourcesContent.find((e) => e.id === r.item_id)?.name_key || artifactsContent.find((a) => a.id === r.item_id)?.name_key || r.item_id || 'Предмет'
+                      return <RewardRow key={i} icon="📦" label={label} qty={r.quantity} />
                     }
                     return null
                   })}
                 </div>
               </div>
 
-              {pickedDrops.length > 0 && (
+              {boxRewards.random.length > 0 && (
                 <div className="glass-card p-4 mb-4">
                   <p className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">
                     Случайные находки
                   </p>
                   <div className="space-y-2">
-                    {pickedDrops.map((d, i) => (
-                      <RewardRow key={i} icon="🧪" label={d.label} qty={d.qty} />
-                    ))}
+                    {boxRewards.random.map((r, i) => {
+                      const label = r.name || resourcesContent.find((e) => e.id === r.item_id)?.name_key || artifactsContent.find((a) => a.id === r.item_id)?.name_key || r.item_id || 'Предмет'
+                      return <RewardRow key={i} icon="🧪" label={label} qty={r.quantity} />
+                    })}
                   </div>
                 </div>
               )}

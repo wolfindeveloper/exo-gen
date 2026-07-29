@@ -50,6 +50,7 @@ class OpenLootBoxUseCase:
         item_ids = [UUID(d["item_id"]) for d in loot.items]
         items = await self.item_repo.get_by_ids(item_ids)
         item_type_map = {item.id: item.type for item in items}
+        item_name_map = {item.id: item.name for item in items}
 
         items_earned = []
         for item_drop in loot.items:
@@ -58,7 +59,11 @@ class OpenLootBoxUseCase:
             inventory.add_item(item_id=item_id, quantity=amount)
             if item_type_map.get(item_id) == ItemType.ARTIFACT:
                 player.increment_artifacts_found(amount)
-            items_earned.append({"item_id": item_id, "amount": amount})
+            items_earned.append({
+                "item_id": item_id,
+                "amount": amount,
+                "name": item_name_map.get(item_id),
+            })
 
         uow.track(player)
         await self.inventory_repo.save(inventory)

@@ -333,13 +333,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (result.chapter_completed && result.box_opened) {
         const boxRewards = {
           guaranteed: [
-            ...(result.box_xgen > 0 ? [{ type: 'xgen', quantity: result.box_xgen }] : []),
-            ...(result.box_fragments > 0 ? [{ type: 'xp', quantity: result.box_fragments }] : []),
+            ...(result.box_xgen > 0 ? [{ type: 'xgen' as const, quantity: result.box_xgen }] : []),
+            ...(result.box_fragments > 0 ? [{ type: 'xp' as const, quantity: result.box_fragments }] : []),
           ],
-          random: result.box_items.map((i: { item_id: string; amount: number }) => ({
-            type: 'resource',
+          random: result.box_items.map((i) => ({
+            type: 'resource' as const,
             item_id: i.item_id,
             quantity: i.amount,
+            name: i.name,
           })),
         }
         set({ boxRewards: boxRewards as unknown as Record<string, unknown> })
@@ -420,8 +421,9 @@ export const useGameStore = create<GameState>((set, get) => ({
             ],
             random: result.box_items.map((i) => ({
               type: 'resource',
-              item_id: i.name || i.item_id,
+              item_id: i.item_id,
               quantity: i.amount,
+              name: i.name,
             })),
           },
         })

@@ -70,8 +70,12 @@ export default function GuidePage() {
   }
 
   function getArtifactName(artifactId: string) {
-    const a = artifactsContent.find((a) => a.id === artifactId)
-    return a?.name_key ?? artifactId
+    const art = artifactsContent.find((a) => a.id === artifactId)
+    if (art) return art.name_key
+    const resourcesContent = useGameStore.getState().resourcesContent
+    const res = resourcesContent.find((r) => r.id === artifactId)
+    if (res) return res.name_key
+    return artifactId.slice(0, 8) + '...'
   }
 
   function glitchText(text: string): string {

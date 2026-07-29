@@ -261,7 +261,7 @@ export interface GuideResearchResponse {
   box_opened: boolean
   box_xgen: number
   box_fragments: number
-  box_items: Array<{ item_id: string; amount: number }>
+  box_items: Array<{ item_id: string; amount: number; name?: string | null }>
 }
 
 export interface GuideFixGlitchResponse {
