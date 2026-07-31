@@ -5,7 +5,7 @@ import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
 import { statIcons, statLabels, formatBonus, getArtifactMainIcon } from '../lib/stats'
 import { useGameStore } from '../store/game'
-import { isFuel, isRepairKit } from '../lib/items'
+import { isFuel, isRepairKit, parseTierFromRarity } from '../lib/items'
 import type { InventoryItem } from '../types'
 
 const rarityConfig: Record<string, { border: string; bg: string; text: string; glow: string }> = {
@@ -50,11 +50,6 @@ const elementEmoji: Record<string, string> = {
 
 const resourceIcons: Record<string, string> = { fuel: '⛽', repair_kit: '🔧' }
 
-function parseTier(id: string): number {
-  const m = id.match(/[tT](\d+)/)
-  return m ? parseInt(m[1]) : 1
-}
-
 type ItemInfo = {
   name: string
   tier: number
@@ -71,7 +66,7 @@ function buildInfo(item: InventoryItem): ItemInfo {
   else if (isRepairKit(ref)) resourceType = 'repair_kit'
   return {
     name: ref.name || ref.id,
-    tier: parseTier(ref.id),
+    tier: parseTierFromRarity(ref.rarity || 'common'),
     rarity: ref.rarity || 'common',
     icon_path: ref.image_url || '',
     resource_type: resourceType,

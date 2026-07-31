@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isFuel, isRepairKit, countFuel } from '../items'
+import { isFuel, isRepairKit, countFuel, parseTierFromRarity } from '../items'
 import type { InventoryItem } from '../../types'
 
 function makeItem(id: string, type: string, effect: Record<string, unknown>): InventoryItem {
@@ -46,5 +46,26 @@ describe('countFuel', () => {
   })
   it('returns 0 for empty inventory', () => {
     expect(countFuel([])).toBe(0)
+  })
+})
+
+describe('parseTierFromRarity', () => {
+  it('common → tier 1', () => {
+    expect(parseTierFromRarity('common')).toBe(1)
+  })
+  it('uncommon → tier 2', () => {
+    expect(parseTierFromRarity('uncommon')).toBe(2)
+  })
+  it('rare → tier 3', () => {
+    expect(parseTierFromRarity('rare')).toBe(3)
+  })
+  it('epic → tier 4', () => {
+    expect(parseTierFromRarity('epic')).toBe(4)
+  })
+  it('legendary → tier 5', () => {
+    expect(parseTierFromRarity('legendary')).toBe(5)
+  })
+  it('unknown rarity → tier 1 (fallback)', () => {
+    expect(parseTierFromRarity('unknown')).toBe(1)
   })
 })

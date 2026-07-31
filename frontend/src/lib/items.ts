@@ -1,5 +1,16 @@
 import type { InventoryItem } from '../types'
 
+export function parseTierFromRarity(rarity: string): number {
+  const map: Record<string, number> = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
+    epic: 4,
+    legendary: 5,
+  }
+  return map[rarity] ?? 1
+}
+
 export function isFuel(item: InventoryItem['item']): boolean {
   if (item.type !== 'consumable') return false
   const effect = item.effect as Record<string, unknown>
