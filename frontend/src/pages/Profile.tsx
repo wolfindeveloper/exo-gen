@@ -647,13 +647,13 @@ export function Profile() {
         <motion.div className="mb-4" variants={fadeIn} initial="hidden" animate="visible">
           <h2 className="text-[10px] font-display uppercase tracking-[0.15em] text-slate-500 mb-2">Экипированные артефакты</h2>
           <div className="flex gap-1.5 flex-wrap">
-            {mainShip.equipment.artifacts.map((equippedArt, i) => {
-              const art = artifactsContent.find((a) => a.id === equippedArt.id)
+            {mainShip.equipment.artifacts.filter(Boolean).map((equippedArt, i) => {
+              const art = artifactsContent.find((a) => a.id === equippedArt!.id)
               if (!art) return null
               const tColor = tierRingColors[Math.min(art.tier - 1, 4)]
               return (
                 <div
-                  key={`${equippedArt.id}-${i}`}
+                  key={`${equippedArt!.id}-${i}`}
                   className="w-9 h-9 rounded-lg flex items-center justify-center text-[9px] font-display"
                   style={{
                     background: `${tColor}15`,

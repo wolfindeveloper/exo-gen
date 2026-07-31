@@ -122,7 +122,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
 
   const totalDefense = useMemo(() => {
     const baseDefense = mainShip?.defense ?? 0
-    const equippedIds = mainShip?.equipment?.artifacts?.map(a => a.id) ?? []
+    const equippedIds = mainShip?.equipment?.artifacts?.filter(Boolean).map(a => a!.id) ?? []
     const artifactDefense = artifactsContent
       .filter(a => equippedIds.includes(a.id))
       .reduce((sum, a) => sum + (a.stats_modifiers?.defense ?? 0), 0)

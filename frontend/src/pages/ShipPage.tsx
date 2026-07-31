@@ -920,7 +920,7 @@ export default function ShipPage() {
         artifactsContent={artifactsContent}
         onEquip={async (artifactId) => {
           if (mainShip && slotModalIndex !== null) {
-            const isAlreadyEquipped = mainShip.equipment?.artifacts?.some(a => a.id === artifactId)
+            const isAlreadyEquipped = mainShip.equipment?.artifacts?.some(a => a?.id === artifactId)
 
             if (isAlreadyEquipped) {
               const messages = [
