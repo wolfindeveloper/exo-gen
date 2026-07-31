@@ -67,7 +67,7 @@ async def _async_finish_expedition(expedition_id: str, player_telegram_id: int):
 
 @celery_app.task(name="process_notification_queue")
 def process_notification_queue_task():
-    asyncio.run(_async_process_notification_queue())
+    return asyncio.run(_async_process_notification_queue())
 
 
 async def _async_process_notification_queue():
