@@ -135,7 +135,7 @@ export default function SlotSelectModal({
               const statsText = artifact.stats_modifiers
                 ? Object.entries(artifact.stats_modifiers)
                     .filter(([, v]) => v !== null && v !== undefined && v !== 0)
-                    .map(([k, v]) => `${statIcons[k] || ''} ${statLabels[k] || k}: ${formatBonus(v)}`)
+                    .map(([k, v]) => `${statIcons[k] || '✨'} ${statLabels[k] || k.replace('bonus_', '')} ${formatBonus(v)}`)
                     .join(' · ')
                 : 'Без бонусов'
               return (

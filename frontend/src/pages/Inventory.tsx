@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 
 import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
-import { statIcons, statLabels, formatBonus } from '../lib/stats'
+import { statIcons, statLabels, formatBonus, getArtifactMainIcon } from '../lib/stats'
 import { useGameStore } from '../store/game'
 import { isFuel, isRepairKit } from '../lib/items'
 import type { InventoryItem } from '../types'
@@ -297,6 +297,8 @@ const InventoryRow = memo(function InventoryRow({
   let icon: React.ReactNode
   if (iconPath) {
     icon = <img src={iconPath} alt={info.name} className="w-8 h-8 object-contain" />
+  } else if (item.item.type === 'artifact') {
+    icon = <span className="text-lg">{getArtifactMainIcon(meta as Record<string, number>)}</span>
   } else if (info.resource_type && resourceIcons[info.resource_type]) {
     icon = <span className="text-lg">{resourceIcons[info.resource_type]}</span>
   } else {
@@ -448,6 +450,8 @@ function ItemDetailSheet({
         className="w-16 h-16 object-contain"
       />
     )
+  } else if (item.item.type === 'artifact') {
+    icon = <span className="text-4xl">{getArtifactMainIcon(meta as Record<string, number>)}</span>
   } else if (info.resource_type && resourceIcons[info.resource_type]) {
     icon = <span className="text-4xl">{resourceIcons[info.resource_type]}</span>
   } else {
@@ -542,10 +546,11 @@ function ItemDetailSheet({
                   .filter(([, v]) => v !== null && v !== undefined && v !== 0)
                   .map(([k, v]) => {
                     const label = statLabels[k] || k.replace('bonus_', '')
-                    const color = k.includes('speed') ? 'text-neon-cyan' : k.includes('defense') ? 'text-neon-green' : k.includes('fuel') ? 'text-neon-amber' : 'text-neon-cyan'
+                    const icon = statIcons[k] || '✨'
+                    const color = k.includes('speed') ? 'text-neon-cyan' : k.includes('defense') ? 'text-neon-green' : k.includes('fuel') ? 'text-neon-amber' : k.includes('luck') ? 'text-neon-purple' : k.includes('xp') ? 'text-amber-400' : k.includes('fragment') ? 'text-purple-400' : 'text-neon-cyan'
                     return (
                       <div key={k} className="glass-card px-3 py-2 text-center">
-                        <p className="text-[10px] text-slate-500">{label}</p>
+                        <p className="text-[10px] text-slate-500">{icon} {label}</p>
                         <p className={`text-sm font-mono ${color}`}>{formatBonus(v)}</p>
                       </div>
                     )
