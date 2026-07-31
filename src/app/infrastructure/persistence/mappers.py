@@ -8,7 +8,6 @@ from app.domain.value_objects.resources import (
     XgenBalance,
     FragmentsBalance,
 )
-from app.domain.value_objects.equipment import SlotType
 from app.domain.entities.zone import Zone
 from app.domain.entities.expedition import Expedition, ExpeditionStatus
 from app.domain.entities.article import Article
@@ -323,7 +322,6 @@ class EquipmentMapper:
         artifacts = [
             EquippedArtifact(
                 item_id=UUID(a["item_id"]),
-                slot_type=SlotType(a["slot_type"]),
                 bonuses=a["bonuses"],
             )
             for a in orm.artifacts
@@ -338,7 +336,6 @@ class EquipmentMapper:
             artifacts=[
                 {
                     "item_id": str(a.item_id),
-                    "slot_type": a.slot_type.value,
                     "bonuses": a.bonuses,
                 }
                 for a in domain.artifacts

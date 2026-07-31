@@ -1,27 +1,13 @@
 from app.domain.entities.player import Player
 from app.domain.entities.item import ItemType
 from app.domain.entities.equipment import Equipment
-from app.domain.value_objects.equipment import SlotType
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.equipment_repository import EquipmentRepository
 from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.exceptions.inventory import ItemNotFoundError, ItemNotInInventoryError
-from app.domain.exceptions.equipment import SlotLockedByLevelError
-from app.domain.services.level_progression import LevelProgressionService
 from app.application.dtos.equipment_dto import EquipArtifactDTO, EquipArtifactResponseDTO, EquipmentResponseDTO, EquippedArtifactDTO
-
-
-SLOT_TYPE_MAP: dict[str, SlotType] = {
-    "bonus_speed": SlotType.SPEED,
-    "bonus_defense": SlotType.DEFENSE,
-    "bonus_capacity": SlotType.CAPACITY,
-    "bonus_luck": SlotType.LUCK,
-    "bonus_fuel": SlotType.FUEL_EFFICIENCY,
-    "bonus_xp": SlotType.XP_BOOST,
-    "bonus_fragment": SlotType.FRAGMENT_BOOST,
-}
 
 
 class EquipArtifactUseCase:
@@ -51,32 +37,14 @@ class EquipArtifactUseCase:
         if not inventory.has_item(item.id):
             raise ItemNotInInventoryError(item.id)
 
-        slot_type = self._determine_slot_type(item.effect)
         bonuses = self._extract_bonuses(item.effect)
 
         equipment = await self.equipment_repo.get_by_ship_id(ship.id)
         if not equipment:
             equipment = Equipment(ship_id=ship.id)
 
-        # Проверка доступности слота по уровню
         max_slots = player.get_max_artifact_slots()
-        current_equipped = len(equipment.artifacts)
-        slot_type = self._determine_slot_type(item.effect)
-        existing_slot_idx = next(
-            (i for i, a in enumerate(equipment.artifacts) if a.slot_type == slot_type),
-            None,
-        )
-        if existing_slot_idx is None and current_equipped >= max_slots:
-            next_unlock = LevelProgressionService.get_next_slot_unlock(player.level)
-            required_level = next_unlock[0] if next_unlock else player.level + 1
-            raise SlotLockedByLevelError(
-                slot_index=current_equipped + 1,
-                required_level=required_level,
-                current_level=player.level,
-                max_slots=max_slots,
-            )
-
-        replaced = equipment.equip(item.id, slot_type, bonuses)
+        replaced = equipment.equip(item.id, bonuses, max_slots)
 
         inventory.remove_item(item.id, quantity=1)
         if replaced is not None:
@@ -92,12 +60,6 @@ class EquipArtifactUseCase:
             equipment=self._equipment_to_dto(equipment),
         )
 
-    def _determine_slot_type(self, effect: dict) -> SlotType:
-        for key, slot_type in SLOT_TYPE_MAP.items():
-            if key in effect:
-                return slot_type
-        raise ValueError("Artifact effect must contain at least one bonus_* key to determine slot type")
-
     def _extract_bonuses(self, effect: dict) -> dict:
         bonuses: dict[str, float] = {}
         for key, value in effect.items():
@@ -112,7 +74,6 @@ class EquipArtifactUseCase:
             artifacts=[
                 EquippedArtifactDTO(
                     item_id=a.item_id,
-                    slot_type=a.slot_type.value,
                     bonuses=a.bonuses,
                 )
                 for a in equipment.artifacts

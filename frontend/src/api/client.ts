@@ -36,7 +36,7 @@ function shipFromDTO(data: {
   defense: number
   luck: number
   equipment?: {
-    artifacts: Array<{ item_id: string; slot_type: string; bonuses: Record<string, number> }>
+    artifacts: Array<{ item_id: string; bonuses: Record<string, number> }>
   } | null
 }): Ship {
   return {
@@ -54,7 +54,6 @@ function shipFromDTO(data: {
             name_key: a.name_key || '',
             tier: 1,
             icon_path: a.icon_path,
-            slot_type: a.slot_type,
             stats_modifiers: a.bonuses || {},
           })),
         }

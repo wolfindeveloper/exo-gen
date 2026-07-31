@@ -41,7 +41,6 @@ async def get_equipment(
         artifacts=[
             EquippedArtifactDTO(
                 item_id=a.item_id,
-                slot_type=a.slot_type.value,
                 bonuses=a.bonuses,
             )
             for a in equipment.artifacts

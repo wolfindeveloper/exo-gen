@@ -28,7 +28,6 @@ class RepairShipResponseDTO(BaseModel):
 
 class EquippedArtifactData(BaseModel):
     item_id: UUID
-    slot_type: str
     bonuses: dict
 
 
