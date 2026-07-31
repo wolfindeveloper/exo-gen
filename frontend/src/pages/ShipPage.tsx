@@ -205,36 +205,32 @@ export default function ShipPage() {
   )
 
   const slotArtifacts: (Artifact | null)[] = useMemo(() => {
-    const slots: (Artifact | null)[] = Array.from({ length: 8 }, () => null)
     const equipped = mainShip?.equipment?.artifacts ?? []
-    
-    equipped.forEach((ea, idx) => {
-      if (idx < 8) {
-        const fullArtifact = artifactsContent.find((a) => a.id === ea.id)
-        if (fullArtifact) {
-          const cleanStats: Record<string, number> = {}
-          if (fullArtifact.stats_modifiers) {
-            for (const [key, value] of Object.entries(fullArtifact.stats_modifiers)) {
-              if (value !== null && value !== undefined) {
-                cleanStats[key] = value
-              }
+    return Array.from({ length: 8 }, (_, i) => {
+      const ea = equipped[i]
+      if (!ea) return null
+      const fullArtifact = artifactsContent.find((a) => a.id === ea.id)
+      if (fullArtifact) {
+        const cleanStats: Record<string, number> = {}
+        if (fullArtifact.stats_modifiers) {
+          for (const [key, value] of Object.entries(fullArtifact.stats_modifiers)) {
+            if (value !== null && value !== undefined) {
+              cleanStats[key] = value
             }
           }
-          const tier = fullArtifact.tier || parseTierFromRarity(fullArtifact.rarity || 'common')
-          slots[idx] = { ...fullArtifact, tier, stats_modifiers: cleanStats }
-        } else {
-          slots[idx] = {
-            id: ea.id,
-            name_key: ea.name_key || 'Артефакт',
-            tier: ea.tier || 1,
-            icon_path: ea.icon_path || '',
-            rarity: 'common',
-            stats_modifiers: ea.stats_modifiers || {},
-          }
         }
+        const tier = fullArtifact.tier || parseTierFromRarity(fullArtifact.rarity || 'common')
+        return { ...fullArtifact, tier, stats_modifiers: cleanStats }
+      }
+      return {
+        id: ea.id,
+        name_key: ea.name_key || 'Артефакт',
+        tier: ea.tier || 1,
+        icon_path: ea.icon_path || '',
+        rarity: 'common',
+        stats_modifiers: ea.stats_modifiers || {},
       }
     })
-    return slots
   }, [mainShip?.equipment?.artifacts, artifactsContent])
 
   /* ── Inventory counts ── */

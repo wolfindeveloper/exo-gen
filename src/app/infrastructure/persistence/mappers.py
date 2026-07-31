@@ -324,6 +324,7 @@ class EquipmentMapper:
                 item_id=UUID(a["item_id"]),
                 bonuses=a["bonuses"],
             )
+            if a is not None else None
             for a in orm.artifacts
         ]
         return Equipment(id=orm.id, ship_id=orm.ship_id, artifacts=artifacts)
@@ -338,6 +339,7 @@ class EquipmentMapper:
                     "item_id": str(a.item_id),
                     "bonuses": a.bonuses,
                 }
+                if a is not None else None
                 for a in domain.artifacts
             ],
         )

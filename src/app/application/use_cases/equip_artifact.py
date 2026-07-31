@@ -44,7 +44,7 @@ class EquipArtifactUseCase:
             equipment = Equipment(ship_id=ship.id)
 
         max_slots = player.get_max_artifact_slots()
-        replaced = equipment.equip(item.id, bonuses, max_slots)
+        replaced = equipment.equip(item.id, bonuses, dto.slot_index, max_slots)
 
         inventory.remove_item(item.id, quantity=1)
         if replaced is not None:
@@ -76,6 +76,7 @@ class EquipArtifactUseCase:
                     item_id=a.item_id,
                     bonuses=a.bonuses,
                 )
+                if a is not None else None
                 for a in equipment.artifacts
             ],
         )

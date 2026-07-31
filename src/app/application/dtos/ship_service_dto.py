@@ -32,7 +32,7 @@ class EquippedArtifactData(BaseModel):
 
 
 class ShipEquipmentData(BaseModel):
-    artifacts: list[EquippedArtifactData]
+    artifacts: list[EquippedArtifactData | None]
 
 
 class ShipResponseDTO(BaseModel):

@@ -36,7 +36,7 @@ function shipFromDTO(data: {
   defense: number
   luck: number
   equipment?: {
-    artifacts: Array<{ item_id: string; bonuses: Record<string, number> }>
+    artifacts: Array<{ item_id: string; bonuses: Record<string, number> } | null>
   } | null
 }): Ship {
   return {
@@ -49,13 +49,13 @@ function shipFromDTO(data: {
     luck: data.luck,
     equipment: data.equipment
       ? {
-          artifacts: data.equipment.artifacts.map((a: any) => ({
+          artifacts: data.equipment.artifacts.map((a: any) => a ? {
             id: a.item_id,
             name_key: a.name_key || '',
             tier: 1,
             icon_path: a.icon_path,
             stats_modifiers: a.bonuses || {},
-          })),
+          } : null),
         }
       : undefined,
   }
@@ -240,8 +240,8 @@ export const api = {
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse
   },
 
-  equipSlot: async (shipId: string, _slotIndex: number, artifactId: string) => {
-    await apiClient.post('/equipment/equip', { ship_id: shipId, item_id: artifactId })
+  equipSlot: async (shipId: string, slotIndex: number, artifactId: string) => {
+    await apiClient.post('/equipment/equip', { ship_id: shipId, item_id: artifactId, slot_index: slotIndex })
     const shipData = await apiClient.get('/ships/me').then((r) => r.data)
     const inv = await apiClient.get<{ items: { item: ItemReference; quantity: number }[] }>('/inventory').then((r) => r.data)
     return { ship: shipFromDTO(shipData), inventory: inv.items as InventoryItem[] } as ShipActionResponse

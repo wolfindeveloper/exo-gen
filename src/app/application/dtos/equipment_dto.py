@@ -5,6 +5,7 @@ from uuid import UUID
 class EquipArtifactDTO(BaseModel):
     ship_id: UUID
     item_id: UUID
+    slot_index: int
 
 
 class UnequipArtifactDTO(BaseModel):
@@ -19,7 +20,7 @@ class EquippedArtifactDTO(BaseModel):
 
 class EquipmentResponseDTO(BaseModel):
     ship_id: UUID
-    artifacts: list[EquippedArtifactDTO]
+    artifacts: list[EquippedArtifactDTO | None]
 
 
 class EquipArtifactResponseDTO(BaseModel):

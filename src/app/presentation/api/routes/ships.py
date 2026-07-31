@@ -47,6 +47,7 @@ async def get_my_ship(
                     item_id=a.item_id,
                     bonuses=a.bonuses,
                 )
+                if a is not None else None
                 for a in ship.equipment.artifacts
             ]
         )

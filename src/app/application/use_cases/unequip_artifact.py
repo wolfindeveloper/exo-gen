@@ -51,6 +51,7 @@ class UnequipArtifactUseCase:
                     item_id=a.item_id,
                     bonuses=a.bonuses,
                 )
+                if a is not None else None
                 for a in equipment.artifacts
             ],
         )
