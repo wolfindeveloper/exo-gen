@@ -65,3 +65,8 @@ class PlayerRepository(ABC):
     async def get_player_rank_by_xgen_balance(self, player_id: UUID) -> int:
         """Место игрока в рейтинге по балансу XGen (1-based)"""
         pass
+
+    @abstractmethod
+    async def get_player_all_ranks(self, player_id: UUID) -> dict[str, int]:
+        """Возвращает ранги игрока по всем метрикам одним запросом"""
+        pass

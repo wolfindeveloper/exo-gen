@@ -3,6 +3,7 @@ from app.domain.repositories.chapter_repository import ChapterRepository
 from app.application.dtos.profile_dto import ProfileResponseDTO
 from app.domain.entities.player import Player
 from app.domain.services.level_progression import LevelProgressionService
+from app.infrastructure.cache.redis_client import redis_client
 
 
 class GetProfileUseCase:
@@ -15,6 +16,11 @@ class GetProfileUseCase:
         self.chapter_repo = chapter_repo
 
     async def execute(self, player: Player) -> ProfileResponseDTO:
+        cache_key = f"profile:{player.id}"
+        cached = await redis_client.get(cache_key)
+        if cached:
+            return ProfileResponseDTO.model_validate(cached)
+
         unlocked_ids = await self.guide_progress_repo.get_unlocked_articles_ids(
             player.id
         )
@@ -25,7 +31,7 @@ class GetProfileUseCase:
             else (None, 0)
         )
 
-        return ProfileResponseDTO(
+        profile = ProfileResponseDTO(
             xp=player.xp,
             level=LevelProgressionService.calculate_level(player.xp),
             total_expeditions=player.total_expeditions,
@@ -38,3 +44,7 @@ class GetProfileUseCase:
             articles_read=len(unlocked_ids),
             articles_total=articles_total,
         )
+
+        await redis_client.set(cache_key, profile.model_dump(mode='json'), ex=60)
+
+        return profile

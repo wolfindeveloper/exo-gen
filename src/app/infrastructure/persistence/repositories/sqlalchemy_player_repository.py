@@ -143,3 +143,35 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
 
     async def get_player_rank_by_xgen_balance(self, player_id: UUID) -> int:
         return await self._rank_by_column(player_id, PlayerORM.xgen_balance)
+
+    async def get_player_all_ranks(self, player_id: UUID) -> dict[str, int]:
+        player_data = await self.session.execute(
+            select(
+                PlayerORM.xp,
+                PlayerORM.total_expeditions,
+                PlayerORM.total_artifacts_found,
+                PlayerORM.xgen_balance,
+            ).where(PlayerORM.id == player_id, PlayerORM.deleted_at.is_(None))
+        )
+        row = player_data.first()
+        if not row:
+            return {"xp": 0, "expeditions": 0, "artifacts": 0, "xgen": 0}
+
+        player_xp, player_expeditions, player_artifacts, player_xgen = row
+
+        result = await self.session.execute(
+            select(
+                func.count().filter(PlayerORM.xp > player_xp).label("xp_rank"),
+                func.count().filter(PlayerORM.total_expeditions > player_expeditions).label("exp_rank"),
+                func.count().filter(PlayerORM.total_artifacts_found > player_artifacts).label("art_rank"),
+                func.count().filter(PlayerORM.xgen_balance > player_xgen).label("xgen_rank"),
+            ).where(PlayerORM.deleted_at.is_(None))
+        )
+        ranks = result.first()
+
+        return {
+            "xp": ranks.xp_rank + 1,
+            "expeditions": ranks.exp_rank + 1,
+            "artifacts": ranks.art_rank + 1,
+            "xgen": ranks.xgen_rank + 1,
+        }

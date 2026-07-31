@@ -174,6 +174,16 @@ class UpdateShopItemDTO(BaseModel):
     is_active: bool | None = None
     bundle_items: list[BundleItemDTO] | None = None
 
+    @model_validator(mode='after')
+    def validate_stock_limits(self) -> 'UpdateShopItemDTO':
+        if self.stock_limit is not None and self.stock_limit < 0:
+            raise ValueError("stock_limit must be >= 0")
+        if self.daily_limit is not None and self.daily_limit < 0:
+            raise ValueError("daily_limit must be >= 0")
+        if self.price_xgen is not None and self.price_xgen < 0:
+            raise ValueError("price_xgen must be >= 0")
+        return self
+
 
 class UpdateStarsPackageDTO(BaseModel):
     stars_amount: int | None = None
@@ -195,6 +205,16 @@ class CreateShopItemDTO(BaseModel):
             raise ValueError("Provide either item_id OR bundle_items, not both")
         if not self.bundle_items and not self.item_id:
             raise ValueError("Provide either item_id or bundle_items")
+        return self
+
+    @model_validator(mode='after')
+    def validate_stock_limits(self) -> 'CreateShopItemDTO':
+        if self.stock_limit < 0:
+            raise ValueError("stock_limit must be >= 0")
+        if self.daily_limit < 0:
+            raise ValueError("daily_limit must be >= 0")
+        if self.price_xgen < 0:
+            raise ValueError("price_xgen must be >= 0")
         return self
 
 
