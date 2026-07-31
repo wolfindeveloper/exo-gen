@@ -233,6 +233,21 @@ export default function ShipPage() {
     })
   }, [mainShip?.equipment?.artifacts, artifactsContent])
 
+  const totalBonuses = useMemo(() => {
+    const bonuses: Record<string, number> = {}
+    for (const art of slotArtifacts) {
+      if (!art?.stats_modifiers) continue
+      for (const [key, value] of Object.entries(art.stats_modifiers)) {
+        if (value !== null && value !== undefined && value !== 0) {
+          bonuses[key] = (bonuses[key] || 0) + value
+        }
+      }
+    }
+    return bonuses
+  }, [slotArtifacts])
+
+  const hasBonuses = Object.keys(totalBonuses).length > 0
+
   /* ── Inventory counts ── */
   const fuelInInventory = useMemo(() => countFuel(inventory), [inventory])
   const repairInInventory = useMemo(() => countRepairKits(inventory), [inventory])
@@ -620,11 +635,61 @@ export default function ShipPage() {
                   </svg>
                 </div>
 
+                {hasBonuses && (
+                  <div className="mt-2 pt-2 border-t border-cyan-500/10">
+                    <p className="text-[5px] text-cyan-400/30 font-semibold tracking-wider mb-1.5 text-center">
+                      БОНУСЫ АРТЕФАКТОВ
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {Object.entries(totalBonuses).map(([key, value]) => {
+                        const icon = key.includes('speed') ? '⚡'
+                          : key.includes('defense') ? '🛡️'
+                          : key.includes('fuel') ? '⛽'
+                          : key.includes('luck') ? '🍀'
+                          : key.includes('xp') ? '⭐'
+                          : key.includes('fragment') ? '📜'
+                          : key.includes('capacity') ? '📦'
+                          : key.includes('repair') ? '🔧'
+                          : '✨'
+                        const color = key.includes('speed') ? 'text-cyan-400'
+                          : key.includes('defense') ? 'text-green-400'
+                          : key.includes('fuel') ? 'text-orange-400'
+                          : key.includes('luck') ? 'text-purple-400'
+                          : 'text-cyan-300'
+                        const pct = Math.round(value * 100)
+                        return (
+                          <span
+                            key={key}
+                            className={`text-[6px] font-mono ${color} bg-black/30 border border-white/5 rounded px-1 py-0.5 flex items-center gap-0.5`}
+                            title={`${key}: +${pct}%`}
+                          >
+                            {icon}+{pct}%
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* stats bar */}
                 <div className="flex justify-between mt-2 text-[7px] text-cyan-400/20 tracking-wider">
                   <span>PWR {Math.round(mainShip?.tea_level ?? 0)}/100</span>
-                  <span>SHLD {Math.round(mainShip?.optimism ?? 100)}%{mainShip?.defense ? ` -${mainShip.defense}%DMG` : ''}</span>
-                  <span>SPD {((mainShip?.speed ?? 1.0) + (mainShip?.luck ?? 0)).toFixed(2)}</span>
+                  <span>
+                    SHLD {Math.round(mainShip?.optimism ?? 100)}%
+                    {totalBonuses.defense ? (
+                      <span className="text-green-400/60"> -{Math.round((totalBonuses.defense + (mainShip?.defense ?? 0)) * 100)}%</span>
+                    ) : mainShip?.defense ? (
+                      ` -${Math.round(mainShip.defense * 100)}%`
+                    ) : ''}
+                  </span>
+                  <span>
+                    SPD {(
+                      (mainShip?.speed ?? 1.0)
+                      + (totalBonuses.speed ?? 0)
+                      + (mainShip?.luck ?? 0)
+                      + (totalBonuses.luck ?? 0)
+                    ).toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
