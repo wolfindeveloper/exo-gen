@@ -20,48 +20,60 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # CONCURRENTLY indexes cannot run inside a transaction
-    # We need to use individual execution with autocommit
-    connection = op.get_bind()
-    
-    # 1. Players table - leaderboard indexes
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_players_xp ON players(xp DESC) WHERE deleted_at IS NULL"
-    ))
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_players_total_expeditions ON players(total_expeditions DESC) WHERE deleted_at IS NULL"
-    ))
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_players_total_artifacts ON players(total_artifacts_found DESC) WHERE deleted_at IS NULL"
-    ))
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_players_xgen_balance ON players(xgen_balance DESC) WHERE deleted_at IS NULL"
-    ))
-    
-    # 2. Expeditions table - status and ends_at for auto-finish
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_expeditions_status_ends ON expeditions(status, ends_at) WHERE status = 'in_progress'"
-    ))
-    
-    # 3. Unlocked articles - player_id and article_id for guide progress
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_unlocked_articles_player ON unlocked_articles(player_id, article_id)"
-    ))
-    
-    # 4. Purchase history - shop_item_id and purchased_at for daily/total limits
-    connection.execute(sa.text(
-        "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_purchase_history_shop_item_date ON purchase_history(shop_item_id, purchased_at)"
-    ))
+    # Players indexes for leaderboard
+    op.create_index(
+        "idx_players_xp",
+        "players",
+        [sa.text("xp DESC")],
+        postgresql_where=sa.text("deleted_at IS NULL"),
+    )
+    op.create_index(
+        "idx_players_total_expeditions",
+        "players",
+        [sa.text("total_expeditions DESC")],
+        postgresql_where=sa.text("deleted_at IS NULL"),
+    )
+    op.create_index(
+        "idx_players_total_artifacts",
+        "players",
+        [sa.text("total_artifacts_found DESC")],
+        postgresql_where=sa.text("deleted_at IS NULL"),
+    )
+    op.create_index(
+        "idx_players_xgen_balance",
+        "players",
+        [sa.text("xgen_balance DESC")],
+        postgresql_where=sa.text("deleted_at IS NULL"),
+    )
+
+    # Expeditions - for active expeditions auto-finish
+    op.create_index(
+        "idx_expeditions_status_ends",
+        "expeditions",
+        ["status", "ends_at"],
+        postgresql_where=sa.text("status = 'in_progress'"),
+    )
+
+    # Unlocked articles - for guide progress
+    op.create_index(
+        "idx_unlocked_articles_player",
+        "unlocked_articles",
+        ["player_id", "article_id"],
+    )
+
+    # Purchase history - for shop analytics
+    op.create_index(
+        "idx_purchase_history_shop_item_date",
+        "purchase_history",
+        ["shop_item_id", "purchased_at"],
+    )
 
 
 def downgrade() -> None:
-    connection = op.get_bind()
-    
-    # Drop indexes in reverse order
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_purchase_history_shop_item_date"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_unlocked_articles_player"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_expeditions_status_ends"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_players_xgen_balance"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_players_total_artifacts"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_players_total_expeditions"))
-    connection.execute(sa.text("DROP INDEX CONCURRENTLY IF EXISTS idx_players_xp"))
+    op.drop_index("idx_purchase_history_shop_item_date", table_name="purchase_history")
+    op.drop_index("idx_unlocked_articles_player", table_name="unlocked_articles")
+    op.drop_index("idx_expeditions_status_ends", table_name="expeditions")
+    op.drop_index("idx_players_xgen_balance", table_name="players")
+    op.drop_index("idx_players_total_artifacts", table_name="players")
+    op.drop_index("idx_players_total_expeditions", table_name="players")
+    op.drop_index("idx_players_xp", table_name="players")
