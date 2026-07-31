@@ -1,5 +1,6 @@
 from uuid import UUID
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+import logging
 
 from app.domain.entities.player import Player
 from app.domain.entities.item import ItemType
@@ -22,6 +23,8 @@ from app.application.dtos.claim_expedition_dto import (
 )
 from app.domain.services.loot_generator import generate_loot
 
+logger = logging.getLogger(__name__)
+
 
 class ClaimExpeditionUseCase:
     def __init__(
@@ -39,6 +42,7 @@ class ClaimExpeditionUseCase:
         self.item_repo = item_repo
 
     async def execute(self, player: Player, dto: ClaimExpeditionDTO, uow: UnitOfWork) -> ClaimExpeditionResponseDTO:
+        logger.info(f"Claim expedition {dto.expedition_id} by player {player.telegram_id}")
         expedition = await self.expedition_repo.get_by_id(dto.expedition_id, for_update=True)
         if not expedition:
             raise ExpeditionNotFoundError(f"Expedition {dto.expedition_id} not found")
@@ -55,7 +59,8 @@ class ClaimExpeditionUseCase:
             raise ShipNotFoundError("Expedition does not belong to player's ship")
 
         now = datetime.now(timezone.utc)
-        if now < expedition.ends_at:
+        GRACE_PERIOD_SECONDS = 5
+        if now < expedition.ends_at - timedelta(seconds=GRACE_PERIOD_SECONDS):
             raise ExpeditionNotFinishedError("Expedition is not finished yet")
 
         zone = await self.zone_repo.get_by_id(expedition.zone_id)
@@ -117,6 +122,7 @@ class ClaimExpeditionUseCase:
         await self.expedition_repo.save(expedition)
         await self.inventory_repo.save(inventory)
         await uow.commit()
+        # TODO: Add metrics tracking for expedition claim (Prometheus/StatsD)
 
         return ClaimExpeditionResponseDTO(
             xgen_earned=loot["xgen"],

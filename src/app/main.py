@@ -24,6 +24,7 @@ from app.presentation.api.routes.settings import router as settings_router
 from app.infrastructure.cache.redis_client import redis_client
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
 from app.infrastructure.messaging.event_handlers import setup_event_handlers
+from app.infrastructure.messaging.notification_queue import NotificationQueue
 from app.infrastructure.security.rate_limiter import limiter
 from app.infrastructure.middleware.request_id import RequestIDMiddleware
 from app.domain.exceptions import DomainError
@@ -41,7 +42,8 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up Hitchhiker's Idle...")
 
     bot_service = TelegramBotService()
-    setup_event_handlers(bot_service)
+    notification_queue = NotificationQueue(redis_client.client)
+    setup_event_handlers(bot_service, notification_queue)
 
     webhook_url = f"{settings.PUBLIC_URL.rstrip('/')}/payments/stars/webhook"
     result = await bot_service.set_webhook(
