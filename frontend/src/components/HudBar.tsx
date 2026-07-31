@@ -58,7 +58,7 @@ export function HudBar() {
           </span>
           {rank && (
             <span
-              className="shrink-0 text-[8px] font-mono px-1.5 py-0.5 rounded-full border leading-tight"
+              className="shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded-full border leading-tight"
               style={{
                 borderColor: `${tierColors[tier - 1]}44`,
                 color: tierColors[tier - 1],

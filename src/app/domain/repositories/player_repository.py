@@ -27,8 +27,8 @@ class PlayerRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
-        """Возвращает топ игроков по XP: список (username, xp, id)"""
+    async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
+        """Возвращает топ игроков по XP: список (username, xp, telegram_id, id)"""
         pass
 
     @abstractmethod
@@ -37,18 +37,18 @@ class PlayerRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
-        """Топ игроков по количеству экспедиций: список (username, total_expeditions, id)"""
+    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
+        """Топ игроков по количеству экспедиций: список (username, total_expeditions, telegram_id, id)"""
         pass
 
     @abstractmethod
-    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
-        """Топ игроков по количеству найденных артефактов: список (username, total_artifacts_found, id)"""
+    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
+        """Топ игроков по количеству найденных артефактов: список (username, total_artifacts_found, telegram_id, id)"""
         pass
 
     @abstractmethod
-    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
-        """Топ игроков по балансу XGen: список (username, xgen_balance, id)"""
+    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
+        """Топ игроков по балансу XGen: список (username, xgen_balance, telegram_id, id)"""
         pass
 
     @abstractmethod

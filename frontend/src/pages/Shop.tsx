@@ -3,9 +3,25 @@ import { AnimatePresence, motion } from 'motion/react'
 import { AlertTriangle, Diamond, Gift, Package, ShoppingBag, Star } from 'lucide-react'
 
 import { api } from '../api/client'
+import { MysteryBoxPreview } from '../components/MysteryBoxPreview'
+import { Skeleton } from '../components/Skeleton'
+import { PullToRefresh } from '../components/PullToRefresh'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { useGameStore } from '../store/game'
 import { statLabels } from '../lib/stats'
+import { hapticImpact } from '../lib/telegram'
 import type { ShopBuyResponse, ShopItem } from '../types'
+
+interface CoinParticle {
+  id: number
+  x: number
+  y: number
+  tx: number
+  ty: number
+  emoji: string
+}
+
+let coinId = 0
 
 const rarityConfig: Record<string, { color: string; label: string }> = {
   common: { color: 'text-slate-400', label: 'C' },
@@ -105,7 +121,7 @@ function ArtifactCard({
   item: ShopItem
   canAfford: boolean
   isBuying: boolean
-  onBuy: () => void
+  onBuy: (e: React.MouseEvent) => void
   buyerCommentVisible: boolean
 }) {
   const rarity = rarityConfig[item.rarity ?? 'common'] ?? rarityConfig.common
@@ -192,6 +208,7 @@ export function Shop() {
   const loadProfile = useGameStore((s) => s.loadProfile)
   const loadInventory = useGameStore((s) => s.loadInventory)
   const user = useGameStore((s) => s.user)
+  const isAdmin = useGameStore((s) => s.isAdmin)
 
   const [items, setItems] = useState<ShopItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -201,13 +218,21 @@ export function Shop() {
   const [activeCategory, setActiveCategory] = useState('resources')
   const [buyerCommentItem, setBuyerCommentItem] = useState<ShopItem | null>(null)
   const [lastBuyResult, setLastBuyResult] = useState<ShopBuyResponse | null>(null)
+  const [coinParticles, setCoinParticles] = useState<CoinParticle[]>([])
   const commentTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const [starsConfirmItem, setStarsConfirmItem] = useState<ShopItem | null>(null)
 
   useEffect(() => {
     api.getShopCatalog()
       .then(setItems)
       .catch(() => setError('Не удалось загрузить лавку'))
       .finally(() => setLoading(false))
+  }, [])
+
+  const handleRefresh = useCallback(async () => {
+    setError(null)
+    const data = await api.getShopCatalog()
+    setItems(data)
   }, [])
 
   useEffect(() => {
@@ -227,11 +252,31 @@ export function Shop() {
   const artifactItems = items.filter((i) => i.category === 'artifacts' && i.type === 'artifact')
   const isArtifactCategory = activeCategory === 'artifacts'
 
-  const handleBuy = useCallback(async (shopItem: ShopItem) => {
+  const executeBuy = useCallback(async (shopItem: ShopItem, btnEl?: HTMLElement) => {
     setBuying(shopItem.id)
     setError(null)
     try {
       const result = await api.buyShopItem(shopItem.id)
+      hapticImpact('heavy')
+
+      if (btnEl) {
+        const rect = btnEl.getBoundingClientRect()
+        const startX = rect.left + rect.width / 2
+        const startY = rect.top
+        const emojis = ['💎', '✦', '⭐', '💎', '✦', '💎', '⭐', '💎']
+        const count = 5 + Math.floor(Math.random() * 4)
+        const particles: CoinParticle[] = Array.from({ length: count }, (_, i) => ({
+          id: ++coinId,
+          x: startX + (Math.random() - 0.5) * 40,
+          y: startY + (Math.random() - 0.5) * 20,
+          tx: (Math.random() - 0.5) * 60,
+          ty: -(80 + Math.random() * 120),
+          emoji: emojis[i % emojis.length],
+        }))
+        setCoinParticles(particles)
+        setTimeout(() => setCoinParticles([]), 700)
+      }
+
       setSuccessMsg(shopItem.name_key)
       setBuyerCommentItem(shopItem)
       if (result.granted.length > 0) {
@@ -239,23 +284,41 @@ export function Shop() {
       }
       await Promise.all([loadProfile(), loadInventory()])
     } catch (e) {
+      hapticImpact('light')
+      setTimeout(() => hapticImpact('light'), 100)
       setError((e as Error).message)
     } finally {
       setBuying(null)
     }
   }, [loadProfile, loadInventory])
 
+  const handleBuy = useCallback(async (shopItem: ShopItem, btnEl?: HTMLElement) => {
+    if (shopItem.price.currency === 'stars') {
+      setStarsConfirmItem(shopItem)
+      return
+    }
+    await executeBuy(shopItem, btnEl)
+  }, [executeBuy])
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48">
-        <div className="text-slate-500 text-xs font-display uppercase tracking-widest animate-pulse">
-          Загружаем барахло...
+      <div className="px-4 pt-4 pb-4 space-y-4">
+        <div className="text-center space-y-2">
+          <Skeleton variant="text" className="mx-auto w-48" />
+          <Skeleton variant="text" className="mx-auto w-64" />
         </div>
+        <div className="flex gap-1 justify-center">
+          {Array.from({ length: 4 }, (_, i) => (
+            <Skeleton key={i} variant="text" className="w-16 h-8 rounded-xl" />
+          ))}
+        </div>
+        <Skeleton variant="card" count={4} />
       </div>
     )
   }
 
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="px-4 pt-4 pb-4 space-y-4">
       <div className="text-center">
         <h1 className="font-display text-sm text-amber-400 uppercase tracking-[0.15em]">
@@ -339,7 +402,7 @@ export function Shop() {
                           item={item}
                           canAfford={canAfford}
                           isBuying={buying === item.id}
-                          onBuy={() => handleBuy(item)}
+                          onBuy={(e) => handleBuy(item, e.currentTarget as HTMLElement)}
                           buyerCommentVisible={buyerCommentItem?.id === item.id}
                         />
                       )
@@ -354,7 +417,25 @@ export function Shop() {
               </div>
             )
           ) : (
-            shopItems.map((item) => {
+            shopItems.length === 0 ? (
+              <div className="text-center py-8">
+                <ShoppingBag size={24} className="text-slate-700 mx-auto mb-2" />
+                <p className="text-[11px] text-slate-600 mb-3">В этой категории пока пусто</p>
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    hapticImpact('light')
+                    const otherCat = categories.find((c) => c !== activeCategory) || 'resources'
+                    setActiveCategory(otherCat)
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/25 text-neon-purple text-[10px] font-display uppercase tracking-wider hover:bg-neon-purple/15 transition-colors"
+                >
+                  Посмотреть другие категории
+                </motion.button>
+              </div>
+            ) : (
+              shopItems.map((item) => {
               const isPremium = item.price.currency === 'stars'
               const canAfford = isPremium
                 ? (user?.balance_stars ?? 0) >= item.price.amount
@@ -397,7 +478,7 @@ export function Shop() {
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleBuy(item)}
+                      onClick={(e) => handleBuy(item, e.currentTarget as HTMLElement)}
                       disabled={!canAfford || isBuying}
                       className={`flex-1 py-2 rounded-lg text-[10px] font-display uppercase tracking-wider transition-all ${
                         isBuying
@@ -427,11 +508,15 @@ export function Shop() {
                     </button>
                   </div>
 
+                  {item.category === 'mystery' && (
+                    <MysteryBoxPreview item={item} isAdmin={isAdmin} />
+                  )}
+
                   <SellerComment item={item} visible={buyerCommentItem?.id === item.id} />
                 </motion.div>
               )
             })
-          )}
+          ))}
         </motion.div>
       </AnimatePresence>
 
@@ -540,6 +625,38 @@ export function Shop() {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Coin particles */}
+      {coinParticles.map((p) => (
+        <span
+          key={p.id}
+          className="animate-coin-fly"
+          style={{
+            left: p.x,
+            top: p.y,
+            '--dx': `${p.tx * 0.3}px`,
+            '--dy': `${p.ty * 0.3}px`,
+            '--tx': `${p.tx}px`,
+            '--ty': `${p.ty}px`,
+          } as React.CSSProperties}
+        >
+          {p.emoji}
+        </span>
+      ))}
+
+      <ConfirmDialog
+        open={!!starsConfirmItem}
+        title="Купить за Stars?"
+        description={`Потратить ${starsConfirmItem?.price.amount ?? 0} ⭐ на ${starsConfirmItem?.name_key ?? ''}? Stars списываются безвозвратно.`}
+        confirmLabel={`Купить за ${starsConfirmItem?.price.amount ?? 0}⭐`}
+        onConfirm={() => {
+          if (starsConfirmItem) {
+            executeBuy(starsConfirmItem)
+            setStarsConfirmItem(null)
+          }
+        }}
+        onCancel={() => setStarsConfirmItem(null)}
+      />
     </div>
+    </PullToRefresh>
   )
 }

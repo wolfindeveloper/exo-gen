@@ -105,13 +105,13 @@ export default function GuidePage() {
             </div>
             <div>
               <h1 className="text-sm font-bold tracking-[0.15em] text-white">ПУТЕВОДИТЕЛЬ</h1>
-              <p className="text-[6px] text-cyan-400/20 tracking-wider mt-0.5">Интерактивная база данных с приступами амнезии</p>
+              <p className="text-[9px] text-cyan-400/20 tracking-wider mt-0.5">Интерактивная база данных с приступами амнезии</p>
             </div>
           </div>
 
           {/* Fragments balance */}
           <div className="bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-3 mb-5 flex items-center justify-between">
-            <span className="text-[8px] text-cyan-400/30 tracking-wider">ФРАГМЕНТЫ БРЕДА</span>
+            <span className="text-[9px] text-cyan-400/30 tracking-wider">ФРАГМЕНТЫ БРЕДА</span>
             <span className="text-sm font-bold text-cyan-300 drop-shadow-[0_0_6px_rgba(0,245,255,.2)]">
               {user?.fragments_balance ?? 0}
             </span>
@@ -139,12 +139,12 @@ export default function GuidePage() {
                         {ch.title}
                       </span>
                     </div>
-                    <span className="text-[8px] text-cyan-400/30">
+                    <span className="text-[10px] text-cyan-400/30">
                       {ch.researched_count}/{ch.total_entries}
                     </span>
                   </div>
 
-                  <p className="text-[7px] text-slate-500 leading-relaxed mb-3 line-clamp-2">
+                  <p className="text-[10px] text-slate-500 leading-relaxed mb-3 line-clamp-2">
                     {ch.description}
                   </p>
 
@@ -158,11 +158,11 @@ export default function GuidePage() {
 
                   {/* Reward indicator */}
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-[6px] text-cyan-400/20">
+                    <span className="text-[9px] text-cyan-400/20">
                       Награда: {getArtifactName(ch.reward_artifact_id)}
                     </span>
                     {ch.reward_claimed && (
-                      <span className="text-[7px] text-green-400/50">Награда получена</span>
+                      <span className="text-[10px] text-green-400/50">Награда получена</span>
                     )}
                   </div>
                 </button>
@@ -181,7 +181,7 @@ export default function GuidePage() {
         {msg && (
           <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
             <div className="bg-black/80 backdrop-blur-sm border border-cyan-500/20 rounded-lg px-3 py-1.5">
-              <span className="text-[8px] text-cyan-400/60">{msg}</span>
+              <span className="text-[10px] text-cyan-400/60">{msg}</span>
             </div>
           </div>
         )}
@@ -242,13 +242,13 @@ export default function GuidePage() {
                     <div className="flex items-start gap-2">
                       <TriangleAlert className="w-3 h-3 text-amber-400 mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-[8px] text-amber-400/60 mb-2">
+                        <p className="text-[10px] text-amber-400/60 mb-2">
                           Текст повреждён системной ошибкой. Требуется исправление.
                         </p>
                         <button
                           disabled={isLoading || (user?.fragments_balance ?? 0) < entryCost(openedEntry)}
                           onClick={() => handleFixGlitch(openedEntry)}
-                          className="text-[8px] px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-amber-500/15 transition-colors"
+                          className="text-[10px] px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-amber-500/15 transition-colors"
                         >
                           Исправить за {entryCost(openedEntry)} фрагментов
                         </button>
@@ -282,11 +282,11 @@ export default function GuidePage() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-bold tracking-wide">{chapter.title}</h2>
-              <span className="text-[8px] text-cyan-400/30">
+              <span className="text-[10px] text-cyan-400/30">
                 {chapter.researched_count}/{chapter.total_entries}
               </span>
             </div>
-            <p className="text-[7px] text-slate-500 leading-relaxed mb-5">{chapter.description}</p>
+            <p className="text-[10px] text-slate-500 leading-relaxed mb-5">{chapter.description}</p>
 
             {/* Progress */}
             <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-cyan-500/10 mb-5">
@@ -328,7 +328,7 @@ export default function GuidePage() {
                     {entry.status === 'researched' && (
                       <button
                         onClick={() => setOpenedEntry(entry)}
-                        className="text-[7px] text-cyan-400/40 hover:text-cyan-300/60 ml-2 shrink-0"
+                        className="text-[10px] text-cyan-400/40 hover:text-cyan-300/60 ml-2 shrink-0"
                       >
                         <FileText className="w-3 h-3" />
                       </button>
@@ -337,7 +337,7 @@ export default function GuidePage() {
                     {entry.status === 'glitched' && (
                       <button
                         onClick={() => setOpenedEntry(entry)}
-                        className="text-[7px] text-amber-400/40 hover:text-amber-300/60 ml-2 shrink-0"
+                        className="text-[10px] text-amber-400/40 hover:text-amber-300/60 ml-2 shrink-0"
                       >
                         <FileText className="w-3 h-3" />
                       </button>
@@ -347,7 +347,7 @@ export default function GuidePage() {
                       <button
                         disabled={isLoading || (user?.fragments_balance ?? 0) < entry.fragment_cost}
                         onClick={() => handleResearch(entry)}
-                        className={`text-[7px] px-2 py-1 rounded-lg border transition-colors shrink-0 ml-2 ${
+                        className={`text-[10px] px-2 py-1 rounded-lg border transition-colors shrink-0 ml-2 ${
                           (user?.fragments_balance ?? 0) >= entry.fragment_cost
                             ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/15'
                             : 'bg-slate-800/50 border-slate-700/20 text-slate-600 cursor-not-allowed'
@@ -359,12 +359,12 @@ export default function GuidePage() {
                   </div>
 
                   {entry.fragment_cost > 0 && entry.status === 'locked' && (
-                    <div className="mt-1 text-[6px] text-slate-600">
+                    <div className="mt-1 text-[9px] text-slate-600">
                       Стоимость: {entry.fragment_cost} фрагментов бреда
                     </div>
                   )}
                   {entry.unlock_event && entry.status !== 'researched' && (
-                    <div className="mt-1 text-[6px] text-slate-600">
+                    <div className="mt-1 text-[9px] text-slate-600">
                       {entry.has_event ? '✓ Условие выполнено' : 'Требуется особое событие'}
                     </div>
                   )}
@@ -398,7 +398,7 @@ export default function GuidePage() {
       {msg && (
         <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
           <div className="bg-black/80 backdrop-blur-sm border border-cyan-500/20 rounded-lg px-3 py-1.5">
-            <span className="text-[8px] text-cyan-400/60">{msg}</span>
+            <span className="text-[10px] text-cyan-400/60">{msg}</span>
           </div>
         </div>
       )}

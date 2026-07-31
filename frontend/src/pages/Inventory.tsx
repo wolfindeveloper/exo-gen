@@ -1,6 +1,10 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { useNavigate } from 'react-router-dom'
 
+import { Skeleton } from '../components/Skeleton'
+import { PullToRefresh } from '../components/PullToRefresh'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
 import { statIcons, statLabels, formatBonus, getArtifactMainIcon } from '../lib/stats'
@@ -132,6 +136,10 @@ export function Inventory() {
     loadShips()
   }, [loadInventory, loadShips])
 
+  const handleRefresh = useCallback(async () => {
+    await loadInventory()
+  }, [loadInventory])
+
   const types = useMemo(() => ['all', ...new Set(inventory.map((i) => i.item.type))], [inventory])
 
   const filtered = useMemo(() => {
@@ -167,6 +175,7 @@ export function Inventory() {
   const user = useGameStore((s) => s.user)
 
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="p-4 pb-28">
       <motion.header className="mb-4" variants={fadeIn} initial="hidden" animate="visible">
         <h1 className="font-display text-lg uppercase tracking-[0.2em] text-neon-green">Инвентарь</h1>
@@ -210,7 +219,9 @@ export function Inventory() {
         </motion.div>
       )}
 
-      {!hasItems ? (
+      {!inventory.length ? (
+        <Skeleton variant="inventory-item" count={6} />
+      ) : !hasItems ? (
         <EmptyState filter={filter} />
       ) : (
         <div className="flex flex-col gap-5">
@@ -251,22 +262,37 @@ export function Inventory() {
         )}
       </AnimatePresence>
     </div>
+    </PullToRefresh>
   )
 }
 
 function EmptyState({ filter }: { filter: string }) {
-  const msgs: Record<string, { icon: string; text: string; hint: string }> = {
-    all: { icon: '📦', text: 'Инвентарь пуст', hint: 'Исследуй зоны в Галактике, чтобы найти ресурсы и элементы' },
-    element: { icon: '🧪', text: 'Нет элементов', hint: 'Отправляй корабли в экспедиции через Галактику' },
-    resource: { icon: '📦', text: 'Нет ресурсов', hint: 'Ресурсы можно найти в зонах или получить за экспедиции' },
-    artifact: { icon: '✨', text: 'Нет артефактов', hint: 'Создавай артефакты в Лаборатории из элементов' },
+  const navigate = useNavigate()
+  const msgs: Record<string, { icon: string; text: string; hint: string; cta?: { label: string; path: string } }> = {
+    all: { icon: '📦', text: 'Инвентарь пуст', hint: 'Исследуй зоны в Галактике, чтобы найти ресурсы и элементы', cta: { label: '🚀 Начать приключение', path: '/galaxy' } },
+    element: { icon: '🧪', text: 'Нет элементов', hint: 'Отправляй корабли в экспедиции через Галактику', cta: { label: '🌌 К зонам', path: '/galaxy' } },
+    resource: { icon: '📦', text: 'Нет ресурсов', hint: 'Ресурсы можно найти в зонах или получить за экспедиции', cta: { label: '🛒 В магазин', path: '/shop' } },
+    artifact: { icon: '✨', text: 'Нет артефактов', hint: 'Артефакты выпадают в экспедициях и из лутбоксов', cta: { label: '🚀 В экспедицию', path: '/galaxy' } },
   }
   const m = msgs[filter] || msgs.all
   return (
     <motion.div variants={fadeIn} initial="hidden" animate="visible" className="glass-card p-8 text-center">
       <div className="text-3xl mb-3 opacity-40">{m.icon}</div>
       <p className="text-slate-500 text-xs font-display uppercase tracking-wider mb-1">{m.text}</p>
-      <p className="text-[11px] text-slate-600">{m.hint}</p>
+      <p className="text-[11px] text-slate-600 mb-4">{m.hint}</p>
+      {m.cta && (
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => {
+            hapticImpact('light')
+            navigate(m.cta!.path)
+          }}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neon-cyan/10 border border-neon-cyan/25 text-neon-cyan text-[10px] font-display uppercase tracking-wider hover:bg-neon-cyan/15 transition-colors"
+        >
+          {m.cta.label}
+        </motion.button>
+      )}
     </motion.div>
   )
 }
@@ -288,6 +314,7 @@ const InventoryRow = memo(function InventoryRow({
   const iconPath = info.icon_path
   const openLootBox = useGameStore((s) => s.openLootBox)
   const isLoading = useGameStore((s) => s.isLoading)
+  const [showLootBoxConfirm, setShowLootBoxConfirm] = useState(false)
 
   let icon: React.ReactNode
   if (iconPath) {
@@ -330,7 +357,7 @@ const InventoryRow = memo(function InventoryRow({
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-medium truncate">{info.name}</p>
           {info.tier >= 1 && (
-            <span className={`shrink-0 text-[8px] font-mono px-1.5 py-0.5 rounded border ${tierBadgeCls[info.tier] || tierBadgeCls[1]}`}>
+            <span className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded border ${tierBadgeCls[info.tier] || tierBadgeCls[1]}`}>
               T{info.tier}
             </span>
           )}
@@ -367,10 +394,8 @@ const InventoryRow = memo(function InventoryRow({
           <button
             onClick={(e) => {
               e.stopPropagation()
-              openLootBox(
-                (item.item.effect as any)?.box_type ?? 'shop',
-                item.item.id,
-              )
+              hapticImpact('heavy')
+              setShowLootBoxConfirm(true)
             }}
             disabled={isLoading}
             className="px-3 py-1.5 rounded-lg bg-neon-purple/15 text-neon-purple border border-neon-purple/20 hover:bg-neon-purple/25 text-[10px] font-display uppercase tracking-wider disabled:opacity-50"
@@ -379,6 +404,22 @@ const InventoryRow = memo(function InventoryRow({
           </button>
         )}
       </div>
+
+      <ConfirmDialog
+        open={showLootBoxConfirm}
+        title="Открыть коробку?"
+        description="Содержимое случайно. Коробка будет уничтожена."
+        confirmLabel="Открыть"
+        destructive
+        onConfirm={() => {
+          setShowLootBoxConfirm(false)
+          openLootBox(
+            (item.item.effect as any)?.box_type ?? 'shop',
+            item.item.id,
+          )
+        }}
+        onCancel={() => setShowLootBoxConfirm(false)}
+      />
     </motion.div>
   )
 })

@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
+import { Skeleton } from '../components/Skeleton'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { ZoneCard } from '../components/ZoneCard'
 import { ZoneModal } from '../components/ZoneModal'
 import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { useGameStore } from '../store/game'
+import { ZONE_UNLOCK_TABLE } from '../lib/progression'
 import type { Zone } from '../types'
 
 const tierLabels = ['', 'T1', 'T2', 'T3', 'T4', 'T5']
@@ -17,6 +20,7 @@ export function Galaxy() {
   const isLoading = useGameStore((s) => s.isLoading)
   const ships = useGameStore((s) => s.ships)
   const loadShips = useGameStore((s) => s.loadShips)
+  const loadContent = useGameStore((s) => s.loadContent)
   const user = useGameStore((s) => s.user)
   const playerLevel = user?.level ?? 1
   const [tierFilter, setTierFilter] = useState(1)
@@ -47,7 +51,12 @@ export function Galaxy() {
     setZoneModal(null)
   }
 
+  const handleRefresh = useCallback(async () => {
+    await loadContent()
+  }, [loadContent])
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="p-4 pb-28">
       <motion.header className="mb-5" variants={fadeIn} initial="hidden" animate="visible">
         <h1 className="font-display text-lg uppercase tracking-[0.2em] text-neon-purple">Галактика</h1>
@@ -83,10 +92,38 @@ export function Galaxy() {
           animate="visible"
           exit={{ opacity: 0, y: -10, transition: { duration: 0.15 } }}
         >
-          {filteredZones.length === 0 ? (
+          {!zones.length ? (
+            <Skeleton variant="zone" count={5} />
+          ) : filteredZones.length === 0 ? (
             <div className="glass-card p-8 text-center">
               <p className="text-slate-500 text-xs">Нет зон этого тира</p>
             </div>
+          ) : filteredZones.every((z) => playerLevel < (ZONE_UNLOCK_TABLE[z.tier] ?? 1)) ? (
+            (() => {
+              const nextUnlock = Object.entries(ZONE_UNLOCK_TABLE)
+                .map(([t, req]) => ({ tier: Number(t), required: req }))
+                .filter((u) => playerLevel < u.required)
+                .sort((a, b) => a.required - b.required)[0]
+              const xp = user?.xp ?? 0
+              const xpNeeded = nextUnlock ? (nextUnlock.required * 1000) - xp : 0
+              const xpPct = nextUnlock ? Math.min(100, Math.round((xp / (nextUnlock.required * 1000)) * 100)) : 0
+              return (
+                <div className="glass-card p-8 text-center">
+                  <div className="text-3xl mb-3 opacity-40">🔒</div>
+                  <p className="text-slate-500 text-xs font-display uppercase tracking-wider mb-1">Все зоны закрыты для твоего уровня</p>
+                  <p className="text-[11px] text-slate-600 mb-4">Набери {xpNeeded} XP чтобы открыть T{nextUnlock?.tier}</p>
+                  <div className="max-w-[200px] mx-auto mb-2">
+                    <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-neon-cyan/60 to-neon-purple/60"
+                        style={{ width: `${xpPct}%`, boxShadow: '0 0 6px rgba(0,245,255,.3)' }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-600 font-mono">{xp} / {nextUnlock ? nextUnlock.required * 1000 : 0} XP</p>
+                </div>
+              )
+            })()
           ) : (
             filteredZones.map((zone, i) => (
               <ZoneCard key={zone.id} zone={zone} onSelect={() => handleZoneSelect(zone)} index={i} playerLevel={playerLevel} />
@@ -107,5 +144,6 @@ export function Galaxy() {
         )}
       </AnimatePresence>
     </div>
+    </PullToRefresh>
   )
 }

@@ -149,20 +149,21 @@ class SQLAlchemyGuideProgressRepository(GuideProgressRepository):
             for row in result.all()
         ]
 
-    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
         stmt = (
             select(
                 PlayerORM.username,
                 func.count(UnlockedArticleORM.id).label("articles_count"),
+                PlayerORM.telegram_id,
                 PlayerORM.id,
             )
             .join(UnlockedArticleORM, PlayerORM.id == UnlockedArticleORM.player_id)
-            .group_by(PlayerORM.id, PlayerORM.username)
+            .group_by(PlayerORM.id, PlayerORM.username, PlayerORM.telegram_id)
             .order_by(func.count(UnlockedArticleORM.id).desc())
             .limit(limit)
         )
         result = await self.session.execute(stmt)
-        return [(row.username, row.articles_count, row.id) for row in result.all()]
+        return [(row.username, row.articles_count, row.telegram_id, row.id) for row in result.all()]
 
     async def get_player_rank_by_unlocked_articles(self, player_id: UUID) -> int:
         player_count = await self.session.execute(

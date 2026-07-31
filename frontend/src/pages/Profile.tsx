@@ -8,6 +8,8 @@ import {
 } from 'lucide-react'
 
 import { fadeIn, staggerContainer } from '../lib/animations'
+import { Skeleton } from '../components/Skeleton'
+import { PullToRefresh } from '../components/PullToRefresh'
 import { useCountUp } from '../hooks/useCountUp'
 import { calculateLevel, getNextLevelXp, getXpProgress, getXpToNextLevel } from '../lib/xp'
 import {
@@ -148,6 +150,10 @@ export function Profile() {
     loadAchievements()
   }, [loadProfile, loadStats, loadAchievements])
 
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([loadProfile(), loadStats()])
+  }, [loadProfile, loadStats])
+
   const saveNick = useCallback(async () => {
     const trimmed = nick.trim()
     if (trimmed && trimmed !== user?.username) {
@@ -181,7 +187,23 @@ export function Profile() {
     return next ? { title: next.title_key, at: next.level, remaining: next.level - level } : null
   }, [level, ranksContent])
 
-  if (!user) return <div className="p-4 pb-28 space-y-4">{Array.from({ length: 4 }, (_, i) => <div key={i} className="shimmer rounded-xl h-24" />)}</div>
+  if (!user) {
+    return (
+      <div className="p-4 pb-28 space-y-4">
+        <Skeleton variant="text" className="w-28 h-6" />
+        <Skeleton variant="card" />
+        <div className="flex gap-3">
+          <Skeleton variant="card" className="flex-1" />
+          <Skeleton variant="card" className="flex-1" />
+        </div>
+        <Skeleton variant="card" />
+        <div className="grid grid-cols-2 gap-3">
+          <Skeleton variant="card" />
+          <Skeleton variant="card" />
+        </div>
+      </div>
+    )
+  }
 
   const safeStats = stats || {
     total_expeditions: 0, completed_expeditions: 0, expeditions_in_progress: 0, failed_expeditions: 0,
@@ -214,6 +236,7 @@ export function Profile() {
   const ringOffset = ringCircumference - (xpPercent / 100) * ringCircumference
 
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="p-4 pb-28">
       <motion.header className="mb-6" variants={fadeIn} initial="hidden" animate="visible">
         <h1 className="font-display text-lg uppercase tracking-[0.2em] text-neon-cyan">Профиль</h1>
@@ -483,7 +506,7 @@ export function Profile() {
                   ) : (
                     <div className="flex items-center gap-0.5 mt-0.5">
                       <Lock size={6} className="text-slate-600" />
-                      <span className="text-[7px] text-slate-600 font-mono">{required}</span>
+                      <span className="text-[10px] text-slate-600 font-mono">{required}</span>
                     </div>
                   )}
                 </div>
@@ -491,12 +514,12 @@ export function Profile() {
             })}
           </div>
           {nextZoneUnlock ? (
-            <p className="text-[8px] text-slate-600 mt-2 text-center">
+            <p className="text-[10px] text-slate-600 mt-2 text-center">
               Зоны T{nextZoneUnlock.tier} откроются на{' '}
               <span className="text-amber-400">LVL {nextZoneUnlock.requiredLevel}</span>
             </p>
           ) : (
-            <p className="text-[8px] text-neon-green mt-2 text-center">✓ Все зоны открыты</p>
+            <p className="text-[10px] text-neon-green mt-2 text-center">✓ Все зоны открыты</p>
           )}
         </div>
 
@@ -517,12 +540,12 @@ export function Profile() {
             </span>
           </div>
           {nextSlotUnlock ? (
-            <p className="text-[8px] text-slate-600 mt-1.5">
+            <p className="text-[10px] text-slate-600 mt-1.5">
               +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
               <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span>
             </p>
           ) : (
-            <p className="text-[8px] text-neon-green mt-1.5">✓ Все 8 слотов открыты</p>
+            <p className="text-[10px] text-neon-green mt-1.5">✓ Все 8 слотов открыты</p>
           )}
         </div>
       </motion.div>
@@ -685,16 +708,16 @@ export function Profile() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="text-[10px] text-slate-300 truncate">{zoneName(exp.zone_config_id)}</span>
-                    <span className={`text-[8px] ${exp.status === 'completed' ? 'text-neon-green' : exp.status === 'failed' ? 'text-red-400' : 'text-slate-500'}`}>
+                    <span className={`text-[10px] ${exp.status === 'completed' ? 'text-neon-green' : exp.status === 'failed' ? 'text-red-400' : 'text-slate-500'}`}>
                       {exp.status === 'completed' ? 'Успех' : exp.status === 'failed' ? 'Провал' : exp.status}
                     </span>
                   </div>
                   {exp.loot_summary && (
-                    <p className="text-[8px] text-slate-600 truncate mt-0.5">{readableLoot(exp.loot_summary)}</p>
+                    <p className="text-[10px] text-slate-600 truncate mt-0.5">{readableLoot(exp.loot_summary)}</p>
                   )}
                 </div>
                 {exp.end_time && (
-                  <span className="text-[8px] text-slate-600 shrink-0">
+                  <span className="text-[10px] text-slate-600 shrink-0">
                     <Clock size={8} className="inline mr-0.5" />
                     {new Date(exp.end_time).toLocaleDateString()}
                   </span>
@@ -743,7 +766,7 @@ export function Profile() {
                   }`}>
                     {def.label}
                   </p>
-                  <p className="text-[8px] text-slate-600 mt-0.5 leading-tight">{def.desc}</p>
+                  <p className="text-[10px] text-slate-600 mt-0.5 leading-tight">{def.desc}</p>
                   {prog && !claimed && (
                     <div className="mt-1 h-1 bg-space-600 rounded-full overflow-hidden">
                       <motion.div
@@ -756,18 +779,18 @@ export function Profile() {
                     </div>
                   )}
                   {prog && !claimed && (
-                    <p className="text-[7px] text-slate-600 mt-0.5">{prog.current}/{prog.max}</p>
+                    <p className="text-[10px] text-slate-600 mt-0.5">{prog.current}/{prog.max}</p>
                   )}
                 </div>
               </div>
               <div className="mt-2 flex items-center justify-between">
-                <span className="text-[7px] text-slate-600">{def.reward}</span>
+                <span className="text-[10px] text-slate-600">{def.reward}</span>
                 {canClaim && (
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleClaim(aid)}
                     disabled={claiming === aid}
-                    className="text-[8px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/20 hover:bg-amber-500/25 transition-colors disabled:opacity-50"
+                    className="text-[10px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/20 hover:bg-amber-500/25 transition-colors disabled:opacity-50"
                   >
                     {claiming === aid ? (
                       <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>◌</motion.span>
@@ -777,7 +800,7 @@ export function Profile() {
                   </motion.button>
                 )}
                 {claimed && (
-                  <span className="text-[8px] text-neon-green/60">✓ Получено</span>
+                  <span className="text-[10px] text-neon-green/60">✓ Получено</span>
                 )}
               </div>
             </motion.div>
@@ -794,6 +817,7 @@ export function Profile() {
         </button>
       )}
     </div>
+    </PullToRefresh>
   )
 }
 

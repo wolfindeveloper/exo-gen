@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class PlayerShortStatsDTO(BaseModel):
     rank: int
+    telegram_id: int
     username: str | None
     xp: int
     level: int
@@ -10,6 +11,7 @@ class PlayerShortStatsDTO(BaseModel):
 
 class MetricEntryDTO(BaseModel):
     rank: int
+    telegram_id: int
     username: str | None
     value: int
 

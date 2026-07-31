@@ -4,11 +4,13 @@ import { User, BookOpen } from 'lucide-react'
 import { useGameStore } from '../store/game'
 import { HexSlot } from '../components/HexSlot'
 import SlotSelectModal from '../components/SlotSelectModal'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { useExpeditionTimer } from '../hooks/useTimer'
 import { getXpProgress, calculateLevel } from '../lib/xp'
 import { getMaxArtifactSlots, getNextSlotUnlock } from '../lib/progression'
-import { getAvatarUrl, getFirstName } from '../lib/telegram'
+import { getAvatarUrl, getFirstName, hapticImpact } from '../lib/telegram'
 import { countFuel, countRepairKits } from '../lib/items'
+import { PullToRefresh } from '../components/PullToRefresh'
 import type { Artifact } from '../types'
 import { api } from '../api/client'
 
@@ -24,13 +26,6 @@ function parseTierFromRarity(rarity: string): number {
 }
 
 const RED_BUTTON_LS = 'eggs/red_button'
-
-const consoleButtons = [
-  { label: 'ГДЕ-ТО ТАМ', accent: '#00f5ff', path: '/galaxy', msg: 'Вы все равно заблудитесь' },
-  { label: 'КОЛЛЕКЦИЯ ХЛАМА', accent: '#a855f7', path: '/inventory' },
-  { label: 'НЕ ПАНИКУЙТЕ', accent: '#00f5ff' },
-  { label: 'СПЕКУЛЯТИВНАЯ ЛАВКА', accent: '#f97316', sub: 'Цены высоки, надежды низки' },
-]
 
 /* ── Easter egg sticker schedule ── */
 const EGGS_LS = 'eggs/sticker'
@@ -68,7 +63,6 @@ function clearSpawnSchedule(): void {
 }
 
 export default function ShipPage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const user = useGameStore((s) => s.user)
   const setUser = useGameStore((s) => s.setUser)
   const ships = useGameStore((s) => s.ships)
@@ -85,6 +79,10 @@ export default function ShipPage() {
   const loadActiveExpeditions = useGameStore((s) => s.loadActiveExpeditions)
   const claimExpedition = useGameStore((s) => s.claimExpedition)
   const isLoading = useGameStore((s) => s.isLoading)
+
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([loadShips(), loadInventory(), loadActiveExpeditions()])
+  }, [loadShips, loadInventory, loadActiveExpeditions])
 
   useEffect(() => { loadShips(); loadInventory(); loadActiveExpeditions() }, [])
 
@@ -261,9 +259,12 @@ export default function ShipPage() {
       return
     }
     await refuelShip(mainShip.id, 'fuel')
+    hapticImpact('medium')
   }
 
   const repairMsg = '«Уровень Оптимизма восстановлен. Корабль снова верит, что долетит до конца карты, хотя это крайне сомнительно»'
+
+  const [showRepairConfirm, setShowRepairConfirm] = useState(false)
 
   const handleRepair = async () => {
     if (!mainShip) return
@@ -271,7 +272,17 @@ export default function ShipPage() {
       navigate('/shop')
       return
     }
+    if ((mainShip.optimism ?? 0) > 80) {
+      setShowRepairConfirm(true)
+      return
+    }
+    await executeRepair()
+  }
+
+  const executeRepair = async () => {
+    if (!mainShip) return
     await repairShip(mainShip.id, 'repair_kit')
+    hapticImpact('medium')
     setConsoleMsg(repairMsg)
   }
 
@@ -290,103 +301,23 @@ export default function ShipPage() {
 
   const [slotModalIndex, setSlotModalIndex] = useState<number | null>(null)
   const closeModal = useCallback(() => setSlotModalIndex(null), [setSlotModalIndex])
+  const [lastEquippedSlot, setLastEquippedSlot] = useState<number | null>(null)
+  const [screenFlash, setScreenFlash] = useState(false)
 
   function handleSlotClick(i: number) {
+    hapticImpact('light')
     setSlotModalIndex(i)
   }
 
 
-  /* ── canvas stars + particles ── */
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let animId: number
-    let stars: { x: number; y: number; r: number; a: number; speed: number; phase: number }[] = []
-    let particles: { x: number; y: number; vx: number; vy: number; r: number; life: number; maxLife: number }[] = []
-
-    function resize() {
-      canvas!.width = window.innerWidth
-      canvas!.height = window.innerHeight
-      stars = Array.from({ length: 120 }, () => ({
-        x: Math.random() * canvas!.width,
-        y: Math.random() * canvas!.height,
-        r: 0.3 + Math.random() * 1.2,
-        a: 0.2 + Math.random() * 0.6,
-        speed: 0.2 + Math.random() * 0.8,
-        phase: Math.random() * Math.PI * 2,
-      }))
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    let pt = 0
-    function draw(t: number) {
-      const w = canvas!.width
-      const h = canvas!.height
-      ctx!.clearRect(0, 0, w, h)
-
-      for (const s of stars) {
-        const tw = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.phase))
-        ctx!.beginPath()
-        ctx!.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        ctx!.fillStyle = `rgba(180,230,255,${s.a * tw})`
-        ctx!.fill()
-      }
-
-      pt++
-      if (pt > 8 && particles.length < 15) {
-        pt = 0
-        particles.push({
-          x: Math.random() * w,
-          y: h + 5,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: -0.2 - Math.random() * 0.4,
-          r: 0.5 + Math.random() * 1.5,
-          life: 0,
-          maxLife: 300 + Math.random() * 400,
-        })
-      }
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i]
-        p.x += p.vx
-        p.y += p.vy
-        p.life++
-        const alpha = p.life < 30 ? p.life / 30 : p.life > p.maxLife - 30 ? (p.maxLife - p.life) / 30 : 1
-        ctx!.beginPath()
-        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx!.fillStyle = `rgba(0,245,255,${alpha * 0.15})`
-        ctx!.fill()
-        if (p.life > p.maxLife) particles.splice(i, 1)
-      }
-
-      animId = requestAnimationFrame(draw)
-    }
-    animId = requestAnimationFrame(draw)
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
-    }
-  }, [])
-
-  /* ── Debug: проверка данных артефактов ── */
-  useEffect(() => {
-    if (mainShip?.equipment?.artifacts?.length) {
-      console.log('[ShipPage] mainShip.equipment.artifacts:', mainShip.equipment.artifacts)
-      console.log('[ShipPage] artifactsContent (catalog):', artifactsContent)
-      console.log('[ShipPage] Final slotArtifacts:', slotArtifacts)
-    }
-  }, [mainShip?.equipment?.artifacts, artifactsContent, slotArtifacts])
-
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div
       className="min-h-screen text-white font-mono relative overflow-hidden"
       style={{ background: 'radial-gradient(circle at center, #1a2a40 0%, #050505 100%)' }}
     >
-      {/* canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+      {/* starfield */}
+      <div className="starfield" />
 
       {/* grid */}
       <div
@@ -450,7 +381,7 @@ export default function ShipPage() {
               <div className="text-white font-bold text-sm tracking-wide drop-shadow-[0_0_4px_rgba(0,245,255,.1)]">
                 {user?.username || first || 'Капитан'}
               </div>
-              <div className="text-[5px] text-cyan-400/15 leading-tight mt-0.5 max-w-[120px]">
+              <div className="text-[10px] text-cyan-400/15 leading-tight mt-0.5 max-w-[120px]">
                 Пока еще не поглощен черной дырой
               </div>
               <div className="flex items-center gap-2 mt-0.5">
@@ -480,7 +411,7 @@ export default function ShipPage() {
                 </span>
               </div>
             </div>
-            <div className="text-[5px] text-cyan-400/15 leading-tight mt-1 max-w-[90px] text-right">
+            <div className="text-[10px] text-cyan-400/15 leading-tight mt-1 max-w-[90px] text-right">
               *Курс валюты постоянно колеблется, но обычно не в вашу пользу
             </div>
             {/* Sound toggle tracker (easter egg) */}
@@ -523,6 +454,7 @@ export default function ShipPage() {
                     locked={isSlotLocked}
                     requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
                     currentLevel={level}
+                    justEquipped={lastEquippedSlot === i}
                     onClick={() => !isSlotLocked && handleSlotClick(i)}
                   />
                 )
@@ -530,6 +462,7 @@ export default function ShipPage() {
             </div>
 
             {/* lightning background */}
+            {slotArtifacts.some(Boolean) && (
             <div className="absolute inset-0 pointer-events-none z-10 blur-sm">
               <svg className="w-full h-full opacity-60" viewBox="0 0 400 500" preserveAspectRatio="none">
                 <defs>
@@ -560,6 +493,7 @@ export default function ShipPage() {
                 <circle cx="345" cy="282" r="1.5" fill="#a855f7" opacity="0.3" />
               </svg>
             </div>
+            )}
 
             {/* ═══ ship card ═══ */}
             <div className="relative z-10">
@@ -572,7 +506,7 @@ export default function ShipPage() {
                   <h2 className="text-white font-bold text-xs tracking-[0.2em] relative inline-block px-3 bg-white/5">
                     {shipName}
                   </h2>
-                  <p className="text-[5px] text-cyan-400/15 italic tracking-wider mt-0.5">Может лететь куда угодно, кроме нужного вам места.</p>
+                  <p className="text-[10px] text-cyan-400/15 italic tracking-wider mt-0.5">Может лететь куда угодно, кроме нужного вам места.</p>
                 </div>
 
                 {/* ship display */}
@@ -637,7 +571,7 @@ export default function ShipPage() {
 
                 {hasBonuses && (
                   <div className="mt-2 pt-2 border-t border-cyan-500/10">
-                    <p className="text-[5px] text-cyan-400/30 font-semibold tracking-wider mb-1.5 text-center">
+                    <p className="text-[9px] text-cyan-400/30 font-semibold tracking-wider mb-1.5 text-center">
                       БОНУСЫ АРТЕФАКТОВ
                     </p>
                     <div className="flex flex-wrap justify-center gap-1">
@@ -660,7 +594,7 @@ export default function ShipPage() {
                         return (
                           <span
                             key={key}
-                            className={`text-[6px] font-mono ${color} bg-black/30 border border-white/5 rounded px-1 py-0.5 flex items-center gap-0.5`}
+                            className={`text-[10px] font-mono ${color} bg-black/30 border border-white/5 rounded px-1 py-0.5 flex items-center gap-0.5`}
                             title={`${key}: +${pct}%`}
                           >
                             {icon}+{pct}%
@@ -672,7 +606,7 @@ export default function ShipPage() {
                 )}
 
                 {/* stats bar */}
-                <div className="flex justify-between mt-2 text-[7px] text-cyan-400/20 tracking-wider">
+                <div className="flex justify-between mt-2 text-[10px] text-cyan-400/20 tracking-wider">
                   <span>PWR {Math.round(mainShip?.tea_level ?? 0)}/100</span>
                   <span>
                     SHLD {Math.round(mainShip?.optimism ?? 100)}%
@@ -712,6 +646,7 @@ export default function ShipPage() {
                     locked={isSlotLocked}
                     requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
                     currentLevel={level}
+                    justEquipped={lastEquippedSlot === i}
                     onClick={() => !isSlotLocked && handleSlotClick(i)}
                   />
                 )
@@ -736,6 +671,7 @@ export default function ShipPage() {
                   locked={isSlotLocked}
                   requiredLevel={isSlotLocked ? nextSlotUnlock?.requiredLevel ?? null : null}
                   currentLevel={level}
+                  justEquipped={lastEquippedSlot === i}
                   onClick={() => !isSlotLocked && handleSlotClick(i)}
                 />
               )
@@ -779,7 +715,7 @@ export default function ShipPage() {
           >
             <div className={`rotate-[6deg] hover:rotate-[-4deg] transition-transform duration-300 ${stickerIdx >= 8 ? 'animate-pulse' : ''}`}>
               <div className="bg-yellow-400/8 backdrop-blur-sm border border-yellow-400/15 rounded-md px-2 py-1 shadow-[0_0_10px_rgba(251,191,36,.08)]">
-                <span className="text-[5px] font-bold tracking-wider text-yellow-400/50 whitespace-nowrap">
+                <span className="text-[10px] font-bold tracking-wider text-yellow-400/50 whitespace-nowrap">
                   {stickerMessages[stickerIdx]}
                 </span>
               </div>
@@ -791,18 +727,18 @@ export default function ShipPage() {
           {/* Slots progress indicator */}
           <div className="w-full max-w-[280px] mt-2 bg-white/5 backdrop-blur-[12px] rounded-xl border border-cyan-500/15 p-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[7px] text-cyan-400/40 font-semibold tracking-wider">СЛОТЫ АРТЕФАКТОВ</span>
+                <span className="text-[9px] text-cyan-400/40 font-semibold tracking-wider">СЛОТЫ АРТЕФАКТОВ</span>
               <span className="text-[9px] text-cyan-300 font-mono">
                 {Math.min(slotArtifacts.filter(Boolean).length, maxSlots)} / {maxSlots}
               </span>
             </div>
             {nextSlotUnlock ? (
-              <p className="text-[7px] text-slate-500 mt-1">
+                <p className="text-[10px] text-slate-500 mt-1">
                 +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
                 <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span>
               </p>
             ) : (
-              <p className="text-[7px] text-neon-green mt-1">✓ Все слоты открыты</p>
+              <p className="text-[10px] text-neon-green mt-1">✓ Все слоты открыты</p>
             )}
           </div>
 
@@ -812,8 +748,8 @@ export default function ShipPage() {
               {/* fuel */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[7px] text-orange-400/40 font-semibold tracking-wider">УРОВЕНЬ ЧАЯ В БАКЕ</span>
-                  <button onClick={() => setFuelLabel('ERROR 418: I\'M A TEAPOT')} className="text-[8px] text-orange-400/40 font-mono hover:text-orange-300/60 transition-colors">{fuelLabel ?? `${mainShip?.tea_level ?? 0}/100`}</button>
+                  <span className="text-[9px] text-orange-400/40 font-semibold tracking-wider">УРОВЕНЬ ЧАЯ В БАКЕ</span>
+                  <button onClick={() => setFuelLabel('ERROR 418: I\'M A TEAPOT')} className="text-[10px] text-orange-400/40 font-mono hover:text-orange-300/60 transition-colors">{fuelLabel ?? `${mainShip?.tea_level ?? 0}/100`}</button>
                 </div>
                 <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-orange-500/10">
                   <div
@@ -825,7 +761,7 @@ export default function ShipPage() {
                   <button
                     disabled={!isShipIdle || fuelInInventory === 0 || isLoading}
                     onClick={handleRefuel}
-                    className="w-full mt-1 py-1.5 rounded-lg bg-gradient-to-r from-orange-600/60 to-orange-400/60 text-[7px] font-bold tracking-wider text-white/70 text-center active:scale-[0.97] transition-all disabled:opacity-25 hover:from-orange-600 hover:to-orange-400 hover:text-white"
+                    className="w-full mt-1 py-1.5 rounded-lg bg-gradient-to-r from-orange-600/60 to-orange-400/60 text-[10px] font-bold tracking-wider text-white/70 text-center active:scale-[0.97] transition-all disabled:opacity-25 hover:from-orange-600 hover:to-orange-400 hover:text-white"
                   >
                     ☕ ЗАПРАВКА ЧАЕМ ({fuelInInventory})
                   </button>
@@ -834,8 +770,8 @@ export default function ShipPage() {
               {/* repair */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[7px] text-green-400/40 font-semibold tracking-wider">УРОВЕНЬ ОПТИМИЗМА</span>
-                  <span className="text-[8px] text-green-400/40 font-mono">{Math.round(mainShip?.optimism ?? 100)}/100</span>
+                  <span className="text-[9px] text-green-400/40 font-semibold tracking-wider">УРОВЕНЬ ОПТИМИЗМА</span>
+                  <span className="text-[10px] text-green-400/40 font-mono">{Math.round(mainShip?.optimism ?? 100)}/100</span>
                 </div>
                 <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-green-500/10">
                   <div
@@ -847,7 +783,7 @@ export default function ShipPage() {
                   <button
                     disabled={!isShipIdle || repairInInventory === 0 || isLoading}
                     onClick={handleRepair}
-                    className="w-full mt-1 py-1.5 rounded-lg bg-gradient-to-r from-green-600/60 to-green-400/60 text-[7px] font-bold tracking-wider text-white/70 text-center active:scale-[0.97] transition-all disabled:opacity-25 hover:from-green-600 hover:to-green-400 hover:text-white"
+                    className="w-full mt-1 py-1.5 rounded-lg bg-gradient-to-r from-green-600/60 to-green-400/60 text-[10px] font-bold tracking-wider text-white/70 text-center active:scale-[0.97] transition-all disabled:opacity-25 hover:from-green-600 hover:to-green-400 hover:text-white"
                   >
                     ✨ ДОБАВИТЬ ОПТИМИЗМА ({repairInInventory})
                   </button>
@@ -863,13 +799,13 @@ export default function ShipPage() {
             {activeExp ? (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[7px] text-cyan-400/40 font-semibold tracking-wider">ЭКСПЕДИЦИЯ</span>
-                  <span className="text-[7px] text-cyan-400/30">{activeZoneName}</span>
+                  <span className="text-[9px] text-cyan-400/40 font-semibold tracking-wider">ЭКСПЕДИЦИЯ</span>
+                  <span className="text-[10px] text-cyan-400/30">{activeZoneName}</span>
                 </div>
                 {expTimer && !expTimer.isComplete ? (
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[8px] text-cyan-400/50 font-mono">🚀 {expTimer.display}</span>
+                      <span className="text-[10px] text-cyan-400/50 font-mono">🚀 {expTimer.display}</span>
                     </div>
                     <div className="h-1.5 bg-black/40 rounded-full overflow-hidden border border-cyan-500/10">
                       <div
@@ -890,80 +826,17 @@ export default function ShipPage() {
               </div>
             ) : (
               <button
-                onClick={() => navigate('/galaxy')}
+                onClick={() => {
+                  hapticImpact('light')
+                  setScreenFlash(true)
+                  setTimeout(() => setScreenFlash(false), 500)
+                  navigate('/galaxy')
+                }}
                 className="w-full py-2 rounded-lg bg-gradient-to-r from-neon-cyan/80 to-neon-purple/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all hover:from-neon-cyan hover:to-neon-purple"
               >
                 🚀 ЗАПУСК ЭКСПЕДИЦИИ
               </button>
             )}
-          </div>
-        </div>
-
-        {/* ═══ console panel ═══ */}
-        <div className="mt-2 mb-4 relative">
-          <div className="absolute -inset-4 bg-gradient-to-t from-purple-500/5 via-cyan-500/3 to-transparent rounded-2xl blur-2xl pointer-events-none" />
-          <div className="relative bg-white/5 backdrop-blur-[12px] rounded-2xl border border-cyan-500/20 p-5 shadow-[0_0_30px_rgba(0,245,255,.06),inset_0_1px_0_rgba(255,255,255,.06)]">
-            <div className="text-center mb-4 relative">
-              <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/8 to-transparent" />
-              <span className="text-[9px] font-bold tracking-[0.2em] text-cyan-400/30 relative inline-block px-3 bg-white/5">
-                ПАНЕЛЬ СЛОЖНЫХ РЕШЕНИЙ
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 relative">
-              {consoleButtons.map((btn, i) => (
-                <button
-                  key={i}
-                  className="group relative overflow-hidden rounded-xl p-0 transition-all duration-200 active:scale-[0.95] hover:scale-[1.03]"
-                  style={{
-                    background: `conic-gradient(from var(--gradient-angle, 0deg), ${btn.accent}00 0%, ${btn.accent}55 25%, ${btn.accent}00 50%, ${btn.accent}55 75%, ${btn.accent}00 100%)`,
-                    animation: 'spin-gradient 4s linear infinite',
-                  }}
-                  onClick={() => {
-                    if (btn.path) navigate(btn.path)
-                    if (btn.msg) setConsoleMsg(btn.msg)
-                  }}
-                >
-                  {/* button body with metallic bevel */}
-                  <div className="relative m-[1.5px] rounded-[10.5px] bg-gradient-to-b from-gray-800/80 to-gray-950/90 border-t border-l border-white/12 border-b border-r border-black/40 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,.4)]">
-                    {/* metallic highlight */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-
-                    {/* hover glow */}
-                    <div
-                      className="absolute -inset-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none"
-                      style={{ background: `radial-gradient(ellipse at center, ${btn.accent}25, transparent)` }}
-                    />
-
-                    {/* label */}
-                    <div className="relative flex flex-col items-center justify-center py-3 px-4">
-                      <span
-                        className="text-[11px] font-bold tracking-[0.15em] transition-all duration-200"
-                        style={{
-                          color: btn.accent,
-                          textShadow: `0 0 14px ${btn.accent}66`,
-                        }}
-                      >
-                        {btn.label}
-                      </span>
-                      {btn.sub && (
-                        <span className="text-[5px] text-white/20 tracking-wider mt-0.5 leading-tight">
-                          {btn.sub}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* bottom accent line */}
-                    <div
-                      className="absolute bottom-0 left-[15%] right-[15%] h-[1.5px] opacity-40"
-                      style={{ background: `linear-gradient(90deg, transparent, ${btn.accent}, transparent)`, boxShadow: `0 0 8px ${btn.accent}66` }}
-                    />
-                  </div>
-                </button>
-              ))}
-            </div>
-
           </div>
         </div>
       </div>
@@ -976,6 +849,9 @@ export default function ShipPage() {
           </div>
         </div>
       )}
+
+      {/* screen flash on expedition launch */}
+      {screenFlash && <div className="animate-screen-flash" />}
 
       <SlotSelectModal
         open={slotModalIndex !== null}
@@ -994,11 +870,15 @@ export default function ShipPage() {
                 'Бортовой компьютер сообщает: «Зачем мне два одинаковых квантовых стабилизатора? Я не жадный, я просто так устроен».',
               ]
               setConsoleMsg(messages[Math.floor(Math.random() * messages.length)])
+              hapticImpact('light')
               closeModal()
               return
             }
 
             await equipSlot(mainShip.id, slotModalIndex, artifactId)
+            hapticImpact('heavy')
+            setLastEquippedSlot(slotModalIndex)
+            setTimeout(() => setLastEquippedSlot(null), 300)
             closeModal()
           }
         }}
@@ -1008,11 +888,25 @@ export default function ShipPage() {
             if (equipped) {
               unequipSlot(mainShip.id, slotModalIndex, equipped.id)
             }
+            hapticImpact('medium')
             closeModal()
           }
         }}
         onClose={closeModal}
       />
+
+      <ConfirmDialog
+        open={showRepairConfirm}
+        title="Починить корабль?"
+        description={`Оптимизм уже ${Math.round(mainShip?.optimism ?? 0)}%. Уверен что хочешь тратить ремкомплект?`}
+        confirmLabel="Починить"
+        onConfirm={() => {
+          setShowRepairConfirm(false)
+          executeRepair()
+        }}
+        onCancel={() => setShowRepairConfirm(false)}
+      />
     </div>
+    </PullToRefresh>
   )
 }

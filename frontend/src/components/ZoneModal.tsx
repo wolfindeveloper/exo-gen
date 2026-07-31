@@ -340,7 +340,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                       <div className="flex items-center gap-1.5">
                         {itemInfo?.type === 'artifact' ? (
                           <span
-                            className="text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border"
+                            className="text-[9px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border"
                             style={{
                               color: rarityInfo.color,
                               borderColor: `${rarityInfo.color}44`,
@@ -350,12 +350,12 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                             {rarityInfo.label}
                           </span>
                         ) : (
-                          <span className={`text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border ${dropConfig.color} ${dropConfig.border} ${dropConfig.bg}`}>
+                          <span className={`text-[9px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border ${dropConfig.color} ${dropConfig.border} ${dropConfig.bg}`}>
                             {dropConfig.label}
                           </span>
                         )}
                         {isGuaranteed && (
-                          <span className="text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border text-green-400 border-green-500/30 bg-green-500/10">
+                          <span className="text-[9px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border text-green-400 border-green-500/30 bg-green-500/10">
                             ✓ Гарантировано
                           </span>
                         )}
@@ -376,7 +376,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                           transition={{ duration: 0.8, delay: idx * 0.05, ease: 'easeOut' }}
                         />
                       </div>
-                      <span className="text-[7px] uppercase tracking-wider block mt-0.5 text-right" style={{ color: chanceStyle.color }}>
+                      <span className="text-[10px] uppercase tracking-wider block mt-0.5 text-right" style={{ color: chanceStyle.color }}>
                         {chanceStyle.label}
                       </span>
                     </div>

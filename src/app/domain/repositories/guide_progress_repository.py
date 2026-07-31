@@ -51,8 +51,8 @@ class GuideProgressRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
-        """Топ игроков по количеству открытых статей: список (username, count, id)"""
+    async def get_top_players_by_unlocked_articles(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
+        """Топ игроков по количеству открытых статей: список (username, count, telegram_id, id)"""
         pass
 
     @abstractmethod

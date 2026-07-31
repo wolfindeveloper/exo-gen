@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Artifact, InventoryItem } from '../types'
 import { statLabels, statIcons, formatBonus } from '../lib/stats'
+import { hapticImpact } from '../lib/telegram'
+import { ConfirmDialog } from './ConfirmDialog'
 
 interface SlotSelectModalProps {
   open: boolean
@@ -26,6 +28,7 @@ export default function SlotSelectModal({
   onClose,
 }: SlotSelectModalProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const [showUnequipConfirm, setShowUnequipConfirm] = useState(false)
 
   useEffect(() => {
     if (!open) return
@@ -96,7 +99,7 @@ export default function SlotSelectModal({
           </h3>
           <button
             onClick={onClose}
-            className="text-[8px] text-cyan-400/30 hover:text-cyan-400/60 transition-colors"
+            className="text-[10px] text-cyan-400/30 hover:text-cyan-400/60 transition-colors"
           >
             ✕
           </button>
@@ -108,11 +111,14 @@ export default function SlotSelectModal({
               <ArtifactIcon artifact={equippedArtifact} />
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-bold text-white/80 truncate">{equippedArtifact.name_key}</div>
-                <div className="text-[7px] text-cyan-400/20 mt-0.5">ЭКИПИРОВАНО</div>
+                <div className="text-[10px] text-cyan-400/20 mt-0.5">ЭКИПИРОВАНО</div>
               </div>
               <button
-                onClick={onUnequip}
-                className="text-[7px] font-bold tracking-wider text-red-400/50 hover:text-red-400/80 transition-colors px-2 py-1 border border-red-400/10 rounded-md"
+                onClick={() => {
+                  hapticImpact('medium')
+                  setShowUnequipConfirm(true)
+                }}
+                className="text-[10px] font-bold tracking-wider text-red-400/50 hover:text-red-400/80 transition-colors px-2 py-1 border border-red-400/10 rounded-md"
               >
                 СНЯТЬ
               </button>
@@ -120,12 +126,12 @@ export default function SlotSelectModal({
           </div>
         )}
 
-        <div className="text-[8px] text-cyan-400/20 font-semibold tracking-wider mb-2">
+        <div className="text-[9px] text-cyan-400/20 font-semibold tracking-wider mb-2">
           ДОСТУПНЫЕ АРТЕФАКТЫ
         </div>
 
         {ownedArtifacts.length === 0 ? (
-          <div className="text-[8px] text-cyan-400/10 text-center py-6">
+          <div className="text-[10px] text-cyan-400/10 text-center py-6">
             Нет артефактов в инвентаре
           </div>
         ) : (
@@ -141,18 +147,21 @@ export default function SlotSelectModal({
               return (
                 <button
                   key={artifact.id}
-                  onClick={() => onEquip(artifact.id)}
+                  onClick={() => {
+                    hapticImpact('heavy')
+                    onEquip(artifact.id)
+                  }}
                   className="flex items-center gap-3 bg-white/5 hover:bg-white/10 transition-colors rounded-xl p-3 border border-cyan-500/10 text-left w-full active:scale-[0.98]"
                 >
                   <ArtifactIcon artifact={artifact} size="sm" />
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-bold text-white/80 truncate">{artifact.name_key}</div>
                     {statsText && (
-                      <div className="text-[6px] text-cyan-400/30 mt-0.5 truncate">{statsText}</div>
+                      <div className="text-[9px] text-cyan-400/30 mt-0.5 truncate">{statsText}</div>
                     )}
                   </div>
                   <div
-                    className="text-[7px] font-bold tracking-wider px-2 py-0.5 rounded"
+                    className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded"
                     style={{ color: tierColor, border: `1px solid ${tierColor}33` }}
                   >
                     T{artifact.tier}
@@ -163,6 +172,19 @@ export default function SlotSelectModal({
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={showUnequipConfirm}
+        title="Снять артефакт?"
+        description={`Артефакт «${equippedArtifact?.name_key}» будет возвращён в инвентарь.`}
+        confirmLabel="Снять"
+        destructive
+        onConfirm={() => {
+          setShowUnequipConfirm(false)
+          onUnequip()
+        }}
+        onCancel={() => setShowUnequipConfirm(false)}
+      />
     </div>
   )
 }

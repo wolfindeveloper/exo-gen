@@ -35,38 +35,39 @@ class GetMultiMetricLeaderboardUseCase:
             top_players=[
                 PlayerShortStatsDTO(
                     rank=idx + 1,
+                    telegram_id=telegram_id,
                     username=username,
                     xp=xp,
                     level=LevelProgressionService.calculate_level(xp),
                 )
-                for idx, (username, xp, _) in enumerate(top_xp)
+                for idx, (username, xp, telegram_id, _) in enumerate(top_xp)
             ],
             expeditions=MetricLeaderboardDTO(
                 my_rank=all_ranks["expeditions"],
                 top=[
-                    MetricEntryDTO(rank=idx + 1, username=username, value=value)
-                    for idx, (username, value, _) in enumerate(top_expeditions)
+                    MetricEntryDTO(rank=idx + 1, telegram_id=telegram_id, username=username, value=value)
+                    for idx, (username, value, telegram_id, _) in enumerate(top_expeditions)
                 ],
             ),
             artifacts=MetricLeaderboardDTO(
                 my_rank=all_ranks["artifacts"],
                 top=[
-                    MetricEntryDTO(rank=idx + 1, username=username, value=value)
-                    for idx, (username, value, _) in enumerate(top_artifacts)
+                    MetricEntryDTO(rank=idx + 1, telegram_id=telegram_id, username=username, value=value)
+                    for idx, (username, value, telegram_id, _) in enumerate(top_artifacts)
                 ],
             ),
             xgen=MetricLeaderboardDTO(
                 my_rank=all_ranks["xgen"],
                 top=[
-                    MetricEntryDTO(rank=idx + 1, username=username, value=value)
-                    for idx, (username, value, _) in enumerate(top_xgen)
+                    MetricEntryDTO(rank=idx + 1, telegram_id=telegram_id, username=username, value=value)
+                    for idx, (username, value, telegram_id, _) in enumerate(top_xgen)
                 ],
             ),
             articles=MetricLeaderboardDTO(
                 my_rank=my_articles_rank,
                 top=[
-                    MetricEntryDTO(rank=idx + 1, username=username, value=value)
-                    for idx, (username, value, _) in enumerate(top_articles)
+                    MetricEntryDTO(rank=idx + 1, telegram_id=telegram_id, username=username, value=value)
+                    for idx, (username, value, telegram_id, _) in enumerate(top_articles)
                 ],
             ),
         )

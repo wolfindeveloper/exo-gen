@@ -71,14 +71,14 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
         player_orm = PlayerMapper.player_to_orm(player)
         await self.session.merge(player_orm)
 
-    async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+    async def get_top_players_by_xp(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
         result = await self.session.execute(
-            select(PlayerORM.username, PlayerORM.xp, PlayerORM.id)
+            select(PlayerORM.username, PlayerORM.xp, PlayerORM.telegram_id, PlayerORM.id)
             .where(PlayerORM.deleted_at.is_(None))
             .order_by(PlayerORM.xp.desc())
             .limit(limit)
         )
-        return [(row.username, row.xp, row.id) for row in result.all()]
+        return [(row.username, row.xp, row.telegram_id, row.id) for row in result.all()]
 
     async def get_player_rank_by_xp(self, player_id: UUID) -> int:
         result = await self.session.execute(
@@ -94,32 +94,32 @@ class SQLAlchemyPlayerRepository(PlayerRepository):
         )
         return result.scalar_one() + 1
 
-    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+    async def get_top_players_by_total_expeditions(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
         result = await self.session.execute(
-            select(PlayerORM.username, PlayerORM.total_expeditions, PlayerORM.id)
+            select(PlayerORM.username, PlayerORM.total_expeditions, PlayerORM.telegram_id, PlayerORM.id)
             .where(PlayerORM.deleted_at.is_(None))
             .order_by(PlayerORM.total_expeditions.desc())
             .limit(limit)
         )
-        return [(row.username, row.total_expeditions, row.id) for row in result.all()]
+        return [(row.username, row.total_expeditions, row.telegram_id, row.id) for row in result.all()]
 
-    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+    async def get_top_players_by_total_artifacts_found(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
         result = await self.session.execute(
-            select(PlayerORM.username, PlayerORM.total_artifacts_found, PlayerORM.id)
+            select(PlayerORM.username, PlayerORM.total_artifacts_found, PlayerORM.telegram_id, PlayerORM.id)
             .where(PlayerORM.deleted_at.is_(None))
             .order_by(PlayerORM.total_artifacts_found.desc())
             .limit(limit)
         )
-        return [(row.username, row.total_artifacts_found, row.id) for row in result.all()]
+        return [(row.username, row.total_artifacts_found, row.telegram_id, row.id) for row in result.all()]
 
-    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, UUID]]:
+    async def get_top_players_by_xgen_balance(self, limit: int = 100) -> list[tuple[str | None, int, int, UUID]]:
         result = await self.session.execute(
-            select(PlayerORM.username, PlayerORM.xgen_balance, PlayerORM.id)
+            select(PlayerORM.username, PlayerORM.xgen_balance, PlayerORM.telegram_id, PlayerORM.id)
             .where(PlayerORM.deleted_at.is_(None))
             .order_by(PlayerORM.xgen_balance.desc())
             .limit(limit)
         )
-        return [(row.username, row.xgen_balance, row.id) for row in result.all()]
+        return [(row.username, row.xgen_balance, row.telegram_id, row.id) for row in result.all()]
 
     async def _rank_by_column(self, player_id: UUID, column) -> int:
         result = await self.session.execute(
