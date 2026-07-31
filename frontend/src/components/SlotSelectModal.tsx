@@ -171,20 +171,20 @@ export default function SlotSelectModal({
             })}
           </div>
         )}
-      </div>
 
-      <ConfirmDialog
-        open={showUnequipConfirm}
-        title="Снять артефакт?"
-        description={`Артефакт «${equippedArtifact?.name_key}» будет возвращён в инвентарь.`}
-        confirmLabel="Снять"
-        destructive
-        onConfirm={() => {
-          setShowUnequipConfirm(false)
-          onUnequip()
-        }}
-        onCancel={() => setShowUnequipConfirm(false)}
-      />
+        <ConfirmDialog
+          open={showUnequipConfirm}
+          title="Снять артефакт?"
+          description={`Артефакт «${equippedArtifact?.name_key}» будет возвращён в инвентарь.`}
+          confirmLabel="Снять"
+          destructive
+          onConfirm={() => {
+            setShowUnequipConfirm(false)
+            onUnequip()
+          }}
+          onCancel={() => setShowUnequipConfirm(false)}
+        />
+      </div>
     </div>
   )
 }
