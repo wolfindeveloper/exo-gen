@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from app.config.settings import settings
 from app.infrastructure.security.rate_limiter import limiter
-from app.application.dtos.player_dto import CreatePlayerDTO
 from app.application.dtos.player_response_dto import PlayerResponseDTO
 from app.application.dtos.profile_dto import ProfileResponseDTO
 from app.application.use_cases.create_player import CreatePlayerUseCase
@@ -19,6 +18,7 @@ from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.infrastructure.telegram.security import get_current_player
+from app.infrastructure.security.telegram_auth import TelegramUserDTO
 from app.presentation.api.dependencies import (
     get_player_repo,
     get_guide_progress_repo,
@@ -27,21 +27,30 @@ from app.presentation.api.dependencies import (
     get_item_repo,
     get_loot_box_repo,
     get_uow,
+    require_telegram_user,
 )
 
-router = APIRouter(prefix="/players", tags=["Players"])
+router = APIRouter(
+    prefix="/players",
+    tags=["Players"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.post("/register", status_code=201)
 @limiter.limit("10/minute")
 async def register_player(
     request: Request,
-    dto: CreatePlayerDTO,
+    telegram_user: TelegramUserDTO = Depends(require_telegram_user),
     player_repo: PlayerRepository = Depends(get_player_repo),
     uow: UnitOfWork = Depends(get_uow),
 ):
     use_case = CreatePlayerUseCase(player_repo=player_repo)
-    player = await use_case.execute(dto, uow)
+    player = await use_case.execute(
+        telegram_id=telegram_user.telegram_id,
+        username=telegram_user.username or f"user_{telegram_user.telegram_id}",
+        uow=uow,
+    )
     return {
         "id": str(player.id),
         "telegram_id": player.telegram_id,

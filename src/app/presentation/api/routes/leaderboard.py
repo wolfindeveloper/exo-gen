@@ -6,9 +6,13 @@ from app.application.use_cases.get_multi_metric_leaderboard import GetMultiMetri
 from app.application.dtos.leaderboard_dto import GlobalLeaderboardDTO
 from app.domain.entities.player import Player
 from app.infrastructure.telegram.security import get_current_player
-from app.presentation.api.dependencies import get_player_repo, get_guide_progress_repo
+from app.presentation.api.dependencies import get_player_repo, get_guide_progress_repo, require_telegram_user
 
-router = APIRouter(prefix="/leaderboard", tags=["Leaderboard"])
+router = APIRouter(
+    prefix="/leaderboard",
+    tags=["Leaderboard"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.get("/global", response_model=GlobalLeaderboardDTO)

@@ -1,9 +1,9 @@
 from typing import AsyncGenerator
 
-from fastapi import Depends, HTTPException, Header
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config.settings import settings
+from app.config.settings import Settings, settings, get_settings
 from app.domain.entities.player import Player
 
 from app.infrastructure.database.session import AsyncSessionLocal
@@ -66,6 +66,10 @@ from app.infrastructure.persistence.repositories.sqlalchemy_purchase_repository 
 from app.domain.repositories.player_settings_repository import PlayerSettingsRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_player_settings_repository import (
     SQLAlchemyPlayerSettingsRepository,
+)
+from app.infrastructure.security.telegram_auth import (
+    TelegramUserDTO,
+    verify_telegram_init_data,
 )
 
 
@@ -181,8 +185,20 @@ async def get_purchase_repo(
     return SQLAlchemyPurchaseRepository(session)
 
 
+async def require_telegram_user(
+    request: Request,
+    settings: Settings = Depends(get_settings),
+) -> TelegramUserDTO:
+    authorization = request.headers.get("Authorization", "")
+    if not authorization.startswith("tghash "):
+        raise HTTPException(status_code=401, detail="Invalid authorization scheme")
+
+    init_data = authorization[len("tghash "):]
+    return verify_telegram_init_data(init_data, settings.BOT_TOKEN)
+
+
 async def verify_admin(
-    authorization: str = Header(..., description="tghash <init_data>"),
+    telegram_user: TelegramUserDTO = Depends(require_telegram_user),
     player_repo: PlayerRepository = Depends(get_player_repo),
     inventory_repo: InventoryRepository = Depends(get_inventory_repo),
     loot_box_repo: LootBoxRepository = Depends(get_loot_box_repo),
@@ -190,10 +206,13 @@ async def verify_admin(
     settings_repo: PlayerSettingsRepository = Depends(get_player_settings_repo),
     uow: UnitOfWork = Depends(get_uow),
 ) -> Player:
+    if telegram_user.telegram_id not in settings.ADMIN_TELEGRAM_IDS:
+        raise HTTPException(status_code=403, detail="Access denied. Admins only.")
+
     from app.infrastructure.telegram.security import get_current_player
 
     current_player = await get_current_player(
-        authorization=authorization,
+        telegram_user=telegram_user,
         player_repo=player_repo,
         inventory_repo=inventory_repo,
         loot_box_repo=loot_box_repo,
@@ -201,6 +220,4 @@ async def verify_admin(
         settings_repo=settings_repo,
         uow=uow,
     )
-    if current_player.telegram_id not in settings.ADMIN_TELEGRAM_IDS:
-        raise HTTPException(status_code=403, detail="Access denied. Admins only.")
     return current_player

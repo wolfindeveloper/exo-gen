@@ -23,9 +23,14 @@ from app.presentation.api.dependencies import (
     get_inventory_repo,
     get_item_repo,
     get_uow,
+    require_telegram_user,
 )
 
-router = APIRouter(prefix="/ships", tags=["Ships"])
+router = APIRouter(
+    prefix="/ships",
+    tags=["Ships"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.get("/me", response_model=ShipResponseDTO)

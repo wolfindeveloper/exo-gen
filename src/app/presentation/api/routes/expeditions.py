@@ -5,7 +5,6 @@ from app.application.dtos.claim_expedition_dto import ClaimExpeditionDTO, ClaimE
 from app.application.use_cases.claim_expedition import ClaimExpeditionUseCase
 from app.domain.entities.player import Player
 from app.domain.exceptions import DomainError
-from app.domain.exceptions.ship import ShipNotFoundError
 from app.domain.uow import UnitOfWork
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.zone_repository import ZoneRepository
@@ -15,9 +14,13 @@ from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.infrastructure.telegram.security import get_current_player
 
-from app.presentation.api.dependencies import get_player_repo, get_expedition_repo, get_zone_repo, get_inventory_repo, get_item_repo, get_uow
+from app.presentation.api.dependencies import get_player_repo, get_expedition_repo, get_zone_repo, get_inventory_repo, get_item_repo, get_uow, require_telegram_user
 
-router = APIRouter(prefix="/expeditions", tags=["Expeditions"])
+router = APIRouter(
+    prefix="/expeditions",
+    tags=["Expeditions"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.get("/active", response_model=ExpeditionResponseDTO | None)

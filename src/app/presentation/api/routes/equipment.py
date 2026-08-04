@@ -17,9 +17,12 @@ from app.domain.entities.player import Player
 from app.domain.exceptions import DomainError
 from app.domain.uow import UnitOfWork
 from app.infrastructure.telegram.security import get_current_player
-from app.presentation.api.dependencies import get_item_repo, get_inventory_repo, get_equipment_repo, get_uow
+from app.presentation.api.dependencies import get_item_repo, get_inventory_repo, get_equipment_repo, get_uow, require_telegram_user
 
-router = APIRouter(tags=["Equipment"])
+router = APIRouter(
+    tags=["Equipment"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.get("/equipment/{ship_id}", response_model=EquipmentResponseDTO)

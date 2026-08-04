@@ -1,6 +1,5 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
 
 from app.presentation.api.dependencies import (
     get_uow, get_zone_repo, get_season_repo, get_chapter_repo,

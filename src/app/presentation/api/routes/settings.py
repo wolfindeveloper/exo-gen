@@ -9,9 +9,13 @@ from app.application.dtos.player_settings_dto import (
     UpdatePlayerSettingsDTO,
 )
 from app.infrastructure.telegram.security import get_current_player
-from app.presentation.api.dependencies import get_player_settings_repo
+from app.presentation.api.dependencies import get_player_settings_repo, require_telegram_user
 
-router = APIRouter(prefix="/players/me", tags=["Settings"])
+router = APIRouter(
+    prefix="/players/me",
+    tags=["Settings"],
+    dependencies=[Depends(require_telegram_user)],
+)
 
 
 @router.get("/settings", response_model=PlayerSettingsDTO)
