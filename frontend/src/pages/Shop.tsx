@@ -853,6 +853,7 @@ export function Shop() {
       <BundlePreviewModal
         open={bundlePreview !== null}
         bundleName={bundlePreview?.bundle_name || bundlePreview?.name_key || '\u041d\u0430\u0431\u043e\u0440'}
+        bundleDescription={bundlePreview?.bundle_description}
         items={bundlePreview?.bundle_items_info || []}
         onClose={() => setBundlePreview(null)}
       />
