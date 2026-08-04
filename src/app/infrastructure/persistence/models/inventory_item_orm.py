@@ -1,5 +1,5 @@
 from uuid import UUID
-from sqlalchemy import Integer, Uuid, ForeignKey
+from sqlalchemy import Integer, Uuid, ForeignKey, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -7,6 +7,9 @@ from app.infrastructure.persistence.models.base import Base
 
 class InventoryItemORM(Base):
     __tablename__ = "inventory_items"
+    __table_args__ = (
+        UniqueConstraint("player_id", "item_id", name="uq_inventory_player_item"),
+    )
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
     

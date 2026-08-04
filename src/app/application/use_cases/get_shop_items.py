@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from app.application.dtos.shop_dto import ShopItemResponseDTO, ShopItemInfoDTO
+from app.application.dtos.shop_dto import ShopItemResponseDTO, ShopItemInfoDTO, BundleItemInfoDTO
 from app.domain.repositories.shop_repository import ShopItemRepository
 from app.domain.repositories.item_repository import ItemRepository
 
@@ -46,6 +46,21 @@ class GetShopItemsUseCase:
                         image_url=catalog_item.image_url or "",
                     )
 
+            bundle_items_info = []
+            for bundle_entry in (shop_item.bundle_items or []):
+                bid = bundle_entry.get("item_id")
+                qty = bundle_entry.get("quantity", 1)
+                if bid:
+                    bundle_item = items_map.get(str(bid))
+                    if bundle_item:
+                        bundle_items_info.append(BundleItemInfoDTO(
+                            item_id=bundle_item.id,
+                            name=bundle_item.name,
+                            description=bundle_item.description,
+                            image_url=bundle_item.image_url or "",
+                            quantity=qty,
+                        ))
+
             result.append(ShopItemResponseDTO(
                 id=shop_item.id,
                 item_id=shop_item.item_id,
@@ -55,6 +70,7 @@ class GetShopItemsUseCase:
                 is_active=shop_item.is_active,
                 bundle_items=shop_item.bundle_items or [],
                 item_info=item_info,
+                bundle_items_info=bundle_items_info,
             ))
 
         return result

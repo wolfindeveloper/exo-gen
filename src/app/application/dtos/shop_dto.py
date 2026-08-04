@@ -14,6 +14,15 @@ class ShopItemInfoDTO(BaseModel):
     image_url: str = ""
 
 
+class BundleItemInfoDTO(BaseModel):
+    """Информация о предмете в бандле"""
+    item_id: UUID
+    name: str
+    description: str
+    image_url: str
+    quantity: int
+
+
 class ShopItemResponseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -25,6 +34,7 @@ class ShopItemResponseDTO(BaseModel):
     is_active: bool
     bundle_items: list[dict] = []
     item_info: ShopItemInfoDTO | None = None
+    bundle_items_info: list[BundleItemInfoDTO] = []
 
 
 class ShopItemAnalyticsDTO(BaseModel):

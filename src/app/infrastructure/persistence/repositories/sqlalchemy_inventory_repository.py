@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from uuid import UUID
 
 from app.domain.entities.inventory import Inventory
@@ -33,24 +34,33 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         return InventoryMapper.to_domain(player_id, items_orm)
 
     async def add_item_to_player(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
-        inventory = await self.get_by_player_id(player_id)
+        inventory = await self.get_by_player_id(player_id, for_update=True)
         inventory.add_item(item_id, quantity)
         await self.save(inventory)
 
     async def save(self, inventory: Inventory) -> None:
-        stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
-        result = await self.session.execute(stmt)
-        existing_items_orm = {item.id: item for item in result.scalars().all()}
+        try:
+            stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
+            result = await self.session.execute(stmt)
+            existing_items_orm = {item.id: item for item in result.scalars().all()}
 
-        for domain_item in inventory.items:
-            if domain_item.id in existing_items_orm:
-                orm_item = existing_items_orm.pop(domain_item.id)
-                orm_item.quantity = domain_item.quantity
-                orm_item.item_metadata = domain_item.metadata
-            else:
-                new_orm = InventoryItemMapper.to_orm(domain_item)
-                self.session.add(new_orm)
+            for domain_item in inventory.items:
+                if domain_item.id in existing_items_orm:
+                    orm_item = existing_items_orm.pop(domain_item.id)
+                    orm_item.quantity = domain_item.quantity
+                    orm_item.item_metadata = domain_item.metadata
+                else:
+                    new_orm = InventoryItemMapper.to_orm(domain_item)
+                    self.session.add(new_orm)
 
-        # Удаляем предметы, которых больше нет в доменной модели (quantity упал до 0)
-        for orphan_orm in existing_items_orm.values():
-            await self.session.delete(orphan_orm)
+            for orphan_orm in existing_items_orm.values():
+                await self.session.delete(orphan_orm)
+
+        except IntegrityError as e:
+            if "uq_inventory_player_item" in str(e):
+                await self.session.rollback()
+                fresh_inventory = await self.get_by_player_id(inventory.player_id, for_update=True)
+                for domain_item in inventory.items:
+                    fresh_inventory.add_item(domain_item.item_id, domain_item.quantity)
+                return await self.save(fresh_inventory)
+            raise

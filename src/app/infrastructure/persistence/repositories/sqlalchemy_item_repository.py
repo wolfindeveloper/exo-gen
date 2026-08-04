@@ -75,6 +75,7 @@ class SQLAlchemyItemRepository(ItemRepository):
         stmt = (
             select(ItemORM)
             .where(ItemORM.id.in_(item_ids))
+            .where(ItemORM.deleted_at.is_(None))
         )
         result = await self.session.execute(stmt)
         orms = result.scalars().all()
