@@ -173,6 +173,9 @@ class UpdateShopItemDTO(BaseModel):
     stock_limit: int | None = None
     is_active: bool | None = None
     bundle_items: list[BundleItemDTO] | None = None
+    bundle_name: str | None = None
+    bundle_description: str | None = None
+    bundle_image_url: str | None = None
 
     @model_validator(mode='after')
     def validate_stock_limits(self) -> 'UpdateShopItemDTO':
@@ -204,6 +207,9 @@ class CreateShopItemDTO(BaseModel):
     stock_limit: int = Field(ge=0, default=0)
     is_active: bool = True
     bundle_items: list[BundleItemDTO] = []
+    bundle_name: str = ""
+    bundle_description: str = ""
+    bundle_image_url: str = ""
 
     @model_validator(mode='after')
     def validate_bundle(self):

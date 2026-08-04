@@ -287,6 +287,21 @@ export interface ShopItem {
   rarity?: string
   stats_modifiers?: Record<string, number>
   type?: string
+  is_bundle?: boolean
+  bundle_name?: string
+  bundle_description?: string
+  bundle_image_url?: string
+  bundle_items_info?: BundleItemInfo[]
+}
+
+export interface BundleItemInfo {
+  item_id: string
+  name: string
+  description: string
+  type: string
+  rarity: string
+  image_url: string
+  quantity: number
 }
 
 export interface ShopGrantedItem {
@@ -567,6 +582,9 @@ export interface AdminShopItem {
   is_active: boolean
   bundle_items: AdminShopBundleItem[]
   analytics: AdminShopAnalytics
+  bundle_name?: string
+  bundle_description?: string
+  bundle_image_url?: string
 }
 
 export interface CreateAdminShopItemPayload {
@@ -576,6 +594,9 @@ export interface CreateAdminShopItemPayload {
   stock_limit?: number
   is_active?: boolean
   bundle_items?: AdminShopBundleItem[]
+  bundle_name?: string
+  bundle_description?: string
+  bundle_image_url?: string
 }
 
 export interface UpdateAdminShopItemPayload {
@@ -584,6 +605,9 @@ export interface UpdateAdminShopItemPayload {
   stock_limit?: number
   is_active?: boolean
   bundle_items?: AdminShopBundleItem[]
+  bundle_name?: string
+  bundle_description?: string
+  bundle_image_url?: string
 }
 
 export interface DailyLoginResult {

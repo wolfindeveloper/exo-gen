@@ -410,6 +410,9 @@ class ShopItemMapper:
             stock_limit=orm.stock_limit,
             is_active=orm.is_active,
             bundle_items=orm.bundle_items or [],
+            bundle_name=orm.bundle_name or "",
+            bundle_description=orm.bundle_description or "",
+            bundle_image_url=orm.bundle_image_url or "",
             deleted_at=orm.deleted_at,
         )
 
@@ -423,6 +426,9 @@ class ShopItemMapper:
             stock_limit=domain.stock_limit,
             is_active=domain.is_active,
             bundle_items=domain.bundle_items,
+            bundle_name=domain.bundle_name,
+            bundle_description=domain.bundle_description,
+            bundle_image_url=domain.bundle_image_url,
             deleted_at=domain.deleted_at,
         )
 

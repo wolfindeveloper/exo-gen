@@ -2,7 +2,7 @@ from uuid import UUID
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, String, Uuid, Boolean, DateTime, ForeignKey
+from sqlalchemy import Integer, String, Text, Uuid, Boolean, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -22,6 +22,9 @@ class ShopItemORM(Base):
     stock_limit: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     bundle_items: Mapped[list[dict]] = mapped_column(JSONB, nullable=False, default=list)
+    bundle_name: Mapped[str] = mapped_column(String(200), default="", server_default="")
+    bundle_description: Mapped[str] = mapped_column(Text, default="", server_default="")
+    bundle_image_url: Mapped[str] = mapped_column(String(500), default="", server_default="")
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     item: Mapped["ItemORM"] = relationship()

@@ -4,6 +4,7 @@ import { AlertTriangle, Diamond, Gift, Package, ShoppingBag, Star } from 'lucide
 
 import { api } from '../api/client'
 import { MysteryBoxPreview } from '../components/MysteryBoxPreview'
+import BundlePreviewModal from '../components/BundlePreviewModal'
 import { Skeleton } from '../components/Skeleton'
 import { PullToRefresh } from '../components/PullToRefresh'
 import { ConfirmDialog } from '../components/ConfirmDialog'
@@ -210,6 +211,89 @@ function ArtifactCard({
   )
 }
 
+function BundleCard({
+  item,
+  canAfford,
+  isBuying,
+  onBuy,
+  onPreview,
+}: {
+  item: ShopItem
+  canAfford: boolean
+  isBuying: boolean
+  onBuy: () => void
+  onPreview: () => void
+}) {
+  const itemCount = item.bundle_items_info?.length || 0
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+      className="rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-yellow-500/5 p-4 space-y-3"
+    >
+      <div className="flex items-start gap-3">
+        <div className="shrink-0 w-14 h-14 rounded-xl border border-amber-500/20 bg-black/30 flex items-center justify-center overflow-hidden">
+          {item.bundle_image_url ? (
+            <img src={item.bundle_image_url} alt={item.bundle_name} className="w-full h-full object-cover" />
+          ) : (
+            <Package size={24} className="text-amber-400" />
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[8px] font-display uppercase tracking-wider px-1.5 py-0.5 rounded border border-amber-500/30 text-amber-400 bg-amber-500/10">
+              {'\u041d\u0430\u0431\u043e\u0440'}
+            </span>
+            <span className="text-[9px] text-slate-500">
+              {itemCount} {itemCount === 1 ? '\u043f\u0440\u0435\u0434\u043c\u0435\u0442' : '\u043f\u0440\u0435\u0434\u043c\u0435\u0442\u043e\u0432'}
+            </span>
+          </div>
+          <h3 className="font-display text-sm text-amber-300 uppercase tracking-wider truncate">
+            {item.bundle_name || item.name_key}
+          </h3>
+          {item.bundle_description && (
+            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed line-clamp-2">
+              {item.bundle_description}
+            </p>
+          )}
+        </div>
+
+        <div className="shrink-0 text-right">
+          <span className="font-display text-sm tabular-nums text-amber-400">
+            {item.price.amount}
+          </span>
+          <span className="text-[10px] ml-0.5 text-amber-400">{'\u2726'}</span>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          onClick={onPreview}
+          className="flex-1 py-2 rounded-lg text-[10px] font-display uppercase tracking-wider bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 active:scale-[0.97] transition-all"
+        >
+          {'\u{1F4CB} \u0427\u0442\u043e \u0432\u043d\u0443\u0442\u0440\u0438'}
+        </button>
+        <button
+          onClick={onBuy}
+          disabled={!canAfford || isBuying}
+          className={`flex-1 py-2 rounded-lg text-[10px] font-display uppercase tracking-wider transition-all ${
+            isBuying
+              ? 'bg-slate-700/50 text-slate-500'
+              : canAfford
+                ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-400 border border-amber-500/25 active:scale-[0.97]'
+                : 'bg-slate-800/50 text-slate-700 border border-slate-700/30 cursor-not-allowed'
+          }`}
+        >
+          {isBuying ? '\u041f\u043e\u043a\u0443\u043f\u0430\u0435\u043c...' : canAfford ? '\u041f\u0440\u0438\u043e\u0431\u0440\u0435\u0441\u0442\u0438' : '\u041d\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442'}
+        </button>
+      </div>
+    </motion.div>
+  )
+}
+
 export function Shop() {
   const loadProfile = useGameStore((s) => s.loadProfile)
   const loadInventory = useGameStore((s) => s.loadInventory)
@@ -227,6 +311,7 @@ export function Shop() {
   const [coinParticles, setCoinParticles] = useState<CoinParticle[]>([])
   const commentTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [starsConfirmItem, setStarsConfirmItem] = useState<ShopItem | null>(null)
+  const [bundlePreview, setBundlePreview] = useState<ShopItem | null>(null)
   const [starsPackages, setStarsPackages] = useState<{ id: string; stars_amount: number; xgen_reward: number; is_active: boolean }[]>([])
 
   useEffect(() => {
@@ -261,7 +346,8 @@ export function Shop() {
     return () => clearTimeout(commentTimeout.current)
   }, [buyerCommentItem])
 
-  const shopItems = items.filter((i) => i.category === activeCategory && i.type !== 'artifact')
+  const bundleItems = items.filter((i) => i.is_bundle)
+  const shopItems = items.filter((i) => i.category === activeCategory && i.type !== 'artifact' && !i.is_bundle)
   const artifactItems = items.filter((i) => i.category === 'artifacts' && i.type === 'artifact')
   const isArtifactCategory = activeCategory === 'artifacts'
 
@@ -392,6 +478,31 @@ export function Shop() {
           )
         })}
       </div>
+
+      {bundleItems.length > 0 && (
+        <div className="space-y-3 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-amber-500/10" />
+            <span className="text-[9px] text-amber-400/60 font-display uppercase tracking-widest">
+              {'\u041d\u0430\u0431\u043e\u0440\u044b'}
+            </span>
+            <div className="h-px flex-1 bg-amber-500/10" />
+          </div>
+          {bundleItems.map((item) => {
+            const canAfford = (user?.xgen_balance ?? 0) >= item.price.amount
+            return (
+              <BundleCard
+                key={item.id}
+                item={item}
+                canAfford={canAfford}
+                isBuying={buying === item.id}
+                onBuy={() => handleBuy(item)}
+                onPreview={() => setBundlePreview(item)}
+              />
+            )
+          })}
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -737,6 +848,13 @@ export function Shop() {
           }
         }}
         onCancel={() => setStarsConfirmItem(null)}
+      />
+
+      <BundlePreviewModal
+        open={bundlePreview !== null}
+        bundleName={bundlePreview?.bundle_name || bundlePreview?.name_key || '\u041d\u0430\u0431\u043e\u0440'}
+        items={bundlePreview?.bundle_items_info || []}
+        onClose={() => setBundlePreview(null)}
       />
     </div>
     </PullToRefresh>

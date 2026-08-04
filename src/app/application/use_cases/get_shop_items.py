@@ -57,6 +57,8 @@ class GetShopItemsUseCase:
                             item_id=bundle_item.id,
                             name=bundle_item.name,
                             description=bundle_item.description,
+                            type=bundle_item.type.value,
+                            rarity=bundle_item.rarity,
                             image_url=bundle_item.image_url or "",
                             quantity=qty,
                         ))
@@ -69,6 +71,9 @@ class GetShopItemsUseCase:
                 stock_limit=shop_item.stock_limit,
                 is_active=shop_item.is_active,
                 bundle_items=shop_item.bundle_items or [],
+                bundle_name=shop_item.bundle_name or "",
+                bundle_description=shop_item.bundle_description or "",
+                bundle_image_url=shop_item.bundle_image_url or "",
                 item_info=item_info,
                 bundle_items_info=bundle_items_info,
             ))

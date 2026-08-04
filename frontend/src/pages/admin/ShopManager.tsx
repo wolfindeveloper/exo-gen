@@ -25,6 +25,9 @@ interface FormState {
   daily_limit: string
   stock_limit: string
   is_active: boolean
+  bundle_name: string
+  bundle_description: string
+  bundle_image_url: string
 }
 
 const EMPTY_FORM: FormState = {
@@ -35,6 +38,9 @@ const EMPTY_FORM: FormState = {
   daily_limit: '0',
   stock_limit: '0',
   is_active: true,
+  bundle_name: '',
+  bundle_description: '',
+  bundle_image_url: '',
 }
 
 export function ShopManager() {
@@ -184,6 +190,9 @@ export function ShopManager() {
       daily_limit: String(item.daily_limit),
       stock_limit: String(item.stock_limit),
       is_active: item.is_active,
+      bundle_name: item.bundle_name || '',
+      bundle_description: item.bundle_description || '',
+      bundle_image_url: item.bundle_image_url || '',
     })
     setBundleItemSelect('')
     setBundleItemQty(1)
@@ -219,9 +228,15 @@ export function ShopManager() {
       setError('\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043f\u0440\u0435\u0434\u043c\u0435\u0442 \u0434\u043b\u044f \u043f\u0440\u043e\u0434\u0430\u0436\u0438')
       return
     }
-    if (form.mode === 'bundle' && form.bundle_items.length === 0) {
-      setError('\u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0445\u043e\u0442\u044f \u0431\u044b \u043e\u0434\u0438\u043d \u043f\u0440\u0435\u0434\u043c\u0435\u0442 \u0432 \u0431\u0430\u043d\u0434\u043b')
-      return
+    if (form.mode === 'bundle') {
+      if (!form.bundle_name.trim()) {
+        setError('\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u0431\u043e\u0440\u0430')
+        return
+      }
+      if (form.bundle_items.length === 0) {
+        setError('\u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0445\u043e\u0442\u044f \u0431\u044b \u043e\u0434\u0438\u043d \u043f\u0440\u0435\u0434\u043c\u0435\u0442 \u0432 \u0431\u0430\u043d\u0434\u043b')
+        return
+      }
     }
 
     try {
@@ -240,6 +255,9 @@ export function ShopManager() {
 
         if (form.mode === 'bundle') {
           payload.bundle_items = form.bundle_items
+          payload.bundle_name = form.bundle_name
+          payload.bundle_description = form.bundle_description
+          payload.bundle_image_url = form.bundle_image_url
         }
 
         await api.updateAdminShopItem(editingItem.id, payload)
@@ -255,6 +273,9 @@ export function ShopManager() {
           payload.item_id = form.item_id
         } else {
           payload.bundle_items = form.bundle_items
+          payload.bundle_name = form.bundle_name
+          payload.bundle_description = form.bundle_description
+          payload.bundle_image_url = form.bundle_image_url
         }
 
         await api.createAdminShopItem(payload as any)
@@ -539,8 +560,56 @@ export function ShopManager() {
               )}
 
               {form.mode === 'bundle' && (
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">{'\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b \u0432 \u0431\u0430\u043d\u0434\u043b\u0435'}</label>
+                <div className="space-y-4">
+                  <div className="bg-blue-900/10 border border-blue-500/20 rounded-lg p-4 space-y-3">
+                    <h4 className="text-sm font-medium text-blue-400">{'\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u043d\u0430\u0431\u043e\u0440\u0435'}</h4>
+                    
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">{'\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u0431\u043e\u0440\u0430 *} </label>
+                      <input
+                        type="text"
+                        value={form.bundle_name}
+                        onChange={(e) => setForm({ ...form, bundle_name: e.target.value })}
+                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                        placeholder={'\u0421\u0442\u0430\u0440\u0442\u043e\u0432\u044b\u0439 \u043d\u0430\u0431\u043e\u0440 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044f'}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">{'\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043d\u0430\u0431\u043e\u0440\u0430'}</label>
+                      <textarea
+                        value={form.bundle_description}
+                        onChange={(e) => setForm({ ...form, bundle_description: e.target.value })}
+                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none resize-none"
+                        rows={2}
+                        placeholder={'\u0412\u0441\u0451 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e\u0435 \u0434\u043b\u044f \u043f\u0435\u0440\u0432\u044b\u0445 \u044d\u043a\u0441\u043f\u0435\u0434\u0438\u0446\u0438\u0439...'}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">{'\u041a\u0430\u0440\u0442\u0438\u043d\u043a\u0430 \u043d\u0430\u0431\u043e\u0440\u0430 (URL)'}</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={form.bundle_image_url}
+                          onChange={(e) => setForm({ ...form, bundle_image_url: e.target.value })}
+                          className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                          placeholder="https://..."
+                        />
+                        {form.bundle_image_url && (
+                          <img
+                            src={form.bundle_image_url}
+                            alt=""
+                            className="w-10 h-10 rounded-lg object-cover border border-gray-700"
+                            onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">{'\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b \u0432 \u0431\u0430\u043d\u0434\u043b\u0435'}</label>
 
                   {form.bundle_items.length === 0 && (
                     <p className="text-xs text-gray-600 mb-2">{'\u041d\u0435\u0442 \u043f\u0440\u0435\u0434\u043c\u0435\u0442\u043e\u0432. \u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0445\u043e\u0442\u044f \u0431\u044b \u043e\u0434\u0438\u043d.'}</p>
@@ -598,6 +667,7 @@ export function ShopManager() {
                       <Plus size={16} />
                     </button>
                   </div>
+                </div>
                 </div>
               )}
 

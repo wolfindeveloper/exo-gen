@@ -15,10 +15,12 @@ class ShopItemInfoDTO(BaseModel):
 
 
 class BundleItemInfoDTO(BaseModel):
-    """Информация о предмете в бандле"""
+    """Полная информация о предмете в бандле для фронта"""
     item_id: UUID
     name: str
     description: str
+    type: str
+    rarity: str
     image_url: str
     quantity: int
 
@@ -33,6 +35,9 @@ class ShopItemResponseDTO(BaseModel):
     stock_limit: int
     is_active: bool
     bundle_items: list[dict] = []
+    bundle_name: str = ""
+    bundle_description: str = ""
+    bundle_image_url: str = ""
     item_info: ShopItemInfoDTO | None = None
     bundle_items_info: list[BundleItemInfoDTO] = []
 
@@ -51,6 +56,9 @@ class ShopItemWithAnalyticsDTO(BaseModel):
     stock_limit: int
     is_active: bool
     bundle_items: list[dict] = []
+    bundle_name: str = ""
+    bundle_description: str = ""
+    bundle_image_url: str = ""
     analytics: ShopItemAnalyticsDTO
 
 
