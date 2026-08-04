@@ -311,6 +311,7 @@ export function Shop() {
   const [coinParticles, setCoinParticles] = useState<CoinParticle[]>([])
   const commentTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [starsConfirmItem, setStarsConfirmItem] = useState<ShopItem | null>(null)
+  const [xgenConfirmItem, setXgenConfirmItem] = useState<ShopItem | null>(null)
   const [bundlePreview, setBundlePreview] = useState<ShopItem | null>(null)
   const [starsPackages, setStarsPackages] = useState<{ id: string; stars_amount: number; xgen_reward: number; is_active: boolean }[]>([])
 
@@ -391,13 +392,13 @@ export function Shop() {
     }
   }, [loadProfile, loadInventory])
 
-  const handleBuy = useCallback(async (shopItem: ShopItem, btnEl?: HTMLElement) => {
+  const handleBuy = useCallback(async (shopItem: ShopItem) => {
     if (shopItem.price.currency === 'stars') {
       setStarsConfirmItem(shopItem)
       return
     }
-    await executeBuy(shopItem, btnEl)
-  }, [executeBuy])
+    setXgenConfirmItem(shopItem)
+  }, [])
 
   const handleBuyStars = async (packageId: string) => {
     try {
@@ -537,7 +538,7 @@ export function Shop() {
                           item={item}
                           canAfford={canAfford}
                           isBuying={buying === item.id}
-                          onBuy={(e) => handleBuy(item, e.currentTarget as HTMLElement)}
+                          onBuy={() => handleBuy(item)}
                           buyerCommentVisible={buyerCommentItem?.id === item.id}
                         />
                       )
@@ -671,7 +672,7 @@ export function Shop() {
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(e) => handleBuy(item, e.currentTarget as HTMLElement)}
+                      onClick={() => handleBuy(item)}
                       disabled={!canAfford || isBuying}
                       className={`flex-1 py-2 rounded-lg text-[10px] font-display uppercase tracking-wider transition-all ${
                         isBuying
@@ -848,6 +849,24 @@ export function Shop() {
           }
         }}
         onCancel={() => setStarsConfirmItem(null)}
+      />
+
+      <ConfirmDialog
+        open={!!xgenConfirmItem}
+        title={`Приобрести ${xgenConfirmItem?.is_bundle ? (xgenConfirmItem.bundle_name || 'Набор') : (xgenConfirmItem?.name_key || 'Товар')}?`}
+        description={
+          xgenConfirmItem?.is_bundle
+            ? `Стоимость: ${xgenConfirmItem.price.amount} XGen.\nСодержимое: ${(xgenConfirmItem.bundle_items_info || []).map((b) => `${b.name}${b.quantity > 1 ? ` ×${b.quantity}` : ''}`).join(', ') || 'набор предметов'}.`
+            : `${xgenConfirmItem?.name_key || 'Товар'} — ${xgenConfirmItem?.price.amount ?? 0} XGen.\nУ вас на счету: ${user?.xgen_balance ?? 0} XGen`
+        }
+        confirmLabel="Купить"
+        onConfirm={() => {
+          if (xgenConfirmItem) {
+            executeBuy(xgenConfirmItem)
+            setXgenConfirmItem(null)
+          }
+        }}
+        onCancel={() => setXgenConfirmItem(null)}
       />
 
       <BundlePreviewModal
