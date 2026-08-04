@@ -34,7 +34,7 @@ def upgrade() -> None:
             })
         conn.execute(
             sa.text("UPDATE equipment SET artifacts = :artifacts WHERE id = :id"),
-            {"artifacts": sa.types.JSON().bind_processor(sa.dialects.postgresql.JSONB)(updated), "id": equipment_id},
+            {"artifacts": updated, "id": equipment_id},
         )
 
 
@@ -54,5 +54,5 @@ def downgrade() -> None:
             })
         conn.execute(
             sa.text("UPDATE equipment SET artifacts = :artifacts WHERE id = :id"),
-            {"artifacts": sa.types.JSON().bind_processor(sa.dialects.postgresql.JSONB)(updated), "id": equipment_id},
+            {"artifacts": updated, "id": equipment_id},
         )
