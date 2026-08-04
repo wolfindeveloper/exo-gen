@@ -40,9 +40,10 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
 
     async def save(self, inventory: Inventory) -> None:
         try:
-            stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
-            result = await self.session.execute(stmt)
-            existing_items_orm = {item.item_id: item for item in result.scalars().all()}
+            with self.session.no_autoflush:
+                stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
+                result = await self.session.execute(stmt)
+                existing_items_orm = {item.item_id: item for item in result.scalars().all()}
 
             for domain_item in inventory.items:
                 if domain_item.item_id in existing_items_orm:
