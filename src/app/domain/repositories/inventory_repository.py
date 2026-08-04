@@ -19,9 +19,11 @@ class InventoryRepository(ABC):
         pass
 
     @abstractmethod
-    async def add_item_to_player(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
-        """Удобный метод для добавления предмета в инвентарь игрока.
+    async def add_item_quantity(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
+        """Атомарно добавляет количество предмета через UPSERT (ON CONFLICT DO UPDATE).
 
-        Внутри использует паттерн: get_by_player_id() → inventory.add_item() → save()
+        Если запись player_id+item_id уже существует — инкрементирует quantity.
+        Если нет — создаёт новую запись.
+        Без race condition: одна SQL-операция.
         """
         pass

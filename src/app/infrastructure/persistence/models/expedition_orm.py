@@ -10,8 +10,6 @@ if TYPE_CHECKING:
     from app.infrastructure.persistence.models.ship_orm import ShipORM
 
 
-
-
 class ExpeditionORM(Base):
     __tablename__ = "expeditions"
 
@@ -21,5 +19,6 @@ class ExpeditionORM(Base):
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     status: Mapped[str] = mapped_column(String(50), nullable=False)
+    notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     ship: Mapped["ShipORM"] = relationship(back_populates="expeditions")

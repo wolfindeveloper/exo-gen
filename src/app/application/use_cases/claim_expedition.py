@@ -79,9 +79,6 @@ class ClaimExpeditionUseCase:
         player.xp += total_xp
         player.increment_expeditions()
 
-        inventory = await self.inventory_repo.get_by_player_id(player.id, for_update=True)
-        claimed_items_dtos = []
-
         loot_items = loot.get("items", [])
         if loot_items:
             item_ids = [UUID(d["item_id"]) for d in loot_items]
@@ -92,11 +89,12 @@ class ClaimExpeditionUseCase:
             item_type_map = {}
             item_name_map = {}
 
+        claimed_items_dtos = []
         for item_drop in loot_items:
             item_id = UUID(item_drop["item_id"])
             amount = item_drop["amount"]
 
-            inventory.add_item(item_id=item_id, quantity=amount)
+            await self.inventory_repo.add_item_quantity(player.id, item_id, amount)
             if item_type_map.get(item_id) == ItemType.ARTIFACT:
                 player.increment_artifacts_found(amount)
 
@@ -120,7 +118,6 @@ class ClaimExpeditionUseCase:
         uow.track(player, expedition)
         await self.player_repo.save(player)
         await self.expedition_repo.save(expedition)
-        await self.inventory_repo.save(inventory)
         await uow.commit()
         # TODO: Add metrics tracking for expedition claim (Prometheus/StatsD)
 

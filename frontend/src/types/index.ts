@@ -38,6 +38,15 @@ export interface LootEntry {
   item_name?: string | null
 }
 
+export interface ZonePreview {
+  effective_fuel_cost: number
+  effective_duration_seconds: number
+  estimated_damage_percent: number
+  risk_percent: number
+  fuel_ok: boolean
+  artifact_bonuses: Record<string, number>
+}
+
 export interface UserProfile {
   id: string
   telegram_id: number

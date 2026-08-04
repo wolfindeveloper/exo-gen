@@ -43,12 +43,16 @@ class TelegramBotService:
         chat_id: int,
         text: str,
         parse_mode: str = "HTML",
+        reply_markup: dict | None = None,
     ) -> bool:
-        payload = {
+        payload: dict = {
             "chat_id": chat_id,
             "text": text,
             "parse_mode": parse_mode,
         }
+        if reply_markup is not None:
+            import json
+            payload["reply_markup"] = json.dumps(reply_markup)
         result = await self._call_api("sendMessage", payload)
         if result:
             logger.info(f"Message sent to chat_id={chat_id}")

@@ -161,7 +161,7 @@ class UnlockArticleUseCase:
                         for reward_item in chapter.reward_items:
                             item_id = UUID(reward_item["item_id"]) if isinstance(reward_item["item_id"], str) else reward_item["item_id"]
                             quantity = reward_item["quantity"]
-                            inventory.add_item(item_id=item_id, quantity=quantity)
+                            await self.inventory_repo.add_item_quantity(player.id, item_id, quantity)
                             items_earned.append({
                                 "item_id": str(item_id),
                                 "amount": quantity,

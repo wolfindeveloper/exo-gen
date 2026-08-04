@@ -1,10 +1,11 @@
 from uuid import UUID
 
 from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.entities.stars_package import StarsPackage
-from app.domain.entities.transaction import Transaction, TransactionStatus
+from app.domain.entities.transaction import Transaction
 from app.domain.repositories.stars_repository import StarsPackageRepository, TransactionRepository
 from app.infrastructure.persistence.mappers import StarsPackageMapper, TransactionMapper
 from app.infrastructure.persistence.models.stars_package_orm import StarsPackageORM
@@ -86,3 +87,21 @@ class SQLAlchemyTransactionRepository(TransactionRepository):
     async def save(self, transaction: Transaction) -> None:
         orm_obj = TransactionMapper.to_orm(transaction)
         self.session.add(orm_obj)
+
+    async def insert_if_not_exists(self, transaction: Transaction) -> bool:
+        orm_obj = TransactionMapper.to_orm(transaction)
+        stmt = (
+            insert(TransactionORM)
+            .values(
+                id=orm_obj.id,
+                player_id=orm_obj.player_id,
+                telegram_charge_id=orm_obj.telegram_charge_id,
+                stars_amount=orm_obj.stars_amount,
+                xgen_amount=orm_obj.xgen_amount,
+                status=orm_obj.status,
+                created_at=orm_obj.created_at,
+            )
+            .on_conflict_do_nothing(index_elements=["telegram_charge_id"])
+        )
+        result = await self.session.execute(stmt)
+        return result.rowcount > 0  # type: ignore[attr-defined]

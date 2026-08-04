@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from app.domain.entities.stars_package import StarsPackage
-from app.domain.entities.transaction import Transaction, TransactionStatus
+from app.domain.entities.transaction import Transaction
 
 
 class StarsPackageRepository(ABC):
@@ -37,4 +37,12 @@ class TransactionRepository(ABC):
 
     @abstractmethod
     async def save(self, transaction: Transaction) -> None:
+        pass
+
+    @abstractmethod
+    async def insert_if_not_exists(self, transaction: Transaction) -> bool:
+        """Insert transaction with ON CONFLICT DO NOTHING on telegram_charge_id.
+
+        Returns True if inserted, False if conflict (already exists).
+        """
         pass

@@ -1,12 +1,9 @@
 from uuid import uuid4
-from datetime import datetime, timezone
 
 from app.application.dtos.shop_dto import PurchaseItemDTO, PurchaseItemResponseDTO
 from app.domain.entities.player import Player
-from app.domain.entities.item import ItemType
 from app.domain.entities.shop import PurchaseHistory
 from app.domain.uow import UnitOfWork
-from app.domain.value_objects.loot_box import LootBoxType
 from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.item_repository import ItemRepository
@@ -15,7 +12,6 @@ from app.domain.repositories.loot_box_repository import LootBoxRepository
 from app.domain.services.loot_box_service import LootBoxService
 from app.domain.services.clock import SystemClock
 from app.domain.exceptions.shop import ShopItemNotFoundError
-from app.application.use_cases.open_loot_box import OpenLootBoxUseCase
 
 
 class PurchaseShopItemUseCase:
@@ -65,14 +61,16 @@ class PurchaseShopItemUseCase:
 
         # Выдача предметов из покупки
         if shop_item.bundle_items:
-            inventory = await uow.inventory.get_by_player_id(locked_player.id, for_update=True)
             for bundle_item in shop_item.bundle_items:
-                inventory.add_item(bundle_item["item_id"], bundle_item["quantity"])
-            await uow.inventory.save(inventory)
+                await uow.inventory.add_item_quantity(
+                    player_id=locked_player.id,
+                    item_id=bundle_item["item_id"],
+                    quantity=bundle_item["quantity"],
+                )
             item_id = shop_item.id
             quantity = sum(b["quantity"] for b in shop_item.bundle_items)
         else:
-            await uow.inventory.add_item_to_player(
+            await uow.inventory.add_item_quantity(
                 player_id=locked_player.id,
                 item_id=shop_item.item_id,
                 quantity=1,

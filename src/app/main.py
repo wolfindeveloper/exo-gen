@@ -1,6 +1,8 @@
 import logging
 from contextlib import asynccontextmanager
 
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -27,6 +29,7 @@ from app.infrastructure.messaging.event_handlers import setup_event_handlers
 from app.infrastructure.messaging.notification_queue import NotificationQueue
 from app.infrastructure.security.rate_limiter import limiter
 from app.infrastructure.middleware.request_id import RequestIDMiddleware
+from app.infrastructure.middleware.sentry_user import SentryUserMiddleware
 from app.domain.exceptions import DomainError
 from app.domain.exceptions.inventory import NoSuitableConsumableError
 from app.domain.exceptions.player import InsufficientXgenError, InsufficientFragmentsError
@@ -74,6 +77,9 @@ def create_app() -> FastAPI:
 
     # Request ID middleware (first — generates ID for all subsequent middleware)
     app.add_middleware(RequestIDMiddleware)
+
+    # Sentry user context (after auth, before response)
+    app.add_middleware(SentryUserMiddleware)
 
     # CORS
     app.add_middleware(
@@ -215,5 +221,16 @@ def create_app() -> FastAPI:
         )
 
     return app
+
+
+if settings.SENTRY_DSN and settings.ENVIRONMENT == "production":
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        integrations=[FastApiIntegration()],
+        traces_sample_rate=0.1,
+        profiles_sample_rate=0.1,
+        environment=settings.ENVIRONMENT,
+    )
+    logger.info("Sentry initialized for environment: %s", settings.ENVIRONMENT)
 
 app = create_app()

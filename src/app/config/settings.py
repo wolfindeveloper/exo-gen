@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     # App
     APP_NAME: str = "Hitchhiker's Idle Strategy"
     DEBUG: bool = False
+    ENVIRONMENT: str = "development"
+
+    # Sentry
+    SENTRY_DSN: str = ""
 
     # Database - новая опция (читается из DATABASE_URL в Coolify)
     DATABASE_URL: str | None = Field(default=None, alias="DATABASE_URL")

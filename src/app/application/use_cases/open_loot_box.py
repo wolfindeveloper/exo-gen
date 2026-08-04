@@ -45,8 +45,6 @@ class OpenLootBoxUseCase:
         player.add_xgen(loot.xgen)
         player.add_fragments(loot.fragments)
 
-        inventory = await self.inventory_repo.get_by_player_id(player.id)
-
         item_ids = [UUID(d["item_id"]) for d in loot.items]
         items = await self.item_repo.get_by_ids(item_ids)
         item_type_map = {item.id: item.type for item in items}
@@ -57,7 +55,7 @@ class OpenLootBoxUseCase:
         for item_drop in loot.items:
             item_id = UUID(item_drop["item_id"])
             amount = item_drop["amount"]
-            inventory.add_item(item_id=item_id, quantity=amount)
+            await self.inventory_repo.add_item_quantity(player.id, item_id, amount)
             if item_type_map.get(item_id) == ItemType.ARTIFACT:
                 player.increment_artifacts_found(amount)
             items_earned.append({
@@ -68,7 +66,6 @@ class OpenLootBoxUseCase:
             })
 
         uow.track(player)
-        await self.inventory_repo.save(inventory)
 
         return OpenLootBoxResult(
             xgen_earned=loot.xgen,

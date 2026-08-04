@@ -30,6 +30,10 @@ celery_app.conf.beat_schedule = {
         "task": "check_finished_expeditions",
         "schedule": 60.0,
     },
+    "notify-completed-expeditions-every-60s": {
+        "task": "notify_completed_expeditions",
+        "schedule": 60.0,
+    },
     "process-notification-queue-every-30s": {
         "task": "process_notification_queue",
         "schedule": 30.0,

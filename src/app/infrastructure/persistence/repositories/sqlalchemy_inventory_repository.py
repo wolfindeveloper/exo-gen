@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from app.domain.entities.inventory import Inventory
 from app.domain.repositories.inventory_repository import InventoryRepository
@@ -13,7 +14,6 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         self.session = session
 
     async def count_by_item_id(self, item_id: UUID) -> int:
-        from sqlalchemy import func
         stmt = (
             select(func.count())
             .select_from(InventoryItemORM)
@@ -29,14 +29,26 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         result = await self.session.execute(stmt)
         items_orm = result.scalars().all()
         
-        # Если у игрока еще нет предметов, вернется пустой список, 
-        # и InventoryMapper создаст пустой Агрегат.
         return InventoryMapper.to_domain(player_id, items_orm)
 
-    async def add_item_to_player(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
-        inventory = await self.get_by_player_id(player_id, for_update=True)
-        inventory.add_item(item_id, quantity)
-        await self.save(inventory)
+    async def add_item_quantity(self, player_id: UUID, item_id: UUID, quantity: int) -> None:
+        stmt = (
+            insert(InventoryItemORM)
+            .values(
+                id=uuid4(),
+                player_id=player_id,
+                item_id=item_id,
+                quantity=quantity,
+                item_metadata={},
+            )
+            .on_conflict_do_update(
+                index_elements=["player_id", "item_id"],
+                set_=dict(
+                    quantity=InventoryItemORM.quantity + quantity,
+                ),
+            )
+        )
+        await self.session.execute(stmt)
 
     async def save(self, inventory: Inventory) -> None:
         try:

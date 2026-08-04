@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 
-import { calculateZoneStats } from '../lib/expeditionCalc'
+import { apiClient } from '../api/client'
 import { statLabels } from '../lib/stats'
 import { canAccessZone, formatUnlockHint } from '../lib/progression'
 import { useGameStore } from '../store/game'
-import type { Zone } from '../types'
+import type { Zone, ZonePreview } from '../types'
 
 const DROP_TYPE_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
   xgen: { label: 'XGen', emoji: '💎', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
@@ -80,11 +80,23 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
   }, [])
 
   const mainShip = ships[0] ?? null
-  const speedMod = mainShip?.speed ?? 1.0
-  const luck = mainShip?.luck ?? 0
   const artifactsContent = useGameStore((s) => s.artifactsContent)
   const resourcesContent = useGameStore((s) => s.resourcesContent)
   const inventory = useGameStore((s) => s.inventory)
+
+  const [preview, setPreview] = useState<ZonePreview | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+
+  useEffect(() => {
+    if (!mainShip) return
+    setPreviewLoading(true)
+    apiClient.get<ZonePreview>(`/zones/${zone.id}/preview`, {
+      params: { ship_id: mainShip.id },
+    })
+      .then((res) => setPreview(res.data))
+      .catch(() => setPreview(null))
+      .finally(() => setPreviewLoading(false))
+  }, [mainShip?.id, zone.id])
 
   const itemInfoMap = useMemo(() => {
     const map = new Map<string, { name: string; icon: string; rarity: string; type: string; description?: string }>()
@@ -120,36 +132,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
     return map
   }, [artifactsContent, resourcesContent, inventory])
 
-  const totalDefense = useMemo(() => {
-    const baseDefense = mainShip?.defense ?? 0
-    const equippedIds = mainShip?.equipment?.artifacts?.filter(Boolean).map(a => a!.id) ?? []
-    const artifactDefense = artifactsContent
-      .filter(a => equippedIds.includes(a.id))
-      .reduce((sum, a) => sum + (a.stats_modifiers?.defense ?? 0), 0)
-    return baseDefense + artifactDefense
-  }, [mainShip, artifactsContent])
-
-  const artifactBonuses = useMemo(() => {
-    const mods: Record<string, number> = {}
-    if (luck) mods.speed_mod = luck
-    if (totalDefense > 0) mods.damage_reduction = totalDefense
-    return Object.keys(mods).length > 0 ? [mods] : []
-  }, [luck, totalDefense])
-
-  const calcedStats = useMemo(() => {
-    if (!mainShip) return null
-    return calculateZoneStats(
-      zone.optimism_risk,
-      zone.fuel_cost,
-      zone.duration_seconds / 3600,
-      mainShip.optimism,
-      speedMod,
-      mainShip.tea_level,
-      artifactBonuses,
-    )
-  }, [mainShip, speedMod, zone, artifactBonuses])
-
-  const canLaunch = !!mainShip && !!calcedStats?.fuelOk
+  const canLaunch = !!mainShip && !!preview?.fuelOk
 
   return (
     <motion.div
@@ -218,8 +201,8 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
             <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Характеристики</h4>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: '⛽ Топливо', base: zone.fuel_cost, calc: calcedStats?.effectiveFuelCost },
-                { label: '⏱ Время', base: `${Math.round(zone.duration_seconds / 3600)}ч`, calc: calcedStats ? `${calcedStats.durationHours}ч` : null },
+                { label: '⛽ Топливо', base: zone.fuel_cost, calc: preview?.effective_fuel_cost },
+                { label: '⏱ Время', base: `${Math.round(zone.duration_seconds / 3600)}ч`, calc: preview ? `${Math.round(preview.effective_duration_seconds / 3600 * 10) / 10}ч` : null },
                 { label: '⚠ Риск зоны', base: `${Math.round(zone.optimism_risk * 100)}%`, calc: null },
               ].map((item) => (
                 <div key={item.label} className="glass-card p-3 text-center">
@@ -235,13 +218,13 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
             </div>
           </div>
 
-          {calcedStats && (
+          {preview && (
             <div className="space-y-2">
-              {totalDefense > 0 && (
+              {Object.keys(preview.artifact_bonuses).length > 0 && preview.artifact_bonuses.damage_reduction && (
                 <div className="flex justify-between text-xs bg-neon-green/5 border border-neon-green/20 rounded-lg px-3 py-2">
                   <span className="text-neon-green">🛡️ Защита корабля</span>
                   <span className="font-display text-neon-green tabular-nums">
-                    -{Math.round(totalDefense * 100)}% урона
+                    -{Math.round(preview.artifact_bonuses.damage_reduction * 100)}% урона
                   </span>
                 </div>
               )}
@@ -251,23 +234,23 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                   <span className="text-[9px] text-slate-600 ml-1">(от текущей)</span>
                 </span>
                 <span className="font-display text-neon-red tabular-nums">
-                  -{calcedStats.estimatedMaxDamage}%
+                  -{preview.estimated_damage_percent}%
                 </span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-slate-500">⚠ Эффективный риск</span>
                 <span className="font-display text-slate-400 tabular-nums">
-                  {calcedStats.riskPercent}%
+                  {preview.risk_percent}%
                 </span>
               </div>
             </div>
           )}
 
-          {artifactBonuses.length > 0 && (
+          {preview && Object.keys(preview.artifact_bonuses).length > 0 && (
             <div>
               <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Бонусы артефактов</h4>
               <div className="flex flex-wrap gap-1.5">
-                {Object.entries(artifactBonuses[0]).map(([key, val]) => {
+                {Object.entries(preview.artifact_bonuses).map(([key, val]) => {
                   const color =
                     key === 'speed_mod' ? 'text-neon-cyan border-neon-cyan/20 bg-neon-cyan/10'
                     : key === 'damage_reduction' ? 'text-neon-green border-neon-green/20 bg-neon-green/10'
@@ -275,7 +258,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                     : 'text-slate-400 border-white/10 bg-white/5'
                   return (
                     <span key={key} className={`text-[10px] px-2 py-1 rounded-md border ${color}`}>
-                      {statLabels[key] || key} {val > 0 ? '+' : ''}{val}
+                      {statLabels[key] || key} {val > 0 ? '+' : ''}{key === 'damage_reduction' ? `${Math.round(val * 100)}%` : val}
                     </span>
                   )
                 })}
@@ -389,7 +372,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
           {!mainShip && (
             <p className="text-xs text-neon-amber/70 text-center">Нет корабля</p>
           )}
-          {mainShip && calcedStats && !calcedStats.fuelOk && (
+          {mainShip && preview && !preview.fuelOk && (
             <p className="text-xs text-neon-red text-center">Недостаточно ⛽ для запуска</p>
           )}
 
@@ -440,9 +423,9 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                   <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>◌</motion.span>
                   Старт...
                 </span>
-              ) : !calcedStats ? (
+              ) : !preview ? (
                 'Загрузка...'
-              ) : !calcedStats.fuelOk ? (
+              ) : !preview.fuelOk ? (
                 'Недостаточно ⛽'
               ) : (
                 '🚀 Запуск'

@@ -58,10 +58,15 @@ async def stars_webhook(request: Request):
         async with AsyncSessionLocal() as session:
             tx_repo = SQLAlchemyTransactionRepository(session)
 
-            existing = await tx_repo.get_by_telegram_charge_id(telegram_charge_id)
-            if existing and existing.status == TransactionStatus.COMPLETED:
-                logger.info(f"Tx {telegram_charge_id} already processed, skipping")
-                return {"ok": True}
+            tx = Transaction(
+                id=uuid4(),
+                player_id=UUID("00000000-0000-0000-0000-000000000000"),
+                telegram_charge_id=telegram_charge_id,
+                stars_amount=total_amount,
+                xgen_amount=0,
+                status=TransactionStatus.COMPLETED,
+                created_at=datetime.now(timezone.utc),
+            )
 
             try:
                 player_id_str, package_id_str = payload.split(":", 1)
@@ -83,26 +88,17 @@ async def stars_webhook(request: Request):
                 logger.error(f"Package {package_id} not found for payment {telegram_charge_id}")
                 return {"ok": True}
 
-            if existing:
-                existing.status = TransactionStatus.COMPLETED
-                await tx_repo.save(existing)
-            else:
-                tx = Transaction(
-                    id=uuid4(),
-                    player_id=player_id,
-                    telegram_charge_id=telegram_charge_id,
-                    stars_amount=total_amount,
-                    xgen_amount=package.xgen_reward,
-                    status=TransactionStatus.COMPLETED,
-                    created_at=datetime.now(timezone.utc),
-                )
-                await tx_repo.save(tx)
+            tx.player_id = player_id
+            tx.xgen_amount = package.xgen_reward
+
+            inserted = await tx_repo.insert_if_not_exists(tx)
+            if not inserted:
+                logger.info(f"Tx {telegram_charge_id} already processed, skipping")
+                return {"ok": True}
 
             player.add_xgen(package.xgen_reward)
-            await player_repo.save(player)
 
             uow = SQLAlchemyUnitOfWork(session)
-            uow.track(player)
             await uow.commit()
 
             logger.info(

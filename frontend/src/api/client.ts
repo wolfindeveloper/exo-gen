@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as Sentry from '@sentry/react'
 
 import type { Artifact, ClaimAchievementResponse, ClaimResult, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
@@ -20,6 +21,12 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (res) => res,
   (err) => {
+    Sentry.captureException(err, {
+      extra: {
+        url: err.config?.url,
+        status: err.response?.status,
+      },
+    })
     const detail = err.response?.data?.detail || err.message || 'Request failed'
     const error = new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
     ;(error as Error & { status?: number }).status = err.response?.status
