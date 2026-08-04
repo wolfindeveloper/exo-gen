@@ -139,9 +139,13 @@ function ArtifactCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
-          <div className={`shrink-0 w-9 h-9 rounded-lg border flex items-center justify-center ${rarity.color.replace('text', 'border')}/30 bg-black/30`}>
-            <Diamond size={16} className={rarity.color} />
-          </div>
+          {item.icon_path ? (
+            <img src={item.icon_path} alt={item.name_key} className="shrink-0 w-10 h-10 rounded-lg object-cover" />
+          ) : (
+            <div className={`shrink-0 w-10 h-10 rounded-lg border flex items-center justify-center ${rarity.color.replace('text', 'border')}/30 bg-black/30`}>
+              <Diamond size={16} className={rarity.color} />
+            </div>
+          )}
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className={`text-[9px] font-bold ${rarity.color} px-1 py-0.5 rounded border ${rarity.color.replace('text', 'border')}/30 leading-none`}>
@@ -149,11 +153,11 @@ function ArtifactCard({
               </span>
               <span className="text-[9px] text-slate-600 font-mono">{tierNames[item.tier ?? 1]}</span>
               <h3 className="font-display text-xs text-slate-200 uppercase tracking-wider truncate">
-                {item.name_key}
+                {item.name_key || 'Предмет'}
               </h3>
             </div>
-            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-              {item.description_key}
+            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed line-clamp-2">
+              {item.description_key || 'Описание отсутствует'}
             </p>
             {Object.keys(stats).length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1.5">
@@ -527,16 +531,22 @@ export function Shop() {
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <ShoppingBag size={14} className="text-amber-500/70 shrink-0" />
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      {item.icon_path ? (
+                        <img src={item.icon_path} alt={item.name_key} className="shrink-0 w-10 h-10 rounded-lg object-cover" />
+                      ) : (
+                        <div className="shrink-0 w-10 h-10 rounded-lg border border-white/10 bg-black/30 flex items-center justify-center">
+                          <ShoppingBag size={16} className="text-amber-500/70" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
                         <h3 className="font-display text-xs text-slate-200 uppercase tracking-wider truncate">
-                          {item.name_key}
+                          {item.name_key || 'Предмет'}
                         </h3>
+                        <p className="text-[10px] text-slate-500 mt-1 leading-relaxed line-clamp-2">
+                          {item.description_key || 'Описание отсутствует'}
+                        </p>
                       </div>
-                      <p className="text-[10px] text-slate-500 mt-1.5 leading-relaxed">
-                        {item.description_key}
-                      </p>
                     </div>
                     <div className="shrink-0 text-right">
                       <span className={`font-display text-sm tabular-nums ${isPremium ? 'text-amber-400' : 'text-neon-cyan'}`}>

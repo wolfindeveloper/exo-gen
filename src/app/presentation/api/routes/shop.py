@@ -40,8 +40,9 @@ router = APIRouter(prefix="/shop", tags=["Shop"])
 async def get_shop_items(
     request: Request,
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
+    item_repo: ItemRepository = Depends(get_item_repo),
 ):
-    use_case = GetShopItemsUseCase(shop_item_repo=shop_item_repo)
+    use_case = GetShopItemsUseCase(shop_item_repo=shop_item_repo, item_repo=item_repo)
     return await use_case.execute()
 
 

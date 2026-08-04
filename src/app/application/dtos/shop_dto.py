@@ -3,6 +3,17 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict
 
 
+class ShopItemInfoDTO(BaseModel):
+    """Информация о предмете из справочника items"""
+    id: UUID
+    name: str
+    description: str
+    type: str
+    rarity: str
+    effect: dict = {}
+    image_url: str = ""
+
+
 class ShopItemResponseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -13,6 +24,7 @@ class ShopItemResponseDTO(BaseModel):
     stock_limit: int
     is_active: bool
     bundle_items: list[dict] = []
+    item_info: ShopItemInfoDTO | None = None
 
 
 class ShopItemAnalyticsDTO(BaseModel):

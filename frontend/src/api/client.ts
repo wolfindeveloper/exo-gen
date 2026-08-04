@@ -369,15 +369,20 @@ export const api = {
   },
 
   getShopCatalog: async () => {
-    const data = await apiClient.get<{ id: string; item_id: string; price_xgen: number; daily_limit: number; stock_limit: number; is_active: boolean }[]>('/shop/').then((r) => r.data)
+    const data = await apiClient.get<{ id: string; item_id: string | null; price_xgen: number; daily_limit: number; stock_limit: number; is_active: boolean; bundle_items: { item_id: string; quantity: number }[]; item_info: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, number>; image_url: string } | null }[]>('/shop/').then((r) => r.data)
     return data.map((s) => ({
       id: s.id,
       category: 'resources',
-      name_key: '',
-      description_key: '',
+      name_key: s.item_info?.name || '',
+      description_key: s.item_info?.description || '',
       price: { amount: s.price_xgen, currency: 'xgen' as const },
-      rewards: [{ type: 'item', item_config_id: s.item_id }],
-      icon_path: undefined,
+      rewards: s.item_id
+        ? [{ type: 'item', item_config_id: s.item_id }]
+        : (s.bundle_items || []).map((b) => ({ type: 'item', item_config_id: b.item_id, quantity: b.quantity })),
+      icon_path: s.item_info?.image_url || undefined,
+      rarity: s.item_info?.rarity,
+      type: s.item_info?.type,
+      stats_modifiers: s.item_info?.effect || {},
     })) as ShopItem[]
   },
 
