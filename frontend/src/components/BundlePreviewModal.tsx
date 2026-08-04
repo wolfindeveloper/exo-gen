@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { X, Package, Diamond, FlaskConical, Key, Box } from 'lucide-react'
+import { Package, Diamond, FlaskConical, Key, Box } from 'lucide-react'
 import type { BundleItemInfo } from '../types'
 
 const rarityConfig: Record<string, { color: string; text: string; border: string; bg: string }> = {
@@ -64,8 +64,16 @@ export default function BundlePreviewModal({ open, bundleName, bundleDescription
           exit={{ scale: 0.9, y: 20 }}
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         >
-          {/* Header — only bundle name + close */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          {/* Close button — absolute top-right */}
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/40 backdrop-blur flex items-center justify-center text-white/70 hover:text-white transition-colors"
+          >
+            ✕
+          </button>
+
+          {/* Header — bundle name + description */}
+          <div className="px-5 pt-4 pb-4 border-b border-white/10 pr-12">
             <div>
               <p className="font-display text-sm text-amber-400 uppercase tracking-wider">
                 {bundleName}
@@ -76,12 +84,6 @@ export default function BundlePreviewModal({ open, bundleName, bundleDescription
                 </p>
               )}
             </div>
-            <button
-              onClick={onClose}
-              className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-colors shrink-0 ml-3"
-            >
-              <X size={14} />
-            </button>
           </div>
 
           {/* Items count */}

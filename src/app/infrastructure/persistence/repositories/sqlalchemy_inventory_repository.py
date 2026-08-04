@@ -42,11 +42,11 @@ class SQLAlchemyInventoryRepository(InventoryRepository):
         try:
             stmt = select(InventoryItemORM).where(InventoryItemORM.player_id == inventory.player_id)
             result = await self.session.execute(stmt)
-            existing_items_orm = {item.id: item for item in result.scalars().all()}
+            existing_items_orm = {item.item_id: item for item in result.scalars().all()}
 
             for domain_item in inventory.items:
-                if domain_item.id in existing_items_orm:
-                    orm_item = existing_items_orm.pop(domain_item.id)
+                if domain_item.item_id in existing_items_orm:
+                    orm_item = existing_items_orm.pop(domain_item.item_id)
                     orm_item.quantity = domain_item.quantity
                     orm_item.item_metadata = domain_item.metadata
                 else:

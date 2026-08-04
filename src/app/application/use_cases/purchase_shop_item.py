@@ -65,12 +65,10 @@ class PurchaseShopItemUseCase:
 
         # Выдача предметов из покупки
         if shop_item.bundle_items:
+            inventory = await uow.inventory.get_by_player_id(locked_player.id, for_update=True)
             for bundle_item in shop_item.bundle_items:
-                await uow.inventory.add_item_to_player(
-                    player_id=locked_player.id,
-                    item_id=bundle_item["item_id"],
-                    quantity=bundle_item["quantity"],
-                )
+                inventory.add_item(bundle_item["item_id"], bundle_item["quantity"])
+            await uow.inventory.save(inventory)
             item_id = shop_item.id
             quantity = sum(b["quantity"] for b in shop_item.bundle_items)
         else:
