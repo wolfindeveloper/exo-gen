@@ -19,33 +19,32 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # 1. Агрегируем quantities: SUM + MIN(id) для сохранения первичного ключа
+    # 1. Удаляем дубли (оставляем первую запись по id на каждую пару player_id, item_id)
     op.execute("""
-        CREATE TEMP TABLE inventory_aggregated AS
-        SELECT
-            player_id,
-            item_id,
-            SUM(quantity) as total_quantity,
-            MIN(id) as keep_id,
-            MIN(item_metadata) as metadata
-        FROM inventory_items
-        GROUP BY player_id, item_id
+        WITH ranked AS (
+            SELECT id, ROW_NUMBER() OVER (
+                PARTITION BY player_id, item_id ORDER BY id
+            ) as rn
+            FROM inventory_items
+        )
+        DELETE FROM inventory_items WHERE id IN (
+            SELECT id FROM ranked WHERE rn > 1
+        )
     """)
 
-    # 2. Очищаем основную таблицу
-    op.execute("DELETE FROM inventory_items")
-
-    # 3. Вставляем агрегированные данные обратно
+    # 2. Обнов quantities до SUM (на случай если дубли уже были удалены, но quantities не сложены)
     op.execute("""
-        INSERT INTO inventory_items (id, player_id, item_id, quantity, metadata)
-        SELECT keep_id, player_id, item_id, total_quantity, metadata
-        FROM inventory_aggregated
+        UPDATE inventory_items i
+        SET quantity = sub.total_quantity
+        FROM (
+            SELECT player_id, item_id, SUM(quantity) as total_quantity
+            FROM inventory_items
+            GROUP BY player_id, item_id
+        ) sub
+        WHERE i.player_id = sub.player_id AND i.item_id = sub.item_id
     """)
 
-    # 4. Удаляем временную таблицу
-    op.execute("DROP TABLE inventory_aggregated")
-
-    # 5. Добавляем unique constraint
+    # 3. Добавляем unique constraint
     op.create_unique_constraint(
         "uq_inventory_player_item",
         "inventory_items",
