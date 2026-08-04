@@ -54,7 +54,7 @@ from app.application.dtos.admin_dto import (
     UpdateArticleDTO, UpdateSeasonDTO, UpdateLootBoxConfigDTO,
     UpdateShopItemDTO, UpdateStarsPackageDTO, LootBoxConfigResponseDTO,
     PaginationParams, PaginatedResponseDTO, CreateShopItemDTO,
-    CreateLootBoxConfigDTO,
+    CreateLootBoxConfigDTO, CreateStarsPackageDTO,
 )
 from app.application.use_cases.create_zone import CreateZoneUseCase
 from app.application.use_cases.create_season import CreateSeasonUseCase
@@ -63,6 +63,7 @@ from app.application.use_cases.create_article import CreateArticleUseCase
 from app.application.use_cases.create_item import CreateItemUseCase
 from app.application.use_cases.create_loot_box_config import CreateLootBoxConfigUseCase
 from app.application.use_cases.create_shop_item import CreateShopItem
+from app.application.use_cases.create_stars_package import CreateStarsPackageUseCase
 from app.application.use_cases.update_zone import UpdateZoneUseCase
 from app.application.use_cases.update_item import UpdateItemUseCase
 from app.application.use_cases.update_chapter import UpdateChapterUseCase
@@ -183,6 +184,18 @@ async def create_shop_item(
     use_case = CreateShopItem(uow)
     result = await use_case.execute(data)
     return result
+
+
+@router.post("/stars-packages", response_model=StarsPackageResponseDTO, status_code=201)
+async def create_stars_package(
+    dto: CreateStarsPackageDTO,
+    _admin = Depends(verify_admin),
+    package_repo: StarsPackageRepository = Depends(get_stars_package_repo),
+    uow: UnitOfWork = Depends(get_uow),
+):
+    use_case = CreateStarsPackageUseCase(package_repo=package_repo)
+    package = await use_case.execute(dto, uow)
+    return package
 
 
 # ─── READ ──────────────────────────────────────────────────────

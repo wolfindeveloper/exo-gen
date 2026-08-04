@@ -185,6 +185,12 @@ class UpdateShopItemDTO(BaseModel):
         return self
 
 
+class CreateStarsPackageDTO(BaseModel):
+    stars_amount: int = Field(gt=0)
+    xgen_reward: int = Field(gt=0)
+    is_active: bool = True
+
+
 class UpdateStarsPackageDTO(BaseModel):
     stars_amount: int | None = None
     xgen_reward: int | None = None
