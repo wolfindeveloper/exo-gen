@@ -7,6 +7,7 @@ Create Date: 2026-07-31 13:00:00.000000
 """
 
 from typing import Sequence, Union
+import json
 
 from alembic import op
 import sqlalchemy as sa
@@ -34,7 +35,7 @@ def upgrade() -> None:
             })
         conn.execute(
             sa.text("UPDATE equipment SET artifacts = :artifacts WHERE id = :id"),
-            {"artifacts": updated, "id": equipment_id},
+            {"artifacts": json.dumps(updated), "id": equipment_id},
         )
 
 
@@ -54,5 +55,5 @@ def downgrade() -> None:
             })
         conn.execute(
             sa.text("UPDATE equipment SET artifacts = :artifacts WHERE id = :id"),
-            {"artifacts": updated, "id": equipment_id},
+            {"artifacts": json.dumps(updated), "id": equipment_id},
         )
