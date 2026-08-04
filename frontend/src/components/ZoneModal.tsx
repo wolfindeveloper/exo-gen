@@ -85,17 +85,14 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
   const inventory = useGameStore((s) => s.inventory)
 
   const [preview, setPreview] = useState<ZonePreview | null>(null)
-  const [previewLoading, setPreviewLoading] = useState(false)
 
   useEffect(() => {
     if (!mainShip) return
-    setPreviewLoading(true)
     apiClient.get<ZonePreview>(`/zones/${zone.id}/preview`, {
       params: { ship_id: mainShip.id },
     })
       .then((res) => setPreview(res.data))
       .catch(() => setPreview(null))
-      .finally(() => setPreviewLoading(false))
   }, [mainShip?.id, zone.id])
 
   const itemInfoMap = useMemo(() => {
@@ -132,7 +129,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
     return map
   }, [artifactsContent, resourcesContent, inventory])
 
-  const canLaunch = !!mainShip && !!preview?.fuelOk
+  const canLaunch = !!mainShip && !!preview?.fuel_ok
 
   return (
     <motion.div
@@ -372,7 +369,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
           {!mainShip && (
             <p className="text-xs text-neon-amber/70 text-center">Нет корабля</p>
           )}
-          {mainShip && preview && !preview.fuelOk && (
+          {mainShip && preview && !preview.fuel_ok && (
             <p className="text-xs text-neon-red text-center">Недостаточно ⛽ для запуска</p>
           )}
 
@@ -425,7 +422,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                 </span>
               ) : !preview ? (
                 'Загрузка...'
-              ) : !preview.fuelOk ? (
+              ) : !preview.fuel_ok ? (
                 'Недостаточно ⛽'
               ) : (
                 '🚀 Запуск'
