@@ -391,6 +391,16 @@ export const api = {
     } as ShopBuyResponse
   },
 
+  getStarsPackages: async () => {
+    const data = await apiClient.get<{ id: string; stars_amount: number; xgen_reward: number; is_active: boolean }[]>('/shop/stars-packages').then((r) => r.data)
+    return data
+  },
+
+  buyXgenWithStars: async (packageId: string) => {
+    const data = await apiClient.post<{ invoice_url: string; package_id: string }>('/shop/buy-xgen', { package_id: packageId }).then((r) => r.data)
+    return data
+  },
+
   getAchievements: async () => {
     return []
   },

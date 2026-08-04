@@ -44,6 +44,7 @@ const categoryIcons: Record<string, typeof Package> = {
   artifacts: Diamond,
   premium: Star,
   mystery: Gift,
+  stars: Star,
 }
 
 const sellerComments: Record<string, string[]> = {
@@ -62,12 +63,13 @@ const artifactComments: Record<number, string[]> = {
   5: ['«Легендарно. Поздравляю. Вы разорились.»', '«T5. Единственное, что легендарнее этого артефакта — ваша способность тратить звёзды.»'],
 }
 
-const categories = ['resources', 'artifacts', 'premium', 'mystery']
+const categories = ['resources', 'artifacts', 'premium', 'mystery', 'stars']
 const categoryLabels: Record<string, string> = {
   resources: 'Ресурсы',
   artifacts: 'Артефакты',
   premium: 'Премиум',
   mystery: 'Ящики',
+  stars: '⭐ Stars',
 }
 
 function getComment(item: ShopItem): string | null {
@@ -221,6 +223,13 @@ export function Shop() {
   const [coinParticles, setCoinParticles] = useState<CoinParticle[]>([])
   const commentTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [starsConfirmItem, setStarsConfirmItem] = useState<ShopItem | null>(null)
+  const [starsPackages, setStarsPackages] = useState<{ id: string; stars_amount: number; xgen_reward: number; is_active: boolean }[]>([])
+
+  useEffect(() => {
+    api.getStarsPackages()
+      .then(setStarsPackages)
+      .catch(() => console.warn('Failed to load stars packages'))
+  }, [])
 
   useEffect(() => {
     api.getShopCatalog()
@@ -299,6 +308,17 @@ export function Shop() {
     }
     await executeBuy(shopItem, btnEl)
   }, [executeBuy])
+
+  const handleBuyStars = async (packageId: string) => {
+    try {
+      const result = await api.buyXgenWithStars(packageId)
+      if (result.invoice_url) {
+        window.open(result.invoice_url, '_blank')
+      }
+    } catch (e) {
+      setError((e as Error).message)
+    }
+  }
 
   if (loading) {
     return (
@@ -414,6 +434,58 @@ export function Shop() {
               <div className="text-center py-8">
                 <Diamond size={24} className="text-slate-700 mx-auto mb-2" />
                 <p className="text-[11px] text-slate-600">Артефакты закончились</p>
+              </div>
+            )
+          ) : activeCategory === 'stars' ? (
+            starsPackages.length > 0 ? (
+              <div className="space-y-3">
+                <div className="text-center py-3">
+                  <p className="text-[10px] text-amber-400/70 italic">
+                    «Звёзды — это не просто валюта. Это способ сказать вселенной: "Я серьёзен".»
+                  </p>
+                </div>
+                {starsPackages.map((pkg) => (
+                  <motion.div
+                    key={pkg.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+                    className="rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-yellow-500/5 p-4 space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
+                          <Star size={24} className="text-amber-400" />
+                        </div>
+                        <div>
+                          <h3 className="font-display text-sm text-amber-300 uppercase tracking-wider">
+                            {pkg.xgen_reward.toLocaleString()} XGen
+                          </h3>
+                          <p className="text-[10px] text-slate-500 mt-0.5">
+                            Мгновенное начисление
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-display text-lg text-amber-400 tabular-nums">
+                          {pkg.stars_amount}
+                        </span>
+                        <span className="text-sm text-amber-400 ml-1">⭐</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleBuyStars(pkg.id)}
+                      className="w-full py-2.5 rounded-lg bg-gradient-to-r from-amber-500/30 to-yellow-500/30 text-amber-300 border border-amber-500/30 text-[11px] font-display uppercase tracking-wider hover:from-amber-500/40 hover:to-yellow-500/40 active:scale-[0.97] transition-all"
+                    >
+                      Купить за Stars
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Star size={24} className="text-slate-700 mx-auto mb-2" />
+                <p className="text-[11px] text-slate-600">Stars пакеты временно недоступны</p>
               </div>
             )
           ) : (
