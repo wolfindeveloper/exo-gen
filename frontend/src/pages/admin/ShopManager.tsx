@@ -565,7 +565,7 @@ export function ShopManager() {
                     <h4 className="text-sm font-medium text-blue-400">{'\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u043d\u0430\u0431\u043e\u0440\u0435'}</h4>
                     
                     <div>
-                      <label className="block text-sm text-gray-400 mb-1">{'\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u0431\u043e\u0440\u0430 *} </label>
+                      <label className="block text-sm text-gray-400 mb-1">{'\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u0431\u043e\u0440\u0430 *'}</label>
                       <input
                         type="text"
                         value={form.bundle_name}
