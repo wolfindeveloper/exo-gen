@@ -438,44 +438,9 @@ function ItemDetailSheet({
   info: ItemInfo
   onClose: () => void
 }) {
-  const ships = useGameStore((s) => s.ships)
-  const refuelShip = useGameStore((s) => s.refuelShip)
-  const repairShip = useGameStore((s) => s.repairShip)
-  const loadInventory = useGameStore((s) => s.loadInventory)
-  const loadShips = useGameStore((s) => s.loadShips)
   const meta = item.item.effect || {}
   const rc = rarityConfig[info.rarity] || rarityConfig.common
   const hasIcon = info.icon_path
-
-  const isFuelItem = isFuel(item.item)
-  const isRepairKitItem = isRepairKit(item.item)
-  const isUsableType = isFuelItem || isRepairKitItem
-
-  const matchingShips = useMemo(() => {
-    if (!isUsableType) return []
-    return ships.filter((s) => {
-      if (isFuelItem && s.tea_level >= 100) return false
-      if (isRepairKitItem && s.optimism >= 100) return false
-      return true
-    })
-  }, [ships, isUsableType, isFuelItem, isRepairKitItem])
-
-  const handleUse = useCallback(async () => {
-    if (!matchingShips.length) return
-    hapticImpact('medium')
-
-    const ship = matchingShips[0]
-    try {
-      if (isFuelItem) {
-        await refuelShip(ship.id, item.item.id)
-      } else if (isRepairKitItem) {
-        await repairShip(ship.id, item.item.id)
-      }
-      await Promise.all([loadInventory(), loadShips()])
-    } catch {
-      // error handled by store
-    }
-  }, [matchingShips, isFuelItem, isRepairKitItem, refuelShip, repairShip, item.item.id, loadInventory, loadShips])
 
   let icon: React.ReactNode
   if (hasIcon) {
@@ -595,36 +560,8 @@ function ItemDetailSheet({
             </div>
           )}
 
-          {isUsableType && (
-            <div>
-              <h4 className="text-[10px] font-display uppercase tracking-wider text-slate-500 mb-2">Использование</h4>
-              {matchingShips.length > 0 ? (
-                <div className="space-y-2">
-                  {matchingShips.slice(0, 3).map((ship) => {
-                    const need = isFuelItem
-                      ? `⛽ ${ship.tea_level}/100`
-                      : `🛡️ ${ship.optimism}%`
-                    return (
-                      <div key={ship.id} className="glass-card p-3 flex items-center justify-between border border-neon-green/10">
-                        <div>
-                          <p className="text-xs text-slate-300 font-medium">{ship.name || ship.id}</p>
-                          <p className="text-[10px] text-slate-500">{need}</p>
-                        </div>
-                        <button
-                          onClick={handleUse}
-                          className="text-[10px] px-3 py-1.5 rounded-lg bg-neon-green/15 text-neon-green border border-neon-green/20 hover:bg-neon-green/25 transition"
-                        >
-                          {isFuelItem ? '⛽ Заправить' : '🔧 Починить'}
-                        </button>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <p className="text-xs text-slate-600">Нет подходящих кораблей на базе</p>
-              )}
-            </div>
-          )}
+
+
         </div>
       </motion.div>
     </motion.div>
