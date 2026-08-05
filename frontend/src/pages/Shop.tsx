@@ -307,7 +307,7 @@ export function Shop() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState('resources')
   const [buyerCommentItem, setBuyerCommentItem] = useState<ShopItem | null>(null)
-  const [lastBuyResult, setLastBuyResult] = useState<ShopBuyResponse | null>(null)
+  const [lastBuyResult, setLastBuyResult] = useState<{ shopItem: ShopItem; response: ShopBuyResponse } | null>(null)
   const [coinParticles, setCoinParticles] = useState<CoinParticle[]>([])
   const commentTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [starsConfirmItem, setStarsConfirmItem] = useState<ShopItem | null>(null)
@@ -380,7 +380,7 @@ export function Shop() {
       setSuccessMsg(shopItem.name_key)
       setBuyerCommentItem(shopItem)
       if (result.granted.length > 0) {
-        setLastBuyResult(result)
+        setLastBuyResult({ shopItem, response: result })
       }
       await Promise.all([loadProfile(), loadInventory()])
     } catch (e) {
@@ -757,12 +757,20 @@ export function Shop() {
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
-                  className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border border-amber-500/30 flex items-center justify-center mx-auto mb-3"
+                  className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border border-amber-500/30 flex items-center justify-center mx-auto mb-3 overflow-hidden"
                 >
-                  <Gift size={24} className="text-amber-400" />
+                  {lastBuyResult.shopItem.bundle_image_url ? (
+                    <img src={lastBuyResult.shopItem.bundle_image_url} alt="" className="w-full h-full object-cover" />
+                  ) : lastBuyResult.shopItem.icon_path ? (
+                    <img src={lastBuyResult.shopItem.icon_path} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <Gift size={24} className="text-amber-400" />
+                  )}
                 </motion.div>
                 <h2 className="font-display text-sm text-amber-400 uppercase tracking-[0.15em]">
-                  Таинственный ящик
+                  {lastBuyResult.shopItem.is_bundle
+                    ? (lastBuyResult.shopItem.bundle_name || 'Набор')
+                    : (lastBuyResult.shopItem.name_key || 'Покупка')}
                 </h2>
                 <p className="text-[10px] text-slate-500 mt-1">
                   «Вселенная щедра сегодня. Или просто издевается.»
@@ -770,41 +778,55 @@ export function Shop() {
               </div>
 
               <div className="px-5 py-4 space-y-2">
-                {lastBuyResult.granted.map((g, i) => (
-                  <motion.div
-                    key={`${g.item_config_id}-${i}`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + i * 0.08 }}
-                    className="flex items-center gap-3 bg-white/5 rounded-xl px-3.5 py-3 border border-white/5"
-                  >
-                    <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
-                      g.type === 'artifact'
-                        ? 'bg-purple-500/15 border border-purple-500/25'
-                        : 'bg-neon-cyan/10 border border-neon-cyan/20'
-                    }`}>
-                      {g.type === 'artifact' ? (
-                        <Diamond size={14} className="text-purple-400" />
-                      ) : (
-                        <Package size={14} className="text-neon-cyan" />
+                {lastBuyResult.response.granted.map((g, i) => {
+                  const itemInfo = lastBuyResult.shopItem.bundle_items_info?.find(
+                    (b) => b.item_id === g.item_config_id
+                  )
+                  const displayName = itemInfo?.name || g.name_key || 'Неизвестный предмет'
+                  const displayQty = g.quantity || itemInfo?.quantity || 1
+                  const displayImage = itemInfo?.image_url
+                  const displayType = itemInfo?.type || g.type
+                  const displayRarity = itemInfo?.rarity
+
+                  return (
+                    <motion.div
+                      key={`${g.item_config_id}-${i}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + i * 0.08 }}
+                      className="flex items-center gap-3 bg-white/5 rounded-xl px-3.5 py-3 border border-white/5"
+                    >
+                      <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden ${
+                        displayType === 'artifact'
+                          ? 'bg-purple-500/15 border border-purple-500/25'
+                          : 'bg-neon-cyan/10 border border-neon-cyan/20'
+                      }`}>
+                        {displayImage ? (
+                          <img src={displayImage} alt={displayName} className="w-full h-full object-cover" />
+                        ) : displayType === 'artifact' ? (
+                          <Diamond size={14} className="text-purple-400" />
+                        ) : (
+                          <Package size={14} className="text-neon-cyan" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-slate-200 truncate">
+                          {displayName}
+                        </p>
+                        <p className="text-[9px] text-slate-500 mt-0.5">
+                          {displayType === 'artifact' ? 'Артефакт' : 'Ресурс'}
+                          {displayRarity ? ` · ${displayRarity}` : ''}
+                          {g.tier ? ` · T${g.tier}` : ''}
+                        </p>
+                      </div>
+                      {displayQty > 1 && (
+                        <span className="shrink-0 text-xs text-slate-400 font-mono">
+                          ×{displayQty}
+                        </span>
                       )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-slate-200 truncate">
-                        {g.name_key || g.item_config_id}
-                      </p>
-                      <p className="text-[9px] text-slate-500 mt-0.5">
-                        {g.type === 'artifact' ? 'Артефакт' : 'Ресурс'}
-                        {g.tier ? ` · T${g.tier}` : ''}
-                      </p>
-                    </div>
-                    {g.quantity && g.quantity > 1 && (
-                      <span className="shrink-0 text-xs text-slate-400 font-mono">
-                        ×{g.quantity}
-                      </span>
-                    )}
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  )
+                })}
               </div>
 
               <div className="px-5 pb-6 pt-2">
@@ -853,11 +875,37 @@ export function Shop() {
 
       <ConfirmDialog
         open={!!xgenConfirmItem}
-        title={`Приобрести ${xgenConfirmItem?.is_bundle ? (xgenConfirmItem.bundle_name || 'Набор') : (xgenConfirmItem?.name_key || 'Товар')}?`}
+        title={xgenConfirmItem?.is_bundle ? `Купить «${xgenConfirmItem.bundle_name || 'Набор'}»?` : `Купить «${xgenConfirmItem?.name_key || 'Товар'}»?`}
         description={
-          xgenConfirmItem?.is_bundle
-            ? `Стоимость: ${xgenConfirmItem.price.amount} XGen.\nСодержимое: ${(xgenConfirmItem.bundle_items_info || []).map((b) => `${b.name}${b.quantity > 1 ? ` ×${b.quantity}` : ''}`).join(', ') || 'набор предметов'}.`
-            : `${xgenConfirmItem?.name_key || 'Товар'} — ${xgenConfirmItem?.price.amount ?? 0} XGen.\nУ вас на счету: ${user?.xgen_balance ?? 0} XGen`
+          xgenConfirmItem?.is_bundle ? (
+            <div className="space-y-2.5">
+              {xgenConfirmItem.bundle_description && (
+                <p className="text-slate-500 text-[10px] italic">{xgenConfirmItem.bundle_description}</p>
+              )}
+              <div className="space-y-1.5 max-h-[240px] overflow-y-auto">
+                {(xgenConfirmItem.bundle_items_info || []).map((b) => (
+                  <div key={b.item_id} className="flex items-center gap-2 bg-white/5 rounded-lg px-2.5 py-2">
+                    <div className="shrink-0 w-6 h-6 rounded-md overflow-hidden bg-black/30 flex items-center justify-center">
+                      {b.image_url ? (
+                        <img src={b.image_url} alt={b.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <Package size={12} className="text-slate-500" />
+                      )}
+                    </div>
+                    <span className="flex-1 text-[11px] text-slate-300 truncate">{b.name}</span>
+                    {b.quantity > 1 && (
+                      <span className="shrink-0 text-[10px] text-amber-400 font-mono">×{b.quantity}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-slate-300 text-[11px] pt-1">
+                Стоимость: <span className="text-neon-cyan font-mono">{xgenConfirmItem.price.amount} XGen</span>
+              </p>
+            </div>
+          ) : (
+            `${xgenConfirmItem?.name_key || 'Товар'} — ${xgenConfirmItem?.price.amount ?? 0} XGen.\nУ вас на счету: ${user?.xgen_balance ?? 0} XGen`
+          )
         }
         confirmLabel="Купить"
         onConfirm={() => {

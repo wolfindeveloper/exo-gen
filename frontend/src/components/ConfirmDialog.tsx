@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { hapticImpact } from '../lib/telegram'
 
 interface ConfirmDialogProps {
   open: boolean
   title: string
-  description: string
+  description: ReactNode
   confirmLabel: string
   cancelLabel?: string
   destructive?: boolean
@@ -39,7 +39,7 @@ export function ConfirmDialog({
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onCancel} />
           <motion.div
-            className="relative w-full max-w-sm glass-card p-5 shadow-2xl border border-white/10"
+            className="relative w-full max-w-sm glass-card p-5 shadow-2xl border border-white/10 max-h-[80vh] overflow-y-auto"
             initial={{ scale: 0.9, opacity: 0, y: 12 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 8 }}
@@ -49,9 +49,9 @@ export function ConfirmDialog({
             <h3 className="text-sm font-display uppercase tracking-wider text-slate-200 mb-2">
               {title}
             </h3>
-            <p className="text-[11px] text-slate-400 leading-relaxed mb-5">
+            <div className="text-[11px] text-slate-400 leading-relaxed mb-5">
               {description}
-            </p>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={() => {
