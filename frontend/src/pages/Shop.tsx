@@ -778,55 +778,90 @@ export function Shop() {
               </div>
 
               <div className="px-5 py-4 space-y-2">
-                {lastBuyResult.response.granted.map((g, i) => {
-                  const itemInfo = lastBuyResult.shopItem.bundle_items_info?.find(
-                    (b) => b.item_id === g.item_config_id
-                  )
-                  const displayName = itemInfo?.name || g.name_key || 'Неизвестный предмет'
-                  const displayQty = g.quantity || itemInfo?.quantity || 1
-                  const displayImage = itemInfo?.image_url
-                  const displayType = itemInfo?.type || g.type
-                  const displayRarity = itemInfo?.rarity
-
-                  return (
+                {lastBuyResult.shopItem.is_bundle
+                  ? (lastBuyResult.shopItem.bundle_items_info || []).map((b, i) => (
                     <motion.div
-                      key={`${g.item_config_id}-${i}`}
+                      key={b.item_id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + i * 0.08 }}
                       className="flex items-center gap-3 bg-white/5 rounded-xl px-3.5 py-3 border border-white/5"
                     >
                       <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden ${
-                        displayType === 'artifact'
+                        b.type === 'artifact'
                           ? 'bg-purple-500/15 border border-purple-500/25'
                           : 'bg-neon-cyan/10 border border-neon-cyan/20'
                       }`}>
-                        {displayImage ? (
-                          <img src={displayImage} alt={displayName} className="w-full h-full object-cover" />
-                        ) : displayType === 'artifact' ? (
+                        {b.image_url ? (
+                          <img src={b.image_url} alt={b.name} className="w-full h-full object-cover" />
+                        ) : b.type === 'artifact' ? (
                           <Diamond size={14} className="text-purple-400" />
                         ) : (
                           <Package size={14} className="text-neon-cyan" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-slate-200 truncate">
-                          {displayName}
-                        </p>
+                        <p className="text-xs text-slate-200 truncate">{b.name}</p>
                         <p className="text-[9px] text-slate-500 mt-0.5">
-                          {displayType === 'artifact' ? 'Артефакт' : 'Ресурс'}
-                          {displayRarity ? ` · ${displayRarity}` : ''}
-                          {g.tier ? ` · T${g.tier}` : ''}
+                          {b.type === 'artifact' ? 'Артефакт' : 'Ресурс'}
+                          {b.rarity ? ` · ${b.rarity}` : ''}
                         </p>
                       </div>
-                      {displayQty > 1 && (
-                        <span className="shrink-0 text-xs text-slate-400 font-mono">
-                          ×{displayQty}
-                        </span>
+                      {b.quantity > 1 && (
+                        <span className="shrink-0 text-xs text-slate-400 font-mono">×{b.quantity}</span>
                       )}
                     </motion.div>
-                  )
-                })}
+                  ))
+                  : lastBuyResult.response.granted.map((g, i) => {
+                    const itemInfo = lastBuyResult.shopItem.bundle_items_info?.find(
+                      (b) => b.item_id === g.item_config_id
+                    )
+                    const displayName = itemInfo?.name || g.name_key || 'Неизвестный предмет'
+                    const displayQty = g.quantity || itemInfo?.quantity || 1
+                    const displayImage = itemInfo?.image_url
+                    const displayType = itemInfo?.type || g.type
+                    const displayRarity = itemInfo?.rarity
+
+                    return (
+                      <motion.div
+                        key={`${g.item_config_id}-${i}`}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 + i * 0.08 }}
+                        className="flex items-center gap-3 bg-white/5 rounded-xl px-3.5 py-3 border border-white/5"
+                      >
+                        <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden ${
+                          displayType === 'artifact'
+                            ? 'bg-purple-500/15 border border-purple-500/25'
+                            : 'bg-neon-cyan/10 border border-neon-cyan/20'
+                        }`}>
+                          {displayImage ? (
+                            <img src={displayImage} alt={displayName} className="w-full h-full object-cover" />
+                          ) : displayType === 'artifact' ? (
+                            <Diamond size={14} className="text-purple-400" />
+                          ) : (
+                            <Package size={14} className="text-neon-cyan" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-slate-200 truncate">
+                            {displayName}
+                          </p>
+                          <p className="text-[9px] text-slate-500 mt-0.5">
+                            {displayType === 'artifact' ? 'Артефакт' : 'Ресурс'}
+                            {displayRarity ? ` · ${displayRarity}` : ''}
+                            {g.tier ? ` · T${g.tier}` : ''}
+                          </p>
+                        </div>
+                        {displayQty > 1 && (
+                          <span className="shrink-0 text-xs text-slate-400 font-mono">
+                            ×{displayQty}
+                          </span>
+                        )}
+                      </motion.div>
+                    )
+                  })
+                }
               </div>
 
               <div className="px-5 pb-6 pt-2">
