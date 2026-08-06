@@ -107,7 +107,11 @@ export function RewardSheet() {
                       className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="text-lg">📦</span>
+                        {item.image_url ? (
+                          <img src={item.image_url} alt="" className="w-6 h-6 object-contain rounded" />
+                        ) : (
+                          <span className="text-lg">📦</span>
+                        )}
                         <span className="text-sm text-slate-200">{lootLabel(item)}</span>
                       </div>
                       <span className="font-display text-neon-cyan text-xs">x{item.quantity}</span>

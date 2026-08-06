@@ -52,12 +52,9 @@ def create_expedition_completed_handler(
 ):
     async def handler(event: ExpeditionCompletedEvent) -> None:
         text = (
-            f"🚀 <b>Экспедиция завершена!</b>\n\n"
-            f"Твой корабль вернулся из зоны.\n"
-            f"💰 XGen: +{event.xgen_earned}\n"
-            f"🧩 Фрагменты: +{event.fragments_earned}\n"
-            f"📦 Предметов: {len(event.items_earned)}\n\n"
-            f"Зайди в игру, чтобы забрать лут!"
+            "🚀 <b>Экспедиция завершена!</b>\n\n"
+            "Твой корабль вернулся из зоны.\n"
+            "Зайди в игру, чтобы забрать награду!"
         )
         sent = await _send_with_retry(bot_service, event.telegram_id, text)
         if not sent and notification_queue:

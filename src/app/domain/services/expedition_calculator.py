@@ -61,7 +61,7 @@ class ExpeditionCalculatorService:
 
         optimism_value = ship.optimism.value
         if optimism_value > 0:
-            estimated_damage = round((effective_risk / (optimism_value / 100.0)) * 100.0 * 10.0) / 10.0
+            estimated_damage = round(effective_risk * optimism_value * 10.0) / 10.0
         else:
             estimated_damage = 0.0
 

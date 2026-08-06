@@ -8,6 +8,7 @@ class ClaimedItemDTO(BaseModel):
     item_id: UUID
     amount: int
     name: str | None = None
+    image_url: str | None = None
 
 class ClaimExpeditionResponseDTO(BaseModel):
     xgen_earned: int

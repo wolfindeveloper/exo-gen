@@ -25,7 +25,8 @@ class Optimism:
             raise ValueError("Optimism must be between 0 and 100")
 
     def apply_damage(self, risk: float, defense: float) -> "Optimism":
-        damage = max(0.0, risk - defense)
+        effective_risk = max(0.0, risk - defense)
+        damage = self.value * effective_risk
         new_value = max(0.0, self.value - damage)
         return Optimism(new_value)
 

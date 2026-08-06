@@ -92,11 +92,13 @@ class ClaimExpeditionUseCase:
             valid_item_ids = {item.id for item in items}  # только не-удалённые
             item_type_map = {item.id: item.type for item in items}
             item_name_map = {item.id: item.name for item in items}
+            item_image_map = {item.id: item.image_url for item in items}
             # Фильтруем loot_items — убираем удалённые предметы
             loot_items = [d for d in loot_items if UUID(d["item_id"]) in valid_item_ids]
         else:
             item_type_map = {}
             item_name_map = {}
+            item_image_map = {}
 
         claimed_items_dtos = []
         for item_drop in loot_items:
@@ -111,10 +113,12 @@ class ClaimExpeditionUseCase:
                 item_id=item_id,
                 amount=amount,
                 name=item_name_map.get(item_id),
+                image_url=item_image_map.get(item_id),
             ))
 
         total_defense = effective_stats.get("defense", ship.defense)
-        damage = max(0.0, zone.optimism_risk - total_defense)
+        effective_risk = max(0.0, zone.optimism_risk - total_defense)
+        damage = round(ship.optimism.value * effective_risk, 1)
         ship.apply_expedition_wear_and_tear(zone.optimism_risk)
 
         expedition.complete(

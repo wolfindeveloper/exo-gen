@@ -113,12 +113,14 @@ export interface ClaimedItem {
   item_id: string
   amount: number
   name?: string | null
+  image_url?: string | null
 }
 
 export interface LootItem {
   item_config_id: string
   quantity: number
   name?: string | null
+  image_url?: string | null
 }
 
 export interface LootResult {

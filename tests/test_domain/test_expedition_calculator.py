@@ -77,13 +77,13 @@ class TestExpeditionCalculatorBaseline:
         assert result.risk_percent == 0
         assert result.estimated_damage_percent == 0
 
-    def test_low_optimism_takes_more_damage(self):
+    def test_damage_scales_with_current_optimism(self):
         zone = _make_zone(fuel_cost=10, optimism_risk=0.1, duration_seconds=14400)
         ship = _make_ship(tea_level=100, optimism=50, speed=1.0)
 
         result = ExpeditionCalculatorService.compute_preview(zone, ship)
 
-        assert result.estimated_damage_percent == 20
+        assert result.estimated_damage_percent == 5
 
     def test_speed_reduces_duration(self):
         zone = _make_zone(fuel_cost=10, optimism_risk=0.1, duration_seconds=14400)

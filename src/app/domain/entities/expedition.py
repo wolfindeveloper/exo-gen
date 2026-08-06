@@ -26,12 +26,13 @@ class Expedition(AggregateRoot):
         self.status = ExpeditionStatus.FINISHED if auto_finished else ExpeditionStatus.COMPLETED
         if auto_finished:
             items_earned = []
-        self.register_event(ExpeditionCompletedEvent(
-            occurred_at=datetime.now(timezone.utc),
-            expedition_id=self.id,
-            player_id=player_id,
-            telegram_id=telegram_id,
-            xgen_earned=xgen_earned,
-            fragments_earned=fragments_earned,
-            items_earned=items_earned
-        ))
+        if auto_finished:
+            self.register_event(ExpeditionCompletedEvent(
+                occurred_at=datetime.now(timezone.utc),
+                expedition_id=self.id,
+                player_id=player_id,
+                telegram_id=telegram_id,
+                xgen_earned=xgen_earned,
+                fragments_earned=fragments_earned,
+                items_earned=items_earned
+            ))

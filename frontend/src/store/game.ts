@@ -236,6 +236,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         item_config_id: i.item_id,
         quantity: i.amount,
         name: i.name,
+        image_url: i.image_url,
       }))
       set({
         activeExpeditions: get().activeExpeditions.filter((e) => e.id !== expeditionId),
