@@ -266,7 +266,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                     : 'text-slate-400 border-white/10 bg-white/5'
                   return (
                     <span key={key} className={`text-[10px] px-2 py-1 rounded-md border ${color}`}>
-                      {statLabels[key] || key} {val > 0 ? '+' : ''}{key === 'damage_reduction' ? `${Math.round(val * 100)}%` : val}
+                      {statLabels[key] || key} {val > 0 ? '+' : ''}{Math.round(val * 100)}%
                     </span>
                   )
                 })}
