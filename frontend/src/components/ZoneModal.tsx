@@ -258,6 +258,11 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                     key === 'speed_mod' ? 'text-neon-cyan border-neon-cyan/20 bg-neon-cyan/10'
                     : key === 'damage_reduction' ? 'text-neon-green border-neon-green/20 bg-neon-green/10'
                     : key === 'fuel_efficiency' ? 'text-neon-amber border-neon-amber/20 bg-neon-amber/10'
+                    : key === 'luck' ? 'text-neon-purple border-neon-purple/20 bg-neon-purple/10'
+                    : key === 'xp' ? 'text-amber-400 border-amber-400/20 bg-amber-400/10'
+                    : key === 'fragment' ? 'text-purple-400 border-purple-400/20 bg-purple-400/10'
+                    : key === 'capacity' ? 'text-orange-400 border-orange-400/20 bg-orange-400/10'
+                    : key === 'repair_bonus' ? 'text-green-400 border-green-400/20 bg-green-400/10'
                     : 'text-slate-400 border-white/10 bg-white/5'
                   return (
                     <span key={key} className={`text-[10px] px-2 py-1 rounded-md border ${color}`}>

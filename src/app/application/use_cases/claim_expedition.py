@@ -68,13 +68,20 @@ class ClaimExpeditionUseCase:
         if not zone:
             raise ZoneNotFoundError(f"Zone {expedition.zone_id} not found")
 
-        loot = generate_loot(zone.loot_table)
+        effective_stats = ship.get_effective_stats()
+
+        luck_bonus = effective_stats.get("luck", 0.0)
+        loot = generate_loot(zone.loot_table, luck_bonus=luck_bonus)
 
         player.add_xgen(loot["xgen"])
-        player.add_fragments(loot["fragments"])
+        fragment_bonus = effective_stats.get("fragment", 0.0)
+        effective_fragments = int(loot["fragments"] * (1.0 + fragment_bonus))
+        player.add_fragments(effective_fragments)
 
-        # XP за экспедицию: единая формула из доменного сервиса
-        total_xp = LevelProgressionService.calculate_expedition_xp(zone.duration_seconds, zone.optimism_risk)
+        # XP за экспедицию: единая формула из доменного сервиса + бонус артефактов
+        base_xp = LevelProgressionService.calculate_expedition_xp(zone.duration_seconds, zone.optimism_risk)
+        xp_bonus = effective_stats.get("xp", 0.0)
+        total_xp = int(base_xp * (1.0 + xp_bonus))
         player.xp += total_xp
         player.increment_expeditions()
 
@@ -106,14 +113,15 @@ class ClaimExpeditionUseCase:
                 name=item_name_map.get(item_id),
             ))
 
-        damage = max(0.0, zone.optimism_risk - ship.defense)
+        total_defense = effective_stats.get("defense", ship.defense)
+        damage = max(0.0, zone.optimism_risk - total_defense)
         ship.apply_expedition_wear_and_tear(zone.optimism_risk)
 
         expedition.complete(
             player_id=player.id,
             telegram_id=player.telegram_id,
             xgen_earned=loot["xgen"],
-            fragments_earned=loot["fragments"],
+            fragments_earned=effective_fragments,
             items_earned=loot.get("items", []),
         )
 
@@ -125,7 +133,7 @@ class ClaimExpeditionUseCase:
 
         return ClaimExpeditionResponseDTO(
             xgen_earned=loot["xgen"],
-            fragments_earned=loot["fragments"],
+            fragments_earned=effective_fragments,
             xp_earned=total_xp,
             items_earned=claimed_items_dtos,
             optimism_lost=damage,

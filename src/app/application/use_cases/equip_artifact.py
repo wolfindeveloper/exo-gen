@@ -11,6 +11,11 @@ from app.application.dtos.equipment_dto import EquipArtifactDTO, EquipArtifactRe
 
 
 class EquipArtifactUseCase:
+    STAT_KEY_MAPPING = {
+        "fuel": "fuel_efficiency",
+        "repair": "repair_bonus",
+    }
+
     def __init__(
         self,
         item_repo: ItemRepository,
@@ -65,6 +70,7 @@ class EquipArtifactUseCase:
         for key, value in effect.items():
             if key.startswith("bonus_") and isinstance(value, (int, float)):
                 stat_key = key.replace("bonus_", "")
+                stat_key = self.STAT_KEY_MAPPING.get(stat_key, stat_key)
                 bonuses[stat_key] = float(value)
         return bonuses
 

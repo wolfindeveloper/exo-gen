@@ -59,7 +59,9 @@ class Ship:
 
         self.tea_level = self.tea_level.consume(effective_fuel_cost)
         now = clock.now()
-        ends_at = now + timedelta(seconds=zone.duration_seconds)
+        speed_mod = effective_stats.get("speed", self.speed)
+        effective_duration_seconds = int(zone.duration_seconds / max(speed_mod, 0.1))
+        ends_at = now + timedelta(seconds=effective_duration_seconds)
 
         return Expedition(
             id=uuid.uuid4(),
@@ -79,5 +81,8 @@ class Ship:
         self.tea_level = self.tea_level.restore(amount, effective_stats.get("capacity", 100.0))
 
     def restore_optimism(self, amount: float) -> None:
-        self.optimism = self.optimism.restore(amount)
+        effective_stats = self.get_effective_stats()
+        repair_bonus = effective_stats.get("repair_bonus", 0.0)
+        effective_amount = amount * (1.0 + repair_bonus)
+        self.optimism = self.optimism.restore(effective_amount)
         

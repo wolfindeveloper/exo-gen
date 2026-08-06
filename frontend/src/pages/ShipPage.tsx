@@ -577,7 +577,9 @@ export default function ShipPage() {
                     </p>
                     <div className="flex flex-wrap justify-center gap-1">
                       {Object.entries(totalBonuses).map(([key, value]) => {
-                        const icon = key.includes('speed') ? '⚡'
+                        const icon = key.includes('fuel_efficiency') ? '⛽'
+                          : key.includes('repair_bonus') ? '🔧'
+                          : key.includes('speed') ? '⚡'
                           : key.includes('defense') ? '🛡️'
                           : key.includes('fuel') ? '⛽'
                           : key.includes('luck') ? '🍀'

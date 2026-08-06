@@ -49,13 +49,12 @@ class ExpeditionCalculatorService:
             artifact_bonuses["fuel_efficiency"] = fuel_efficiency
 
         total_damage_reduction = artifact_bonuses.get("damage_reduction", 0.0)
-        total_speed_bonus = artifact_bonuses.get("speed_mod", 0.0)
         total_fuel_efficiency = artifact_bonuses.get("fuel_efficiency", 0.0)
 
         effective_risk = max(0.0, zone.optimism_risk - total_damage_reduction)
         effective_fuel_cost = zone.fuel_cost * (1.0 - total_fuel_efficiency)
         zone_duration_hours = zone.duration_seconds / 3600.0
-        effective_duration = zone_duration_hours / speed_mod * (1.0 - total_speed_bonus)
+        effective_duration = zone_duration_hours / speed_mod
 
         effective_fuel_cost = max(0.0, round(effective_fuel_cost))
         effective_duration = max(0.5, effective_duration)

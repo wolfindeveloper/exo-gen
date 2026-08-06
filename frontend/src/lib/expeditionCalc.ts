@@ -12,4 +12,9 @@ export interface ArtifactBonus {
   speed_mod?: number
   damage_reduction?: number
   fuel_efficiency?: number
+  luck?: number
+  xp?: number
+  fragment?: number
+  capacity?: number
+  repair_bonus?: number
 }

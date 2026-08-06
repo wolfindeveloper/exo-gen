@@ -5,11 +5,13 @@ _rng = SystemRandom()
 logger = logging.getLogger(__name__)
 
 
-def generate_loot(loot_table: list[dict]) -> dict:
+def generate_loot(loot_table: list[dict], luck_bonus: float = 0.0) -> dict:
     rewards = {"xgen": 0, "fragments": 0, "items": []}
 
     for entry in loot_table:
-        if _rng.random() < entry.get("chance", 0):
+        base_chance = entry.get("chance", 0)
+        effective_chance = min(1.0, base_chance * (1.0 + luck_bonus))
+        if _rng.random() < effective_chance:
             item_type = entry.get("drop_type")
 
             if item_type == "xgen":
