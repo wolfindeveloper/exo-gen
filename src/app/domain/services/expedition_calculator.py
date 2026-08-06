@@ -36,7 +36,7 @@ class ExpeditionCalculatorService:
             for key, value in bonuses.items():
                 base_stats[key] = base_stats.get(key, 0) + value
 
-        speed_mod = base_stats.get("speed", ship.speed)
+        speed_mod = max(base_stats.get("speed", ship.speed), 0.1)
         total_defense = base_stats.get("defense", ship.defense)
         fuel_efficiency = base_stats.get("fuel_efficiency", 0.0)
 
@@ -57,7 +57,6 @@ class ExpeditionCalculatorService:
         effective_duration = zone_duration_hours / speed_mod
 
         effective_fuel_cost = max(0.0, round(effective_fuel_cost))
-        effective_duration = max(0.5, effective_duration)
         fuel_ok = ship.tea_level.value >= effective_fuel_cost
 
         optimism_value = ship.optimism.value
