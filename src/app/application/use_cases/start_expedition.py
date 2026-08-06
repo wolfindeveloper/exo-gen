@@ -11,7 +11,6 @@ from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.zone_repository import ZoneRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.domain.events.player_events import ExpeditionStartedEvent
-from app.infrastructure.messaging.tasks import finish_expedition_task
 
 
 class StartExpeditionUseCase:
@@ -59,12 +58,6 @@ class StartExpeditionUseCase:
         await self.player_repo.save(player)
         await self.expedition_repo.save(new_expedition)
         await uow.commit()
-
-        # Schedule background task to auto-finish expedition at ends_at
-        finish_expedition_task.apply_async(
-            args=[str(new_expedition.id), player.telegram_id],
-            eta=new_expedition.ends_at,
-        )
 
         return ExpeditionResponseDTO(
             id=new_expedition.id,
