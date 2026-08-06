@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 
 import { cardHover } from '../lib/animations'
 import { canAccessZone, formatUnlockHint } from '../lib/progression'
+import { formatDuration } from '../lib/formatTime'
 import type { Zone } from '../types'
 
 interface ZoneCardProps {
@@ -65,7 +66,7 @@ export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index
           <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">{zone.description}</p>
           <div className="flex gap-3 text-[11px] text-slate-500 mt-3">
             <span>⛽ {zone.fuel_cost}</span>
-            <span>⏱ {Math.round(zone.duration_seconds / 3600)}ч</span>
+            <span>⏱ {formatDuration(zone.duration_seconds)}</span>
           </div>
         </div>
       </motion.button>

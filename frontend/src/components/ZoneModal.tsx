@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import { apiClient } from '../api/client'
 import { statLabels } from '../lib/stats'
 import { canAccessZone, formatUnlockHint } from '../lib/progression'
+import { formatDuration } from '../lib/formatTime'
 import { useGameStore } from '../store/game'
 import type { Zone, ZonePreview } from '../types'
 
@@ -201,7 +202,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: '⛽ Топливо', base: zone.fuel_cost, calc: preview?.effective_fuel_cost },
-                { label: '⏱ Время', base: `${Math.round(zone.duration_seconds / 3600)}ч`, calc: preview ? `${Math.round(preview.effective_duration_seconds / 3600 * 10) / 10}ч` : null },
+                { label: '⏱ Время', base: formatDuration(zone.duration_seconds), calc: preview ? formatDuration(preview.effective_duration_seconds) : null },
                 { label: '⚠ Риск зоны', base: `${Math.round(zone.optimism_risk * 100)}%`, calc: null },
               ].map((item) => (
                 <div key={item.label} className="glass-card p-3 text-center">
