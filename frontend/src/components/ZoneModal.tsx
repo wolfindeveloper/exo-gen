@@ -68,6 +68,8 @@ interface ZoneModalProps {
 export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }: ZoneModalProps) {
   const ships = useGameStore((s) => s.ships)
   const loadShips = useGameStore((s) => s.loadShips)
+  const activeExpeditions = useGameStore((s) => s.activeExpeditions)
+  const isShipBusy = activeExpeditions.length > 0
   const [confirming, setConfirming] = useState(false)
   const [imgError, setImgError] = useState(false)
 
@@ -129,7 +131,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
     return map
   }, [artifactsContent, resourcesContent, inventory])
 
-  const canLaunch = !!mainShip && !!preview?.fuel_ok
+  const canLaunch = !!mainShip && !!preview?.fuel_ok && !isShipBusy
 
   return (
     <motion.div
@@ -422,6 +424,8 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                 </span>
               ) : !preview ? (
                 'Загрузка...'
+              ) : isShipBusy ? (
+                'Корабль в экспедиции'
               ) : !preview.fuel_ok ? (
                 'Недостаточно ⛽'
               ) : (

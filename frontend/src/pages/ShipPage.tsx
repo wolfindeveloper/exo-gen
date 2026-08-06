@@ -250,7 +250,8 @@ export default function ShipPage() {
   const fuelInInventory = useMemo(() => countFuel(inventory), [inventory])
   const repairInInventory = useMemo(() => countRepairKits(inventory), [inventory])
 
-  const isShipIdle = !!mainShip
+  const isShipBusy = activeExpeditions.length > 0
+  const isShipIdle = !!mainShip && !isShipBusy
 
   const handleRefuel = async () => {
     if (!mainShip) return
@@ -826,15 +827,16 @@ export default function ShipPage() {
               </div>
             ) : (
               <button
+                disabled={isShipBusy}
                 onClick={() => {
                   hapticImpact('light')
                   setScreenFlash(true)
                   setTimeout(() => setScreenFlash(false), 500)
                   navigate('/galaxy')
                 }}
-                className="w-full py-2 rounded-lg bg-gradient-to-r from-neon-cyan/80 to-neon-purple/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all hover:from-neon-cyan hover:to-neon-purple"
+                className={`w-full py-2 rounded-lg bg-gradient-to-r from-neon-cyan/80 to-neon-purple/80 text-[9px] font-bold tracking-wider text-white/90 text-center active:scale-[0.97] transition-all hover:from-neon-cyan hover:to-neon-purple ${isShipBusy ? 'opacity-30 cursor-not-allowed' : ''}`}
               >
-                🚀 ЗАПУСК ЭКСПЕДИЦИИ
+                {isShipBusy ? '🚀 КОРАБЛЬ В ЭКСПЕДИЦИИ' : '🚀 ЗАПУСК ЭКСПЕДИЦИИ'}
               </button>
             )}
           </div>
