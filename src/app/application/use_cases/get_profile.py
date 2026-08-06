@@ -1,5 +1,6 @@
 from app.domain.repositories.guide_progress_repository import GuideProgressRepository
 from app.domain.repositories.chapter_repository import ChapterRepository
+from app.domain.repositories.expedition_repository import ExpeditionRepository
 from app.application.dtos.profile_dto import ProfileResponseDTO
 from app.domain.entities.player import Player
 from app.domain.services.level_progression import LevelProgressionService
@@ -11,9 +12,11 @@ class GetProfileUseCase:
         self,
         guide_progress_repo: GuideProgressRepository,
         chapter_repo: ChapterRepository | None = None,
+        expedition_repo: ExpeditionRepository | None = None,
     ):
         self.guide_progress_repo = guide_progress_repo
         self.chapter_repo = chapter_repo
+        self.expedition_repo = expedition_repo
 
     async def execute(self, player: Player) -> ProfileResponseDTO:
         cache_key = f"profile:{player.id}"
@@ -31,6 +34,13 @@ class GetProfileUseCase:
             else (None, 0)
         )
 
+        expeditions_in_progress = 0
+        if self.expedition_repo and player.ships:
+            ship_id = player.ships[0].id
+            active_exp = await self.expedition_repo.get_current_by_ship_id(ship_id)
+            if active_exp is not None:
+                expeditions_in_progress = 1
+
         profile = ProfileResponseDTO(
             xp=player.xp,
             level=LevelProgressionService.calculate_level(player.xp),
@@ -38,7 +48,7 @@ class GetProfileUseCase:
             total_artifacts_found=player.total_artifacts_found,
             unlocked_articles=len(unlocked_ids),
             expeditions_completed=player.total_expeditions,
-            expeditions_in_progress=0,
+            expeditions_in_progress=expeditions_in_progress,
             artifacts_found=player.total_artifacts_found,
             xgen_earned_total=player.xgen_balance.value,
             articles_read=len(unlocked_ids),

@@ -24,6 +24,17 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
         orm = result.scalar_one_or_none()
         return ShopItemMapper.to_domain(orm) if orm else None
 
+    async def get_by_id_for_update(self, shop_item_id: UUID) -> ShopItem | None:
+        stmt = (
+            select(ShopItemORM)
+            .where(ShopItemORM.id == shop_item_id)
+            .where(ShopItemORM.deleted_at.is_(None))
+            .with_for_update()
+        )
+        result = await self.session.execute(stmt)
+        orm = result.scalar_one_or_none()
+        return ShopItemMapper.to_domain(orm) if orm else None
+
     async def get_all(self) -> list[ShopItem]:
         stmt = (
             select(ShopItemORM)

@@ -41,7 +41,7 @@ class PurchaseShopItemUseCase:
         if not locked_player:
             raise RuntimeError(f"Player {player.id} not found during locked reload")
 
-        shop_item = await self.shop_item_repo.get_by_id(dto.shop_item_id)
+        shop_item = await self.shop_item_repo.get_by_id_for_update(dto.shop_item_id)
         if not shop_item:
             raise ShopItemNotFoundError(dto.shop_item_id)
 

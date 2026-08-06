@@ -69,20 +69,13 @@ async def open_loot_box(
     item_repo: ItemRepository = Depends(get_item_repo),
 ):
     async with uow:
-        if dto.inventory_item_id:
-            inventory = await inventory_repo.get_by_player_id(
-                current_player.id, for_update=True
-            )
-            try:
-                inventory.remove_item(dto.inventory_item_id, quantity=1)
-            except ValueError as e:
-                raise HTTPException(status_code=400, detail=f"Коробка не найдена: {e}")
-            await inventory_repo.save(inventory)
-
         use_case = OpenLootBoxUseCase(
             LootBoxService(), loot_box_repo, inventory_repo, item_repo
         )
-        result = await use_case.execute(current_player, dto.box_type, uow)
+        result = await use_case.execute(
+            current_player, dto.box_type, uow,
+            inventory_item_id=dto.inventory_item_id,
+        )
 
         return OpenBoxResponseDTO(
             xgen_earned=result.xgen_earned,
@@ -91,6 +84,8 @@ async def open_loot_box(
                 ClaimedItemDTO(
                     item_id=item["item_id"],
                     amount=item["amount"],
+                    name=item.get("name"),
+                    image_url=item.get("image_url"),
                 )
                 for item in result.items_earned
             ],

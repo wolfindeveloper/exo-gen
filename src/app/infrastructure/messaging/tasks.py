@@ -182,10 +182,17 @@ async def _async_notify_completed_expeditions() -> int:
                         )
                     else:
                         logger.warning(
-                            "Failed to send notification for expedition %s to %s",
+                            "Failed to send notification for expedition %s to %s, marking as notified to stop retries",
                             expedition_id,
                             telegram_id,
                         )
+                        await session.execute(
+                            text(
+                                "UPDATE expeditions SET notified_at = :now WHERE id = :id"
+                            ),
+                            {"id": expedition_id, "now": datetime.now(timezone.utc)},
+                        )
+                        await session.commit()
                 except Exception:
                     logger.exception(
                         "Error notifying expedition %s", expedition_id

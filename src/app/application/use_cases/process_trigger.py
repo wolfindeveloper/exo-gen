@@ -167,8 +167,8 @@ class ProcessTriggerUseCase:
 
                 await self.guide_repo.save_trigger_progress(progress)
 
+        uow.track(player)
         if player_state_changed:
-            uow.track(player)
             await self.player_repo.save(player)
 
         await uow.commit()

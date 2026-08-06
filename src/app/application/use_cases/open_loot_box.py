@@ -35,7 +35,13 @@ class OpenLootBoxUseCase:
         player: Player,
         box_type: str,
         uow: UnitOfWork,
+        inventory_item_id: UUID | None = None,
     ) -> OpenLootBoxResult:
+        if inventory_item_id is not None:
+            inventory = await self.inventory_repo.get_by_player_id(player.id, for_update=True)
+            inventory.remove_item(inventory_item_id, quantity=1)
+            await self.inventory_repo.save(inventory)
+
         config = await self.loot_box_repo.get_by_type(box_type)
         if not config or not config.is_active:
             return OpenLootBoxResult(0, 0, [])

@@ -12,6 +12,11 @@ class ShopItemRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_by_id_for_update(self, shop_item_id: UUID) -> ShopItem | None:
+        """Загружает товар с блокировкой строки (SELECT ... FOR UPDATE)"""
+        pass
+
+    @abstractmethod
     async def get_all_active(self) -> list[ShopItem]:
         pass
 

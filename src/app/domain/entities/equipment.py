@@ -18,9 +18,9 @@ class Equipment(AggregateRoot):
     artifacts: list[EquippedArtifact | None] = field(default_factory=list)
 
     def equip(self, item_id: UUID, bonuses: dict, slot_index: int, max_slots: int) -> EquippedArtifact | None:
-        if slot_index >= max_slots:
+        if slot_index < 0 or slot_index >= max_slots:
             raise ValueError(
-                f"Slot {slot_index + 1} is locked. Max available slots: {max_slots}"
+                f"Invalid slot index {slot_index}. Must be 0-{max_slots - 1}"
             )
 
         if any(a is not None and a.item_id == item_id for a in self.artifacts):

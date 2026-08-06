@@ -22,6 +22,7 @@ from app.application.dtos.claim_expedition_dto import (
     ClaimedItemDTO
 )
 from app.domain.services.loot_generator import generate_loot
+from app.domain.services.level_progression import LevelProgressionService
 
 logger = logging.getLogger(__name__)
 
@@ -72,10 +73,8 @@ class ClaimExpeditionUseCase:
         player.add_xgen(loot["xgen"])
         player.add_fragments(loot["fragments"])
 
-        # XP за экспедицию: базовая формула + минимум 5 XP
-        duration_hours = zone.duration_seconds / 3600
-        risk_percent = zone.optimism_risk * 100  # конвертируем долю (0.05) в проценты (5)
-        total_xp = max(5, int(20 * duration_hours + risk_percent * 2))
+        # XP за экспедицию: единая формула из доменного сервиса
+        total_xp = LevelProgressionService.calculate_expedition_xp(zone.duration_seconds, zone.optimism_risk)
         player.xp += total_xp
         player.increment_expeditions()
 
@@ -83,8 +82,11 @@ class ClaimExpeditionUseCase:
         if loot_items:
             item_ids = [UUID(d["item_id"]) for d in loot_items]
             items = await self.item_repo.get_by_ids(item_ids)
+            valid_item_ids = {item.id for item in items}  # только не-удалённые
             item_type_map = {item.id: item.type for item in items}
             item_name_map = {item.id: item.name for item in items}
+            # Фильтруем loot_items — убираем удалённые предметы
+            loot_items = [d for d in loot_items if UUID(d["item_id"]) in valid_item_ids]
         else:
             item_type_map = {}
             item_name_map = {}

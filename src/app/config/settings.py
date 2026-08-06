@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     TELEGRAM_AUTH_MAX_AGE_SECONDS: int = 86400  # 24 часа
 
     # Telegram
-    ADMIN_TELEGRAM_IDS: list[int] = [754269918]
+    ADMIN_TELEGRAM_IDS: list[int] = Field(default_factory=list)
     BOT_TOKEN: str = Field(..., description="Telegram Bot Token from BotFather")
 
     # Redis
