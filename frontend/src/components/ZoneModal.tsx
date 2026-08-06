@@ -204,17 +204,20 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                 { label: '⛽ Топливо', base: zone.fuel_cost, calc: preview?.effective_fuel_cost },
                 { label: '⏱ Время', base: formatDuration(zone.duration_seconds), calc: preview ? formatDuration(preview.effective_duration_seconds) : null },
                 { label: '⚠ Риск зоны', base: `${Math.round(zone.optimism_risk * 100)}%`, calc: null },
-              ].map((item) => (
-                <div key={item.label} className="glass-card p-3 text-center">
-                  <p className="text-[10px] text-slate-500 mb-1">{item.label}</p>
-                  <p className="text-sm font-display text-slate-300">{item.base}</p>
-                  {item.calc && (
-                    <p className="text-[10px] mt-0.5 font-display text-neon-cyan">
-                      {item.calc}
-                    </p>
-                  )}
-                </div>
-              ))}
+              ].map((item) => {
+                const isSame = item.calc != null && String(item.calc) === String(item.base)
+                return (
+                  <div key={item.label} className="glass-card p-3 text-center">
+                    <p className="text-[10px] text-slate-500 mb-1">{item.label}</p>
+                    <p className="text-sm font-display text-slate-300">{item.base}</p>
+                    {item.calc != null && !isSame && (
+                      <p className="text-[10px] mt-0.5 font-display text-neon-cyan">
+                        → {item.calc}
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
 
