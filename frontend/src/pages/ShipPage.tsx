@@ -601,7 +601,7 @@ export default function ShipPage() {
                           <span
                             key={key}
                             className={`text-[10px] font-mono ${color} bg-black/30 border border-white/5 rounded px-1 py-0.5 flex items-center gap-0.5`}
-                            title={`${key}: +${pct}%`}
+                            title={key.includes('defense') ? `Снижение получаемого урона: ${pct}%` : `${key}: +${pct}%`}
                           >
                             {icon}+{pct}%
                           </span>
@@ -614,14 +614,7 @@ export default function ShipPage() {
                 {/* stats bar */}
                 <div className="flex justify-between mt-2 text-[10px] text-cyan-400/20 tracking-wider">
                   <span>PWR {Math.round(mainShip?.tea_level ?? 0)}/100</span>
-                  <span>
-                    SHLD {Math.round(mainShip?.optimism ?? 100)}%
-                    {totalBonuses.defense ? (
-                      <span className="text-green-400/60"> -{Math.round((totalBonuses.defense + (mainShip?.defense ?? 0)) * 100)}%</span>
-                    ) : mainShip?.defense ? (
-                      ` -${Math.round(mainShip.defense * 100)}%`
-                    ) : ''}
-                  </span>
+                  <span>SHLD {Math.round(mainShip?.optimism ?? 100)}%</span>
                   <span>
                     SPD {(
                       (mainShip?.speed ?? 1.0)
