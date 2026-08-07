@@ -4,17 +4,16 @@ import { BookOpen, Globe2, Package, Rocket, Settings, ShoppingBag, Trophy, User 
 import { Link, useLocation } from 'react-router-dom'
 
 import { useNotifications } from '../hooks/useNotifications'
-import { useTranslate } from '../hooks/useTranslate'
 import { useSettingsStore } from '../store/settings'
 
 const nav = [
-  { path: '/', icon: Rocket, key: 'nav.hangar' },
-  { path: '/guide', icon: BookOpen, key: 'nav.guide' },
-  { path: '/galaxy', icon: Globe2, key: 'nav.map' },
-  { path: '/inventory', icon: Package, key: 'nav.inv' },
-  { path: '/profile', icon: User, key: 'nav.profile' },
-  { path: '/shop', icon: ShoppingBag, key: 'nav.shop' },
-  { path: '/leaderboard', icon: Trophy, key: 'nav.leaders' },
+  { path: '/', icon: Rocket },
+  { path: '/guide', icon: BookOpen },
+  { path: '/galaxy', icon: Globe2 },
+  { path: '/inventory', icon: Package },
+  { path: '/profile', icon: User },
+  { path: '/shop', icon: ShoppingBag },
+  { path: '/leaderboard', icon: Trophy },
 ]
 
 function BadgeDot({ color }: { color: string }) {
@@ -57,7 +56,6 @@ export function NavBar() {
   const isCockpit = location.pathname === '/'
   const reduceMotion = useReducedMotion()
   const setSettingsOpen = useSettingsStore((s) => s.setSettingsOpen)
-  const t = useTranslate()
   const { hasCompletedExpedition, hasUnlockedGuideEntry, hasUnclaimedReward } = useNotifications()
 
   const handleSettings = useCallback(() => setSettingsOpen(true), [setSettingsOpen])
@@ -100,38 +98,18 @@ export function NavBar() {
                 )}
                 <motion.span
                   whileTap={reduceMotion ? undefined : { scale: 0.85 }}
-                  className="relative flex flex-col items-center justify-center"
+                  className="relative flex items-center justify-center"
                 >
-                  <motion.span
-                    animate={{ y: active ? -5 : 0 }}
-                    transition={spring}
-                    className="relative flex items-center justify-center"
-                  >
-                    <NavIcon icon={item.icon} active={active} />
-                    <AnimatePresence>
-                      {item.path === '/' && hasCompletedExpedition && (
-                        <BadgeDot color="#22c55e" />
-                      )}
-                      {item.path === '/guide' && hasUnlockedGuideEntry && (
-                        <BadgeDot color="#a855f7" />
-                      )}
-                      {item.path === '/guide' && !hasUnlockedGuideEntry && hasUnclaimedReward && (
-                        <BadgeDot color="#f59e0b" />
-                      )}
-                    </AnimatePresence>
-                  </motion.span>
+                  <NavIcon icon={item.icon} active={active} />
                   <AnimatePresence>
-                    {active && (
-                      <motion.span
-                        key="label"
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 4 }}
-                        transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 30 }}
-                        className="absolute top-[23px] font-display text-[9px] uppercase tracking-wider whitespace-nowrap text-neon-cyan"
-                      >
-                        {t(item.key)}
-                      </motion.span>
+                    {item.path === '/' && hasCompletedExpedition && (
+                      <BadgeDot color="#22c55e" />
+                    )}
+                    {item.path === '/guide' && hasUnlockedGuideEntry && (
+                      <BadgeDot color="#a855f7" />
+                    )}
+                    {item.path === '/guide' && !hasUnlockedGuideEntry && hasUnclaimedReward && (
+                      <BadgeDot color="#f59e0b" />
                     )}
                   </AnimatePresence>
                 </motion.span>
