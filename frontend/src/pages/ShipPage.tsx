@@ -237,7 +237,10 @@ export default function ShipPage() {
       if (!art?.stats_modifiers) continue
       for (const [key, value] of Object.entries(art.stats_modifiers)) {
         if (value !== null && value !== undefined && value !== 0) {
-          bonuses[key] = (bonuses[key] || 0) + value
+          let k = key.startsWith('bonus_') ? key.slice(6) : key
+          if (k === 'fuel') k = 'fuel_efficiency'
+          if (k === 'repair') k = 'repair_bonus'
+          bonuses[k] = (bonuses[k] || 0) + value
         }
       }
     }
