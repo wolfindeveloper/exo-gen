@@ -90,7 +90,7 @@ export const ZoneCard = memo(function ZoneCard({ zone, onSelect, disabled, index
       <p className="text-[11px] text-slate-500 mb-3 line-clamp-2">{zone.description}</p>
       <div className="flex gap-3 text-[11px] text-slate-500 mb-3">
         <span>⛽ {zone.fuel_cost}</span>
-        <span>⏱ {Math.round(zone.duration_seconds / 3600)}ч</span>
+        <span>⏱ {formatDuration(zone.duration_seconds)}</span>
         <span>⚠ {Math.round(zone.optimism_risk * 100)}%</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
