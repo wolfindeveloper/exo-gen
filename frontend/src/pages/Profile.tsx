@@ -21,6 +21,7 @@ import {
 import { getTierForLevel, findRank } from '../lib/ranks'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import { useGameStore } from '../store/game'
+import { FragmentIcon } from '../components/FragmentIcon'
 import type { UserStats } from '../types'
 
 const tierGradients = [
@@ -137,12 +138,11 @@ export function Profile() {
   const streakCount = useCountUp(user?.daily_streak ?? 0, 1000)
   const starsCount = useCountUp(user?.balance_stars ?? 0, 1000)
   const xgenCount = useCountUp(user?.xgen_balance ?? 0, 1200)
-  const expeditionsCompletedCount = useCountUp(stats?.completed_expeditions ?? 0, 1000)
-  const expeditionsInProgressCount = useCountUp(stats?.expeditions_in_progress ?? 0, 1000)
+  const fragmentsCount = useCountUp(user?.fragments_balance ?? 0, 1000)
   const artifactsFoundCount = useCountUp(stats?.artifacts_found ?? 0, 1000)
   const xgenEarnedTotalCount = useCountUp(stats?.xgen_earned_total ?? 0, 1200)
-  const articlesReadCount = useCountUp(stats?.articles_read ?? 0, 1000)
-  const articlesTotalCount = useCountUp(stats?.articles_total ?? 0, 1000)
+  const fragmentsEarnedTotalCount = useCountUp(stats?.fragments_earned_total ?? 0, 1000)
+  const joinedDaysCount = useCountUp(stats?.joined_days ?? 0, 1000)
 
   useEffect(() => {
     loadProfile()
@@ -231,9 +231,13 @@ export function Profile() {
       return m ? `${itemName(m[1])} x${m[2]}` : part
     }).join(', ')
 
-  const ringRadius = 36
-  const ringCircumference = 2 * Math.PI * ringRadius
-  const ringOffset = ringCircumference - (xpPercent / 100) * ringCircumference
+  const guideTotal = stats?.guide_progress.total_chapters ?? 0
+  const guideCompleted = stats?.guide_progress.completed_chapters ?? 0
+  const guidePercent = guideTotal > 0 ? (guideCompleted / guideTotal) * 100 : 0
+
+  const claimableCount = Object.entries(ACHIEVEMENT_DEFS).filter(
+    ([aid, def]) => def.check(safeStats, user.daily_streak ?? 0) && !claimedSet.has(aid),
+  ).length
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
@@ -262,56 +266,17 @@ export function Profile() {
         )}
       </AnimatePresence>
 
-      {/* Daily streak info card */}
-      <motion.div
-        className="glass-card p-3 mb-4 flex items-center gap-3"
-        initial={{ opacity: 0, y: -20, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-      >
-        <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
-          <Flame size={18} className="text-orange-400" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-display text-orange-400 uppercase tracking-wider">
-            Ежедневный вход
-          </p>
-          <p className="text-[10px] text-slate-400 mt-0.5">
-            Стрик: <span className="text-orange-300 font-mono">{user.daily_streak}</span> дней
-            {' · '}
-            +{(user.daily_streak + 1) * 10} XP завтра
-          </p>
-          {user.daily_streak > 0 && (
-            <p className="text-[9px] text-slate-600 mt-0.5">
-              До бонус-бокса: {42 - (user.daily_streak % 42)} дн.
-            </p>
-          )}
-        </div>
-      </motion.div>
-
       {/* Hero */}
       <motion.div
-        className="glass-card p-6 mb-4 text-center relative overflow-hidden"
+        className="glass-card p-5 mb-4 relative overflow-hidden"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
         <div className={`absolute inset-0 bg-gradient-to-b ${tierGradients[tier]} opacity-30`} />
         <div className="relative">
-          <div className="inline-flex items-center justify-center mb-3">
-            <svg width="96" height="96" className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: '50%', top: '50%' }}>
-              <circle cx="48" cy="48" r={ringRadius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
-              <motion.circle
-                cx="48" cy="48" r={ringRadius} fill="none"
-                stroke={tierRingColors[tier - 1] || '#22d3ee'}
-                strokeWidth="4" strokeLinecap="round"
-                strokeDasharray={ringCircumference}
-                initial={{ strokeDashoffset: ringCircumference }}
-                animate={{ strokeDashoffset: ringOffset }}
-                transition={{ duration: 1.4, ease: 'easeOut', delay: 0.3 }}
-                transform="rotate(-90 48 48)"
-              />
-            </svg>
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple overflow-hidden ring-2 ring-white/10">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple overflow-hidden ring-2 ring-white/10 shrink-0">
               {avatarUrl ? (
                 <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
               ) : (
@@ -320,178 +285,144 @@ export function Profile() {
                 </div>
               )}
             </div>
+            <div className="flex-1 min-w-0 text-left">
+              {editing ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={nick}
+                  onChange={(e) => setNick(e.target.value)}
+                  onBlur={saveNick}
+                  onKeyDown={(e) => { if (e.key === 'Enter') saveNick() }}
+                  className="bg-space-600 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-neon-cyan/50 w-full"
+                  maxLength={32}
+                  autoFocus
+                />
+              ) : (
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-base text-slate-200 font-medium truncate">{user.username || first || 'Капитан'}</span>
+                  <button
+                    onClick={handleStartEdit}
+                    className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors"
+                    aria-label="Редактировать имя"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                </div>
+              )}
+              {rank && (
+                <motion.div
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-display uppercase tracking-wider mt-1.5 border"
+                  style={{
+                    borderColor: `${tierRingColors[tier - 1]}33`,
+                    color: tierRingColors[tier - 1],
+                    backgroundColor: `${tierRingColors[tier - 1]}10`,
+                  }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.3 }}
+                >
+                  <Award size={10} />
+                  {rank.title_key}
+                </motion.div>
+              )}
+              <p className="text-[10px] text-slate-500 mt-1 truncate">{rank?.description_key || ''}</p>
+            </div>
           </div>
 
-          {rank && (
-            <motion.div
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-display uppercase tracking-wider mb-2 border"
-              style={{
-                borderColor: `${tierRingColors[tier - 1]}33`,
-                color: tierRingColors[tier - 1],
-                backgroundColor: `${tierRingColors[tier - 1]}10`,
-              }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.5 }}
-            >
-              <Award size={10} />
-              {rank.title_key}
-            </motion.div>
-          )}
-
-          {editing ? (
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <input
-                ref={inputRef}
-                type="text"
-                value={nick}
-                onChange={(e) => setNick(e.target.value)}
-                onBlur={saveNick}
-                onKeyDown={(e) => { if (e.key === 'Enter') saveNick() }}
-                className="bg-space-600 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-center text-slate-200 outline-none focus:border-neon-cyan/50 w-48"
-                maxLength={32}
-                autoFocus
-              />
+          {/* XP progress */}
+          <div>
+            <div className="flex items-center justify-between text-[10px] mb-1.5">
+              <span className="text-slate-500 font-display uppercase tracking-wider">Уровень {level}</span>
+              <span className="text-slate-500 font-mono tabular-nums">
+                <span className="text-neon-cyan">{levelXpCount}</span> / {nextXpCount} XP
+              </span>
             </div>
-          ) : (
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <span className="text-base text-slate-200 font-medium">{user.username || first || 'Капитан'}</span>
-              <button
-                onClick={handleStartEdit}
-                className="text-slate-600 hover:text-slate-300 transition-colors"
+            <div className="relative h-2.5 bg-space-500 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full rounded-full relative"
+                style={{
+                  background: `linear-gradient(90deg, ${tierRingColors[tier - 1]}, ${tierRingColors[Math.min(tier, 4)] || '#a855f7'})`,
+                  boxShadow: `0 0 8px ${tierRingColors[tier - 1]}44`,
+                }}
+                initial={{ width: 0 }}
+                animate={{ width: `${xpPercent}%` }}
+                transition={{ duration: 1.2, ease: 'easeOut' }}
               >
-                <Pencil size={12} />
-              </button>
+                {xpPercent > 80 && (
+                  <motion.div
+                    className="absolute inset-y-0 right-0 w-4 rounded-full bg-white/30"
+                    animate={{ opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                )}
+              </motion.div>
             </div>
-          )}
-          <p className="text-[10px] text-slate-600 mt-1">{rank?.description_key || ''}</p>
+            <p className="text-[10px] text-slate-600 mt-1.5 text-center">
+              До уровня {level + 1}: ещё <span className="text-slate-400 font-mono">{xpToNext}</span> XP
+            </p>
+          </div>
 
           {nextRank && (
-            <div className="mt-3 pt-3 border-t border-white/5">
-              <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500">
-                <Trophy size={10} className="text-amber-500/60" />
-                Следующий ранг: <span className="text-amber-400/80 font-display">{nextRank.title}</span>
-                <span className="text-slate-600">через {nextRank.remaining} ур.</span>
-              </div>
+            <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 text-[10px] text-slate-500">
+              <Trophy size={10} className="text-amber-500/60" />
+              Следующий ранг: <span className="text-amber-400/80 font-display">{nextRank.title}</span>
+              <span className="text-slate-600">через {nextRank.remaining} ур.</span>
             </div>
           )}
         </div>
       </motion.div>
 
-      {/* XP & Progress */}
+      {/* Wallet */}
       <motion.div
-        className="glass-card p-5 mb-4"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-11 h-11 rounded-full flex items-center justify-center font-display text-base border-2"
-              style={{
-                borderColor: tierRingColors[tier - 1],
-                color: tierRingColors[tier - 1],
-                boxShadow: `0 0 12px ${tierRingColors[tier - 1]}33`,
-              }}
-            >
-              {level}
-            </div>
-            <div>
-              <p className="font-display text-sm uppercase tracking-wider text-slate-300">Уровень {level}</p>
-              <p className="text-[10px] text-slate-500">
-                <span className="text-neon-cyan font-mono">{levelXpCount}</span> / {nextXpCount} XP
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative h-2.5 bg-space-500 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full relative"
-            style={{
-              background: `linear-gradient(90deg, ${tierRingColors[tier - 1]}, ${tierRingColors[Math.min(tier, 4)] || '#a855f7'})`,
-              boxShadow: `0 0 8px ${tierRingColors[tier - 1]}44`,
-            }}
-            initial={{ width: 0 }}
-            animate={{ width: `${xpPercent}%` }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
-          >
-            {xpPercent > 80 && (
-              <motion.div
-                className="absolute inset-y-0 right-0 w-4 rounded-full bg-white/30"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            )}
-          </motion.div>
-        </div>
-
-        <p className="text-[10px] text-slate-600 mt-2">
-          До уровня {level + 1}: ещё <span className="text-slate-400 font-mono">{xpToNext}</span> XP
-        </p>
-      </motion.div>
-
-      {/* Guide + Ship Progress */}
-      <motion.div
-        className="grid grid-cols-2 gap-3 mb-4"
+        className="grid grid-cols-4 gap-2 mb-4"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
       >
-        <div className="glass-card p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <BookOpen size={14} className="text-neon-purple" />
-            <span className="text-[10px] text-slate-500 font-display uppercase tracking-wider">Гайд</span>
-          </div>
-          <p className="font-display text-lg text-neon-purple tabular-nums">
-            {stats?.guide_progress.completed_chapters ?? 0}
-            <span className="text-slate-600 text-sm"> / {stats?.guide_progress.total_chapters ?? 0}</span>
-          </p>
-          <p className="text-[9px] text-slate-600 mt-1">{stats?.guide_progress.entries_researched ?? 0} записей изучено</p>
-        </div>
-        <div className="glass-card p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Rocket size={14} className="text-neon-cyan" />
-            <span className="text-[10px] text-slate-500 font-display uppercase tracking-wider">Корабль</span>
-          </div>
-          <p className="font-display text-lg text-neon-cyan tabular-nums">
-            {equippedCount}
-            <span className="text-slate-600 text-sm"> / {maxSlots}</span>
-          </p>
-          <p className="text-[9px] text-slate-600 mt-1">{shipConfig?.name_key || 'Vega MK-II'} · T{mainShip ? getTierForLevel(level) : '-'}</p>
-        </div>
+        <BalanceCard title="XGEN" value={xgenCount} accent="#22d3ee" pulse>
+          <div className="text-[15px] font-display text-neon-cyan leading-none">✦</div>
+        </BalanceCard>
+        <BalanceCard title="STARS" value={starsCount} accent="#f59e0b">
+          <Star size={16} className="text-amber-400" />
+        </BalanceCard>
+        <BalanceCard title="ФРАГМ" value={fragmentsCount} accent="#a855f7">
+          <FragmentIcon className="h-4 w-4" />
+        </BalanceCard>
+        <BalanceCard title="СТРИК" value={streakCount} accent="#ef4444" subtitle={`+${(user.daily_streak + 1) * 10} XP`}>
+          <Flame size={16} className="text-red-400" />
+        </BalanceCard>
       </motion.div>
 
-      {/* Progression unlocks */}
+      {/* Progression */}
       <motion.div
         className="glass-card p-4 mb-4"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-4">
           <Sparkles size={14} className="text-amber-400" />
           <span className="text-[10px] font-display uppercase tracking-wider text-slate-400">
-            Разблокировки
+            Прогресс
           </span>
         </div>
 
         {/* Zones tier progress */}
-        <div className="mb-3">
+        <div className="mb-5">
           <p className="text-[9px] text-slate-500 mb-2 uppercase tracking-wider">Зоны галактики</p>
           <div className="flex gap-1.5">
-            {[1, 2, 3, 4, 5].map((tier) => {
-              const required = ZONE_UNLOCK_TABLE[tier]
+            {[1, 2, 3, 4, 5].map((tierId) => {
+              const required = ZONE_UNLOCK_TABLE[tierId]
               const isUnlocked = level >= required
               const TIER_HEX: Record<number, string> = { 1: '#22d3ee', 2: '#22c55e', 3: '#a855f7', 4: '#fbbf24', 5: '#ef4444' }
-              const hex = TIER_HEX[tier]
+              const hex = TIER_HEX[tierId]
               const tierStyle = isUnlocked
                 ? { borderColor: `${hex}55`, backgroundColor: `${hex}22` }
                 : { borderColor: 'rgba(100,116,139,0.3)', backgroundColor: 'rgba(15,20,32,0.3)' }
               return (
                 <div
-                  key={tier}
+                  key={tierId}
                   className="flex-1 aspect-square rounded-lg flex flex-col items-center justify-center border"
                   style={tierStyle}
                 >
@@ -499,7 +430,7 @@ export function Profile() {
                     className="text-[10px] font-display font-bold"
                     style={{ color: isUnlocked ? hex : '#475569' }}
                   >
-                    T{tier}
+                    T{tierId}
                   </span>
                   {isUnlocked ? (
                     <Unlock size={8} className="mt-0.5" style={{ color: hex }} />
@@ -513,19 +444,33 @@ export function Profile() {
               )
             })}
           </div>
-          {nextZoneUnlock ? (
-            <p className="text-[10px] text-slate-600 mt-2 text-center">
-              Зоны T{nextZoneUnlock.tier} откроются на{' '}
-              <span className="text-amber-400">LVL {nextZoneUnlock.requiredLevel}</span>
+          <div className="flex items-center justify-between gap-2 mt-2.5">
+            <p className="text-[10px] text-slate-600">
+              {nextZoneUnlock ? (
+                <>Зоны T{nextZoneUnlock.tier} откроются на <span className="text-amber-400">LVL {nextZoneUnlock.requiredLevel}</span></>
+              ) : (
+                <span className="text-neon-green">✓ Все зоны открыты</span>
+              )}
             </p>
-          ) : (
-            <p className="text-[10px] text-neon-green mt-2 text-center">✓ Все зоны открыты</p>
-          )}
+            {nextZoneUnlock && (
+              <button
+                onClick={() => navigate('/galaxy')}
+                className="shrink-0 text-[10px] px-3 h-7 rounded-lg bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20 font-display uppercase tracking-wider active:bg-neon-cyan/20 transition-colors"
+              >
+                К галактике →
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Artifact slots progress */}
-        <div>
-          <p className="text-[9px] text-slate-500 mb-2 uppercase tracking-wider">Слоты артефактов</p>
+        {/* Artifact slots */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[9px] text-slate-500 uppercase tracking-wider">Слоты артефактов</p>
+            <span className="text-[10px] text-slate-500 truncate ml-2">
+              {shipConfig?.name_key || 'Vega MK-II'}
+            </span>
+          </div>
           <div className="flex items-center gap-2">
             <div className="flex-1 h-2 bg-space-600 rounded-full overflow-hidden">
               <motion.div
@@ -539,33 +484,46 @@ export function Profile() {
               {maxSlots}/8
             </span>
           </div>
-          {nextSlotUnlock ? (
-            <p className="text-[10px] text-slate-600 mt-1.5">
-              +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
-              <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span>
-            </p>
-          ) : (
-            <p className="text-[10px] text-neon-green mt-1.5">✓ Все 8 слотов открыты</p>
-          )}
+          <p className="text-[10px] text-slate-600 mt-1.5">
+            Экипировано: <span className="text-slate-400 font-mono">{equippedCount}</span>
+            {nextSlotUnlock ? (
+              <> · +{nextSlotUnlock.newSlotCount - maxSlots} слота на{' '}
+              <span className="text-amber-400">LVL {nextSlotUnlock.requiredLevel}</span></>
+            ) : (
+              <> · <span className="text-neon-green">все слоты открыты</span></>
+            )}
+          </p>
         </div>
-      </motion.div>
 
-      {/* Balance cards */}
-      <motion.div
-        className="grid grid-cols-3 gap-3 mb-4"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-      >
-        <BalanceCard title="Стрик" value={streakCount} accent="#ef4444">
-          <Flame size={18} className="text-red-400" />
-        </BalanceCard>
-        <BalanceCard title="Stars" value={starsCount} accent="#f59e0b">
-          <Star size={18} className="text-amber-400" />
-        </BalanceCard>
-        <BalanceCard title="XGEN" value={xgenCount} accent="#22d3ee" pulse>
-          <div className="text-[16px] font-display text-neon-cyan">✦</div>
-        </BalanceCard>
+        {/* Guide progress */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[9px] text-slate-500 uppercase tracking-wider">Путеводитель</p>
+            <span className="text-[10px] font-mono text-neon-purple tabular-nums">
+              {guideCompleted}/{guideTotal} глав
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-2 bg-space-600 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-neon-purple/80 to-fuchsia-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${guidePercent}%` }}
+                transition={{ duration: 1, ease: 'easeOut' }}
+              />
+            </div>
+            <BookOpen size={14} className="text-neon-purple shrink-0" />
+          </div>
+          <div className="flex items-center justify-between gap-2 mt-1.5">
+            <p className="text-[10px] text-slate-600">{stats?.guide_progress.entries_researched ?? 0} записей изучено</p>
+            <button
+              onClick={() => navigate('/guide')}
+              className="shrink-0 text-[10px] px-3 h-7 rounded-lg bg-neon-purple/10 text-neon-purple border border-neon-purple/20 font-display uppercase tracking-wider active:bg-neon-purple/20 transition-colors"
+            >
+              В гайд →
+            </button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Stats */}
@@ -604,6 +562,9 @@ export function Profile() {
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-neon-green" /> {stats.completed_expeditions} успешно</span>
               <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> {stats.failed_expeditions} провалено</span>
             </div>
+            {stats.expeditions_in_progress > 0 && (
+              <p className="text-[10px] text-slate-600 mt-1">Активных: {stats.expeditions_in_progress}</p>
+            )}
           </div>
         </motion.div>
       )}
@@ -616,17 +577,7 @@ export function Profile() {
         animate="visible"
       >
         <motion.div variants={fadeIn} className="glass-card p-3">
-          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Экспедиций</p>
-          <p className="font-display text-xl text-neon-cyan tabular-nums">
-            {expeditionsCompletedCount}
-          </p>
-          <p className="text-[9px] text-slate-600">
-            Активных: {expeditionsInProgressCount}
-          </p>
-        </motion.div>
-
-        <motion.div variants={fadeIn} className="glass-card p-3">
-          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Артефактов</p>
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Артефактов найдено</p>
           <p className="font-display text-xl text-neon-purple tabular-nums">
             {artifactsFoundCount}
           </p>
@@ -640,10 +591,16 @@ export function Profile() {
         </motion.div>
 
         <motion.div variants={fadeIn} className="glass-card p-3">
-          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Путеводитель</p>
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Фрагментов заработано</p>
+          <p className="font-display text-xl text-neon-cyan tabular-nums">
+            {fragmentsEarnedTotalCount}
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="glass-card p-3">
+          <p className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Дней в проекте</p>
           <p className="font-display text-xl text-neon-green tabular-nums">
-            {articlesReadCount}
-            <span className="text-slate-600 text-sm"> / {articlesTotalCount}</span>
+            {joinedDaysCount}
           </p>
         </motion.div>
       </motion.div>
@@ -729,10 +686,17 @@ export function Profile() {
       )}
 
       {/* Achievements */}
-      <h2 className="text-[10px] font-display uppercase tracking-[0.15em] text-slate-500 mb-3">
-        Достижения
-        <span className="text-slate-600 ml-1 font-mono">({claimedSet.size}/{Object.keys(ACHIEVEMENT_DEFS).length})</span>
-      </h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-[10px] font-display uppercase tracking-[0.15em] text-slate-500">
+          Достижения
+          <span className="text-slate-600 ml-1 font-mono">({claimedSet.size}/{Object.keys(ACHIEVEMENT_DEFS).length})</span>
+        </h2>
+        {claimableCount > 0 && (
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20 font-mono">
+            {claimableCount} доступно
+          </span>
+        )}
+      </div>
       <motion.div
         className="grid grid-cols-2 gap-2"
         variants={staggerContainer}
@@ -741,9 +705,9 @@ export function Profile() {
       >
         {Object.entries(ACHIEVEMENT_DEFS).map(([aid, def]) => {
           const claimed = claimedSet.has(aid)
-          const met = def.check(safeStats, user?.daily_streak ?? 0)
+          const met = def.check(safeStats, user.daily_streak ?? 0)
           const Icon = def.icon
-          const prog = def.progress?.(safeStats, user?.daily_streak ?? 0)
+          const prog = def.progress?.(safeStats, user.daily_streak ?? 0)
           const canClaim = met && !claimed
 
           return (
@@ -790,7 +754,7 @@ export function Profile() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleClaim(aid)}
                     disabled={claiming === aid}
-                    className="text-[10px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/20 hover:bg-amber-500/25 transition-colors disabled:opacity-50"
+                    className="text-[10px] px-3 min-h-[28px] rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/20 hover:bg-amber-500/25 transition-colors disabled:opacity-50"
                   >
                     {claiming === aid ? (
                       <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>◌</motion.span>
@@ -821,13 +785,13 @@ export function Profile() {
   )
 }
 
-function BalanceCard({ title, value, accent, pulse, children }: {
-  title: string; value: number; accent: string; pulse?: boolean; children: React.ReactNode
+function BalanceCard({ title, value, accent, pulse, subtitle, children }: {
+  title: string; value: number; accent: string; pulse?: boolean; subtitle?: React.ReactNode; children: React.ReactNode
 }) {
   return (
     <motion.div
       variants={fadeIn}
-      className="glass-card p-3 text-center relative overflow-hidden"
+      className="glass-card p-2.5 text-center relative overflow-hidden"
       style={{ borderColor: `${accent}22` }}
     >
       {pulse && (
@@ -839,7 +803,6 @@ function BalanceCard({ title, value, accent, pulse, children }: {
         />
       )}
       <div className="flex justify-center mb-1">{children}</div>
-      <p className="text-[10px] text-slate-500 uppercase tracking-wider">{title}</p>
       <motion.p
         className="font-display text-sm mt-0.5 tabular-nums"
         style={{ color: accent }}
@@ -849,8 +812,10 @@ function BalanceCard({ title, value, accent, pulse, children }: {
       >
         {value}
       </motion.p>
+      <p className="text-[9px] text-slate-500 uppercase tracking-wider mt-0.5">{title}</p>
+      {subtitle && (
+        <p className="text-[8px] text-slate-500 mt-0.5">{subtitle}</p>
+      )}
     </motion.div>
   )
 }
-
-
