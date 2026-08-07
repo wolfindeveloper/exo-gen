@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '../components/Skeleton'
 import { PullToRefresh } from '../components/PullToRefresh'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { FragmentIcon } from '../components/FragmentIcon'
 import { fadeIn, scaleIn, staggerContainer } from '../lib/animations'
 import { hapticImpact } from '../lib/telegram'
-import { statIcons, statLabels, formatBonus, getArtifactMainIcon } from '../lib/stats'
+import { statIcons, statLabels, formatBonus, getArtifactMainIcon, FRAGMENT_ICON } from '../lib/stats'
 import { useGameStore } from '../store/game'
 import { isFuel, isRepairKit, parseTierFromRarity } from '../lib/items'
 import type { InventoryItem } from '../types'
@@ -46,7 +47,7 @@ const elementEmoji: Record<string, string> = {
   the_dust_of_paradoxes: '🌫️', logic_gate_inverter: '🔄', chrome_nostalgia: '💿',
   quantum_stabilizer: '⚛️', bergamot_crystal: '🍵',
   essential_oil_condensate: '💧', the_fractal_of_greatness: '🌀',
-  fragments_of_a_deal: '📜', condensation_of_possibilities: '💫',
+  fragments_of_a_deal: FRAGMENT_ICON, condensation_of_possibilities: '💫',
   the_core_of_reality: '🔮',
   "the_universe's_bug_report": '🐛', "the_demiurge's_ink": '🖋️',
   absolute_zero: '❄️', the_holy_spoon: '🥄', the_pen_of_laughter: '🪶',
@@ -181,7 +182,7 @@ export function Inventory() {
         <h1 className="font-display text-lg uppercase tracking-[0.2em] text-neon-green">Инвентарь</h1>
         <p className="text-xs text-slate-500 mt-1">{totalUnique} предметов · {totalItems} ед.</p>
         <div className="flex items-center gap-2 mt-2">
-          <span className="text-[10px] text-amber-400/70 font-mono">📜 Фрагментов бреда: <strong className="text-amber-300">{user?.fragments_balance ?? 0}</strong></span>
+          <span className="text-[10px] text-amber-400/70 font-mono"><FragmentIcon className="h-3 w-3" /> Фрагментов бреда: <strong className="text-amber-300">{user?.fragments_balance ?? 0}</strong></span>
         </div>
       </motion.header>
 
@@ -320,11 +321,17 @@ const InventoryRow = memo(function InventoryRow({
   if (iconPath) {
     icon = <img src={iconPath} alt={info.name} className="w-8 h-8 object-contain" />
   } else if (item.item.type === 'artifact') {
-    icon = <span className="text-lg">{getArtifactMainIcon(meta as Record<string, number>)}</span>
+    const mainIcon = getArtifactMainIcon(meta as Record<string, number>)
+    icon = mainIcon === FRAGMENT_ICON
+      ? <FragmentIcon className="h-4 w-4" />
+      : <span className="text-lg">{mainIcon}</span>
   } else if (info.resource_type && resourceIcons[info.resource_type]) {
     icon = <span className="text-lg">{resourceIcons[info.resource_type]}</span>
   } else {
-    icon = <span className="text-lg">{elementEmoji[item.item.id] || '📦'}</span>
+    const el = elementEmoji[item.item.id]
+    icon = el === FRAGMENT_ICON
+      ? <FragmentIcon className="h-4 w-4" />
+      : <span className="text-lg">{el || '📦'}</span>
   }
 
   const resourceLabel = info.resource_type === 'fuel'
@@ -375,7 +382,7 @@ const InventoryRow = memo(function InventoryRow({
               .slice(0, 3)
               .map(([k, v]) => (
                 <span key={k} className="text-[9px] text-neon-cyan/70">
-                  {statIcons[k] || '⚡'} {formatBonus(v)}
+                  {k.includes('fragment') ? <FragmentIcon className="h-2.5 w-2.5" /> : statIcons[k] || '⚡'} {formatBonus(v)}
                 </span>
               ))}
           </div>
@@ -452,11 +459,17 @@ function ItemDetailSheet({
       />
     )
   } else if (item.item.type === 'artifact') {
-    icon = <span className="text-4xl">{getArtifactMainIcon(meta as Record<string, number>)}</span>
+    const mainIcon = getArtifactMainIcon(meta as Record<string, number>)
+    icon = mainIcon === FRAGMENT_ICON
+      ? <FragmentIcon className="h-8 w-8" />
+      : <span className="text-4xl">{mainIcon}</span>
   } else if (info.resource_type && resourceIcons[info.resource_type]) {
     icon = <span className="text-4xl">{resourceIcons[info.resource_type]}</span>
   } else {
-    icon = <span className="text-4xl">{elementEmoji[item.item.id] || '📦'}</span>
+    const el = elementEmoji[item.item.id]
+    icon = el === FRAGMENT_ICON
+      ? <FragmentIcon className="h-8 w-8" />
+      : <span className="text-4xl">{el || '📦'}</span>
   }
 
   const resourceLabel = info.resource_type === 'fuel'
@@ -547,7 +560,7 @@ function ItemDetailSheet({
                   .filter(([, v]) => v !== null && v !== undefined && v !== 0)
                   .map(([k, v]) => {
                     const label = statLabels[k] || k.replace('bonus_', '')
-                    const icon = statIcons[k] || '✨'
+                    const icon = k.includes('fragment') ? <FragmentIcon className="h-2.5 w-2.5" /> : statIcons[k] || '✨'
                     const color = k.includes('speed') ? 'text-neon-cyan' : k.includes('defense') ? 'text-neon-green' : k.includes('fuel') ? 'text-neon-amber' : k.includes('luck') ? 'text-neon-purple' : k.includes('xp') ? 'text-amber-400' : k.includes('fragment') ? 'text-purple-400' : 'text-neon-cyan'
                     return (
                       <div key={k} className="glass-card px-3 py-2 text-center">

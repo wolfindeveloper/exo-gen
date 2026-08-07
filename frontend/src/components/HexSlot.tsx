@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { statIcons, formatBonus } from '../lib/stats'
+import { FragmentIcon } from './FragmentIcon'
 
 interface HexSlotProps {
   active: boolean
@@ -148,7 +149,12 @@ export function HexSlot({ active, icon, name, tier = 1, onClick, side, flicker, 
               {Object.entries(stats)
                 .filter(([_, v]) => v !== null && v !== undefined && v !== 0)
                 .slice(0, 2)
-                .map(([k, v]) => `${statIcons[k] || '⚡'}${formatBonus(v)}`).join(' ')}
+                .map(([k, v]) => (
+                  <span key={k} className="inline-flex items-center gap-0.5">
+                    {k.includes('fragment') ? <FragmentIcon className="h-2.5 w-2.5" /> : statIcons[k] || '⚡'}
+                    {formatBonus(v)}
+                  </span>
+                ))}
             </span>
           )}
         </div>

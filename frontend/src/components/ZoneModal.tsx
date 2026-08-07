@@ -2,15 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 
 import { apiClient } from '../api/client'
-import { statLabels } from '../lib/stats'
+import { statLabels, FRAGMENT_ICON } from '../lib/stats'
 import { canAccessZone, formatUnlockHint } from '../lib/progression'
 import { formatDuration } from '../lib/formatTime'
 import { useGameStore } from '../store/game'
+import { FragmentIcon } from './FragmentIcon'
 import type { Zone, ZonePreview } from '../types'
 
 const DROP_TYPE_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
   xgen: { label: 'XGen', emoji: '💎', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
-  fragments: { label: 'Фрагменты', emoji: '📜', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
+  fragments: { label: 'Фрагменты', emoji: FRAGMENT_ICON, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
   item: { label: 'Предмет', emoji: '📦', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
 }
 
@@ -313,7 +314,7 @@ export function ZoneModal({ zone, onClose, onStart, isLoading, playerLevel = 1 }
                         <img src={itemInfo.icon} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-lg">
-                          {(itemInfo?.icon && itemInfo.icon.length > 2) ? '📦' : (itemInfo?.icon || dropConfig.emoji)}
+                          {(itemInfo?.icon && itemInfo.icon.length > 2) ? '📦' : (itemInfo?.icon || (dropConfig.emoji === FRAGMENT_ICON ? <FragmentIcon className="h-5 w-5" /> : dropConfig.emoji))}
                         </span>
                       )}
                     </div>

@@ -1,3 +1,5 @@
+export const FRAGMENT_ICON = '/icons/fragment_icon.webp'
+
 export const statLabels: Record<string, string> = {
   speed_mod: 'Скорость',
   speed: 'Скорость',
@@ -35,7 +37,7 @@ export const statIcons: Record<string, string> = {
   repair: '🔧',
   repair_bonus: '🔧',
   xp: '⭐',
-  fragment: '📜',
+  fragment: FRAGMENT_ICON,
   bonus_speed: '⚡',
   bonus_defense: '🛡️',
   bonus_capacity: '📦',
@@ -43,7 +45,7 @@ export const statIcons: Record<string, string> = {
   bonus_fuel: '⛽',
   bonus_repair: '🔧',
   bonus_xp: '⭐',
-  bonus_fragment: '📜',
+  bonus_fragment: FRAGMENT_ICON,
 }
 
 export function formatBonus(v: unknown): string {

@@ -7,6 +7,7 @@ import { getXpProgress, calculateLevel } from '../lib/xp'
 import { getTierForLevel, findRank } from '../lib/ranks'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import { useGameStore } from '../store/game'
+import { FragmentIcon } from './FragmentIcon'
 
 const tierColors = ['#22d3ee', '#22c55e', '#a855f7', '#f59e0b', '#ef4444']
 
@@ -89,7 +90,7 @@ export function HudBar() {
         🔷{xgenCount}
       </span>
       <span className="text-[11px] text-amber-400/80 font-mono tabular-nums shrink-0">
-        📜{user?.fragments_balance ?? 0}
+        <FragmentIcon className="h-3 w-3" />{user?.fragments_balance ?? 0}
       </span>
     </motion.header>
   )

@@ -3,6 +3,7 @@ import type { Artifact, InventoryItem } from '../types'
 import { statLabels, statIcons, formatBonus } from '../lib/stats'
 import { hapticImpact } from '../lib/telegram'
 import { ConfirmDialog } from './ConfirmDialog'
+import { FragmentIcon } from './FragmentIcon'
 
 interface SlotSelectModalProps {
   open: boolean
@@ -138,12 +139,16 @@ export default function SlotSelectModal({
           <div className="flex flex-col gap-2">
             {ownedArtifacts.map((artifact) => {
               const tierColor = TIER_COLORS[Math.min(artifact.tier - 1, 4)]
-              const statsText = artifact.stats_modifiers
-                ? Object.entries(artifact.stats_modifiers)
-                    .filter(([, v]) => v !== null && v !== undefined && v !== 0)
-                    .map(([k, v]) => `${statIcons[k] || '✨'} ${statLabels[k] || k.replace('bonus_', '')} ${formatBonus(v)}`)
-                    .join(' · ')
-                : 'Без бонусов'
+              const statsEntries = artifact.stats_modifiers
+                ? Object.entries(artifact.stats_modifiers).filter(([, v]) => v !== null && v !== undefined && v !== 0)
+                : []
+              const statsNodes = statsEntries.flatMap(([k, v], i) => [
+                ...(i > 0 ? [<span key={`sep-${i}`}> · </span>] : []),
+                <span key={k} className="inline-flex items-center gap-0.5">
+                  {k.includes('fragment') ? <FragmentIcon className="h-3 w-3" /> : statIcons[k] || '✨'}
+                  {statLabels[k] || k.replace('bonus_', '')} {formatBonus(v)}
+                </span>,
+              ])
               return (
                 <button
                   key={artifact.id}
@@ -156,8 +161,8 @@ export default function SlotSelectModal({
                   <ArtifactIcon artifact={artifact} size="sm" />
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-bold text-white/80 truncate">{artifact.name_key}</div>
-                    {statsText && (
-                      <div className="text-[9px] text-cyan-400/30 mt-0.5 truncate">{statsText}</div>
+                    {statsNodes.length > 0 && (
+                      <div className="text-[9px] text-cyan-400/30 mt-0.5 truncate">{statsNodes}</div>
                     )}
                   </div>
                   <div

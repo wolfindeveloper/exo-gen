@@ -11,6 +11,7 @@ import { getMaxArtifactSlots, getNextSlotUnlock } from '../lib/progression'
 import { getAvatarUrl, getFirstName, hapticImpact } from '../lib/telegram'
 import { countFuel, countRepairKits } from '../lib/items'
 import { PullToRefresh } from '../components/PullToRefresh'
+import { FragmentIcon } from '../components/FragmentIcon'
 import type { Artifact } from '../types'
 import { api } from '../api/client'
 
@@ -409,7 +410,7 @@ export default function ShipPage() {
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-[10px] text-amber-400/30 font-semibold tracking-wider">📜</span>
+                <span className="text-[10px] text-amber-400/30 font-semibold tracking-wider"><FragmentIcon className="h-3 w-3" /></span>
                 <span className="text-amber-300 font-bold text-sm drop-shadow-[0_0_4px_rgba(251,191,36,.2)]">
                   {user?.fragments_balance ?? 0}
                 </span>
@@ -587,7 +588,6 @@ export default function ShipPage() {
                           : key.includes('fuel') ? '⛽'
                           : key.includes('luck') ? '🍀'
                           : key.includes('xp') ? '⭐'
-                          : key.includes('fragment') ? '📜'
                           : key.includes('capacity') ? '📦'
                           : key.includes('repair') ? '🔧'
                           : '✨'
@@ -603,7 +603,7 @@ export default function ShipPage() {
                             className={`text-[10px] font-mono ${color} bg-black/30 border border-white/5 rounded px-1 py-0.5 flex items-center gap-0.5`}
                             title={key.includes('defense') ? `Снижение получаемого урона: ${pct}%` : `${key}: +${pct}%`}
                           >
-                            {icon}+{pct}%
+                            {key.includes('fragment') ? <FragmentIcon className="h-3 w-3" /> : icon}+{pct}%
                           </span>
                         )
                       })}

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { useGameStore } from '../store/game'
+import { FragmentIcon } from './FragmentIcon'
 import type { LootItem } from '../types'
 
 function lootLabel(item: LootItem): string {
@@ -91,7 +92,7 @@ export function RewardSheet() {
                       className="flex items-center justify-between bg-space-600/50 rounded-lg px-3 py-2"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="text-lg">💎</span>
+                        <FragmentIcon className="h-4 w-4" />
                         <span className="text-sm text-slate-200">Фрагменты</span>
                       </div>
                       <span className="font-display text-neon-purple text-xs">+{fragmentsGained}</span>
