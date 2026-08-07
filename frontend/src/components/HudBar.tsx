@@ -8,6 +8,7 @@ import { getTierForLevel, findRank } from '../lib/ranks'
 import { getAvatarUrl, getFirstName } from '../lib/telegram'
 import { useGameStore } from '../store/game'
 import { FragmentIcon } from './FragmentIcon'
+import { XGenIcon } from './XGenIcon'
 
 const tierColors = ['#22d3ee', '#22c55e', '#a855f7', '#f59e0b', '#ef4444']
 
@@ -87,7 +88,7 @@ export function HudBar() {
       </div>
 
       <span className="text-[11px] text-neon-cyan font-mono tabular-nums shrink-0">
-        🔷{xgenCount}
+        <XGenIcon className="h-3 w-3" />{xgenCount}
       </span>
       <span className="text-[11px] text-amber-400/80 font-mono tabular-nums shrink-0">
         <FragmentIcon className="h-3 w-3" />{user?.fragments_balance ?? 0}

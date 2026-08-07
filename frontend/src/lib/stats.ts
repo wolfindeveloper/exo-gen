@@ -1,4 +1,5 @@
 export const FRAGMENT_ICON = '/icons/fragment_icon.webp'
+export const XGEN_ICON = '/icons/xgen.webp'
 
 export const statLabels: Record<string, string> = {
   speed_mod: 'Скорость',

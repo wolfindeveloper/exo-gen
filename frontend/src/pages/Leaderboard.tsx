@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { Trophy, Medal, Crown, ChevronDown, ArrowUp, ArrowDown } from 'lucide-react'
@@ -7,16 +8,17 @@ import { Skeleton } from '../components/Skeleton'
 import { PullToRefresh } from '../components/PullToRefresh'
 import { HudBar } from '../components/HudBar'
 import { PageTransition } from '../components/PageTransition'
+import { XGenIcon } from '../components/XGenIcon'
 import { fadeIn, staggerContainer } from '../lib/animations'
 import { getAvatarUrl, hapticImpact } from '../lib/telegram'
 
 type Tab = 'xp' | 'expeditions' | 'artifacts' | 'xgen' | 'articles'
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
+const TABS: { key: Tab; label: string; icon: ReactNode }[] = [
   { key: 'xp', label: 'Уровень', icon: '⭐' },
   { key: 'expeditions', label: 'Экспедиции', icon: '🚀' },
   { key: 'artifacts', label: 'Артефакты', icon: '✨' },
-  { key: 'xgen', label: 'XGen', icon: '💎' },
+  { key: 'xgen', label: 'XGen', icon: <XGenIcon className="h-3 w-3" /> },
   { key: 'articles', label: 'Статьи', icon: '📖' },
 ]
 

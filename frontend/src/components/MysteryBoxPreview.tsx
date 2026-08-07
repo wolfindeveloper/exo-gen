@@ -4,15 +4,18 @@ import { ChevronDown, ChevronUp, FlaskConical, Gift } from 'lucide-react'
 
 import type { ShopItem, LootBoxSimResult } from '../types'
 import { api } from '../api/client'
-import { FRAGMENT_ICON } from '../lib/stats'
+import { FRAGMENT_ICON, XGEN_ICON } from '../lib/stats'
 import { FragmentIcon } from './FragmentIcon'
+import { XGenIcon } from './XGenIcon'
 
 function renderDropEmoji(emoji: string, className = 'h-3 w-3') {
-  return emoji === FRAGMENT_ICON ? <FragmentIcon className={className} /> : emoji
+  if (emoji === FRAGMENT_ICON) return <FragmentIcon className={className} />
+  if (emoji === XGEN_ICON) return <XGenIcon className={className} />
+  return emoji
 }
 
 const DROP_TYPE_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
-  xgen: { label: 'XGen', emoji: '💎', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+  xgen: { label: 'XGen', emoji: XGEN_ICON, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
   fragments: { label: 'Фрагменты', emoji: FRAGMENT_ICON, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
   artifact: { label: 'Артефакт', emoji: '✨', color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
   item: { label: 'Предмет', emoji: '📦', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
@@ -131,7 +134,7 @@ export function MysteryBoxPreview({ item, isAdmin }: MysteryBoxPreviewProps) {
                       }}
                     >
                       <span className="text-sm">
-                        {reward.type === 'artifact' ? '✨' : reward.type === 'xgen' ? '💎' : reward.type === 'fragments' ? <FragmentIcon className="h-3.5 w-3.5" /> : renderDropEmoji(dropConfig.emoji)}
+                        {reward.type === 'artifact' ? '✨' : reward.type === 'xgen' ? <XGenIcon className="h-3.5 w-3.5" /> : reward.type === 'fragments' ? <FragmentIcon className="h-3.5 w-3.5" /> : renderDropEmoji(dropConfig.emoji)}
                       </span>
                     </div>
 
@@ -211,7 +214,11 @@ export function MysteryBoxPreview({ item, isAdmin }: MysteryBoxPreviewProps) {
                           <div key={`${r.item_id ?? r.drop_type}-${i}`} className="flex items-center gap-2 text-[10px]">
                             <span className="text-slate-400 truncate flex-1 min-w-0">
                               {r.item_name || r.drop_type}
-                              {r.total_xgen ? ` (${r.total_xgen} 💎)` : ''}
+                              {r.total_xgen ? (
+                                <>
+                                  {' '}({r.total_xgen} <XGenIcon className="h-2.5 w-2.5" />)
+                                </>
+                              ) : null}
                               {r.total_fragments ? (
                                 <>
                                   {' '}({r.total_fragments} <FragmentIcon className="h-2.5 w-2.5" />)
