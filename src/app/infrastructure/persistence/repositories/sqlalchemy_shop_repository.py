@@ -4,10 +4,82 @@ from uuid import UUID, uuid4
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.domain.entities.shop import ShopItem, PurchaseHistory
-from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository
-from app.infrastructure.persistence.mappers import ShopItemMapper, PurchaseHistoryMapper
-from app.infrastructure.persistence.models.shop_orm import ShopItemORM, PurchaseHistoryORM
+from app.domain.entities.shop import ShopItem, PurchaseHistory, ShopCategory
+from app.domain.repositories.shop_repository import (
+    ShopItemRepository,
+    PurchaseHistoryRepository,
+    ShopCategoryRepository,
+)
+from app.infrastructure.persistence.mappers import (
+    ShopItemMapper,
+    PurchaseHistoryMapper,
+    ShopCategoryMapper,
+)
+from app.infrastructure.persistence.models.shop_orm import (
+    ShopItemORM,
+    PurchaseHistoryORM,
+    ShopCategoryORM,
+)
+
+
+class SQLAlchemyShopCategoryRepository(ShopCategoryRepository):
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
+    async def get_all_active(self) -> list[ShopCategory]:
+        stmt = (
+            select(ShopCategoryORM)
+            .where(ShopCategoryORM.is_active.is_(True))
+            .where(ShopCategoryORM.deleted_at.is_(None))
+            .order_by(ShopCategoryORM.sort_order.asc(), ShopCategoryORM.name.asc())
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ShopCategoryMapper.to_domain(o) for o in orms]
+
+    async def get_all(self) -> list[ShopCategory]:
+        stmt = (
+            select(ShopCategoryORM)
+            .where(ShopCategoryORM.deleted_at.is_(None))
+            .order_by(ShopCategoryORM.sort_order.asc(), ShopCategoryORM.name.asc())
+        )
+        result = await self.session.execute(stmt)
+        orms = result.scalars().all()
+        return [ShopCategoryMapper.to_domain(o) for o in orms]
+
+    async def get_by_id(self, category_id: UUID) -> ShopCategory | None:
+        stmt = (
+            select(ShopCategoryORM)
+            .where(ShopCategoryORM.id == category_id)
+            .where(ShopCategoryORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        orm = result.scalar_one_or_none()
+        return ShopCategoryMapper.to_domain(orm) if orm else None
+
+    async def get_by_slug(self, slug: str) -> ShopCategory | None:
+        stmt = (
+            select(ShopCategoryORM)
+            .where(ShopCategoryORM.slug == slug)
+            .where(ShopCategoryORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        orm = result.scalar_one_or_none()
+        return ShopCategoryMapper.to_domain(orm) if orm else None
+
+    async def count_items_by_category(self, category_id: UUID) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(ShopItemORM)
+            .where(ShopItemORM.category_id == category_id)
+            .where(ShopItemORM.deleted_at.is_(None))
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar() or 0
+
+    async def save(self, category: ShopCategory) -> None:
+        orm_obj = ShopCategoryMapper.to_orm(category)
+        await self.session.merge(orm_obj)
 
 
 class SQLAlchemyShopItemRepository(ShopItemRepository):
@@ -47,7 +119,7 @@ class SQLAlchemyShopItemRepository(ShopItemRepository):
     async def get_all_active(self) -> list[ShopItem]:
         stmt = (
             select(ShopItemORM)
-            .where(ShopItemORM.is_active == True)
+            .where(ShopItemORM.is_active.is_(True))
             .where(ShopItemORM.deleted_at.is_(None))
         )
         result = await self.session.execute(stmt)

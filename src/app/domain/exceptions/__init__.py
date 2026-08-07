@@ -55,6 +55,9 @@ from app.domain.exceptions.shop import (
     ShopItemNotFoundError,
     ShopItemDailyLimitReachedError,
     ShopItemOutOfStockError,
+    ShopCategoryNotFoundError,
+    ShopCategorySlugTakenError,
+    ShopCategoryHasItemsError,
 )
 from app.domain.exceptions.stars import (
     StarsPackageNotFoundError,
@@ -103,6 +106,9 @@ __all__ = [
     "ShopItemNotFoundError",
     "ShopItemDailyLimitReachedError",
     "ShopItemOutOfStockError",
+    "ShopCategoryNotFoundError",
+    "ShopCategorySlugTakenError",
+    "ShopCategoryHasItemsError",
     "StarsPackageNotFoundError",
     "TransactionAlreadyProcessedError",
 ]

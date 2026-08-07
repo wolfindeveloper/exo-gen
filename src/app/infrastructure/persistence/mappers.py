@@ -36,8 +36,8 @@ from app.infrastructure.persistence.models.equipment_orm import EquipmentORM
 from app.infrastructure.persistence.models.stars_package_orm import StarsPackageORM
 from app.infrastructure.persistence.models.transaction_orm import TransactionORM
 from app.infrastructure.persistence.models.player_settings_orm import PlayerSettingsORM
-from app.domain.entities.shop import ShopItem, PurchaseHistory
-from app.infrastructure.persistence.models.shop_orm import ShopItemORM, PurchaseHistoryORM
+from app.domain.entities.shop import ShopItem, PurchaseHistory, ShopCategory
+from app.infrastructure.persistence.models.shop_orm import ShopItemORM, PurchaseHistoryORM, ShopCategoryORM
 
 
 class PlayerMapper:
@@ -399,12 +399,39 @@ class LootBoxMapper:
         )
 
 
+class ShopCategoryMapper:
+    @staticmethod
+    def to_domain(orm: ShopCategoryORM) -> ShopCategory:
+        return ShopCategory(
+            id=orm.id,
+            name=orm.name,
+            slug=orm.slug,
+            icon=orm.icon or "",
+            sort_order=orm.sort_order,
+            is_active=orm.is_active,
+            deleted_at=orm.deleted_at,
+        )
+
+    @staticmethod
+    def to_orm(domain: ShopCategory) -> ShopCategoryORM:
+        return ShopCategoryORM(
+            id=domain.id,
+            name=domain.name,
+            slug=domain.slug,
+            icon=domain.icon,
+            sort_order=domain.sort_order,
+            is_active=domain.is_active,
+            deleted_at=domain.deleted_at,
+        )
+
+
 class ShopItemMapper:
     @staticmethod
     def to_domain(orm: ShopItemORM) -> ShopItem:
         return ShopItem(
             id=orm.id,
             item_id=orm.item_id,
+            category_id=orm.category_id,
             price_xgen=orm.price_xgen,
             daily_limit=orm.daily_limit,
             stock_limit=orm.stock_limit,
@@ -421,6 +448,7 @@ class ShopItemMapper:
         return ShopItemORM(
             id=domain.id,
             item_id=domain.item_id,
+            category_id=domain.category_id,
             price_xgen=domain.price_xgen,
             daily_limit=domain.daily_limit,
             stock_limit=domain.stock_limit,

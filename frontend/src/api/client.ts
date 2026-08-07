@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as Sentry from '@sentry/react'
 
-import type { Artifact, ClaimAchievementResponse, ClaimResult, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
+import type { Artifact, ClaimAchievementResponse, ClaimResult, DailyLoginResult, Expedition, GlobalLeaderboard, GuideChapterDetail, GuideChaptersResponse, GuideClaimRewardResponse, GuideFixGlitchResponse, GuideResearchResponse, InventoryItem, Ship, ShipActionResponse, ShopBuyResponse, ShopItem, ShopCategory, AdminShopCategory, UserProfile, UserStats, Zone, ItemReference, AdminItem, AdminItemsResponse, CreateItemPayload, UpdateItemPayload, AdminZone, AdminZonesResponse, CreateZonePayload, UpdateZonePayload, AdminLootBox, CreateLootBoxPayload, UpdateLootBoxPayload, LootBoxSimResult, AdminShopItem, CreateAdminShopItemPayload, UpdateAdminShopItemPayload, AdminSeason, CreateAdminSeasonPayload, UpdateAdminSeasonPayload, AdminPaginatedResponse, AdminStarsPackage, UpdateAdminStarsPackagePayload, AdminChapter, AdminArticle, ChapterRewardItem } from '../types'
 
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
 
@@ -376,14 +376,15 @@ export const api = {
   },
 
   getShopCatalog: async () => {
-    const data = await apiClient.get<{ id: string; item_id: string | null; price_xgen: number; daily_limit: number; stock_limit: number; is_active: boolean; bundle_items: { item_id: string; quantity: number }[]; bundle_name: string; bundle_description: string; bundle_image_url: string; bundle_items_info: { item_id: string; name: string; description: string; type: string; rarity: string; image_url: string; quantity: number }[]; item_info: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, number>; image_url: string } | null }[]>('/shop/').then((r) => r.data)
+    const data = await apiClient.get<{ id: string; item_id: string | null; category_id: string | null; category_name: string | null; category_slug: string | null; price_xgen: number; daily_limit: number; stock_limit: number; is_active: boolean; bundle_items: { item_id: string; quantity: number }[]; bundle_name: string; bundle_description: string; bundle_image_url: string; bundle_items_info: { item_id: string; name: string; description: string; type: string; rarity: string; image_url: string; quantity: number }[]; item_info: { id: string; name: string; description: string; type: string; rarity: string; effect: Record<string, number>; image_url: string } | null }[]>('/shop/').then((r) => r.data)
     return data.map((s) => {
       const isBundle = !s.item_id && s.bundle_items?.length > 0
+      const category = s.category_slug || (isBundle ? 'mystery' : 'resources')
 
       if (isBundle) {
         return {
           id: s.id,
-          category: 'mystery',
+          category,
           name_key: s.bundle_name || 'Набор',
           description_key: s.bundle_description || '',
           price: { amount: s.price_xgen, currency: 'xgen' as const },
@@ -403,7 +404,7 @@ export const api = {
 
       return {
         id: s.id,
-        category: 'resources',
+        category,
         name_key: s.item_info?.name || '',
         description_key: s.item_info?.description || '',
         price: { amount: s.price_xgen, currency: 'xgen' as const },
@@ -415,6 +416,30 @@ export const api = {
         is_bundle: false,
       } as ShopItem
     })
+  },
+
+  getShopCategories: async () => {
+    const data = await apiClient.get<ShopCategory[]>('/shop/categories').then((r) => r.data)
+    return data
+  },
+
+  getAdminShopCategories: async () => {
+    const data = await apiClient.get<AdminShopCategory[]>('/admin/shop-categories').then((r) => r.data)
+    return data
+  },
+
+  createAdminShopCategory: async (payload: { name: string; slug: string; icon?: string; sort_order?: number }) => {
+    const data = await apiClient.post<AdminShopCategory>('/admin/shop-categories', payload).then((r) => r.data)
+    return data
+  },
+
+  updateAdminShopCategory: async (categoryId: string, payload: { name?: string; icon?: string; sort_order?: number; is_active?: boolean }) => {
+    const data = await apiClient.patch<AdminShopCategory>(`/admin/shop-categories/${categoryId}`, payload).then((r) => r.data)
+    return data
+  },
+
+  deleteAdminShopCategory: async (categoryId: string) => {
+    await apiClient.delete(`/admin/shop-categories/${categoryId}`)
   },
 
   buyShopItem: async (itemId: string) => {

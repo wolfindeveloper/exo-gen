@@ -9,10 +9,15 @@ from app.domain.entities.player import Player
 from app.infrastructure.database.session import AsyncSessionLocal
 from app.domain.uow import UnitOfWork
 from app.infrastructure.persistence.uow import SQLAlchemyUnitOfWork
-from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository
+from app.domain.repositories.shop_repository import (
+    ShopItemRepository,
+    PurchaseHistoryRepository,
+    ShopCategoryRepository,
+)
 from app.infrastructure.persistence.repositories.sqlalchemy_shop_repository import (
     SQLAlchemyShopItemRepository,
     SQLAlchemyPurchaseHistoryRepository,
+    SQLAlchemyShopCategoryRepository,
 )
 from app.domain.repositories.player_repository import PlayerRepository
 from app.infrastructure.persistence.repositories.sqlalchemy_player_repository import (
@@ -153,6 +158,12 @@ async def get_shop_item_repo(
     session: AsyncSession = Depends(get_db_session),
 ) -> ShopItemRepository:
     return SQLAlchemyShopItemRepository(session)
+
+
+async def get_shop_category_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> ShopCategoryRepository:
+    return SQLAlchemyShopCategoryRepository(session)
 
 
 async def get_purchase_history_repo(

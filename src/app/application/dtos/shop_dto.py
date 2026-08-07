@@ -3,6 +3,31 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict
 
 
+class ShopCategoryResponseDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    name: str
+    slug: str
+    icon: str
+    sort_order: int
+    is_active: bool = True
+
+
+class CreateShopCategoryDTO(BaseModel):
+    name: str
+    slug: str
+    icon: str = ""
+    sort_order: int = 0
+
+
+class UpdateShopCategoryDTO(BaseModel):
+    name: str | None = None
+    icon: str | None = None
+    sort_order: int | None = None
+    is_active: bool | None = None
+
+
 class ShopItemInfoDTO(BaseModel):
     """Информация о предмете из справочника items"""
     id: UUID
@@ -30,6 +55,9 @@ class ShopItemResponseDTO(BaseModel):
 
     id: UUID
     item_id: UUID | None = None
+    category_id: UUID | None = None
+    category_name: str | None = None
+    category_slug: str | None = None
     price_xgen: int
     daily_limit: int
     stock_limit: int
@@ -51,6 +79,7 @@ class ShopItemAnalyticsDTO(BaseModel):
 class ShopItemWithAnalyticsDTO(BaseModel):
     id: UUID
     item_id: UUID | None = None
+    category_id: UUID | None = None
     price_xgen: int
     daily_limit: int
     stock_limit: int

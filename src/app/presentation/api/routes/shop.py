@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.infrastructure.security.rate_limiter import limiter
 from app.infrastructure.messaging.telegram_bot_service import TelegramBotService
-from app.application.dtos.shop_dto import ShopItemResponseDTO, PurchaseItemDTO, PurchaseItemResponseDTO
+from app.application.dtos.shop_dto import ShopItemResponseDTO, PurchaseItemDTO, PurchaseItemResponseDTO, ShopCategoryResponseDTO
 from app.application.dtos.stars_dto import StarsPackageResponseDTO, BuyXgenRequestDTO, BuyXgenResponseDTO
 from app.application.use_cases.get_shop_items import GetShopItemsUseCase
+from app.application.use_cases.get_shop_categories import GetShopCategoriesUseCase
 from app.application.use_cases.purchase_shop_item import PurchaseShopItemUseCase
 from app.application.use_cases.get_stars_packages import GetStarsPackagesUseCase
 from app.application.use_cases.buy_xgen import BuyXgenUseCase
@@ -13,7 +14,7 @@ from app.domain.exceptions import DomainError
 from app.domain.exceptions.player import InsufficientXgenError
 from app.domain.exceptions.stars import StarsPackageNotFoundError
 from app.domain.uow import UnitOfWork
-from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository
+from app.domain.repositories.shop_repository import ShopItemRepository, PurchaseHistoryRepository, ShopCategoryRepository
 from app.domain.repositories.player_repository import PlayerRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
@@ -23,6 +24,7 @@ from app.domain.services.loot_box_service import LootBoxService
 from app.infrastructure.telegram.security import get_current_player
 from app.presentation.api.dependencies import (
     get_shop_item_repo,
+    get_shop_category_repo,
     get_purchase_history_repo,
     get_player_repo,
     get_item_repo,
@@ -35,14 +37,29 @@ from app.presentation.api.dependencies import (
 router = APIRouter(prefix="/shop", tags=["Shop"])
 
 
+@router.get("/categories", response_model=list[ShopCategoryResponseDTO])
+@limiter.limit("30/minute")
+async def get_shop_categories(
+    request: Request,
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
+):
+    use_case = GetShopCategoriesUseCase(category_repo=category_repo)
+    return await use_case.execute()
+
+
 @router.get("/", response_model=list[ShopItemResponseDTO])
 @limiter.limit("30/minute")
 async def get_shop_items(
     request: Request,
     shop_item_repo: ShopItemRepository = Depends(get_shop_item_repo),
     item_repo: ItemRepository = Depends(get_item_repo),
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
 ):
-    use_case = GetShopItemsUseCase(shop_item_repo=shop_item_repo, item_repo=item_repo)
+    use_case = GetShopItemsUseCase(
+        shop_item_repo=shop_item_repo,
+        item_repo=item_repo,
+        category_repo=category_repo,
+    )
     return await use_case.execute()
 
 

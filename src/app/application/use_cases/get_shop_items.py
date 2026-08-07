@@ -1,17 +1,25 @@
 from uuid import UUID
 
 from app.application.dtos.shop_dto import ShopItemResponseDTO, ShopItemInfoDTO, BundleItemInfoDTO
-from app.domain.repositories.shop_repository import ShopItemRepository
+from app.domain.repositories.shop_repository import ShopItemRepository, ShopCategoryRepository
 from app.domain.repositories.item_repository import ItemRepository
 
 
 class GetShopItemsUseCase:
-    def __init__(self, shop_item_repo: ShopItemRepository, item_repo: ItemRepository):
+    def __init__(
+        self,
+        shop_item_repo: ShopItemRepository,
+        item_repo: ItemRepository,
+        category_repo: ShopCategoryRepository,
+    ):
         self.shop_item_repo = shop_item_repo
         self.item_repo = item_repo
+        self.category_repo = category_repo
 
     async def execute(self) -> list[ShopItemResponseDTO]:
         items = await self.shop_item_repo.get_all_active()
+        categories = await self.category_repo.get_all_active()
+        categories_map = {str(c.id): c for c in categories}
 
         item_ids: list[UUID] = []
         for shop_item in items:
@@ -32,6 +40,8 @@ class GetShopItemsUseCase:
 
         result = []
         for shop_item in items:
+            category = categories_map.get(str(shop_item.category_id)) if shop_item.category_id else None
+
             item_info = None
             if shop_item.item_id:
                 catalog_item = items_map.get(str(shop_item.item_id))
@@ -66,6 +76,9 @@ class GetShopItemsUseCase:
             result.append(ShopItemResponseDTO(
                 id=shop_item.id,
                 item_id=shop_item.item_id,
+                category_id=shop_item.category_id,
+                category_name=category.name if category else None,
+                category_slug=category.slug if category else None,
                 price_xgen=shop_item.price_xgen,
                 daily_limit=shop_item.daily_limit,
                 stock_limit=shop_item.stock_limit,

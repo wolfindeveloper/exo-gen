@@ -286,6 +286,18 @@ export interface GuideClaimRewardResponse {
   artifact_name: string
 }
 
+export interface ShopCategory {
+  id: string
+  name: string
+  slug: string
+  icon: string
+  sort_order: number
+}
+
+export interface AdminShopCategory extends ShopCategory {
+  is_active: boolean
+}
+
 export interface ShopItem {
   id: string
   category: string
@@ -587,6 +599,7 @@ export interface AdminChapter {
 export interface AdminShopItem {
   id: string
   item_id: string | null
+  category_id?: string | null
   price_xgen: number
   daily_limit: number
   stock_limit: number
@@ -600,6 +613,7 @@ export interface AdminShopItem {
 
 export interface CreateAdminShopItemPayload {
   item_id?: string
+  category_id?: string
   price_xgen: number
   daily_limit?: number
   stock_limit?: number
@@ -611,6 +625,7 @@ export interface CreateAdminShopItemPayload {
 }
 
 export interface UpdateAdminShopItemPayload {
+  category_id?: string
   price_xgen?: number
   daily_limit?: number
   stock_limit?: number

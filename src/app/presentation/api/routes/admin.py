@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.presentation.api.dependencies import (
     get_uow, get_zone_repo, get_season_repo, get_chapter_repo,
     get_item_repo, get_inventory_repo, get_loot_box_repo,
-    get_shop_item_repo, get_purchase_repo, get_stars_package_repo,
+    get_shop_item_repo, get_shop_category_repo, get_purchase_repo, get_stars_package_repo,
     get_expedition_repo, get_guide_progress_repo, verify_admin,
 )
 from app.domain.uow import UnitOfWork
@@ -14,7 +14,7 @@ from app.domain.repositories.chapter_repository import ChapterRepository
 from app.domain.repositories.item_repository import ItemRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.loot_box_repository import LootBoxRepository
-from app.domain.repositories.shop_repository import ShopItemRepository
+from app.domain.repositories.shop_repository import ShopItemRepository, ShopCategoryRepository
 from app.domain.repositories.purchase_repository import PurchaseRepository
 from app.domain.repositories.stars_repository import StarsPackageRepository
 from app.domain.repositories.expedition_repository import ExpeditionRepository
@@ -25,7 +25,12 @@ from app.domain.exceptions.guide import (
     SeasonActiveError, SeasonHasProgressError, ArticleHasUnlocksError,
 )
 from app.domain.exceptions.zone import ZoneNotFoundError, ZoneHasActiveExpeditionsError
-from app.domain.exceptions.shop import ShopItemNotFoundError
+from app.domain.exceptions.shop import (
+    ShopItemNotFoundError,
+    ShopCategoryNotFoundError,
+    ShopCategorySlugTakenError,
+    ShopCategoryHasItemsError,
+)
 from app.domain.exceptions.stars import StarsPackageNotFoundError
 from app.domain.exceptions.loot_box import LootBoxConfigNotFoundError
 from app.domain.exceptions.item import (
@@ -46,6 +51,9 @@ from app.application.dtos.shop_dto import (
     ShopItemResponseDTO,
     ShopItemWithAnalyticsDTO,
     ShopItemAnalyticsDTO,
+    ShopCategoryResponseDTO,
+    CreateShopCategoryDTO,
+    UpdateShopCategoryDTO,
 )
 from app.application.dtos.stars_dto import StarsPackageResponseDTO
 from app.application.dtos.admin_dto import (
@@ -79,6 +87,9 @@ from app.application.use_cases.soft_delete_season import SoftDeleteSeasonUseCase
 from app.application.use_cases.soft_delete_loot_box_config import SoftDeleteLootBoxConfigUseCase
 from app.application.use_cases.soft_delete_shop_item import SoftDeleteShopItemUseCase
 from app.application.use_cases.soft_delete_stars_package import SoftDeleteStarsPackageUseCase
+from app.application.use_cases.create_shop_category import CreateShopCategoryUseCase
+from app.application.use_cases.update_shop_category import UpdateShopCategoryUseCase
+from app.application.use_cases.soft_delete_shop_category import SoftDeleteShopCategoryUseCase
 from app.application.use_cases.simulate_zone_loot import SimulateZoneLootUseCase as SimulateZoneLoot
 from app.application.use_cases.simulate_loot_box import SimulateLootBoxUseCase as SimulateLootBox
 from app.application.use_cases.get_shop_item_analytics import GetShopItemAnalyticsUseCase as GetShopItemAnalytics
@@ -183,6 +194,20 @@ async def create_shop_item(
     use_case = CreateShopItem(uow)
     result = await use_case.execute(data)
     return result
+
+
+@router.post("/shop-categories", response_model=ShopCategoryResponseDTO, status_code=201)
+async def create_shop_category(
+    dto: CreateShopCategoryDTO,
+    _admin = Depends(verify_admin),
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
+    uow: UnitOfWork = Depends(get_uow),
+):
+    try:
+        use_case = CreateShopCategoryUseCase(category_repo=category_repo)
+        return await use_case.execute(dto, uow)
+    except ShopCategorySlugTakenError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.post("/stars-packages", response_model=StarsPackageResponseDTO, status_code=201)
@@ -516,6 +541,7 @@ async def get_all_shop_items(
             ShopItemWithAnalyticsDTO(
                 id=item.id,
                 item_id=item.item_id,
+                category_id=item.category_id,
                 price_xgen=item.price_xgen,
                 daily_limit=item.daily_limit,
                 stock_limit=item.stock_limit,
@@ -529,6 +555,22 @@ async def get_all_shop_items(
             )
         )
     return results
+
+
+@router.get("/shop-categories", response_model=list[ShopCategoryResponseDTO])
+async def get_all_shop_categories(
+    _admin = Depends(verify_admin),
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
+):
+    categories = await category_repo.get_all()
+    return [ShopCategoryResponseDTO(
+        id=c.id,
+        name=c.name,
+        slug=c.slug,
+        icon=c.icon,
+        sort_order=c.sort_order,
+        is_active=c.is_active,
+    ) for c in categories]
 
 
 @router.get("/shop-items/{item_id}/analytics")
@@ -558,6 +600,21 @@ async def update_shop_item(
         use_case = UpdateShopItemUseCase(shop_item_repo=shop_item_repo)
         return await use_case.execute(shop_item_id, dto, uow)
     except ShopItemNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.patch("/shop-categories/{category_id}", response_model=ShopCategoryResponseDTO)
+async def update_shop_category(
+    category_id: UUID,
+    dto: UpdateShopCategoryDTO,
+    _admin = Depends(verify_admin),
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
+    uow: UnitOfWork = Depends(get_uow),
+):
+    try:
+        use_case = UpdateShopCategoryUseCase(category_repo=category_repo)
+        return await use_case.execute(category_id, dto, uow)
+    except ShopCategoryNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 
@@ -716,6 +773,22 @@ async def delete_shop_item(
         await use_case.execute(shop_item_id, uow)
     except ShopItemNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+@router.delete("/shop-categories/{category_id}", status_code=204)
+async def delete_shop_category(
+    category_id: UUID,
+    _admin = Depends(verify_admin),
+    category_repo: ShopCategoryRepository = Depends(get_shop_category_repo),
+    uow: UnitOfWork = Depends(get_uow),
+):
+    try:
+        use_case = SoftDeleteShopCategoryUseCase(category_repo=category_repo)
+        await use_case.execute(category_id, uow)
+    except ShopCategoryNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ShopCategoryHasItemsError as e:
+        raise HTTPException(status_code=409, detail=str(e))
 
 
 @router.delete("/stars-packages/{package_id}", status_code=204)

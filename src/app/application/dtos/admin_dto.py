@@ -172,6 +172,7 @@ class UpdateShopItemDTO(BaseModel):
     daily_limit: int | None = None
     stock_limit: int | None = None
     is_active: bool | None = None
+    category_id: UUID | None = None
     bundle_items: list[BundleItemDTO] | None = None
     bundle_name: str | None = None
     bundle_description: str | None = None
@@ -202,6 +203,7 @@ class UpdateStarsPackageDTO(BaseModel):
 
 class CreateShopItemDTO(BaseModel):
     item_id: UUID | None = None
+    category_id: UUID | None = None
     price_xgen: int = Field(ge=0)
     daily_limit: int = Field(ge=0, default=0)
     stock_limit: int = Field(ge=0, default=0)

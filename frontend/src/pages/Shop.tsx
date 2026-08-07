@@ -11,7 +11,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog'
 import { useGameStore } from '../store/game'
 import { statLabels } from '../lib/stats'
 import { hapticImpact } from '../lib/telegram'
-import type { ShopBuyResponse, ShopItem } from '../types'
+import type { ShopBuyResponse, ShopCategory, ShopItem } from '../types'
 
 interface CoinParticle {
   id: number
@@ -40,14 +40,6 @@ const tierNames: Record<number, string> = {
   5: 'Ранг V',
 }
 
-const categoryIcons: Record<string, typeof Package> = {
-  resources: Package,
-  artifacts: Diamond,
-  premium: Star,
-  mystery: Gift,
-  stars: Star,
-}
-
 const sellerComments: Record<string, string[]> = {
   fuel_pack: ['«Разумный выбор. Редкость.»', '«Пейте, космонавты, заварку — в космосе она бесполезна, но согревает душу.»'],
   repair_pack: ['«Оптимизм — это вам не прочность. Но звучит лучше.»', '«Купил — починился. Не починился — купи ещё.»'],
@@ -62,15 +54,6 @@ const artifactComments: Record<number, string[]> = {
   3: ['«Редкость. Как честный политик.»', '«T3. Золотая середина между «дешево» и «дорого».»'],
   4: ['«Эпик. Вы либо везунчик, либо транжира.»', '«T4. Если не работает — попробуйте перезагрузить вселенную.»'],
   5: ['«Легендарно. Поздравляю. Вы разорились.»', '«T5. Единственное, что легендарнее этого артефакта — ваша способность тратить звёзды.»'],
-}
-
-const categories = ['resources', 'artifacts', 'premium', 'mystery', 'stars']
-const categoryLabels: Record<string, string> = {
-  resources: 'Ресурсы',
-  artifacts: 'Артефакты',
-  premium: 'Премиум',
-  mystery: 'Ящики',
-  stars: '⭐ Stars',
 }
 
 function getComment(item: ShopItem): string | null {
@@ -314,6 +297,13 @@ export function Shop() {
   const [xgenConfirmItem, setXgenConfirmItem] = useState<ShopItem | null>(null)
   const [bundlePreview, setBundlePreview] = useState<ShopItem | null>(null)
   const [starsPackages, setStarsPackages] = useState<{ id: string; stars_amount: number; xgen_reward: number; is_active: boolean }[]>([])
+  const [shopCategories, setShopCategories] = useState<ShopCategory[]>([])
+
+  useEffect(() => {
+    api.getShopCategories()
+      .then(setShopCategories)
+      .catch(() => console.warn('Failed to load shop categories'))
+  }, [])
 
   useEffect(() => {
     api.getStarsPackages()
@@ -330,8 +320,9 @@ export function Shop() {
 
   const handleRefresh = useCallback(async () => {
     setError(null)
-    const data = await api.getShopCatalog()
+    const [data, cats] = await Promise.all([api.getShopCatalog(), api.getShopCategories()])
     setItems(data)
+    setShopCategories(cats)
   }, [])
 
   useEffect(() => {
@@ -347,10 +338,14 @@ export function Shop() {
     return () => clearTimeout(commentTimeout.current)
   }, [buyerCommentItem])
 
-  const bundleItems = items.filter((i) => i.is_bundle)
-  const shopItems = items.filter((i) => i.category === activeCategory && i.type !== 'artifact' && !i.is_bundle)
+  const shopItems = items.filter((i) => i.category === activeCategory && i.type !== 'artifact')
   const artifactItems = items.filter((i) => i.category === 'artifacts' && i.type === 'artifact')
   const isArtifactCategory = activeCategory === 'artifacts'
+
+  const tabs = [
+    ...shopCategories.map((c) => ({ key: c.slug, label: c.name, icon: c.icon })),
+    { key: 'stars', label: 'Stars', icon: '⭐' },
+  ]
 
   const executeBuy = useCallback(async (shopItem: ShopItem, btnEl?: HTMLElement) => {
     setBuying(shopItem.id)
@@ -460,50 +455,24 @@ export function Shop() {
       </AnimatePresence>
 
       <div className="flex gap-1 overflow-x-auto -mx-4 px-4 scrollbar-none">
-        {categories.map((cat) => {
-          const active = activeCategory === cat
-          const Icon = categoryIcons[cat]
+        {tabs.map((tab) => {
+          const active = activeCategory === tab.key
           return (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
+              key={tab.key}
+              onClick={() => setActiveCategory(tab.key)}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[10px] font-display uppercase tracking-wider transition-all shrink-0 ${
                 active
                   ? 'bg-amber-500/15 text-amber-400 border border-amber-500/25'
                   : 'text-slate-600 hover:text-slate-400 border border-transparent'
               }`}
             >
-              <Icon size={14} strokeWidth={1.5} />
-              {categoryLabels[cat]}
+              <span className="text-sm leading-none">{tab.icon}</span>
+              {tab.label}
             </button>
           )
         })}
       </div>
-
-      {bundleItems.length > 0 && (
-        <div className="space-y-3 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="h-px flex-1 bg-amber-500/10" />
-            <span className="text-[9px] text-amber-400/60 font-display uppercase tracking-widest">
-              {'\u041d\u0430\u0431\u043e\u0440\u044b'}
-            </span>
-            <div className="h-px flex-1 bg-amber-500/10" />
-          </div>
-          {bundleItems.map((item) => {
-            const canAfford = (user?.xgen_balance ?? 0) >= item.price.amount
-            return (
-              <BundleCard
-                key={item.id}
-                item={item}
-                canAfford={canAfford}
-                isBuying={buying === item.id}
-                onBuy={() => handleBuy(item)}
-                onPreview={() => setBundlePreview(item)}
-              />
-            )
-          })}
-        </div>
-      )}
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -614,8 +583,8 @@ export function Shop() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
                     hapticImpact('light')
-                    const otherCat = categories.find((c) => c !== activeCategory) || 'resources'
-                    setActiveCategory(otherCat)
+                    const otherTab = tabs.find((t) => t.key !== activeCategory)
+                    setActiveCategory(otherTab?.key ?? 'stars')
                   }}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neon-purple/10 border border-neon-purple/25 text-neon-purple text-[10px] font-display uppercase tracking-wider hover:bg-neon-purple/15 transition-colors"
                 >
@@ -624,6 +593,19 @@ export function Shop() {
               </div>
             ) : (
               shopItems.map((item) => {
+              if (item.is_bundle) {
+                const canAfford = (user?.xgen_balance ?? 0) >= item.price.amount
+                return (
+                  <BundleCard
+                    key={item.id}
+                    item={item}
+                    canAfford={canAfford}
+                    isBuying={buying === item.id}
+                    onBuy={() => handleBuy(item)}
+                    onPreview={() => setBundlePreview(item)}
+                  />
+                )
+              }
               const isPremium = item.price.currency === 'stars'
               const canAfford = isPremium
                 ? (user?.balance_stars ?? 0) >= item.price.amount

@@ -8,12 +8,51 @@ from app.domain.exceptions.shop import (
     ShopItemOutOfStockError,
 )
 
+_UNSET = object()
+
+
+@dataclass
+class ShopCategory(AggregateRoot):
+    id: UUID
+    name: str
+    slug: str
+    icon: str = ""
+    sort_order: int = 0
+    is_active: bool = True
+    deleted_at: datetime | None = None
+
+    def soft_delete(self) -> None:
+        self.deleted_at = datetime.now(timezone.utc)
+
+    def is_deleted(self) -> bool:
+        return self.deleted_at is not None
+
+    def update(
+        self,
+        name: str | None = None,
+        icon: str | None = None,
+        sort_order: int | None = None,
+        is_active: bool | None = None,
+        **kwargs: object,
+    ) -> None:
+        if "slug" in kwargs:
+            raise ValueError("Cannot change slug directly")
+        if name is not None:
+            self.name = name
+        if icon is not None:
+            self.icon = icon
+        if sort_order is not None:
+            self.sort_order = sort_order
+        if is_active is not None:
+            self.is_active = is_active
+
 
 @dataclass
 class ShopItem(AggregateRoot):
     id: UUID
     price_xgen: int
     item_id: UUID | None = None
+    category_id: UUID | None = None
     daily_limit: int = 0
     stock_limit: int = 0
     is_active: bool = True
@@ -32,6 +71,7 @@ class ShopItem(AggregateRoot):
         bundle_name: str | None = None,
         bundle_description: str | None = None,
         bundle_image_url: str | None = None,
+        category_id: UUID | None = _UNSET,  # type: ignore[assignment]
         **kwargs: object,
     ) -> None:
         if "item_id" in kwargs:
@@ -50,6 +90,8 @@ class ShopItem(AggregateRoot):
             self.bundle_description = bundle_description
         if bundle_image_url is not None:
             self.bundle_image_url = bundle_image_url
+        if category_id is not _UNSET:
+            self.category_id = category_id
 
     def soft_delete(self) -> None:
         self.deleted_at = datetime.now(timezone.utc)

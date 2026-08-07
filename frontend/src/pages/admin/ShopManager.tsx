@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Info, Package, PackageOpen, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Info, Package, PackageOpen, Pencil, Plus, Search, Tags, Trash2, X } from 'lucide-react'
 
 import { api } from '../../api/client'
-import type { AdminItem, AdminShopItem } from '../../types'
+import type { AdminItem, AdminShopCategory, AdminShopItem } from '../../types'
 
 const PAGE_SIZE = 20
 
@@ -20,6 +20,7 @@ interface BundleFormItem {
 interface FormState {
   mode: 'single' | 'bundle'
   item_id: string
+  category_id: string
   bundle_items: BundleFormItem[]
   price_xgen: string
   daily_limit: string
@@ -33,6 +34,7 @@ interface FormState {
 const EMPTY_FORM: FormState = {
   mode: 'single',
   item_id: '',
+  category_id: '',
   bundle_items: [],
   price_xgen: '0',
   daily_limit: '0',
@@ -65,6 +67,22 @@ export function ShopManager() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
+  const [view, setView] = useState<'items' | 'categories'>('items')
+  const [categories, setCategories] = useState<AdminShopCategory[]>([])
+  const [showCategoryForm, setShowCategoryForm] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<AdminShopCategory | null>(null)
+  const [categorySubmitting, setCategorySubmitting] = useState(false)
+  const [categoryError, setCategoryError] = useState('')
+  const [deletingCategory, setDeletingCategory] = useState<AdminShopCategory | null>(null)
+  const [categoryDeleting, setCategoryDeleting] = useState(false)
+  const [catForm, setCatForm] = useState({
+    name: '',
+    slug: '',
+    icon: '',
+    sort_order: 0,
+    is_active: true,
+  })
+
   const [bundleItemSelect, setBundleItemSelect] = useState('')
   const [bundleItemQty, setBundleItemQty] = useState(1)
 
@@ -85,13 +103,15 @@ export function ShopManager() {
       setForbidden(false)
       setError(null)
 
-      const [shopData, itemsData] = await Promise.all([
+      const [shopData, itemsData, catData] = await Promise.all([
         api.getAdminShopItems(),
         api.getAdminItems(1, 200),
+        api.getAdminShopCategories(),
       ])
 
       setShopItems(shopData)
       setAllItems(itemsData.items)
+      setCategories(catData)
     } catch (e) {
       const err = e as Error & { status?: number }
       if (err.status === 403 || err.message.includes('Access denied')) {
@@ -182,6 +202,7 @@ export function ShopManager() {
     setForm({
       mode: isBundle ? 'bundle' : 'single',
       item_id: item.item_id || '',
+      category_id: item.category_id || '',
       bundle_items: (item.bundle_items || []).map((b) => ({
         item_id: b.item_id,
         quantity: b.quantity,
@@ -253,6 +274,10 @@ export function ShopManager() {
           is_active: form.is_active,
         }
 
+        if (form.category_id) {
+          payload.category_id = form.category_id
+        }
+
         if (form.mode === 'bundle') {
           payload.bundle_items = form.bundle_items
           payload.bundle_name = form.bundle_name
@@ -267,6 +292,10 @@ export function ShopManager() {
           daily_limit: limit(form.daily_limit),
           stock_limit: limit(form.stock_limit),
           is_active: form.is_active,
+        }
+
+        if (form.category_id) {
+          payload.category_id = form.category_id
         }
 
         if (form.mode === 'single') {
@@ -305,6 +334,80 @@ export function ShopManager() {
     }
   }
 
+  const openCategoryCreate = () => {
+    setEditingCategory(null)
+    setCategoryError('')
+    setCatForm({ name: '', slug: '', icon: '', sort_order: categories.length, is_active: true })
+    setShowCategoryForm(true)
+  }
+
+  const openCategoryEdit = (cat: AdminShopCategory) => {
+    setEditingCategory(cat)
+    setCategoryError('')
+    setCatForm({ name: cat.name, slug: cat.slug, icon: cat.icon, sort_order: cat.sort_order, is_active: cat.is_active })
+    setShowCategoryForm(true)
+  }
+
+  const closeCategoryForm = () => {
+    setShowCategoryForm(false)
+    setEditingCategory(null)
+    setCategoryError('')
+  }
+
+  const handleCategorySubmit = async () => {
+    if (!catForm.name.trim()) {
+      setCategoryError('Укажите название категории')
+      return
+    }
+    if (!editingCategory && !catForm.slug.trim()) {
+      setCategoryError('Укажите slug категории (латиницей)')
+      return
+    }
+
+    try {
+      setCategorySubmitting(true)
+      setCategoryError('')
+
+      if (editingCategory) {
+        await api.updateAdminShopCategory(editingCategory.id, {
+          name: catForm.name,
+          icon: catForm.icon,
+          sort_order: catForm.sort_order,
+          is_active: catForm.is_active,
+        })
+      } else {
+        await api.createAdminShopCategory({
+          name: catForm.name,
+          slug: catForm.slug,
+          icon: catForm.icon,
+          sort_order: catForm.sort_order,
+        })
+      }
+
+      closeCategoryForm()
+      await loadItems()
+    } catch (e) {
+      setCategoryError((e as Error).message)
+    } finally {
+      setCategorySubmitting(false)
+    }
+  }
+
+  const confirmDeleteCategory = async () => {
+    if (!deletingCategory) return
+    try {
+      setCategoryDeleting(true)
+      await api.deleteAdminShopCategory(deletingCategory.id)
+      setDeletingCategory(null)
+      await loadItems()
+    } catch (e) {
+      setDeletingCategory(null)
+      setCategoryError((e as Error).message)
+    } finally {
+      setCategoryDeleting(false)
+    }
+  }
+
   if (forbidden) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -336,6 +439,106 @@ export function ShopManager() {
         </button>
       </div>
 
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => setView('items')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            view === 'items' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'
+          }`}
+        >
+          <Package size={16} />
+          {'Товары'}
+        </button>
+        <button
+          onClick={() => setView('categories')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            view === 'categories' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'
+          }`}
+        >
+          <Tags size={16} />
+          {'Категории'}
+        </button>
+      </div>
+
+      {view === 'categories' && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm text-gray-500">{'Всего категорий:'} {categories.length}</p>
+            <button
+              onClick={openCategoryCreate}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg transition-colors text-sm"
+            >
+              <Plus size={18} />
+              {'Добавить категорию'}
+            </button>
+          </div>
+
+          {categoryError && (
+            <div className="mb-4 bg-red-900/30 border border-red-700/50 text-red-300 px-4 py-3 rounded-lg text-sm">
+              {categoryError}
+            </div>
+          )}
+
+          {categories.length === 0 ? (
+            <div className="bg-gray-800 rounded-lg p-8 text-center text-gray-500">
+              {'Категорий пока нет. Создайте первую, чтобы разложить товары по полкам.'}
+            </div>
+          ) : (
+            <div className="bg-gray-800 rounded-lg overflow-x-auto">
+              <table className="w-full text-sm min-w-[640px]">
+                <thead>
+                  <tr className="bg-gray-750 border-b border-gray-700 text-left text-gray-400">
+                    <th className="px-3 py-3 font-medium">{'Название'}</th>
+                    <th className="px-3 py-3 font-medium">{'Slug'}</th>
+                    <th className="px-3 py-3 font-medium text-center">{'Иконка'}</th>
+                    <th className="px-3 py-3 font-medium text-center">{'Порядок'}</th>
+                    <th className="px-3 py-3 font-medium hidden sm:table-cell">{'Статус'}</th>
+                    <th className="px-3 py-3 font-medium text-right">{'Действия'}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categories.map((cat) => (
+                    <tr key={cat.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
+                      <td className="px-3 py-3 font-medium text-white">{cat.name}</td>
+                      <td className="px-3 py-3 text-gray-400 font-mono text-xs">{cat.slug}</td>
+                      <td className="px-3 py-3 text-center text-lg">{cat.icon}</td>
+                      <td className="px-3 py-3 text-center text-gray-400">{cat.sort_order}</td>
+                      <td className="px-3 py-3 hidden sm:table-cell">
+                        {cat.is_active ? (
+                          <span className="text-green-400 text-xs">{'Активна'}</span>
+                        ) : (
+                          <span className="text-red-400 text-xs">{'Неактивна'}</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-3">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => openCategoryEdit(cat)}
+                            className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-gray-700 rounded transition-colors"
+                            title={'Редактировать'}
+                          >
+                            <Pencil size={16} />
+                          </button>
+                          <button
+                            onClick={() => setDeletingCategory(cat)}
+                            className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
+                            title={'Удалить'}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {view === 'items' && (
+      <>
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <div className="relative flex-1">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
@@ -476,6 +679,8 @@ export function ShopManager() {
           )}
         </>
       )}
+      </>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -532,6 +737,20 @@ export function ShopManager() {
                   )}
                 </div>
               )}
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">{'Категория'}</label>
+                <select
+                  value={form.category_id}
+                  onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                >
+                  <option value="">{'\u2014 \u0431\u0435\u0437 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438 \u2014'}</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
+                  ))}
+                </select>
+              </div>
 
               {form.mode === 'single' && (
                 <div>
@@ -759,6 +978,132 @@ export function ShopManager() {
                 className="bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
               >
                 {deleting ? '\u0423\u0434\u0430\u043b\u0435\u043d\u0438\u0435...' : '\u0423\u0434\u0430\u043b\u0438\u0442\u044c'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCategoryForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeCategoryForm} />
+          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-md max-h-[90vh] overflow-y-auto mx-4">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+              <h3 className="text-lg font-bold">
+                {editingCategory ? 'Редактировать категорию' : 'Новая категория'}
+              </h3>
+              <button onClick={closeCategoryForm} className="text-gray-400 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {categoryError && (
+                <div className="bg-red-900/30 border border-red-700/50 text-red-300 px-4 py-3 rounded-lg text-sm">
+                  {categoryError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Название *</label>
+                <input
+                  type="text"
+                  value={catForm.name}
+                  onChange={(e) => setCatForm({ ...catForm, name: e.target.value })}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                  placeholder="Ресурсы"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Slug * (латиницей, для вкладок магазина)</label>
+                <input
+                  type="text"
+                  value={catForm.slug}
+                  onChange={(e) => setCatForm({ ...catForm, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                  disabled={!!editingCategory}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none disabled:opacity-50"
+                  placeholder="resources"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Иконка (эмодзи)</label>
+                <input
+                  type="text"
+                  value={catForm.icon}
+                  onChange={(e) => setCatForm({ ...catForm, icon: e.target.value })}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                  placeholder="📦"
+                  maxLength={8}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Порядок</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={catForm.sort_order}
+                    onChange={(e) => setCatForm({ ...catForm, sort_order: parseInt(e.target.value) || 0 })}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none"
+                  />
+                </div>
+                <div className="flex items-end pb-2">
+                  <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={catForm.is_active}
+                      onChange={(e) => setCatForm({ ...catForm, is_active: e.target.checked })}
+                      className="w-4 h-4 accent-blue-600"
+                    />
+                    Активна
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-700 flex justify-end gap-3 sticky bottom-0 bg-gray-800">
+              <button
+                onClick={closeCategoryForm}
+                className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleCategorySubmit}
+                disabled={categorySubmitting}
+                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
+              >
+                {categorySubmitting ? 'Сохранение...' : editingCategory ? 'Сохранить' : 'Создать'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deletingCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeletingCategory(null)} />
+          <div className="relative bg-gray-800 rounded-xl border border-gray-700 w-full max-w-sm p-6">
+            <h3 className="text-lg font-bold mb-2">Удалить категорию?</h3>
+            <p className="text-sm text-gray-400 mb-6">
+              Удалить категорию «{deletingCategory.name}»? Это мягкое удаление. Удалить можно только пустую категорию — если в ней есть товары, операция будет отклонена.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setDeletingCategory(null)}
+                className="px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={confirmDeleteCategory}
+                disabled={categoryDeleting}
+                className="bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg text-sm transition-colors"
+              >
+                {categoryDeleting ? 'Удаление...' : 'Удалить'}
               </button>
             </div>
           </div>

@@ -16,7 +16,7 @@ class UpdateShopItemUseCase:
         if not shop_item or shop_item.is_deleted():
             raise ShopItemNotFoundError(shop_item_id)
 
-        shop_item.update(**dto.model_dump(exclude_none=True))
+        shop_item.update(**dto.model_dump(exclude_unset=True))
 
         uow.track(shop_item)
         await self.shop_item_repo.save(shop_item)

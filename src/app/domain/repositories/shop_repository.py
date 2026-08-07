@@ -3,7 +3,36 @@ from datetime import date
 from uuid import UUID
 from typing import Any
 
-from app.domain.entities.shop import ShopItem, PurchaseHistory
+from app.domain.entities.shop import ShopItem, PurchaseHistory, ShopCategory
+
+
+class ShopCategoryRepository(ABC):
+    @abstractmethod
+    async def get_all_active(self) -> list[ShopCategory]:
+        """Возвращает активные категории, отсортированные по sort_order"""
+        pass
+
+    @abstractmethod
+    async def get_all(self) -> list[ShopCategory]:
+        """Возвращает все категории (кроме soft-deleted), включая неактивные"""
+        pass
+
+    @abstractmethod
+    async def get_by_id(self, category_id: UUID) -> ShopCategory | None:
+        pass
+
+    @abstractmethod
+    async def get_by_slug(self, slug: str) -> ShopCategory | None:
+        pass
+
+    @abstractmethod
+    async def count_items_by_category(self, category_id: UUID) -> int:
+        """Возвращает количество не удалённых товаров в указанной категории"""
+        pass
+
+    @abstractmethod
+    async def save(self, category: ShopCategory) -> None:
+        pass
 
 
 class ShopItemRepository(ABC):
