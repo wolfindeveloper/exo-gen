@@ -6,7 +6,6 @@ import { Trophy, Medal, Crown, ChevronDown, ArrowUp, ArrowDown } from 'lucide-re
 import { useGameStore } from '../store/game'
 import { Skeleton } from '../components/Skeleton'
 import { PullToRefresh } from '../components/PullToRefresh'
-import { HudBar } from '../components/HudBar'
 import { PageTransition } from '../components/PageTransition'
 import { XGenIcon } from '../components/XGenIcon'
 import { fadeIn, staggerContainer } from '../lib/animations'
@@ -116,7 +115,6 @@ export function Leaderboard() {
   if (!leaderboard) {
     return (
       <PageTransition>
-        <HudBar />
         <div className="px-5 pb-24 pt-4 max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-5">
             <Trophy size={18} className="text-amber-400" />
@@ -158,7 +156,6 @@ export function Leaderboard() {
   return (
     <PageTransition>
       <PullToRefresh onRefresh={handleRefresh}>
-      <HudBar />
       <div className="px-5 pb-24 pt-4 max-w-md mx-auto">
         <div className="flex items-center gap-2 mb-5">
           <Trophy size={18} className="text-amber-400" />
