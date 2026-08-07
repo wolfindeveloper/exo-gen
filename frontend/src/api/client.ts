@@ -295,7 +295,7 @@ export const api = {
   },
 
   getGuideChapters: async () => {
-    const data = await apiClient.get<{ chapters: { id: string; name: string; description: string; is_secret: boolean; season_id: string | null; reward_xgen: number; reward_fragments: number; reward_items: Record<string, unknown>[]; articles: { id: string; chapter_id: string; title: string; content: string | null; is_unlocked: boolean; fragment_cost: number; trigger_event_type: string | null; trigger_threshold: number }[] }[]; player_fragments_balance: number }>('/guide/').then((r) => r.data)
+    const data = await apiClient.get<{ chapters: { id: string; name: string; description: string; is_secret: boolean; season_id: string | null; reward_xgen: number; reward_fragments: number; reward_claimed: boolean; reward_items: Record<string, unknown>[]; articles: { id: string; chapter_id: string; title: string; content: string | null; is_unlocked: boolean; fragment_cost: number; trigger_event_type: string | null; trigger_threshold: number }[] }[]; player_fragments_balance: number }>('/guide/').then((r) => r.data)
     return {
       chapters: data.chapters.map((ch) => ({
         id: ch.id,
@@ -307,7 +307,7 @@ export const api = {
         total_entries: ch.articles.length,
         researched_count: ch.articles.filter((a) => a.is_unlocked).length,
         all_researched: ch.articles.every((a) => a.is_unlocked),
-        reward_claimed: false,
+        reward_claimed: ch.reward_claimed ?? false,
         entries: ch.articles.map((a) => ({
           id: a.id,
           title: a.title,
@@ -321,7 +321,7 @@ export const api = {
   },
 
   getGuideChapter: async (chapterId: string) => {
-    const data = await apiClient.get<{ chapters: { id: string; name: string; description: string; is_secret: boolean; season_id: string | null; reward_xgen: number; reward_fragments: number; reward_items: Record<string, unknown>[]; articles: { id: string; chapter_id: string; title: string; content: string | null; is_unlocked: boolean; fragment_cost: number; trigger_event_type: string | null; trigger_threshold: number }[] }[]; player_fragments_balance: number }>('/guide/').then((r) => r.data)
+    const data = await apiClient.get<{ chapters: { id: string; name: string; description: string; is_secret: boolean; season_id: string | null; reward_xgen: number; reward_fragments: number; reward_claimed: boolean; reward_items: Record<string, unknown>[]; articles: { id: string; chapter_id: string; title: string; content: string | null; is_unlocked: boolean; fragment_cost: number; trigger_event_type: string | null; trigger_threshold: number }[] }[]; player_fragments_balance: number }>('/guide/').then((r) => r.data)
     const ch = data.chapters.find((c) => c.id === chapterId)
     if (!ch) throw new Error('Chapter not found')
     return {
@@ -333,7 +333,7 @@ export const api = {
       total_entries: ch.articles.length,
       researched_count: ch.articles.filter((a) => a.is_unlocked).length,
       all_researched: ch.articles.every((a) => a.is_unlocked),
-      reward_claimed: false,
+      reward_claimed: ch.reward_claimed ?? false,
       entries: ch.articles.map((a) => ({
         id: a.id,
         title: a.title,
