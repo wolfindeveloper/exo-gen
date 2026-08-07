@@ -622,9 +622,7 @@ export default function ShipPage() {
                   <span>
                     SPD {(
                       (mainShip?.speed ?? 1.0)
-                      + (totalBonuses.speed ?? 0)
-                      + (mainShip?.luck ?? 0)
-                      + (totalBonuses.luck ?? 0)
+                      * (1 + (totalBonuses.speed ?? totalBonuses.speed_mod ?? 0))
                     ).toFixed(2)}
                   </span>
                 </div>
@@ -752,7 +750,7 @@ export default function ShipPage() {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[9px] text-orange-400/40 font-semibold tracking-wider">УРОВЕНЬ ЧАЯ В БАКЕ</span>
-                  <button onClick={() => setFuelLabel('ERROR 418: I\'M A TEAPOT')} className="text-[10px] text-orange-400/40 font-mono hover:text-orange-300/60 transition-colors">{fuelLabel ?? `${mainShip?.tea_level ?? 0}/100`}</button>
+                  <button onClick={() => setFuelLabel('ERROR 418: I\'M A TEAPOT')} className="text-[10px] text-orange-400/40 font-mono hover:text-orange-300/60 transition-colors">{fuelLabel ?? `${Math.round(mainShip?.tea_level ?? 0)}/100`}</button>
                 </div>
                 <div className="h-2 bg-black/40 rounded-full overflow-hidden border border-orange-500/10">
                   <div
@@ -802,8 +800,10 @@ export default function ShipPage() {
             {activeExp ? (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[9px] text-cyan-400/40 font-semibold tracking-wider">ЭКСПЕДИЦИЯ</span>
-                  <span className="text-[10px] text-cyan-400/30">{activeZoneName}</span>
+                  <span className="text-[9px] text-cyan-400/40 font-semibold tracking-wider shrink-0">ЭКСПЕДИЦИЯ</span>
+                  <span className="text-[10px] text-cyan-400/30 truncate max-w-[140px] text-right" title={activeZoneName ?? ''}>
+                    {activeZoneName}
+                  </span>
                 </div>
                 {expTimer && !expTimer.isComplete ? (
                   <div>

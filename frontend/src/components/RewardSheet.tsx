@@ -141,7 +141,7 @@ export function RewardSheet() {
               {lastLoot && (
                 <div className="flex items-center justify-between text-xs bg-space-600/30 rounded-lg px-3 py-2">
                   <span className="text-slate-500">⚡ Прочность корабля</span>
-                  <span className="font-mono text-slate-300">{lastLoot.shipStability}%</span>
+                  <span className="font-mono text-slate-300">{Math.round(lastLoot.shipStability)}%</span>
                 </div>
               )}
 
